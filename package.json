@@ -31,7 +31,7 @@
   "dependencies": {
     "canonical-path": "0.0.2",
     "lodash": "~2.4.1",
-    "dgeni": "0.0.1",
+    "dgeni": "~0.0.1",
     "winston": "~0.7.2",
     "doctrine": "~0.2.0",
     "graceful-fs": "~2.0.1",
