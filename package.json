@@ -1,0 +1,47 @@
+{
+  "name": "dgeni-packages",
+  "version": "0.0.1",
+  "description": "A collection of dgeni packages for generating documentation from source code",
+  "scripts": {
+    "test": "node ./node_modules/jasmine-node/bin/jasmine-node ngdoc/spec jsdoc/spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/dgeni-packages.git"
+  },
+  "keywords": [
+    "ngdoc",
+    "angular",
+    "angularjs",
+    "dgeni",
+    "document generation",
+    "javascript",
+    "jsdoc"
+  ],
+  "author": "Pete Bacon Darwin",
+  "licenses": [
+    {
+      "type": "Apache",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/angular/dgeni-packages/issues"
+  },
+  "dependencies": {
+    "canonical-path": "0.0.2",
+    "lodash": "~2.4.1",
+    "dgeni": "0.0.1",
+    "winston": "~0.7.2",
+    "doctrine": "~0.2.0",
+    "graceful-fs": "~2.0.1",
+    "q": "~1.0.0",
+    "glob": "~3.2.8",
+    "q-io": "~1.10.9",
+    "nunjucks": "~1.0.1"
+  },
+  "devDependencies": {
+    "rewire": "~2.0.0",
+    "jasmine-node": "~1.13.1"
+  }
+}
