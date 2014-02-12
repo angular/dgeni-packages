@@ -1,6 +1,6 @@
 var path = require('canonical-path');
 var packagePath = __dirname;
-var basePackage = require('dgeni-jsdoc');
+var basePackage = require('../jsdoc');
 
 module.exports = function(config) {
 
