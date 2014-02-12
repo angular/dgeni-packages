@@ -92,12 +92,13 @@ describe('tag definitions', function() {
     describe("(for api docs)", function() {
       it("should compute the id from other properties", function() {
         doc.docType = 'service';
-        doc.name = '$http#get';
+        doc.name = '$http';
         doc.area = 'api';
         doc.module = 'ngRoute';
 
-        expect(tagDef.defaultFn(doc)).toEqual('module:ngRoute.service:$http#get');
+        expect(tagDef.defaultFn(doc)).toEqual('module:ngRoute.service:$http');
       });
+
     });
   });
 

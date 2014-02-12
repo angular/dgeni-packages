@@ -3,7 +3,7 @@ var log = require('winston');
 var path = require('canonical-path');
 var trimIndentation = require('dgeni/lib/utils/trim-indentation');
 var code = require('dgeni/lib/utils/code');
-var templateFolder, outputFolder, commonFiles;
+var templateFolder, commonFiles;
 
 
 function outputPath(example, fileName) {
@@ -58,9 +58,8 @@ module.exports = {
   runBefore: ['extra-docs-added'],
   init: function(config, injectables) {
     exampleNames = {};
-    commonFiles = config.get('processing.examples.commonFiles');
+    commonFiles = config.get('processing.examples.commonFiles', []);
     templateFolder = config.get('processing.examples.templateFolder', 'examples');
-    outputFolder = config.get('processing.examples.outputFolder', 'examples');
   },
   process: function(docs, examples) {
     _.forEach(examples, function(example) {

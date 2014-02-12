@@ -1,7 +1,7 @@
 var plugin = require('../../processors/examples-generate');
 var configurer = require('dgeni/lib/utils/config');
 
-describe("examples-docs processor", function() {
+describe("examples-generate processor", function() {
   beforeEach(function() {
     plugin.init(configurer.load(), { value: function() { }});
   });
@@ -11,6 +11,7 @@ describe("examples-docs processor", function() {
       {
         id: 'a.b.c',
         doc: docs[0],
+        outputFolder: 'examples',
         files: [
           { type: 'js', name: 'app.js' },
           { type: 'css', name: 'app.css' },

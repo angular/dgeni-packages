@@ -3,7 +3,7 @@ var plugin = rewire('../../processors/examples-parse');
 var configurer = require('dgeni/lib/utils/config');
 var log = require('winston');
 
-describe("parse-examples doc processor", function() {
+describe("examples-parse doc processor", function() {
 
   beforeEach(function() {
     var injectables = { value: function() { } };
@@ -60,7 +60,7 @@ describe("parse-examples doc processor", function() {
 
     plugin.process([doc], []);
 
-    expect(doc.content).toMatch('<div class="runnable-example" name="bar" id="example-bar" outputPath="examples/example-bar/index.html">');
+    expect(doc.content).toMatch('<div class="runnable-example" name="bar" id="example-bar" outputFolder="examples/example-bar">');
     expect(doc.content).toMatch('<iframe class="runnable-example-frame" src="examples/example-bar/index.html" name="example-bar"></iframe>');
 
   });

@@ -1,4 +1,4 @@
-var PartialNames = require('dgeni/lib/utils/partial-names').PartialNames;
+var PartialNames = require('../utils/partial-names').PartialNames;
 
 module.exports = {
   name: 'partial-names',
