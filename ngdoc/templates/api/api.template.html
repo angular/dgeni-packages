@@ -10,7 +10,7 @@
   <ol class="api-profile-header-structure naked-list step-list">
     {% block related_components %}{% endblock %}
     <li>
-      - {$ doc.docType $} in module {$ doc.moduleDoc.id | link $}
+      - {$ doc.docType $} in module <a href="{$ doc.moduleDoc.path $}">{$ doc.moduleDoc.name $}</a>
     </li>
   </ol>
 </header>
