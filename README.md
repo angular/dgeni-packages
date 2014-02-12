@@ -28,7 +28,7 @@ as HTML or JS, based on templates.
 
 This package does not provide any templates.
 
-### `angularjs` Package
+### `ngdoc` Package
 
 There is one new document extractor in this package, `ngdoc`, which can pull a single document from
 an ngdoc content file.
@@ -68,29 +68,6 @@ This package also provides a set of templates for generating an HTML file for ea
 directive, error, filter function, input, module, object, overview, provider, service, type and a
 number to support rendering of the runnable examples.
 
-### doc.angularjs.org Package
-
-This package adds the following processors on top of those provided by the `angularjs` package.
-
-* `index-pages` -
-Create new docs that will correspond to index pages based on the deployment information in the 
-configuration.  In the angularjs project there are a number of configurations, including "debug",
-"jquery", "no-cache" and "production".  Each configuration loads up different dependencies, such as
-"angular.js" or "angular.min.js".
-
-* `keywords` - extracts the keywords from the document for use in searching.
-
-* `pages-data` - creates a new document, which will be rendered as a JS file, containing information
-about all the pages in the web app, used for setting up the navigation.
-
-* `version-data` - creates a new document, which will be rendered as a JS file, containing information
-about the versions of angular, used for the version-changer drop-down in the web app.
-
-The package contains an extra tag definition that extracts the step number from tutorial documents,
-which enable more control over sorting of those pages.
-
-The package adds a number of extra templates, primarily to support the extra processors: index,
-pages-data, versions-data and tutorial.
 
 ## HTML Rendering
 
