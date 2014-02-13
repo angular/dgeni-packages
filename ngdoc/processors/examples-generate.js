@@ -3,7 +3,7 @@ var log = require('winston');
 var path = require('canonical-path');
 var trimIndentation = require('dgeni/lib/utils/trim-indentation');
 var code = require('dgeni/lib/utils/code');
-var templateFolder, commonFiles;
+var templateFolder, commonFiles, dependencyPath;
 
 
 function outputPath(example, fileName) {
@@ -22,9 +22,16 @@ function createExampleDoc(example) {
     outputPath: example.outputFolder + '/index.html'
   };
 
-  // Copy in the common scripts
+  // Copy in the common scripts and stylesheets
   exampleDoc.scripts = _.map(commonFiles.scripts || [], function(script) { return { path: script }; });
   exampleDoc.stylesheets = _.map(commonFiles.stylesheets || [], function(stylesheet) { return { path: stylesheet }; });
+
+  // Copy in any dependencies for this example
+  if ( example.deps ) {
+    _.forEach(example.deps.split(';'), function(dependency) {
+      exampleDoc.scripts.push({ path: path.join(dependencyPath, dependency) });
+    });
+  }
 
   // If there is an index.html file specified then use it contents for this doc
   // and remove it from the files property
@@ -60,6 +67,7 @@ module.exports = {
     exampleNames = {};
     commonFiles = config.get('processing.examples.commonFiles', []);
     templateFolder = config.get('processing.examples.templateFolder', 'examples');
+    dependencyPath = config.get('processing.examples.dependencyPath', '.');
   },
   process: function(docs, examples) {
     _.forEach(examples, function(example) {
