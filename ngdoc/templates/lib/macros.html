@@ -41,13 +41,13 @@
 
 {%- macro functionSyntax(fn) %}
   {%- set sep = joiner(', ') -%}
-  {% code -%}
-    {$ fn.name $}({%- for param in fn.params %}{$ sep() $}
+  {% marked -%}
+    `{$ fn.name $}({%- for param in fn.params %}{$ sep() $}
     {%- if param.type.optional %}[{% endif -%}
     {$ param.name $}
     {%- if param.type.optional %}]{% endif -%}
-    {% endfor %});
-  {%- endcode %}
+    {% endfor %});`
+  {%- endmarked %}
 {% endmacro -%}
 
 {%- macro returns(fn) -%}
