@@ -8,6 +8,12 @@
 
   {% for script in doc.scripts %}<script src="{$ script.path $}"></script>
   {% endfor %}
+
+  {% if doc.example.fixBase -%}
+  <script type="text/javascript">
+    angular.element(document.getElementsByTagName('head')).append(angular.element('<base href="' + window.location.pathname + '" />'));
+  </script>
+  {%- endif %}
 </head>
 <body ng-app="{$ doc.example.module $}">
   {$ doc.fileContents $}
