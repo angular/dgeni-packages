@@ -74,9 +74,15 @@ module.exports = [
         }
       } else {
         doc.id = doc.fileName;
+
         if ( doc.docType === 'error' ) {
+          // Parse out the error info from the id
           doc.id = doc.name;
+          var parts = doc.id.split(':');
+          doc.namespace = parts[0];
+          doc.name = parts[1];
         }
+
         doc.path = path.join(path.dirname(doc.file));
         if ( doc.fileName !== 'index' ) {
           doc.path += '/' + doc.fileName;
@@ -189,6 +195,10 @@ module.exports = [
         return'ANY';
       }
     }
+  },
+
+  {
+    name: 'fullName'
   },
   
   {
