@@ -1,14 +1,11 @@
 var _ = require('lodash');
 var log = require('winston');
 
-var handlers;
-
 module.exports = {
   name: 'api-docs',
   description: 'Compute the various fields for docs in the API area',
   runAfter: ['tags-extracted'],
   init: function(config, injectables) {
-    handlers = config.get('processing.propertyHandlers');
     injectables.value('moduleMap', {});
   },
   process: function(docs, partialNames, moduleMap) {
