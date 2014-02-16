@@ -3,7 +3,7 @@
 {%- endmacro -%}
 
 {%- macro paramTable(params) %}
-<table class="variables-matrix table table-bordered table-striped">
+<table class="variables-matrix input-arguments">
   <thead>
     <tr>
       <th>Param</th>
@@ -51,7 +51,7 @@
 {% endmacro -%}
 
 {%- macro returns(fn) -%}
-<table class="variables-matrix">
+<table class="variables-matrix return-arguments">
   <tr>
     <td>{$ typeList(fn.type.typeList) $}</td>
     <td>{$ fn.description | marked $}</td>
