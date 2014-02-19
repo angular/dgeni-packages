@@ -19,9 +19,11 @@ module.exports = {
     basePath = config.basePath || process.cwd();
     extractors = config.source.extractors;
     sourceFiles = config.source.files;
+
+    injectables.value('projectPath', config.source.projectPath);
   },
 
-  process: function(docs) {
+  process: function(docs, projectPath) {
 
     return Q.all(_.map(sourceFiles, function(fileInfo) {
       var pattern, files;
@@ -56,6 +58,7 @@ module.exports = {
               
               _.forEach(docs, function(doc) {
                 doc.fileName = path.basename(doc.file, '.'+doc.fileType);
+                doc.relativePath = path.relative(projectPath, path.resolve(doc.basePath, doc.file));
               });
 
               return docs;
