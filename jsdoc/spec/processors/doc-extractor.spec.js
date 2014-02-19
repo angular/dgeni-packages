@@ -38,9 +38,27 @@ var mockJsExtractor = {
 
 describe('doc-extractor', function() {
 
+  it("should throw an error if the projectPath has not been set", function() {
+    expect(function() {
+      plugin.init({ source: { files: [] }});
+    }).toThrow();
+  });
+
   it('should traverse the specified folder tree, reading each matching file', function() {
 
-    plugin.init({ source: { extractors: [mockNgDocExtractor, mockJsExtractor], files: ['./docs', './src'] }});
+    var config = {
+      source: {
+        projectPath: '.',
+        extractors: [mockNgDocExtractor, mockJsExtractor],
+        files: ['./docs', './src']
+      }
+    };
+
+    var injectables = {
+      value: function() {}
+    };
+
+    plugin.init(config, injectables);
     plugin.process().then(function(docs) {
       expect(docs.length).toEqual(4);
       expect(docs[0]).toEqual({

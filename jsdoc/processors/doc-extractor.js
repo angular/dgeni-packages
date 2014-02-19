@@ -20,6 +20,11 @@ module.exports = {
     extractors = config.source.extractors;
     sourceFiles = config.source.files;
 
+    if ( !config.source.projectPath ) {
+      throw new Error('Missing configuration property.\n' +
+          'You must provide the path to the root of the project in `config.source.projectPath`');
+    }
+
     injectables.value('projectPath', config.source.projectPath);
   },
 
