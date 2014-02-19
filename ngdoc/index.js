@@ -20,19 +20,6 @@ module.exports = function(config) {
     require('./processors/links')
   ]);
 
-
-  config.append('processing.docTypes.code', [
-    'directive',
-    'input',
-    'service',
-    'provider',
-    'object',
-    'type',
-    'method',
-    'property',
-    'interface'
-  ]);
-
   config.set('processing.examples.commonFiles', {
     scripts: [],
     stylesheets: []
