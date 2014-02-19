@@ -1,7 +1,7 @@
 var code = require('dgeni/lib/utils/code');
 module.exports = {
   name: 'code',
-  process: function(str) {
-    return code(str, true);
+  process: function(str, lang) {
+    return code(str, true, lang);
   }
 };
