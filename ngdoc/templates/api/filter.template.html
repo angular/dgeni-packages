@@ -17,7 +17,7 @@
   <h3>In JavaScript</h3>
   {% code -%}
     {%- set sep = joiner(', ') -%}
-    $filter('{$ doc.name $}', {% for param in doc.params %}{$ sep() $}{$ param.name $}{% endfor -%})
+    $filter('{$ doc.name $}')({% for param in doc.params %}{$ sep() $}{$ param.name $}{% endfor -%})
   {%- endcode %}
 
   {% include "lib/params.template.html" %}
