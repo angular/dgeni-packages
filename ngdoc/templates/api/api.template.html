@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<a href='http://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.tag or 'master' $}/{$ doc.file $}#L{$ doc.startingLine $}' class='view-source pull-right'>
+<a href='http://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.tag or 'master' $}/{$ doc.relativePath $}#L{$ doc.startingLine $}' class='view-source pull-right'>
   <i class="icon-zoom-in">&nbsp;</i>View Source
 </a>
 
