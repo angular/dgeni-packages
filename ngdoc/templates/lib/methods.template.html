@@ -2,7 +2,7 @@
 <h2>Methods</h2>
 <ul class="methods">
   {%- for method in doc.methods %}
-  <li>
+  <li id="{$ method.name $}">
     <h3>{$ functionSyntax(method) $}</h3>
     <div>{$ method.description | marked $}</div>
 

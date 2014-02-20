@@ -54,7 +54,7 @@ module.exports = [
   {
     name: 'id',
     defaultFn: function(doc) {
-      var partialFolder = 'partials';
+      var parts, partialFolder = 'partials';
       if ( doc.area === 'api' && doc.docType !== 'overview' ) {
         if ( doc.docType === 'module' ) {
           doc.id = _.template('module:${name}', doc);
@@ -69,7 +69,9 @@ module.exports = [
         } else {
           doc.id = doc.name;
           doc.isMember = true;
-          doc.memberof = doc.id.split('#')[0];
+          parts = doc.id.split('#');
+          doc.memberof = parts[0];
+          doc.name = parts[1];
           // This is a member of another doc so it doesn't need an output path
         }
       } else {
@@ -78,7 +80,7 @@ module.exports = [
         if ( doc.docType === 'error' ) {
           // Parse out the error info from the id
           doc.id = doc.name;
-          var parts = doc.id.split(':');
+          parts = doc.id.split(':');
           doc.namespace = parts[0];
           doc.name = parts[1];
         }
