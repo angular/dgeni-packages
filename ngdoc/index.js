@@ -13,17 +13,10 @@ module.exports = function(config) {
   config.append('processing.processors', [
     require('./processors/partial-names'),
     require('./processors/filter-ngdocs'),
-    require('./processors/examples-parse'),
     require('./processors/api-docs'),
-    require('./processors/examples-generate'),
     require('./processors/component-groups-generate'),
     require('./processors/links')
   ]);
-
-  config.set('processing.examples.commonFiles', {
-    scripts: [],
-    stylesheets: []
-  });
 
   config.prepend('rendering.templateFolders', path.resolve(packagePath, 'templates'));
 
