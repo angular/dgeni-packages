@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "node ./node_modules/jasmine-node/bin/jasmine-node ngdoc/spec jsdoc/spec"
@@ -31,7 +31,7 @@
   "dependencies": {
     "canonical-path": "0.0.2",
     "lodash": "~2.4.1",
-    "dgeni": "~0.0",
+    "dgeni": "~0.1.0",
     "winston": "~0.7.2",
     "doctrine": "~0.2.0",
     "graceful-fs": "~2.0.1",
