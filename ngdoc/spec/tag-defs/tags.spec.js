@@ -99,6 +99,18 @@ describe('tag definitions', function() {
         expect(tagDef.defaultFn(doc)).toEqual('module:ngRoute.service:$http');
       });
 
+      it("should extract the container and member from the name if it is a memberOf type", function() {
+        doc.docType = 'method';
+        doc.name = '$http#get';
+        doc.area = 'api';
+        doc.module = 'ng';
+
+        expect(tagDef.defaultFn(doc)).toEqual('$http#get');
+        expect(doc.name).toEqual('get');
+        expect(doc.memberof).toEqual('$http');
+        expect(doc.isMember).toEqual(true);
+      });
+
     });
   });
 

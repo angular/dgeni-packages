@@ -2,7 +2,7 @@
 <h2>Events</h2>
 <ul class="events">
   {%- for event in doc.events %}
-  <li>
+  <li id="{$ event.name $}">
     <h3>{$ event.name $}</h3>
     <div>{$ event.description | marked $}</div>
     {%- if event.eventType == 'listen' %}
