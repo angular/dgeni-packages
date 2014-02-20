@@ -27,7 +27,7 @@ function createExampleDoc(example, deployment, stylesheets, scripts) {
   };
 
   // Copy in the common scripts and stylesheets
-  exampleDoc.scripts = _.map(commonFiles, function(script) { return { path: script }; });
+  exampleDoc.scripts = _.map(commonFiles.scripts, function(script) { return { path: script }; });
   exampleDoc.stylesheets = _.map(commonFiles.stylesheets || [], function(stylesheet) { return { path: stylesheet }; });
 
   // Copy in any dependencies for this example

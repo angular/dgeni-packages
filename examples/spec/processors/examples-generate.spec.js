@@ -16,7 +16,9 @@ describe("examples-generate processor", function() {
 
       other: {
         examples: {
-          commonFiles: [ 'someFile.js' ],
+          commonFiles: {
+            scripts: [ 'someFile.js', 'someOtherFile.js' ],
+          },
           dependencyPath: '..'
         }
       }
@@ -62,6 +64,7 @@ describe("examples-generate processor", function() {
 
     expect(docs[5].scripts).toEqual([
       { path: 'someFile.js' },
+      { path: 'someOtherFile.js' },
       { path : '../dep1.js' },
       { path : '../dep2.js' },
       jasmine.objectContaining({ path: 'app.js'})
