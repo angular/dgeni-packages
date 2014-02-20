@@ -1,9 +1,9 @@
 {
   "name": "dgeni-packages",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
-    "test": "node ./node_modules/jasmine-node/bin/jasmine-node ngdoc/spec jsdoc/spec"
+    "test": "node ./node_modules/jasmine-node/bin/jasmine-node ngdoc/spec jsdoc/spec examples/spec"
   },
   "repository": {
     "type": "git",
