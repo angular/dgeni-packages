@@ -48,7 +48,6 @@ function createExampleDoc(example, deployment, stylesheets, scripts) {
   // and remove it from the files property
   if ( example.files['index.html'] ) {
     exampleDoc.fileContents = example.files['index.html'].fileContents;
-    delete example.files['index.html'];
   }
   return exampleDoc;
 }
