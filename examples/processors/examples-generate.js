@@ -11,7 +11,7 @@ function outputPath(example, fileName) {
 }
 
 function createExampleDoc(example, deployment, stylesheets, scripts) {
-  var deploymentQualifier = deployment.name === 'default' ? '' : '-' + deployment.name;
+  var deploymentQualifier = deployment.name === 'default' ? '' : ('-' + deployment.name);
   var commonFiles = (deployment.examples && deployment.examples.commonFiles) || {};
   var dependencyPath = deployment.examples.dependencyPath || '.';
 
@@ -44,12 +44,11 @@ function createExampleDoc(example, deployment, stylesheets, scripts) {
   exampleDoc.stylesheets = exampleDoc.stylesheets.concat(stylesheets);
   exampleDoc.scripts = exampleDoc.scripts.concat(scripts);
 
-  // If there is an index.html file specified then use it contents for this doc
-  // and remove it from the files property
-  if ( example.files['index.html'] ) {
-    exampleDoc.fileContents = example.files['index.html'].fileContents;
-    delete example.files['index.html'];
+  // If there is content specified for the index.html file then use its contents for this doc
+  if ( example.indexFile ) {
+    exampleDoc.fileContents = example.indexFile.fileContents;
   }
+
   return exampleDoc;
 }
 
@@ -90,8 +89,13 @@ module.exports = {
       var stylesheets = [];
       var scripts = [];
 
+      // We don't want to create a file for index.html, since that will be covered by the exampleDoc
+      example.indexFile = example.files['index.html'];
+      delete example.files['index.html'];
+
       // Create a new document for each file of the example
       _.forEach(example.files, function(file) {
+
         var fileDoc = createFileDoc(example, file);
         docs.push(fileDoc);
 

@@ -1,20 +1,23 @@
 var plugin = require('../../processors/examples-generate');
 var configurer = require('dgeni/lib/utils/config');
+var _ = require('lodash');
 
 describe("examples-generate processor", function() {
+  var docs, examples;
   beforeEach(function() {
     var config = configurer.load();
     config.set('processing.examples.templateFolder', 'examples');
-    config.set('deployment.environments', {
-
-      default: {
+    config.set('deployment.environments', [
+      {
+        name: 'default',
         examples: {
           commonFiles: [],
           dependencyPath: '.'
         },
       },
 
-      other: {
+      {
+        name: 'other',
         examples: {
           commonFiles: {
             scripts: [ 'someFile.js', 'someOtherFile.js' ],
@@ -22,47 +25,66 @@ describe("examples-generate processor", function() {
           dependencyPath: '..'
         }
       }
-    });
+    ]);
+
     plugin.init(config, { value: function() { }});
-  });
-  it("should add new documents that represent the examples", function() {
-    var docs = [ { file: 'a.b.js' }];
-    var examples = [
+
+    docs = [
+      { file: 'a.b.js' }
+    ];
+    examples = [
       {
         id: 'a.b.c',
         doc: docs[0],
         outputFolder: 'examples',
         deps: 'dep1.js;dep2.js',
-        files: [
-          { type: 'js', name: 'app.js' },
-          { type: 'css', name: 'app.css' },
-          { type: 'spec', name: 'app.spec.js' }
-        ]
+        files: {
+          'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
+          'app.js': { type: 'js', name: 'app.js', fileContents: 'app.js content' },
+          'app.css': { type: 'css', name: 'app.css', fileContents: 'app.css content' },
+          'app.spec.js': { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' }
+        }
       }
     ];
 
     plugin.process(docs, examples);
 
-    expect(docs[1]).toEqual(
-      jasmine.objectContaining({ docType: 'example-js', template: 'examples/template.js' })
+  });
+  it("should add an exampleDoc for each example deployment", function() {
+    var exampleDocs = _.filter(docs, { docType: 'example' });
+    expect(exampleDocs.length).toBe(2);
+    
+    expect(exampleDocs[0]).toEqual(
+      jasmine.objectContaining({ docType: 'example', id:'a.b.c', template: 'examples/index.template.html'})
     );
-    expect(docs[2]).toEqual(
-      jasmine.objectContaining({ docType: 'example-css', template: 'examples/template.css' })
-    );
-    expect(docs[3]).toEqual(
-      jasmine.objectContaining({ docType: 'example-spec', template: 'examples/template.spec' })
-    );
-    expect(docs[4]).toEqual(
-      jasmine.objectContaining({ docType: 'example', template: 'examples/index.template.html' })
+    expect(exampleDocs[1]).toEqual(
+      jasmine.objectContaining({ docType: 'example', id:'a.b.c-other', template: 'examples/index.template.html'})
     );
 
-    expect(docs[4].scripts).toEqual([
+    expect(exampleDocs[0].fileContents).toEqual('index.html content');
+    expect(exampleDocs[1].fileContents).toEqual('index.html content');
+  });
+
+  it("should add a fileDoc for each of the example's files", function() {
+    expect(_.find(docs, { id: 'a.b.c/app.js' })).toEqual(
+      jasmine.objectContaining({ docType: 'example-js', template: 'examples/template.js' })
+    );
+    expect(_.find(docs, { id: 'a.b.c/app.css' })).toEqual(
+      jasmine.objectContaining({ docType: 'example-css', template: 'examples/template.css' })
+    );
+    expect(_.find(docs, { id: 'a.b.c/app.spec.js' })).toEqual(
+      jasmine.objectContaining({ docType: 'example-spec', template: 'examples/template.spec' })
+    );
+  });
+
+  it("should add the dependencies to the exampleDoc scripts", function() {
+    expect(_.find(docs, { id: 'a.b.c' }).scripts).toEqual([
       { path : 'dep1.js' },
       { path : 'dep2.js' },
       jasmine.objectContaining({ path: 'app.js'})
     ]);
 
-    expect(docs[5].scripts).toEqual([
+    expect(_.find(docs, { id: 'a.b.c-other' }).scripts).toEqual([
       { path: 'someFile.js' },
       { path: 'someOtherFile.js' },
       { path : '../dep1.js' },
