@@ -26,7 +26,7 @@ module.exports = [
       return name;
     }
   },
-  
+
 
   {
     name: 'area',
@@ -43,9 +43,18 @@ module.exports = [
     defaultFn: function(doc) {
       if ( doc.area === 'api' ) {
         checkProperty(doc, 'file');
+        if (doc.docType === 'module') {
+          return doc.name;
+        }
+
+        var index = _.findIndex(doc.tags.tags, function(tag) {
+          return tag.title.toLowerCase() === 'partof';
+        });
+
+        var partof = index !== -1 ? doc.tags.tags[index].description : null;
         // Calculate the module from the second segment of the file path
         // (the first being the area)
-        return path.dirname(doc.file).split('/')[1];
+        return partof || path.dirname(doc.file).split('/')[1];
       }
     }
   },
@@ -95,7 +104,7 @@ module.exports = [
       if ( doc.outputPath ) {
         doc.outputPath = partialFolder + '/' + doc.outputPath;
       }
-      
+
       return doc.id;
     }
   },
@@ -202,7 +211,7 @@ module.exports = [
   {
     name: 'fullName'
   },
-  
+
   {
     name: 'requires',
     multi: true
@@ -217,7 +226,7 @@ module.exports = [
     name: 'priority',
     defaultFn: function(doc) { return 0; }
   },
-  
+
   { name: 'title' },
   { name: 'parent' },
 
