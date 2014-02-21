@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "node ./node_modules/jasmine-node/bin/jasmine-node ngdoc/spec jsdoc/spec examples/spec"
