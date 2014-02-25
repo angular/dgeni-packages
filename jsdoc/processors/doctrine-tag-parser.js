@@ -67,7 +67,6 @@ Tags.prototype = {
     } catch(e) {
       console.log(e);
       console.log(tag);
-      throw e;
     }
   }
 };
