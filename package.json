@@ -33,7 +33,7 @@
     "lodash": "~2.4.1",
     "dgeni": "~0.1.0",
     "winston": "~0.7.2",
-    "doctrine": "~0.2.0",
+    "doctrine": "~0.3.0",
     "graceful-fs": "~2.0.1",
     "q": "~1.0.0",
     "glob": "~3.2.8",
