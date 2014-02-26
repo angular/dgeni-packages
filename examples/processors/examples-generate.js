@@ -74,7 +74,7 @@ module.exports = {
   runAfter: ['adding-extra-docs'],
   runBefore: ['extra-docs-added'],
   init: function(config, injectables) {
-    exampleNames = {};
+    exampleNames = Object.create(null);
 
     deployments = config.get('deployment.environments');
     if ( !deployments ) {

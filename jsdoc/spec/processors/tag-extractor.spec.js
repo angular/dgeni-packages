@@ -1,9 +1,9 @@
 var rewire = require('rewire');
-var plugin = rewire('../../processors/doctrine-tag-extractor');
+var plugin = rewire('../../processors/tag-extractor');
 
-describe("doctrine-tag-extractor doc processor plugin", function() {
-  it("should have name 'doctrine-tag-extractor", function() {
-    expect(plugin.name).toEqual('doctrine-tag-extractor');
+describe("tag-extractor doc processor plugin", function() {
+  it("should have name 'tag-extractor", function() {
+    expect(plugin.name).toEqual('tag-extractor');
   });
 
   it("should error if no valid config is provided", function() {

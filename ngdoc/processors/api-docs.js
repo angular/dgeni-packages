@@ -6,7 +6,7 @@ module.exports = {
   description: 'Compute the various fields for docs in the API area',
   runAfter: ['tags-extracted'],
   init: function(config, injectables) {
-    injectables.value('moduleMap', {});
+    injectables.value('moduleMap', Object.create(null));
   },
   process: function(docs, partialNames, moduleMap) {
 

@@ -46,7 +46,7 @@ var plugin = module.exports = {
     });
 
     // Extract any extra helper functions/data from the config
-    helpers = _.defaults({}, config.rendering.helpers);
+    helpers = _.defaults(Object.create(null), config.rendering.helpers);
   },
   /**
    * Render the set of documents to the output folder and extra data, using the templates found in the given folder
@@ -59,7 +59,7 @@ var plugin = module.exports = {
       log.debug('Rendering doc', doc.id, doc.name);
       var data, res, err;
       try {
-        data = _.defaults({}, { doc: doc, docs: docs }, extraData, helpers);
+        data = _.defaults(Object.create(null), { doc: doc, docs: docs }, extraData, helpers);
         var templateFile = templateFinder(data.doc);
         doc.renderedContent = env.render(templateFile, data);
       } catch(ex) {

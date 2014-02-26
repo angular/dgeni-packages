@@ -12,7 +12,7 @@ var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
 var outputFolder;
 
 function extractAttributes(attributeText) {
-  var attributes = {};
+  var attributes = Object.create(null);
   attributeText.replace(ATTRIBUTE_REGEX, function(match, prop, val1, val2){
     attributes[prop] = val1 || val2;
   });
@@ -20,7 +20,7 @@ function extractAttributes(attributeText) {
 }
 
 function extractFiles(exampleText) {
-  var files = {};
+  var files = Object.create(null);
   exampleText.replace(FILE_REGEX, function(match, attributesText, contents) {
     var file = extractAttributes(attributesText);
     if ( !file.name ) {
@@ -96,7 +96,7 @@ module.exports = {
   runBefore: ['parsing-tags'],
   init: function(config, injectables) {
     // Reset the unique name map
-    exampleNames = {};
+    exampleNames = Object.create(null);
 
     injectables.value('examples', []);
 

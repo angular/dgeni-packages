@@ -113,7 +113,7 @@ module.exports = [
       var param = {
         name: tag.name,
         description: description,
-        type: doc.tags.getType(tag),
+        type: tag.type,
       };
       if (tag.default) {
         param.default = tag.default;
@@ -132,7 +132,7 @@ module.exports = [
     docProperty: 'properties',
     transformFn: function(doc, tag) {
       return {
-        type: doc.tags.getType(tag),
+        type: tag.type,
         name: tag.name,
         description: tag.description
       };
@@ -163,7 +163,7 @@ module.exports = [
     aliases: ['return'],
     transformFn: function(doc, tag) {
       return {
-        type: doc.tags.getType(tag),
+        type: tag.type,
         description: tag.description
       };
     }
