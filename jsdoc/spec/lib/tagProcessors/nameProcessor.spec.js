@@ -42,4 +42,13 @@ describe("nameProcessor", function() {
     expect(tag.description).toEqual('');
   });
 
+  it("should extract a param name alias", function() {
+    var tag = new Tag(tagDef, 'someTag', 'paramName|aliasName some description', 0);
+    tags.addTag(tag);
+    nameProcessor(tags);
+    expect(tag.name).toEqual('paramName');
+    expect(tag.alias).toEqual('aliasName');
+    expect(tag.description).toEqual('some description');
+  });
+
 });

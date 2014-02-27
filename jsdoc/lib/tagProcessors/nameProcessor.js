@@ -12,12 +12,19 @@ function extractName(tag) {
 
   tag.description = tag.description.replace(NAME_AND_DESCRIPTION, function(match, name, optionalName, defaultValue, description, dashDescription) {
     tag.name = optionalName || name;
+
     if ( optionalName ) {
       tag.optional = true;
     }
+    
     if ( defaultValue ) {
       tag.defaultValue = defaultValue;
     }
+
+    var aliasParts = tag.name.split('|');
+    tag.name = aliasParts[0];
+    tag.alias = aliasParts[1];
+
     return dashDescription || description || '';
   });
 
