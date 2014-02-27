@@ -7,6 +7,7 @@ module.exports = function(config) {
     require('./processors/tag-parser'),
     require('./processors/tag-extractor'),
     require('./processors/nunjucks-renderer'),
+    require('./processors/escaped-comments'),
     require('./processors/write-files')
   ]);
   config.append('processing.tagDefinitions', require('./tag-defs'));
