@@ -5,7 +5,6 @@ var tagParser = require('../../processors/tag-parser');
 var config = require('dgeni/lib/utils/config').Config;
 
 describe('tag definitions', function() {
-  var doc, tags;
 
   function parseDoc(content) {
     var doc;
