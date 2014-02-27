@@ -28,23 +28,10 @@ module.exports = [
     name: 'param',
     multi: true,
     docProperty: 'params',
+    canHaveName: true,
+    canHaveType: true,
     transformFn: function(doc, tag) {
-      // doctrine doesn't support param name aliases
-      var match = /^(?:\|(\S+)\s)?([\s\S]*)/.exec(tag.description);
-      var alias = match[1];
-      var description = match[2];
-      var param = {
-        name: tag.name,
-        description: description,
-        type: doc.tags.getType(tag),
-      };
-      if (tag.default) {
-        param.default = tag.default;
-      }
-      if (alias) {
-        param.alias = alias;
-      }
-      return param;
+      return tag;
     }
   },
 
@@ -53,12 +40,10 @@ module.exports = [
     name: 'property',
     multi: true,
     docProperty: 'properties',
+    canHaveName: true,
+    canHaveType: true,
     transformFn: function(doc, tag) {
-      return {
-        type: doc.tags.getType(tag),
-        name: tag.name,
-        description: tag.description
-      };
+      return tag;
     }
   },
 
@@ -66,11 +51,9 @@ module.exports = [
   {
     name: 'returns',
     aliases: ['return'],
+    canHaveType: true,
     transformFn: function(doc, tag) {
-      return {
-        type: doc.tags.getType(tag),
-        description: tag.description
-      };
+      return tag;
     }
   },
 
