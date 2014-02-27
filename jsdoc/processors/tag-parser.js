@@ -35,10 +35,15 @@ var plugin = module.exports = {
   },
   process: function(docs) {
     _.forEach(docs, function(doc) {
-      var tags = parseTags(doc.content, doc.startingLine);
-      doc.tags = tags;
-      if ( tags.badTags.length > 0 ) {
-        log.warn(formatBadTagErrorMessage(doc));
+      try {
+        var tags = parseTags(doc.content, doc.startingLine);
+        doc.tags = tags;
+        if ( tags.badTags.length > 0 ) {
+          log.warn(formatBadTagErrorMessage(doc));
+        }
+      } catch(e) {
+        log.error('Error parsing tags for doc starting at ' + doc.startingLine + ' in file ' + doc.file);
+        throw e;
       }
     });
   }
