@@ -46,6 +46,9 @@ var TYPE_EXPRESSION_START = /\{[^@]/;
 
     tag.type = catharsis.parse(tag.typeExpression, {jsdoc: true});
     tag.typeList = getTypeStrings(tag.type);
+    if ( tag.type.optional ) {
+      tag.optional = true;
+    }
   }
 }
 

@@ -29,4 +29,11 @@ describe("typeProcessor", function() {
     expect(tag.description).toEqual('paramName - Some description');
   });
 
+  it("should set the optional property to true if the type is optional", function() {
+    var tag = new Tag(tagDef, 'someTag', '{string=} paramName - some description', 0);
+    tags.addTag(tag);
+    typeProcessor(tags);
+    expect(tag.optional).toEqual(true);
+  });
+
 });
