@@ -1,5 +1,4 @@
-var rewire = require('rewire');
-var tagParserFactory = rewire('../../lib/tagParser');
+var tagParserFactory = require('../../lib/tagParser');
 
 describe("simple-tag-parser", function() {
   describe("tagParserFactory", function() {
@@ -61,6 +60,29 @@ describe("simple-tag-parser", function() {
       expect(function() {
         tagParser('@unknownTag some text', 123);
       }).not.toThrow();
+    });
+
+
+    it("should ignore @tags inside back-ticked code blocks", function() {
+      var tagParser = tagParserFactory([ { name: 'a' }, { name: 'b' }]);
+      var tags = tagParser(
+        '@a some text\n\n' +
+        '```\n' +
+        '  some code\n' +
+        '  @b not a tag\n' +
+        '```\n\n' +
+        'more text\n' +
+        '@b is a tag'
+      );
+      expect(tags.getTag('a').description).toEqual('some text\n\n' +
+        '```\n' +
+        '  some code\n' +
+        '  @b not a tag\n' +
+        '```\n\n' +
+        'more text'
+      );
+      expect(tags.getTags('b').length).toEqual(1);
+      expect(tags.getTag('b').description).toEqual('is a tag');
     });
   });
 });
