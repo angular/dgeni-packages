@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var log = require('winston');
 var catharsis = require('catharsis');
 var TYPE_EXPRESSION_START = /\{[^@]/;
 
@@ -59,8 +60,13 @@ var TYPE_EXPRESSION_START = /\{[^@]/;
  */
 module.exports = function(tags) {
   _.forEach(tags.tags, function(tag) {
-    if ( tag.tagDef.canHaveType ) {
-      extractTypeExpression(tag);
+    try {
+      if ( tag.tagDef.canHaveType ) {
+        extractTypeExpression(tag);
+      }
+    } catch(e) {
+      log.error('Error processing tag type expression in "' + tag.tagName + '", at line ' + tag.startingLine);
+      throw e;
     }
   });
 };
