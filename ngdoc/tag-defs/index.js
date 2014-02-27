@@ -102,45 +102,6 @@ module.exports = [
 
 
   {
-    name: 'param',
-    multi: true,
-    docProperty: 'params',
-    transformFn: function(doc, tag) {
-      // doctrine doesn't support param name aliases
-      var match = /^(?:\|(\S+)\s)?([\s\S]*)/.exec(tag.description);
-      var alias = match[1];
-      var description = match[2];
-      var param = {
-        name: tag.name,
-        description: description,
-        type: tag.type,
-      };
-      if (tag.default) {
-        param.default = tag.default;
-      }
-      if (alias) {
-        param.alias = alias;
-      }
-      return param;
-    }
-  },
-
-
-  {
-    name: 'property',
-    multi: true,
-    docProperty: 'properties',
-    transformFn: function(doc, tag) {
-      return {
-        type: tag.type,
-        name: tag.name,
-        description: tag.description
-      };
-    }
-  },
-
-
-  {
     name: 'restrict',
     defaultFn: function(doc) {
       if ( doc.docType === 'directive' || doc.docType === 'input' ) {
@@ -153,18 +114,6 @@ module.exports = [
         attribute: _.contains(tag.description, 'A'),
         cssClass: _.contains(tag.description, 'C'),
         comment: _.contains(tag.description, 'M')
-      };
-    }
-  },
-
-
-  {
-    name: 'returns',
-    aliases: ['return'],
-    transformFn: function(doc, tag) {
-      return {
-        type: tag.type,
-        description: tag.description
       };
     }
   },
@@ -204,11 +153,6 @@ module.exports = [
   },
   
   {
-    name: 'requires',
-    multi: true
-  },
-
-  {
     name: 'scope',
     transformFn: function(doc, tag) { return true; }
   },
@@ -220,15 +164,5 @@ module.exports = [
   
   { name: 'title' },
   { name: 'parent' },
-
-  { name: 'description' },
-  { name: 'usage' },
-  { name: 'animations' },
-  { name: 'constructor' },
-  { name: 'class' },
-  { name: 'classdesc' },
-  { name: 'global' },
-  { name: 'namespace' },
-  { name: 'kind' }
 
 ];

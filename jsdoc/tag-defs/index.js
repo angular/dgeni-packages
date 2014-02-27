@@ -57,6 +57,10 @@ module.exports = [
     }
   },
 
+  {
+    name: 'requires',
+    multi: true
+  },
 
   { name: 'module' },
   { name: 'description' },
@@ -67,5 +71,6 @@ module.exports = [
   { name: 'classdesc' },
   { name: 'global' },
   { name: 'namespace' },
-  { name: 'kind' }
+  { name: 'kind' },
+  { name: 'function' }
 ];

@@ -8,7 +8,7 @@ module.exports = function(config) {
 
   config.append('source.extractors', require('./extractors/ngdoc'));
   
-  config.set('processing.tagDefinitions', require('./tag-defs'));
+  config.append('processing.tagDefinitions', require('./tag-defs'));
 
   config.append('processing.processors', [
     require('./processors/partial-names'),
