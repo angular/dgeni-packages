@@ -1,8 +1,6 @@
 var _ = require('lodash');
 var log = require('winston');
 var path = require('canonical-path');
-var trimIndentation = require('dgeni/lib/utils/trim-indentation');
-var code = require('dgeni/lib/utils/code');
 var templateFolder, deployments;
 
 
