@@ -3,7 +3,7 @@ var TagCollection = require('./TagCollection');
 var Tag = require('./Tag');
 
 var END_OF_LINE = /\r?\n/;
-var TAG_MARKER = /^\s*@(\S+)\s+(.*)$/;
+var TAG_MARKER = /^\s*@(\S+)\s*(.*)$/;
 
 
 /**

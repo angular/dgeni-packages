@@ -39,6 +39,19 @@ describe("simple-tag-parser", function() {
       );
     });
 
+    it("should cope with tags that have no description", function() {
+      var tagDefinitions = [
+        { name: 'id' },
+        { name: 'description' },
+        { name: 'param' }
+      ];
+      var tagParser = tagParserFactory(tagDefinitions);
+      var content = '@id\n@description some description';
+      var tags = tagParser(content, 123);
+      expect(tags.tags[0]).toEqual(jasmine.objectContaining({ tagName: 'id', description: '' }));
+      expect(tags.tags[1]).toEqual(jasmine.objectContaining({ tagName: 'description', description: 'some description' }));
+    });
+
     it("should cope with empty content or no known tags", function() {
       var tagParser = tagParserFactory([]);
       expect(function() {
