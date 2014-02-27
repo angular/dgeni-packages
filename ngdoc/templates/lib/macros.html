@@ -1,5 +1,5 @@
 {% macro typeList(types) -%}
-{% for typeName in types %}<a href="" class="{$ typeName | typeClass $}">{$ typeName $}</a>{% endfor %}
+{% for typeName in types %}<a href="" class="{$ typeName | typeClass $}">{$ typeName | escape $}</a>{% endfor %}
 {%- endmacro -%}
 
 {%- macro paramTable(params) %}
@@ -20,7 +20,7 @@
         {% if param.type.optional %}<div><em>(optional)</em></div>{% endif %}
       </td>
       <td>
-        {$ typeList(param.type.typeList) $}
+        {$ typeList(param.typeList) $}
       </td>
       <td>
         {$ param.description | marked $}
@@ -50,10 +50,10 @@
   {%- endmarked %}
 {% endmacro -%}
 
-{%- macro returns(fn) -%}
+{%- macro typeInfo(fn) -%}
 <table class="variables-matrix return-arguments">
   <tr>
-    <td>{$ typeList(fn.type.typeList) $}</td>
+    <td>{$ typeList(fn.typeList) $}</td>
     <td>{$ fn.description | marked $}</td>
   </tr>
 </table>
