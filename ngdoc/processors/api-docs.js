@@ -48,7 +48,7 @@ module.exports = {
       if ( doc.isMember ) {
         log.debug('child doc found', doc.id, doc.memberof);
 
-        containerDoc = partialNames.getDoc(doc.memberof);
+        var containerDoc = partialNames.getDoc(doc.memberof);
 
         if ( !containerDoc ) {
           log.warn('Missing container document "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);
