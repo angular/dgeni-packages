@@ -18,8 +18,8 @@ This package contains the following processors:
 * `doc-extractor` - used to load up documents from files.  This processor can be configured to use a
 set of **extractors**.  The `jsdoc` package has a single `js` extractor, which can extract documents
 from jsdoc style comments in files.
-* `doctrine-tag-parser` - uses the Doctrine library to parse the jsdoc tags in the extracted documents.
-* `doctrine-tag-extractor` - extracts the tags information and converts it to specific properties on
+* `tag-parser` - parses the jsdoc tags in the extracted documents.
+* `tag-extractor` - extracts the tags information and converts it to specific properties on
 the documents, based on a set of tag-definitions.  The `jsdoc` package contains definitions for the
 following tags: `name`, `memberof`, `param`, `property`, `returns`, `module`, `description`, `usage`,
 `animations`, `constructor`, `class`, `classdesc`, `global`, `namespace` and `kind`.
