@@ -43,6 +43,11 @@ describe('tag definitions', function() {
     return tagDef.transformFn(doc, tag);
   }
 
+  function doDefault(doc, name) {
+    var tagDef = _.find(tagDefs, { name: name });
+    return tagDef.defaultFn(doc);
+  }
+
 
   describe("memberof", function() {
 
@@ -56,18 +61,17 @@ describe('tag definitions', function() {
 
     it("should throw an exception if the tag doesn't exist and docType is 'event', 'method' or 'property'", function() {
       var doc = parseDoc("empty content");
-      var tag = doc.tags.getTag('memberof');
       expect(function() {
         doc.docType = 'event';
-        tagDef.defaultFn(doc, tag);
+        doDefault(doc, 'memberof');
       }).toThrow();
       expect(function() {
         doc.docType = 'property';
-        tagDef.defaultFn(doc, tag);
+        doDefault(doc, 'memberof');
       }).toThrow();
       expect(function() {
         doc.docType = 'method';
-        tagDef.defaultFn(doc, tag);
+        doDefault(doc, 'memberof');
       }).toThrow();
     });
   });
