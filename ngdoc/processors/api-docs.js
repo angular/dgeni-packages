@@ -6,7 +6,7 @@ module.exports = {
   description: 'Compute the various fields for docs in the API area',
   runAfter: ['tags-extracted'],
   init: function(config, injectables) {
-    injectables.value('moduleMap', {});
+    injectables.value('moduleMap', Object.create(null));
   },
   process: function(docs, partialNames, moduleMap) {
 
@@ -48,7 +48,7 @@ module.exports = {
       if ( doc.isMember ) {
         log.debug('child doc found', doc.id, doc.memberof);
 
-        containerDoc = partialNames.getDoc(doc.memberof);
+        var containerDoc = partialNames.getDoc(doc.memberof);
 
         if ( !containerDoc ) {
           log.warn('Missing container document "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);

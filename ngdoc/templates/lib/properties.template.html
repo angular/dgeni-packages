@@ -4,7 +4,7 @@
   {%- for property in doc.properties %}
   <li id="{$ property.name $}">
     <h3>{$ property.name | code $}</h3>
-    <div>{$ property.description | marked $}</div>
+    {$ typeInfo(property) $}
   </li>
   {% endfor -%}
 </ul>

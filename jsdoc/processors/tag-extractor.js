@@ -1,10 +1,10 @@
 var log = require('winston');
 var _ = require('lodash');
-var extractTagsFactory = require('dgeni/lib/utils/extract-tags');
+var extractTagsFactory = require('../lib/extract-tags');
 
 var extractTags;
 var plugin = module.exports = {
-  name: 'doctrine-tag-extractor',
+  name: 'tag-extractor',
   runAfter: ['extracting-tags'],
   runBefore: ['tags-extracted'],
   description:

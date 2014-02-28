@@ -1,8 +1,6 @@
 var _ = require('lodash');
 var log = require('winston');
 var path = require('canonical-path');
-var trimIndentation = require('dgeni/lib/utils/trim-indentation');
-var code = require('dgeni/lib/utils/code');
 var templateFolder, deployments;
 
 
@@ -74,7 +72,7 @@ module.exports = {
   runAfter: ['adding-extra-docs'],
   runBefore: ['extra-docs-added'],
   init: function(config, injectables) {
-    exampleNames = {};
+    exampleNames = Object.create(null);
 
     deployments = config.get('deployment.environments');
     if ( !deployments ) {

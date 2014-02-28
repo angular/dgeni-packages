@@ -2,7 +2,7 @@ var _ = require('lodash');
 var log = require('winston');
 var path = require('canonical-path');
 var trimIndentation = require('dgeni/lib/utils/trim-indentation');
-var code = require('dgeni/lib/utils/code');
+var marked = require('dgeni/lib/utils/marked');
 
 var EXAMPLE_REGEX = /<example([^>]*)>([\S\s]+?)<\/example>/g;
 var ATTRIBUTE_REGEX = /\s*([^=]+)\s*=\s*(?:(?:"([^"]+)")|(?:'([^']+)'))/g;
@@ -12,7 +12,7 @@ var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
 var outputFolder;
 
 function extractAttributes(attributeText) {
-  var attributes = {};
+  var attributes = Object.create(null);
   attributeText.replace(ATTRIBUTE_REGEX, function(match, prop, val1, val2){
     attributes[prop] = val1 || val2;
   });
@@ -20,7 +20,7 @@ function extractAttributes(attributeText) {
 }
 
 function extractFiles(exampleText) {
-  var files = {};
+  var files = Object.create(null);
   exampleText.replace(FILE_REGEX, function(match, attributesText, contents) {
     var file = extractAttributes(attributesText);
     if ( !file.name ) {
@@ -68,13 +68,19 @@ function generateExampleDirective(example) {
 
   // Write each of the files as a runnable-example-file directive
   _.forEach(example.files, function(file) {
-    html += '  <div class="runnable-example-file"';
+    html += '<div class="runnable-example-file"';
     _.forEach(_.omit(file, ['fileContents']), function(value, key) {
       html += ' ' + key + '="' + value + '"';
     });
-    html += '>\n';
-    html += code(file.fileContents, false, file.language) + '\n';
-    html += '  </div>\n';
+    html += '>\n\n';
+    
+    // We need to convert the code as markdown to ensure that it is HTML encoded
+    var code = '```' + (file.language || '') + '\n' + file.fileContents + '\n```\n\n';
+    // We must wrap the rendered HTML code in a div to ensure that it doesn't get parsed as markdown
+    // a second time later.
+    html += '\n\n<div>\n' + marked(code) + '\n</div>\n\n';
+
+    html += '</div>\n';
   });
 
   // Write out the iframe that will host the runnable example
@@ -96,7 +102,7 @@ module.exports = {
   runBefore: ['parsing-tags'],
   init: function(config, injectables) {
     // Reset the unique name map
-    exampleNames = {};
+    exampleNames = Object.create(null);
 
     injectables.value('examples', []);
 

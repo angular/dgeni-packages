@@ -4,13 +4,14 @@ module.exports = function(config) {
   
   config.append('processing.processors', [
     require('./processors/doc-extractor'),
-    require('./processors/doctrine-tag-parser'),
-    require('./processors/doctrine-tag-extractor'),
+    require('./processors/tag-parser'),
+    require('./processors/tag-extractor'),
     require('./processors/nunjucks-renderer'),
+    require('./processors/escaped-comments'),
     require('./processors/write-files')
   ]);
   config.append('processing.tagDefinitions', require('./tag-defs'));
-
+  
   config.append('rendering.filters', [
     require('./rendering/filters/dash-case'),
     require('./rendering/filters/first-line'),

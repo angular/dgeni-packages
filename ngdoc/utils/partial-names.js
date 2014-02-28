@@ -79,7 +79,7 @@ function _getPartialNames(codeNameParts) {
  * A map of partial names to docs
  */
 function PartialNames(docs) {
-  this.map = {};
+  this.map = Object.create(null);
   that = this;
   _.forEach(docs, function(doc) {
     that.addDoc(doc);
