@@ -43,7 +43,7 @@ var TYPE_EXPRESSION_START = /\{[^@]/;
     }
 
     tag.description = (description.substring(0, start) + description.substring(position+1)).trim();
-    tag.typeExpression = description.slice(start+1, position).trim();
+    tag.typeExpression = description.slice(start+1, position).trim().replace('\\}', '}').replace('\\{', '{');
 
     tag.type = catharsis.parse(tag.typeExpression, {jsdoc: true});
     tag.typeList = getTypeStrings(tag.type);

@@ -15,6 +15,20 @@ describe("typeProcessor", function() {
     tags = new TagCollection();
   });
 
+  it("should cope with nested braces", function() {
+    var tag = new Tag(tagDef, 'someTag', '  {{a: number, b: string, c}} \n   paramName - Some description', 0);
+    tags.addTag(tag);
+    typeProcessor(tags);
+    expect(tag.typeExpression).toEqual('{a: number, b: string, c}');
+  });
+
+  it("should cope with escaped braces", function() {
+    var tag = new Tag(tagDef, 'someTag', '  {weirdObject."with\\}AnnoyingProperty"} \n   paramName - Some description', 0);
+    tags.addTag(tag);
+    typeProcessor(tags);
+    expect(tag.typeExpression).toEqual('weirdObject."with}AnnoyingProperty"');
+  });
+
   it("should extract the trimmed typeExpression from the description", function() {
     var tag = new Tag(tagDef, 'someTag', '  { Function|Array<String>= } \n   paramName - Some description', 0);
     tags.addTag(tag);
