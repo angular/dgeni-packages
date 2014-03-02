@@ -1,3 +1,8 @@
+## 0.3.1 03/02/2014
+
+* fix(tagParser): don't break on bad-tags  560eff7b
+
+
 ## 0.3.0 02/28/2014
 
 * feat(tagParser): ignore tags inside fenced code blocks   09fb7d64
