@@ -34,10 +34,13 @@ function extractName(tag) {
  * Process the name information in the tags
  * @param  {TagCollection} tags The collection of tags to process
  */
-module.exports = function(tags) {
-  _.forEach(tags.tags, function(tag) {
-    if ( tag.tagDef.canHaveName ) {
+module.exports = function(tag) {
+  if ( tag.tagDef.canHaveName ) {
+    try {
       extractName(tag);
+    } catch(e) {
+      tag.errors = tag.errors || [];
+      tag.errors.push(e);
     }
-  });
+  }
 };

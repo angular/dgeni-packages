@@ -33,6 +33,14 @@ module.exports = function tagParserFactory(tagDefinitions, tagProcessors) {
     var inCode = false;   // Are we inside a fenced, back-ticked, code block
     var tags = new TagCollection();        // Contains all the tags that have been found
 
+
+    var storeTag = function(tag) {
+      _.forEach(tagProcessors, function(tagProcessor) {
+        tagProcessor(tag);
+      });
+      tags.addTag(tag);
+    };
+
     // Extract the description block
     do {
       line = lines[lineNumber];
@@ -69,7 +77,7 @@ module.exports = function tagParserFactory(tagDefinitions, tagProcessors) {
       // We ignore tags if we are in a code block
       match = TAG_MARKER.exec(line);
       if ( !inCode && match && tagDefMap[match[1]] ) {
-        tags.addTag(current);
+        storeTag(current);
         current = new Tag(tagDefMap[match[1]], match[1], match[2], startingLine + lineNumber);
       } else {
         current.description = current.description ? (current.description + '\n' + line) : line;
@@ -78,12 +86,8 @@ module.exports = function tagParserFactory(tagDefinitions, tagProcessors) {
       lineNumber += 1;
     }
     if ( current ) {
-      tags.addTag(current);
+      storeTag(current);
     }
-
-    _.forEach(tagProcessors, function(tagProcessor) {
-      tagProcessor(tags);
-    });
 
     return tags;
   };

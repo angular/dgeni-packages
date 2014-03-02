@@ -4,15 +4,21 @@ var tagParserFactory = require('../lib/tagParser');
 var tagProcessors = require('../lib/tagProcessors');
 
 function formatBadTagErrorMessage(doc) {
-  var message = 'Bad tags found in doc "' + doc.id + '" from file "' + doc.file + '" line ' + doc.startingLine + '\n';
+  var id = (doc.id || doc.name);
+  id = id ? '"' + id + '" ' : '';
+  var message = 'Invalid tags found in doc, starting at line ' + doc.startingLine + ', from file "' + doc.file + '"\n';
 
   _.forEach(doc.tags.badTags, function(badTag) {
-    var title = badTag.title || '<missing>';
-    var description =
-      badTag.name ||
-      (_.isString(badTag.description) ? (badTag.description.substr(0, 20) + '...') : '<missing>');
+    //console.log(badTag);
+    var description = (_.isString(badTag.description) && (badTag.description.substr(0, 20) + '...'));
+    if ( badTag.name ) {
+      description = badTag.name + ' ' + description;
+    }
+    if ( badTag.typeExpression ) {
+      description = '{' + badTag.typeExpression + '} ' + description;
+    }
 
-    message += '  - Bad tag: "' + title + '" - "' + description + '"\n';
+    message += 'Line: ' + badTag.startingLine + ': @' + badTag.tagName + ' ' + description + '\n';
     _.forEach(badTag.errors, function(error) {
       message += '    * ' + error + '\n';
     });

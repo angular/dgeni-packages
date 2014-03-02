@@ -1,7 +1,25 @@
-var _ = require('lodash');
-var log = require('winston');
+// Much of this code was inspired by or simply copied from the JSDOC project.
+// See https://github.com/jsdoc3/jsdoc/blob/c9b0237c12144cfa48abe5fccd73ba2a1d46553a/lib/jsdoc/tag/type.js
+
 var catharsis = require('catharsis');
 var TYPE_EXPRESSION_START = /\{[^@]/;
+
+
+/**
+ * Process the type information in the tags
+ * @param  {TagCollection} tags The collection of tags to process
+ */
+module.exports = function(tag) {
+  try {
+    if ( tag.tagDef.canHaveType ) {
+      extractTypeExpression(tag);
+    }
+  } catch(e) {
+    tag.errors = tag.errors || [];
+    tag.errors.push(e);
+  }
+};
+
 
 /**
  * Extract a type expression from the tag text.
@@ -52,25 +70,6 @@ var TYPE_EXPRESSION_START = /\{[^@]/;
     }
   }
 }
-
-
-/**
- * Process the type information in the tags
- * @param  {TagCollection} tags The collection of tags to process
- */
-module.exports = function(tags) {
-  _.forEach(tags.tags, function(tag) {
-    try {
-      if ( tag.tagDef.canHaveType ) {
-        extractTypeExpression(tag);
-      }
-    } catch(e) {
-      log.error('Error processing tag type expression in "' + tag.tagName + '", at line ' + tag.startingLine);
-      throw e;
-    }
-  });
-};
-
 
 /** @private */
 function getTypeStrings(parsedType) {
