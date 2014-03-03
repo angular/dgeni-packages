@@ -54,7 +54,7 @@
       {% for component in componentGroup.components %}
       <tr>
         <td>{$ component.id | link(component.name, component) $}</td>
-        <td>{$ component.description | firstLine | marked $}</td>
+        <td>{$ component.description | firstParagraph | marked $}</td>
       </tr>
       {% endfor %}
     </table>
