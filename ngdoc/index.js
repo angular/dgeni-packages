@@ -9,13 +9,15 @@ module.exports = function(config) {
   config.append('source.extractors', require('./extractors/ngdoc'));
   
   config.append('processing.tagDefinitions', require('./tag-defs'));
+  config.append('processing.inlineTagDefinitions', [
+    require('./inline-tag-defs/link')
+  ]);
 
   config.append('processing.processors', [
     require('./processors/partial-names'),
     require('./processors/filter-ngdocs'),
     require('./processors/api-docs'),
-    require('./processors/component-groups-generate'),
-    require('./processors/links')
+    require('./processors/component-groups-generate')
   ]);
 
   config.prepend('rendering.templateFolders', path.resolve(packagePath, 'templates'));
