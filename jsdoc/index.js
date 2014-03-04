@@ -8,8 +8,10 @@ module.exports = function(config) {
     require('./processors/tag-extractor'),
     require('./processors/nunjucks-renderer'),
     require('./processors/escaped-comments'),
+    require('./processors/inline-tags'),
     require('./processors/write-files')
   ]);
+  
   config.append('processing.tagDefinitions', require('./tag-defs'));
   
   config.append('rendering.filters', [
