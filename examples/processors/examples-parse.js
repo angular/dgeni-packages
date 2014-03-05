@@ -31,6 +31,7 @@ function extractFiles(exampleText) {
     file.fileContents = trimIndentation(contents);
     file.language = path.extname(file.name).substr(1);
     file.type = file.type || file.language || 'file';
+    file.attributes = _.omit(file, ['fileContents']);
 
     // Store this file information
     files[file.name] = file;
@@ -38,62 +39,16 @@ function extractFiles(exampleText) {
   return files;
 }
 
-var exampleNames;
-function uniqueName(name) {
-  if ( exampleNames[name] ) {
+var uniqueName = function(container, name) {
+  if ( container[name] ) {
     var index = 1;
-    while(exampleNames[name + index]) {
+    while(container[name + index]) {
       index += 1;
     }
     name = name + index;
   }
-  exampleNames[name] = true;
   return name;
-}
-
-function generateExampleDirective(example) {
-
-  var html = '';
-
-    // Be aware that we need these extra new lines here or marked will not realise that the <div>
-  // above is HTML and wrap each line in a <p> - thus breaking the HTML
-  html += '\n\n';
-  
-  // Write out the runnable-example directive
-  html += '<div class="runnable-example"';
-  _.forEach(_.omit(example, ['files', 'doc']), function(value, key) {
-    html += ' ' + key + '="' + value + '"';
-  });
-  html += '>\n';
-
-  // Write each of the files as a runnable-example-file directive
-  _.forEach(example.files, function(file) {
-    html += '<div class="runnable-example-file"';
-    _.forEach(_.omit(file, ['fileContents']), function(value, key) {
-      html += ' ' + key + '="' + value + '"';
-    });
-    html += '>\n\n';
-    
-    // We need to convert the code as markdown to ensure that it is HTML encoded
-    var code = '```' + (file.language || '') + '\n' + file.fileContents + '\n```\n\n';
-    // We must wrap the rendered HTML code in a div to ensure that it doesn't get parsed as markdown
-    // a second time later.
-    html += '\n\n<div>\n' + marked(code) + '\n</div>\n\n';
-
-    html += '</div>\n';
-  });
-
-  // Write out the iframe that will host the runnable example
-  html += '<iframe class="runnable-example-frame" src="' + example.outputFolder + '/index.html" name="' + example.id + '"></iframe>\n';
-
-  html += '</div>';
-
-  // Be aware that we need these extra new lines here or marked will not realise that the <div>
-  // above is HTML and wrap each line in a <p> - thus breaking the HTML
-  html += '\n\n';
-  
-  return html;
-}
+};
 
 module.exports = {
   name: 'examples-parse',
@@ -102,9 +57,9 @@ module.exports = {
   runBefore: ['parsing-tags'],
   init: function(config, injectables) {
     // Reset the unique name map
-    exampleNames = Object.create(null);
+    examples = Object.create(null);
 
-    injectables.value('examples', []);
+    injectables.value('examples', examples);
 
     outputFolder = config.get('processing.examples.outputFolder', 'examples');
   },
@@ -113,15 +68,18 @@ module.exports = {
     _.forEach(docs, function(doc) {
       doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
         var example = extractAttributes(attributeText);
+        example.attributes = _.omit(example, ['files', 'doc']);
+        var id = uniqueName(examples, 'example-' + (example.name || 'example'));
         example.files = extractFiles(exampleText);
-        example.id = 'example-' + uniqueName(example.name || 'example');
+        example.id = id;
         example.doc = doc;
         example.outputFolder = path.join(outputFolder, example.id);
         
         // store the example information for later
-        examples.push(example);
+        log.debug('Storing example', id);
+        examples[id] = example;
 
-        return generateExampleDirective(example);
+        return '{@runnableExample ' + id + '}';
       });
     });
 
