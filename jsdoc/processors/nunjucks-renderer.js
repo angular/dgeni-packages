@@ -30,7 +30,7 @@ var plugin = module.exports = {
 
     // Lets use {$ $} for nunjucks interpolation rather than {{ }}, which conflicts with AngularJS
     env = new nunjucks.Environment(new nunjucks.FileSystemLoader(config.rendering.templateFolders, true),
-      { tags: { variableStart: '{$', variableEnd: '$}' } }
+      config.get('rendering.nunjucks.config', {})
     );
 
 
