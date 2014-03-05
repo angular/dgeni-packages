@@ -18,17 +18,18 @@ module.exports = {
     return Q.all(_.map(docs, function(doc) {
 
       if ( !doc.outputPath ) {
-        console.log(doc);
-        log.error('Invalid document "' + doc.id + ', ' + doc.docType + '" - this document has no outputPath.');
+        log.debug('Document "' + doc.id + ', ' + doc.docType + '" has no outputPath.');
+      } else {
+
+        var outputFile = path.resolve(outputFolder, doc.outputPath);
+
+        log.silly('writing file', outputFile);
+        return writer.writeFile(outputFile, doc.renderedContent).then(function() {
+          log.debug('written file', outputFile);
+          return outputFile;
+        });
+
       }
-
-      var outputFile = path.resolve(outputFolder, doc.outputPath);
-
-      log.silly('writing file', outputFile);
-      return writer.writeFile(outputFile, doc.renderedContent).then(function() {
-        log.debug('written file', outputFile);
-        return outputFile;
-      });
     }));
   }
 };
