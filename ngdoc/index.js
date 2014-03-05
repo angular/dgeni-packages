@@ -4,6 +4,10 @@ var basePackage = require('../jsdoc');
 
 module.exports = function(config) {
 
+  config.merge('rendering.nunjucks.config.tags', {
+    variableStart: '{$',
+    variableEnd: '$}'
+  });
   config = basePackage(config);
 
   config.append('source.extractors', require('./extractors/ngdoc'));
