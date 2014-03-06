@@ -8,6 +8,10 @@ module.exports = function(config) {
     require('./processors/examples-generate'),
   ]);
 
+  config.append('processing.inlineTagDefinitions', [
+    require('./inline-tag-defs/runnableExample')
+  ]);
+
   config.set('processing.examples.commonFiles', {
     scripts: [],
     stylesheets: []

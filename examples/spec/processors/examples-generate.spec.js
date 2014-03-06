@@ -32,7 +32,7 @@ describe("examples-generate processor", function() {
     docs = [
       { file: 'a.b.js' }
     ];
-    examples = [
+    examples = { 'a.b.c':
       {
         id: 'a.b.c',
         doc: docs[0],
@@ -45,7 +45,7 @@ describe("examples-generate processor", function() {
           'app.spec.js': { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' }
         }
       }
-    ];
+    };
 
     plugin.process(docs, examples);
 
@@ -91,5 +91,9 @@ describe("examples-generate processor", function() {
       { path : '../dep2.js' },
       jasmine.objectContaining({ path: 'app.js'})
     ]);
+  });
+
+  it("should add a runnableExampleDoc for each example", function() {
+    var runnableExampleDocs = _.filter(docs, { docType: 'runnableExample' });
   });
 });

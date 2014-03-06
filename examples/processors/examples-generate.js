@@ -65,14 +65,25 @@ function createFileDoc(example, file) {
   return fileDoc;
 }
 
+function createRunnableExampleDoc(example) {
+  var exampleDoc = {
+    id: example.id + '-runnableExample',
+    docType: 'runnableExample',
+    file: example.doc.file,
+    startingLine: example.doc.startingLine,
+    example: example
+  };
+  return exampleDoc;
+}
 
 module.exports = {
   name: 'examples-generate',
-  description: 'Search the documentation for examples that need to be extracted',
+  description: 'Create doc objects of the various things that need to be rendered for an example.\n' +
+               'This includes the files that will be run in an iframe, the code that will be injected' +
+               'into the HTML pages and the protractor test files',
   runAfter: ['adding-extra-docs'],
   runBefore: ['extra-docs-added'],
   init: function(config, injectables) {
-    exampleNames = Object.create(null);
 
     deployments = config.get('deployment.environments');
     if ( !deployments ) {
@@ -82,17 +93,19 @@ module.exports = {
     templateFolder = config.get('processing.examples.templateFolder', 'examples');
   },
   process: function(docs, examples) {
-    _.forEach(examples, function(example) {
+    _.forOwn(examples, function(example) {
 
       var stylesheets = [];
       var scripts = [];
 
-      // We don't want to create a file for index.html, since that will be covered by the exampleDoc
+      // The index file is special, see createExampleDoc()
       example.indexFile = example.files['index.html'];
-      delete example.files['index.html'];
 
       // Create a new document for each file of the example
-      _.forEach(example.files, function(file) {
+      _(example.files)
+      // We don't want to create a file for index.html, see createExampleDoc()
+      .omit('index.html')
+      .forEach(function(file) {
 
         var fileDoc = createFileDoc(example, file);
         docs.push(fileDoc);
@@ -105,11 +118,17 @@ module.exports = {
         }
       });
 
-      // Create a new document for the example (for each deployment)
+      // Create an index.html document for the example (one for each deployment type)
       _.forEach(deployments, function(deployment) {
         var exampleDoc = createExampleDoc(example, deployment, stylesheets, scripts);
         docs.push(exampleDoc);
       });
+
+      // Create the doc that will be injected into the website as a runnable example
+      var runnableExampleDoc = createRunnableExampleDoc(example);
+      docs.push(runnableExampleDoc);
+      example.runnableExampleDoc = runnableExampleDoc;
+
     });
   }
 };
