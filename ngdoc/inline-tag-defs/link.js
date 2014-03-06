@@ -1,5 +1,3 @@
-var _ = require('lodash');
-var log = require('winston');
 var INLINE_LINK = /(\S+)(?:\s+(.+))?/;
 
 module.exports = {
@@ -15,14 +13,10 @@ module.exports = {
         var linkInfo = partialNames.getLink(uri, title);
 
         if ( !linkInfo.valid ) {
-          log.warn('Error processing link "' + uri + '" for "' + doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine + ':\n' + linkInfo.error);
-          linkInfo = {
-            url: uri,
-            title: title || uri
-          };
+          throw new Error(linkInfo.error);
         }
         
-        return _.template('<a href="${url}">${title}</a>', linkInfo);
+        return '<a href="' + linkInfo.url + '">' + linkInfo.title + '</a>';
       });
     };
   }

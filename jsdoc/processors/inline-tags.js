@@ -73,7 +73,12 @@ module.exports = {
               return handler(doc, tagName, tagDescription);
 
             } catch(e) {
-              log.error('Error running inline tag handler for inline tag "' + match + '" for "' + doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine + '\n' + e.stack);
+              throw new Error('There was a problem running the @' + tagName +
+                          ' inline tag handler for ' + match + '\n' +
+                          'Doc: ' + doc.id + '\n' +
+                          'File: ' + doc.file + '\n' +
+                          'Line: ' + doc.startingLine + '\n' +
+                          'Message: \n' + e.message);
             }
           
           } else {
