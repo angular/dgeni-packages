@@ -4,6 +4,7 @@ var log = require('winston');
 module.exports = {
   name: 'filter-ngdocs',
   runAfter: ['tags-parsed'],
+  runBefore: ['extracting-tags'],
   process: function(docs) {
     var docCount = docs.length;
     docs = _.filter(docs, function(doc) {
