@@ -35,7 +35,7 @@ function extractName(tag) {
  * @param  {TagCollection} tags The collection of tags to process
  */
 module.exports = function(tag) {
-  if ( tag.tagDef.canHaveName ) {
+  if ( tag.tagDef && tag.tagDef.canHaveName ) {
     try {
       extractName(tag);
     } catch(e) {

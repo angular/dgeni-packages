@@ -27,7 +27,7 @@ module.exports = function tagParserFactory(tagDefinitions, tagProcessors) {
   return function tagParser(content, startingLine) {
     var lines = content.split(END_OF_LINE);
     var lineNumber = 0;
-    var line, match;
+    var line, match, tagDef;
     var descriptionLines = [];
     var current;          // The current that that is being extracted
     var inCode = false;   // Are we inside a fenced, back-ticked, code block
@@ -50,12 +50,12 @@ module.exports = function tagParserFactory(tagDefinitions, tagProcessors) {
       }
 
       // We ignore tags if we are in a code block
-      if ( !inCode ) {
-        match = TAG_MARKER.exec(line);
-        if ( match && tagDefMap[match[1]] ) {
-          current = new Tag(tagDefMap[match[1]], match[1], match[2], startingLine + lineNumber);
-          break;
-        }
+      match = TAG_MARKER.exec(line);
+      tagDef = match && tagDefMap[match[1]];
+      if ( !inCode && match && ( !tagDef || !tagDef.ignore ) ) {
+        // Only store tags that are unknown or not ignored
+        current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
+        break;
       }
 
       lineNumber += 1;
@@ -76,9 +76,10 @@ module.exports = function tagParserFactory(tagDefinitions, tagProcessors) {
 
       // We ignore tags if we are in a code block
       match = TAG_MARKER.exec(line);
-      if ( !inCode && match && tagDefMap[match[1]] ) {
+      tagDef = match && tagDefMap[match[1]];
+      if ( !inCode && match && (!tagDef || !tagDef.ignore) ) {
         storeTag(current);
-        current = new Tag(tagDefMap[match[1]], match[1], match[2], startingLine + lineNumber);
+        current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
       } else {
         current.description = current.description ? (current.description + '\n' + line) : line;
       }

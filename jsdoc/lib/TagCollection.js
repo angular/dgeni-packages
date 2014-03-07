@@ -17,7 +17,7 @@ TagCollection.prototype = {
    * @param {Tag} tag The tag to add
    */
   addTag: function(tag) {
-    if ( !tag.errors ) {
+    if ( !tag.errors && tag.tagDef ) {
       this.tags.push(tag);
 
       var tags = this.tagsByName[tag.tagDef.name] || [];

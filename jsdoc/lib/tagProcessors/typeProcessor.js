@@ -11,7 +11,7 @@ var TYPE_EXPRESSION_START = /\{[^@]/;
  */
 module.exports = function(tag) {
   try {
-    if ( tag.tagDef.canHaveType ) {
+    if ( tag.tagDef && tag.tagDef.canHaveType ) {
       extractTypeExpression(tag);
     }
   } catch(e) {

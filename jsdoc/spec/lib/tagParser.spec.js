@@ -1,6 +1,6 @@
 var tagParserFactory = require('../../lib/tagParser');
 
-describe("simple-tag-parser", function() {
+describe("tagParser", function() {
   describe("tagParserFactory", function() {
     it("should accept a set of tag-definitions and return a configured tagParser", function() {
       var tagDefinitions = [];
@@ -10,11 +10,12 @@ describe("simple-tag-parser", function() {
   });
 
   describe("tagParser", function() {
-    it("should only return tags that are passed in as definitions", function() {
+    it("should only return tags that are not ignored", function() {
       var tagDefinitions = [
         { name: 'id' },
         { name: 'description' },
-        { name: 'param' }
+        { name: 'param' },
+        { name: 'other-tag', ignore: true }
       ];
       var tagParser = tagParserFactory(tagDefinitions);
       var content = 'Some initial content\n@id some.id\n' +
@@ -25,7 +26,7 @@ describe("simple-tag-parser", function() {
       expect(tags.tags[0]).toEqual(
         jasmine.objectContaining({ tagName: 'id', description: 'some.id', startingLine: 11 })
       );
-        // Not that the description tag contains what appears to be another tag but it was not defined so
+        // Not that the description tag contains what appears to be another tag but it was ignored so
         // is consumed into the description tag!
       expect(tags.tags[1]).toEqual(
         jasmine.objectContaining({ tagName: 'description', description: 'Some description\n@other-tag Some other tag', startingLine: 12})
