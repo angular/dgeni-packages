@@ -1,11 +1,11 @@
 var plugin = require('../../processors/examples-generate');
-var configurer = require('dgeni/lib/utils/config');
+var Config = require('dgeni/lib/utils/config').Config;
 var _ = require('lodash');
 
 describe("examples-generate processor", function() {
   var docs, examples;
   beforeEach(function() {
-    var config = configurer.load();
+    var config = _.extend(Config);
     config.set('processing.examples.templateFolder', 'examples');
     config.set('deployment.environments', [
       {
