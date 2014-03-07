@@ -3,7 +3,7 @@ var _ = require('lodash');
 module.exports = {
   name: 'component-groups-generate',
   description: 'Add new component-groups docs',
-  runAfter: ['adding-extra-docs'],
+  runAfter: ['adding-extra-docs', 'api-docs'],
   runBefore: ['extra-docs-added'],
   process: function(docs, moduleMap) {
     _.forEach(moduleMap, function(module) {

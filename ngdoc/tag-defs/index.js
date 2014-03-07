@@ -51,54 +51,7 @@ module.exports = [
   },
 
 
-  {
-    name: 'id',
-    defaultFn: function(doc) {
-      var parts, partialFolder = 'partials';
-      if ( doc.area === 'api' && doc.docType !== 'overview' ) {
-        if ( doc.docType === 'module' ) {
-          doc.id = _.template('module:${name}', doc);
-          doc.outputPath = _.template('${area}/${name}/index.html', doc);
-          doc.path = _.template('${area}/${name}', doc);
-
-        } else if ( doc.name.indexOf('#' ) === -1 ) {
-          doc.id = _.template('module:${module}.${docType}:${name}', doc);
-          doc.outputPath = _.template('${area}/${module}/${docType}/${name}.html', doc);
-          doc.path = _.template('${area}/${module}/${docType}/${name}', doc);
-
-        } else {
-          doc.id = doc.name;
-          doc.isMember = true;
-          parts = doc.id.split('#');
-          doc.memberof = parts[0];
-          doc.name = parts[1];
-          // This is a member of another doc so it doesn't need an output path
-        }
-      } else {
-        doc.id = doc.fileName;
-
-        if ( doc.docType === 'error' ) {
-          // Parse out the error info from the id
-          doc.id = doc.name;
-          parts = doc.id.split(':');
-          doc.namespace = parts[0];
-          doc.name = parts[1];
-        }
-
-        doc.path = path.join(path.dirname(doc.file));
-        if ( doc.fileName !== 'index' ) {
-          doc.path += '/' + doc.fileName;
-        }
-        doc.outputPath = doc.path + '.html';
-      }
-
-      if ( doc.outputPath ) {
-        doc.outputPath = partialFolder + '/' + doc.outputPath;
-      }
-      
-      return doc.id;
-    }
-  },
+  { name: 'id' },
 
 
   {

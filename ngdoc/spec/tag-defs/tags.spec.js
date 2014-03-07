@@ -125,37 +125,6 @@ describe('tag definitions', function() {
     });
   });
 
-  describe("id", function() {
-
-    describe("(for api docs)", function() {
-      it("should compute the id from other properties", function() {
-        var doc = {
-          docType: 'service',
-          name: '$http',
-          area: 'api',
-          module: 'ngRoute'
-        };
-        expect(doDefault(doc, 'id')).toEqual('module:ngRoute.service:$http');
-      });
-
-      it("should extract the container and member from the name if it is a memberOf type", function() {
-        var doc = {
-          docType: 'method',
-          name: '$http#get',
-          area: 'api',
-          module: 'ng'
-        };
-
-        expect(doDefault(doc, 'id')).toEqual('$http#get');
-        expect(doc.name).toEqual('get');
-        expect(doc.memberof).toEqual('$http');
-        expect(doc.isMember).toEqual(true);
-      });
-
-    });
-  });
-
-
 
   describe("restrict", function() {
 

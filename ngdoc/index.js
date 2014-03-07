@@ -20,6 +20,7 @@ module.exports = function(config) {
   config.append('processing.processors', [
     require('./processors/partial-names'),
     require('./processors/filter-ngdocs'),
+    require('./processors/compute-id'),
     require('./processors/api-docs'),
     require('./processors/component-groups-generate')
   ]);

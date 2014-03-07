@@ -4,32 +4,52 @@ var log = require('winston');
 module.exports = {
   name: 'api-docs',
   description: 'Compute the various fields for docs in the API area',
-  runAfter: ['partial-names'],
+  runAfter: ['compute-id', 'partial-names'],
   runBefore: ['compute-path'],
   init: function(config, injectables) {
     injectables.value('moduleMap', Object.create(null));
   },
   process: function(docs, partialNames, moduleMap) {
+    var parts;
 
-    // Identify the modules and add some meta data to each
+    // Compute some extra fields for docs in the API area
     _.forEach(docs, function(doc) {
-      if ( doc.docType === 'module' ) {
 
-        moduleMap[doc.name] = doc;
+      if ( doc.area === 'api' && doc.docType !== 'overview' ) {
 
-        // Create a place to store references to the module's components
-        doc.components = [];
+        if ( doc.docType === 'module' ) {
 
-        // Compute the package name and filename for the module
-        var match = /^ng(.*)/.exec(doc.name);
-        if ( match ) {
-          var packageName = match[1].toLowerCase();
-          if ( packageName ) { packageName = '-' + packageName; }
-          doc.packageName = 'angular' + packageName;
-          doc.packageFile = doc.packageName + '.js';
+          doc.outputPath = _.template('${area}/${name}/index.html', doc);
+          doc.path = _.template('${area}/${name}', doc);
+
+          moduleMap[doc.name] = doc;
+
+          // Create a place to store references to the module's components
+          doc.components = [];
+
+          // Compute the package name and filename for the module
+          var match = /^ng(.*)/.exec(doc.name);
+          if ( match ) {
+            var packageName = match[1].toLowerCase();
+            if ( packageName ) { packageName = '-' + packageName; }
+            doc.packageName = 'angular' + packageName;
+            doc.packageFile = doc.packageName + '.js';
+          }
+
+        } else {
+
+          // Is this doc a member of another doc?
+          if ( doc.name.indexOf('#' ) !== -1 ) {
+            doc.isMember = true;
+            parts = doc.id.split('#');
+            doc.memberof = parts[0];
+            doc.name = parts[1];
+          }
+
+          doc.outputPath = _.template('${area}/${module}/${docType}/${name}.html', doc);
+          doc.path = _.template('${area}/${module}/${docType}/${name}', doc);
         }
       }
-
 
     });
 
@@ -78,11 +98,16 @@ module.exports = {
         var serviceId = doc.id.replace(/provider:/, 'service:').replace(/Provider$/, '');
         var serviceDoc = partialNames.getDoc(serviceId);
 
-        if ( serviceDoc ) {
+        if ( !serviceDoc ) {
+          log.warn('Missing service "' + serviceId + '" for provider "' + doc.id + '"');
+        } else if ( _.isArray(serviceDoc) ) {
+          log.warn('Ambiguous service name "' + serviceId + '" for provider "' + doc.id + '"\n' +
+            _.reduce(doc, function(msg, doc) {
+              return msg + '\n  "' + doc.id + '"';
+            }, 'Matching docs: '));
+        } else {
           doc.serviceDoc = serviceDoc;
           serviceDoc.providerDoc = doc;
-        } else {
-          log.warn('Missing service "' + serviceId + '" for provider "' + doc.id + '"');
         }
       }
     });
