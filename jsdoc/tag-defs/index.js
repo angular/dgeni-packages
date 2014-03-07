@@ -4,8 +4,7 @@ var _ = require('lodash');
 
 module.exports = [
   {
-    name: 'name',
-    required: true
+    name: 'name'
   },
   
 
@@ -64,6 +63,8 @@ module.exports = [
 
   { name: 'module' },
   { name: 'description' },
+  { name: 'private' },
+  { name: 'see'},
   { name: 'usage' },
   { name: 'animations' },
   { name: 'constructor' },
