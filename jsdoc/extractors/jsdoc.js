@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var jsParser = require('esprima');
+var walk = require('../lib/walk');
 var LEADING_STAR = /^\s*\*[^\S\n]?/gm;
 
 module.exports = {
@@ -35,7 +36,8 @@ module.exports = {
           endingLine: comment.loc.end.line,
           file: filePath,
           basePath: basePath,
-          content: text
+          content: text,
+          code: walk.findNodeAfter(ast, comment.range[1]+1)
         };
 
       })

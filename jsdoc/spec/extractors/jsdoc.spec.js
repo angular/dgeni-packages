@@ -23,5 +23,13 @@ describe("js doc extractor", function() {
       var docs = extractor.processFile('some/file.js', '/** Some jsdoc comment */\n// A line comment\n\/* A non-jsdoc block comment*/');
       expect(docs.length).toEqual(1);
     });
+
+    it("should find the next code item following the comment and attach it to the doc", function() {
+      var docs = extractor.processFile('some/file.js', srcJsContent);
+      expect(docs.length).toEqual(3);
+      expect(docs[0].code.node.type).toEqual('FunctionDeclaration');
+      expect(docs[1].code.node.type).toEqual('ExpressionStatement');
+      expect(docs[2].code.node.type).toEqual('ReturnStatement');
+    });
   });
 });
