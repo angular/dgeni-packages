@@ -4,7 +4,8 @@ var log = require('winston');
 module.exports = {
   name: 'api-docs',
   description: 'Compute the various fields for docs in the API area',
-  runAfter: ['tags-extracted'],
+  runAfter: ['partial-names'],
+  runBefore: ['compute-path'],
   init: function(config, injectables) {
     injectables.value('moduleMap', Object.create(null));
   },
@@ -29,10 +30,7 @@ module.exports = {
         }
       }
 
-      // Only track this doc if it is not going to be merged as a member of another doc
-      if ( !doc.isMember ) {
-        partialNames.addDoc(doc);
-      }
+
     });
 
 
