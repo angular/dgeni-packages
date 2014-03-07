@@ -125,6 +125,32 @@ PartialNames.prototype.addDoc = function(doc) {
 };
 
 
+PartialNames.prototype.removeDoc = function(doc) {
+
+  var map = this.map;
+
+  _.forEach(doc.partialNames, function(partialName) {
+
+    var matchedDocs = map[partialName];
+    
+    if ( matchedDocs === doc ) {
+      // There is only one doc and it is the one we want to remove
+      delete map[partialName];
+    } else if ( _.isArray(matchedDocs) ) {
+      // We have an array of docs so we need to remove the culprit
+      var index = matchedDocs.indexOf(doc);
+      if ( index !== -1 ) {
+        matchedDocs.splice(index, 1);
+      }
+      if ( matchedDocs.length === 1 ) {
+        map[partialName] = matchedDocs[0];
+      }
+    }
+
+  });
+};
+
+
 PartialNames.prototype.getDoc = function(partialName) {
   return this.map[partialName];
 };
