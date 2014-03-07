@@ -1,4 +1,6 @@
-var plugin = require('../../processors/component-groups-generate');
+var _ = require('lodash');
+var processor = require('../../processors/component-groups-generate');
+var Config = require('dgeni/lib/utils/config').Config;
 
 describe("component-groups processor", function() {
   it("should create a new doc for each group of components (by docType) in each module", function() {
@@ -16,7 +18,10 @@ describe("component-groups processor", function() {
       ]
     }];
 
-    plugin.process(docs, modules);
+    config = _.extend(Config);
+    config.set('rendering.contentsFolder', 'partials');
+    processor.init(config);
+    processor.process(docs, modules);
 
     expect(docs.length).toEqual(2);
   });

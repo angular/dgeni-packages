@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var log = require('winston');
+var path = require('canonical-path');
+var partialsPath;
 
 module.exports = {
   name: 'api-docs',
@@ -8,6 +10,10 @@ module.exports = {
   runBefore: ['compute-path'],
   init: function(config, injectables) {
     injectables.value('moduleMap', Object.create(null));
+    partialsPath = config.get('rendering.contentsFolder');
+    if ( !partialsPath ) {
+      throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
+    }
   },
   process: function(docs, partialNames, moduleMap) {
     var parts;
@@ -19,7 +25,7 @@ module.exports = {
 
         if ( doc.docType === 'module' ) {
 
-          doc.outputPath = _.template('${area}/${name}/index.html', doc);
+          doc.outputPath = path.join(partialsPath, _.template('${area}/${name}/index.html', doc));
           doc.path = _.template('${area}/${name}', doc);
 
           moduleMap[doc.name] = doc;
@@ -46,7 +52,7 @@ module.exports = {
             doc.name = parts[1];
           }
 
-          doc.outputPath = _.template('${area}/${module}/${docType}/${name}.html', doc);
+          doc.outputPath = path.join(partialsPath, _.template('${area}/${module}/${docType}/${name}.html', doc));
           doc.path = _.template('${area}/${module}/${docType}/${name}', doc);
         }
       }

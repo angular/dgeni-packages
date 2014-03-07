@@ -1,7 +1,17 @@
 var processor = require('../../processors/api-docs');
 var PartialNames = require('../../utils/partial-names').PartialNames;
+var Config = require('dgeni/lib/utils/config').Config;
+var di = require('di');
+var _ = require('lodash');
 
 describe("api-docs processor", function() {
+  var config;
+
+  beforeEach(function() {
+    config = _.extend(Config);
+    config.set('rendering.contentsFolder', 'partials');
+    processor.init(config, new di.Module());
+  });
 
   it("should add module docs to the module map", function() {
     var doc1 = {

@@ -7,6 +7,7 @@ describe("compute-path doc processor", function() {
 
   beforeEach(function() {
     config = _.extend(Config);
+    config.set('rendering.contentsFolder', 'partials');
     processor.init(config);
   });
 
@@ -23,9 +24,9 @@ describe("compute-path doc processor", function() {
     processor.process([doc1, doc2]);
 
     expect(doc1.path).toEqual('a/b/c/foo');
-    expect(doc1.outputPath).toEqual('contents/a/b/c/foo.html');
+    expect(doc1.outputPath).toEqual('partials/a/b/c/foo.html');
     expect(doc2.path).toEqual('x/y/z');
-    expect(doc2.outputPath).toEqual('contents/x/y/z.html');
+    expect(doc2.outputPath).toEqual('partials/x/y/z.html');
   });
 
   it("should not change the path if one is already present", function() {
@@ -38,7 +39,7 @@ describe("compute-path doc processor", function() {
     processor.process([doc]);
     
     expect(doc.path).toEqual('a/b/c');
-    expect(doc.outputPath).toEqual('contents/a/b/c.html');
+    expect(doc.outputPath).toEqual('partials/a/b/c.html');
   });
 
 
@@ -55,15 +56,4 @@ describe("compute-path doc processor", function() {
     expect(doc.outputPath).toEqual('a/b/c/foo.bar');
   });
 
-  it("should prepend the configured contents folder to the outputPath", function() {
-    var doc = {
-      file: 'x/y/z/foo.bar',
-      fileName: 'foo'
-    };
-    config.set('rendering.contentsFolder', 'different/path');
-    processor.init(config);
-    processor.process([doc]);
-
-    expect(doc.outputPath).toEqual('different/path/x/y/z/foo.html');
-  });
 });
