@@ -6,6 +6,7 @@ module.exports = function(config) {
     require('./processors/doc-extractor'),
     require('./processors/tag-parser'),
     require('./processors/tag-extractor'),
+    require('./processors/compute-path'),
     require('./processors/nunjucks-renderer'),
     require('./processors/escaped-comments'),
     require('./processors/inline-tags'),
