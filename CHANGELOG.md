@@ -1,4 +1,15 @@
-## 0.4.0 03/06/2014
+## v0.5.0 03/07/2014
+
+**New Features**
+
+* feat(jsdoc extractor): add next code node to the doc  22a59651
+
+**Bug Fixes**
+
+* fix(jsdoc extractor): ignore non-jsdoc comments  50ad83d8
+* fix(inline link tag): throw error if link is invalid   07af2f42
+
+## v0.4.0 03/06/2014
 
 **New Features**
 
@@ -23,14 +34,14 @@ iterated over the examples then things like `forEach` should still just
 work.  But you can no longer access the examples by index, e.g.
 `examples[0]` will return undefined rather than the first example.
 
-## 0.3.1 03/02/2014
+## v0.3.1 03/02/2014
 
 **Bug Fixes**
 
 * fix(tagParser): don't break on bad-tags  560eff7b
 
 
-## 0.3.0 02/28/2014
+## v0.3.0 02/28/2014
 
 **New Features**
 
@@ -51,13 +62,13 @@ work.  But you can no longer access the examples by index, e.g.
 * fix(typeProcessor): attach optional property to tag if type is optional  0188305f
 
 
-## 0.2.4 02/25/2014
+## v0.2.4 02/25/2014
 
 **Bug Fixes**
 
 * fix(doctrine-tag-parser): don't rethrow error if tag type is bad  7ac46af6
 
-## 0.2.3 02/25/2014
+## v0.2.3 02/25/2014
 
 **Bug Fixes**
 
@@ -70,19 +81,19 @@ work.  But you can no longer access the examples by index, e.g.
 * fix(examples-generate): ensure each index file gets content c4918e05
 * fix(ngdoc/members): render member docs correctly  c7b98a67
 
-## 0.2.1 02/20/2014
+## v0.2.1 02/20/2014
 
 **Bug Fixes**
 
 * fix(example-generation): commonFiles should get scripts from the 'scripts' object  3b41c91a
 
-## 0.2.0 02/20/2014
+## v0.2.0 02/20/2014
 
 **New Features**
 
 * feat(example-generation): generate examples for multiple deployments  82ba9054
 
-## 0.1.0 02/20/2014
+## v0.1.0 02/20/2014
 
 **Bug Fixes**
 
