@@ -10,7 +10,7 @@ module.exports = {
       // Parse out the uri and title
       return tagDescription.replace(INLINE_LINK, function(match, uri, title) {
 
-        var linkInfo = partialNames.getLink(uri, title);
+        var linkInfo = partialNames.getLink(uri, title, doc);
 
         if ( !linkInfo.valid ) {
           throw new Error(linkInfo.error);

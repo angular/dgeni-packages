@@ -161,7 +161,7 @@ PartialNames.prototype.getDoc = function(partialName) {
  * @param  {String} title An optional title to return in the link information
  * @return {Object}       The link information
  */
-PartialNames.prototype.getLink = function(url, title) {
+PartialNames.prototype.getLink = function(url, title, currentDoc) {
   var linkInfo = {
     url: url,
     type: 'url',
@@ -174,6 +174,17 @@ PartialNames.prototype.getLink = function(url, title) {
   }
 
   var doc = this.map[url];
+
+  if ( _.isArray(doc) && currentDoc ) {
+    // If there is more than one item with this name then first
+    // try to filter them by the currentDoc's area
+    doc = _.filter(doc, function(doc) {
+      return doc.area === currentDoc.area;
+    });
+    if ( doc.length === 1 ) {
+      doc = doc[0];
+    }
+  }
 
   if ( _.isArray(doc) ) {
 

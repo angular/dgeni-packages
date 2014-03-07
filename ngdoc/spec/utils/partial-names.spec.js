@@ -82,5 +82,28 @@ describe("PartialNames", function() {
       });
 
     });
+
+    it("should error if there are multiple docs with the same name", function() {
+      var partialNames = new util.PartialNames();
+      var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick' };
+      var doc2 = { id: 'module:ngTouch.directive:ngClick', name: 'ngClick', path: 'api/ngTouch/directive/ngClick' };
+      partialNames.addDoc(doc1);
+      partialNames.addDoc(doc2);
+      expect(partialNames.getLink('ngClick').error).toMatch(/Ambiguous link:/);
+    });
+
+    it("should filter ambiguous documents by area before failing", function() {
+      var partialNames = new util.PartialNames();
+      var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick', area: 'api' };
+      var doc2 = { id: 'ngClick', name: 'ngClick', path: 'guide/ngClick', area: 'guide' };
+      partialNames.addDoc(doc1);
+      partialNames.addDoc(doc2);
+      expect(partialNames.getLink('ngClick', 'ngClick Guide', doc2)).toEqual({
+        type: 'doc',
+        valid: true,
+        url: 'guide/ngClick',
+        title: 'ngClick Guide'
+      });
+    });
   });
 });
