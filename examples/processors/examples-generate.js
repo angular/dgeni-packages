@@ -76,6 +76,28 @@ function createRunnableExampleDoc(example) {
   return exampleDoc;
 }
 
+function createManifestDoc(example) {
+
+  var files = _(example.files)
+    .omit('index.html')
+    .map(function(file) {
+      return file.name;
+    })
+    .value();
+
+  var manifestDoc = {
+    id: example.id + '-manifest',
+    docType: 'example-manifest',
+    template: path.join(templateFolder, 'manifest.template.json'),
+    file: example.doc.file,
+    startingLine: example.doc.startingLine,
+    example: example,
+    files: files,
+    outputPath: outputPath(example, 'manifest.json')
+  };
+  return manifestDoc;
+}
+
 module.exports = {
   name: 'examples-generate',
   description: 'Create doc objects of the various things that need to be rendered for an example.\n' +
@@ -128,6 +150,9 @@ module.exports = {
       var runnableExampleDoc = createRunnableExampleDoc(example);
       docs.push(runnableExampleDoc);
       example.runnableExampleDoc = runnableExampleDoc;
+
+      // Create the manifest that will be sent to Plunker
+      docs.push(createManifestDoc(example));
 
     });
   }

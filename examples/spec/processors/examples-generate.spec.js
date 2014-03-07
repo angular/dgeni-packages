@@ -95,5 +95,12 @@ describe("examples-generate processor", function() {
 
   it("should add a runnableExampleDoc for each example", function() {
     var runnableExampleDocs = _.filter(docs, { docType: 'runnableExample' });
+    expect(runnableExampleDocs.length).toEqual(1);
+  });
+
+  it("should add a manifest doc for each example", function() {
+    var manifestDocs = _.filter(docs, { docType: 'example-manifest' });
+    expect(manifestDocs.length).toEqual(1);
+
   });
 });
