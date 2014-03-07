@@ -1,3 +1,35 @@
+## v0.6.0 03/07/2014
+
+**New Features**
+
+* feat(tagParser): only ignore tags that are defined with ignore property 59492bea
+* feat(jsdoc tags): improve jsdoc tag coverage  d8eb2b43
+* feat(PartialNames): getLink disambiguates docs by area  6da98dd5
+* feat(jsdoc/compute-paths): add new processor  23cc829a
+* feat(partial-names): add removeDoc method 746a0bc7
+* test(link handler): fix test, since the handler now throws on error a15053ab
+
+**Bug Fixes**
+
+* fix(compute-paths): ensure contentsFolder is applied correctly  301877fc
+* fix(filter-ngdocs processor): run before tags are extracted a090cf49
+
+**Refactorings**
+
+* refact(ngdoc/id tag def): move functionality to its own doc processor 268ac3bd
+* refact(partial-name processor): move adding docs to own processor 8684226b
+
+**BREAKING CHANGE**
+
+* If you relied on undefined tags being quietly ignored
+your processing will now fail.  You should add new tag defintions for
+all tags that you wish to ignore of the form:
+
+```
+{ name: 'tag-to-ignore', ignore: true }
+```
+
+
 ## v0.5.0 03/07/2014
 
 **New Features**
