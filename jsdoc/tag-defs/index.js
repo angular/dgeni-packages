@@ -63,6 +63,7 @@ module.exports = [
 
   { name: 'module' },
   { name: 'description' },
+  { name: 'deprecated' },
   { name: 'private' },
   { name: 'see'},
   { name: 'usage' },
