@@ -3,11 +3,15 @@ var _ = require('lodash');
 /**
  * A collection of tags that can be looked up by their tagDefinition.
  */
-var TagCollection = function() {
+var TagCollection = function(tags) {
   this.tags = [];
   this.tagsByName = Object.create(null);
   this.badTags = [];
   this.description = '';
+
+  _.forEach(tags, function(tag) {
+    this.addTag(tag);
+  }, this);
 };
 
 TagCollection.prototype = {

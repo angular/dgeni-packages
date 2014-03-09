@@ -15,6 +15,13 @@ describe("TagCollection", function() {
     expect(tags.description).toEqual('');
   });
 
+  it("should add the tags provided to the constructor", function() {
+    spyOn(TagCollection.prototype, 'addTag');
+    new TagCollection([{}, {}, {}]);
+    expect(TagCollection.prototype.addTag).toHaveBeenCalled();
+    expect(TagCollection.prototype.addTag.calls.length).toEqual(3);
+  });
+
   describe("addTag", function() {
     it("should add a good tag to the tags and tagsByName properties", function() {
       var goodTag = { tagDef: { name: 'param'} };
