@@ -2,6 +2,7 @@ var _ = require('lodash');
 var log = require('winston');
 var path = require('canonical-path');
 var partialsPath;
+var options;
 
 module.exports = {
   name: 'api-docs',
@@ -14,7 +15,14 @@ module.exports = {
     if ( !partialsPath ) {
       throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
     }
+    options = _.assign({
+      outputPath: '${area}/${module}/${docType}/${name}.html',
+      path: '${area}/${module}/${docType}/${name}',
+      moduleOutputPath: '${area}/${name}/index.html',
+      modulePath: '${area}/${name}'
+    }, config.get('processing.api-docs', {}));
   },
+
   process: function(docs, partialNames, moduleMap) {
     var parts;
 
@@ -25,8 +33,8 @@ module.exports = {
 
         if ( doc.docType === 'module' ) {
 
-          doc.outputPath = path.join(partialsPath, _.template('${area}/${name}/index.html', doc));
-          doc.path = _.template('${area}/${name}', doc);
+          doc.outputPath = path.join(partialsPath, _.template(options.moduleOutputPath, doc));
+          doc.path = _.template(options.modulePath, doc);
 
           moduleMap[doc.name] = doc;
 
@@ -52,8 +60,8 @@ module.exports = {
             doc.name = parts[1];
           }
 
-          doc.outputPath = path.join(partialsPath, _.template('${area}/${module}/${docType}/${name}.html', doc));
-          doc.path = _.template('${area}/${module}/${docType}/${name}', doc);
+          doc.outputPath = path.join(partialsPath, _.template(options.outputPath, doc));
+          doc.path = _.template(options.path, doc);
         }
       }
 
