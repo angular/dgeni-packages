@@ -1,3 +1,11 @@
+## v0.7.0 03/11/2014
+
+**New Features**
+
+* feat(TagCollection): add an array of Tags via the constructor 7c1cca1a
+* feat(jsdoc/tag-defs): add deprecated tag  0f3a1949
+* feat(examples-generate): create manifest.json file for Plunker  1849ec49
+
 ## v0.6.0 03/07/2014
 
 **New Features**
