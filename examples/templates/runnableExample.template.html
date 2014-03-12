@@ -2,7 +2,9 @@
    is HTML and wrap each line in a <p> - thus breaking the HTML #}
 
 
-<div class="runnable-example" {% for attrName, attrValue in doc.example.attributes %}
+<div class="runnable-example"
+    path="{$ doc.example.outputFolder $}"
+    {%- for attrName, attrValue in doc.example.attributes %}
     {$ attrName $}="{$ attrValue $}"{% endfor %}>
 
  {% for fileName, file in doc.example.files %}
