@@ -1,5 +1,12 @@
 ## v0.7.0 03/11/2014
 
+**Minor Features**
+feat(api-docs): add configuration for paths  8ddcf647
+feat(runnableExample template): provide the path to the example  353eef6e
+
+
+## v0.7.0 03/11/2014
+
 **New Features**
 
 * feat(TagCollection): add an array of Tags via the constructor 7c1cca1a
