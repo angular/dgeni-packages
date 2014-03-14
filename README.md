@@ -52,17 +52,13 @@ Parse the `<example>` tags from the content, generating new docs that will be co
 files that can be loaded by the application and used, for example, in live in-place demos of the
 examples and e2e testing.
 
-* `module` -
-Some docs that represent a module.  The processor will compute the package name for the module (e.g.
-angular or angular-sanitize).  It also collects up all documents that belong to the module and
-attaches them to the module doc in the `components` property.
-
-* `paths` -
-This processor computes the URL to the document and the path to the final output file for the
-document.
-
-* `service-provider-mapping` - relates documents about angular services to their corresponding
-angular service provider document.
+* `api-docs` -
+This processor runs a bunch of computations that are specifically related to docs for API components.
+In particular, it will compute the package name for the module (e.g.
+angular or angular-sanitize, it collects up all documents that belong to the module and
+attaches them to the module doc in the `components` property, it computes the URL path to the document
+in the docs app and the outputPath to the final output file, it relates documents about angular
+services to their corresponding angular service provider document.
 
 This package also provides a set of templates for generating an HTML file for each document: api,
 directive, error, filter function, input, module, object, overview, provider, service, type and a
