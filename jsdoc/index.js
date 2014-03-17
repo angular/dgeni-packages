@@ -1,6 +1,6 @@
 module.exports = function(config) {
 
-  config.append('source.extractors', require('./extractors/js'));
+  config.append('source.extractors', require('./extractors/jsdoc'));
   
   config.append('processing.processors', [
     require('./processors/doc-extractor'),
