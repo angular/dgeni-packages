@@ -17,7 +17,7 @@ var plugin = module.exports = {
       throw new Error('Invalid configuration: You must provide a basePath in the configuration object');
     }
     if ( !config.rendering || !config.rendering.templateFolders ) {
-      throw new Error('Invalid configuration: You must provide a valid config.rendering object');
+      throw new Error('Invalid configuration: You must provide config.rendering.templateFolders array');
     }
 
     // Resolve the paths to the templates and output folder
