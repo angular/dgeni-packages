@@ -15,7 +15,7 @@
   </script>
   {%- endif %}
 </head>
-<body ng-app="{$ doc.example.module $}">
+<body {% if !doc.example['ng-app-included'] %}ng-app="{$ doc.example.module $}"{% endif %}>
   {$ doc.fileContents $}
 </body>
 </html>
