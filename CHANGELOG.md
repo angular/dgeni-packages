@@ -1,3 +1,10 @@
+## v0.8.1 03/18/2014
+
+**Bug Fixes**
+
+* fix(examples/index.template): nunjucks uses `not` not `!`   e0070e3f
+
+
 ## v0.8.0 03/18/2014
 
 **New Features**
