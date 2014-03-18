@@ -19,3 +19,20 @@ module.exports = function(config) {
   // Add your own configuration here
 };
 ```
+
+Then inside your docs you can markup inline-examples such as:
+
+```
+Some text before the example
+
+<example name="example-name">
+  <file name="index.html">
+    <div>The main HTML for the example</div>
+  </file>
+  <file name="app.js">
+    // Some JavaScript code to be included in the example
+  </file>
+</example>
+
+Some text after the example
+```

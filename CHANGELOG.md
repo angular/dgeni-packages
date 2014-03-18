@@ -1,8 +1,17 @@
-## v0.7.0 03/11/2014
+## v0.8.0 03/18/2014
+
+**New Features**
+
+* feat(examples/index.template): allow ng-app to be defined in the example    9b760c08
+* feat(jsdoc package): use `jsdoc` rather than `js` doc-extractor   72866263
+
+
+## v0.7.1 03/11/2014
 
 **Minor Features**
-feat(api-docs): add configuration for paths  8ddcf647
-feat(runnableExample template): provide the path to the example  353eef6e
+
+* feat(api-docs): add configuration for paths  8ddcf647
+* feat(runnableExample template): provide the path to the example  353eef6e
 
 
 ## v0.7.0 03/11/2014
