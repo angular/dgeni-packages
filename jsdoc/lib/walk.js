@@ -262,7 +262,11 @@
   };
   base.ObjectExpression = function(node, st, c) {
     for (var i = 0; i < node.properties.length; ++i)
-      c(node.properties[i].value, st, "Expression");
+      c(node.properties[i], st);
+  };
+  base.Property = function(node, st, c) {
+    c(node.key, st);
+    c(node.value, st);
   };
   base.FunctionExpression = base.FunctionDeclaration;
   base.SequenceExpression = function(node, st, c) {
