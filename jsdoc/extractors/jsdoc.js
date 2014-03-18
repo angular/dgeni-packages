@@ -37,7 +37,7 @@ module.exports = {
           file: filePath,
           basePath: basePath,
           content: text,
-          code: walk.findNodeAfter(ast, comment.range[1]+1)
+          code: walk.findNodeAfter(ast, comment.range[1])
         };
 
       })
