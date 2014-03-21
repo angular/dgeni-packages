@@ -31,5 +31,10 @@ describe("js doc extractor", function() {
       expect(docs[1].code.node.type).toEqual('ExpressionStatement');
       expect(docs[2].code.node.type).toEqual('ReturnStatement');
     });
+
+    it("should not remove windows new line characters when stripping stars from comments", function() {
+        var docs = extractor.processFile('some/file.js', '/** Some jsdoc comment\r\n* over multiple\r\n* lines\r\n**/');
+        expect(docs[0].content).toEqual('Some jsdoc comment\r\nover multiple\r\nlines');
+    });
   });
 });
