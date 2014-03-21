@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var jsParser = require('esprima');
 var walk = require('../lib/walk');
-var LEADING_STAR = /^\s*\*[^\S\n]?/gm;
+var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
 module.exports = {
   pattern: /\.js$/,
@@ -17,7 +17,7 @@ module.exports = {
 
       .filter(function(comment) {
         // To test for a jsdoc comment (i.e. starting with /** ), we need to check for a leading
-        // star since the parser strips off the first "/*"        
+        // star since the parser strips off the first "/*"
         return comment.type === 'Block' && comment.value.charAt(0) === '*';
       })
 
