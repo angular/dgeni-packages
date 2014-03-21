@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var jsParser = require('esprima');
 var walk = require('../lib/walk');
-var LEADING_STAR = /^\s*\*[^\S\n]?/gm;
+var LEADING_STAR = /[\f\r\t\v\u00A0\u2028\u2029]*^\*[^\S\n]?/gm;
 
 module.exports = {
   pattern: /\.js$/,
