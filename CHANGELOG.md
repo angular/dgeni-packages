@@ -1,3 +1,13 @@
+## v0.8.2 03/22/2014
+
+**Bug Fixes**
+
+* fix(jsdoc/jsdoc-extractor): ensure Windows newlines are respected    7f1e1627
+* fix(jsdoc/jsdoc-extractor): fix off-by-one error    fedcf6b1
+* fix(jsdoc/lib/walk): also walk the keys of properties   4a8ae60d
+* fix(jsdoc/nunjucks-renderer): improve error message   554c7afd
+
+
 ## v0.8.1 03/18/2014
 
 **Bug Fixes**

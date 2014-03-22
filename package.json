@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "node ./node_modules/jasmine-node/bin/jasmine-node ngdoc/spec jsdoc/spec examples/spec",
@@ -53,6 +53,7 @@
   "contributors": [
     "Peter Bacon Darwin <pete@bacondarwin.com>",
     "Andy Joslin <andytjoslin@gmail.com>",
-    "Julie <ju.ralph@gmail.com>"
+    "Julie <ju.ralph@gmail.com>",
+    "Kevin Rowe <kevinrowe@outlook.com>"
   ]
 }
