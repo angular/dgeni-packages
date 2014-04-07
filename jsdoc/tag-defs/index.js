@@ -17,7 +17,7 @@ module.exports = [
     },
     transformFn: function(doc, tag) {
       if ( !(doc.docType === 'event' || doc.docType === 'property' || doc.docType === 'method') ) {
-        throw new Error('"@'+ tag.name +'" tag found on non-'+ doc.docTyep +' document in file "' + doc.file + '" at line ' + doc.startingLine);
+        throw new Error('"@'+ tag.name +'" tag found on non-'+ doc.docType +' document in file "' + doc.file + '" at line ' + doc.startingLine);
       }
     }
   },
