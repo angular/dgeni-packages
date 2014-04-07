@@ -75,4 +75,5 @@ module.exports = [
   { name: 'namespace' },
   { name: 'kind' },
   { name: 'function' }
+  { name: 'method' }
 ];
