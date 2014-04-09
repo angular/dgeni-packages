@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var path = require('canonical-path');
-var code = require('dgeni/lib/utils/code.js');
+var code = require('../../utils/code.js');
 var log = require('winston');
 
 /**
@@ -100,15 +100,15 @@ PartialNames.prototype.addDoc = function(doc) {
   // This map will be used to match relative links later on
   _.forEach(doc.partialNames, function(partialName) {
 
-    // Try to get a list of docs that match this partialName    
+    // Try to get a list of docs that match this partialName
     var matchedDocs = map[partialName];
-  
+
     if ( !matchedDocs ) {
       // This partial name is not yet used - add it to the map
       map[partialName] = doc;
 
     } else {
-  
+
       if ( _.isArray(matchedDocs) ) {
         // There are already more than one docs associated with this partialName - add this one too
         matchedDocs.push(doc);
@@ -132,7 +132,7 @@ PartialNames.prototype.removeDoc = function(doc) {
   _.forEach(doc.partialNames, function(partialName) {
 
     var matchedDocs = map[partialName];
-    
+
     if ( matchedDocs === doc ) {
       // There is only one doc and it is the one we want to remove
       delete map[partialName];

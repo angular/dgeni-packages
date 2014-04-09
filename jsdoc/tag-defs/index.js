@@ -1,4 +1,3 @@
-var checkProperty = require('dgeni/lib/utils/check-property');
 var path = require('canonical-path');
 var _ = require('lodash');
 
@@ -6,7 +5,7 @@ module.exports = [
   {
     name: 'name'
   },
-  
+
 
   {
     name: 'memberof',

@@ -2,7 +2,7 @@ var _ = require('lodash');
 var logger = require('winston');
 var tagDefs = require('../../tag-defs');
 var tagParser = require('../../../jsdoc/processors/tag-parser');
-var config = require('dgeni/lib/utils/config').Config;
+var config = require('dgeni').Config;
 
 describe('tag definitions', function() {
 
@@ -87,7 +87,7 @@ describe('tag definitions', function() {
       expect(function() {
         doTransform(doc, 'name');
       }).toThrow();
-      
+
     });
 
   });

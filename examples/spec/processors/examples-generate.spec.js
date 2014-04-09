@@ -1,11 +1,11 @@
 var plugin = require('../../processors/examples-generate');
-var Config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 var _ = require('lodash');
 
 describe("examples-generate processor", function() {
   var docs, examples;
   beforeEach(function() {
-    var config = _.extend(Config);
+    var config = new Config();
     config.set('processing.examples.templateFolder', 'examples');
     config.set('deployment.environments', [
       {
@@ -53,7 +53,7 @@ describe("examples-generate processor", function() {
   it("should add an exampleDoc for each example deployment", function() {
     var exampleDocs = _.filter(docs, { docType: 'example' });
     expect(exampleDocs.length).toBe(2);
-    
+
     expect(exampleDocs[0]).toEqual(
       jasmine.objectContaining({ docType: 'example', id:'a.b.c', template: 'examples/index.template.html'})
     );

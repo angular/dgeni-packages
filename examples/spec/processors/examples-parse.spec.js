@@ -1,13 +1,13 @@
 var rewire = require('rewire');
 var plugin = rewire('../../processors/examples-parse');
-var Config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 var log = require('winston');
 var _ = require('lodash');
 
 describe("examples-parse doc processor", function() {
 
   beforeEach(function() {
-    var config = _.extend(Config);
+    var config = new Config();
     var injectables = { value: function() { } };
     log.level = 'error';
     plugin.init(config, injectables);

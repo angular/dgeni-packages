@@ -1,9 +1,12 @@
 var plugin = require('../../processors/tag-parser');
-var config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 
 describe("tag-parser doc processor plugin", function() {
 
+  var config;
+
   beforeEach(function() {
+    config = new Config();
     config.set('processing.tagDefinitions', [
       { name: 'ngdoc' },
       { name: 'description' },
@@ -15,7 +18,7 @@ describe("tag-parser doc processor plugin", function() {
   it("should have name 'tag-parser", function() {
     expect(plugin.name).toEqual('tag-parser');
   });
-  
+
 
   it("should parse the content of the document and attach a tags property to the doc", function() {
     var doc = {

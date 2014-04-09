@@ -1,12 +1,12 @@
 var processor = require('../../processors/compute-path');
 var _ = require('lodash');
-var Config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 var config;
 
 describe("compute-path doc processor", function() {
 
   beforeEach(function() {
-    config = _.extend(Config);
+    config = Config();
     config.set('rendering.contentsFolder', 'partials');
     processor.init(config);
   });
@@ -37,7 +37,7 @@ describe("compute-path doc processor", function() {
     };
 
     processor.process([doc]);
-    
+
     expect(doc.path).toEqual('a/b/c');
     expect(doc.outputPath).toEqual('partials/a/b/c.html');
   });

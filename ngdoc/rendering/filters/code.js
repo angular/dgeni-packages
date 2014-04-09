@@ -1,4 +1,4 @@
-var code = require('dgeni/lib/utils/code');
+var code = require('../../../utils/code');
 module.exports = {
   name: 'code',
   process: function(str, lang) {

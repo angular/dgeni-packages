@@ -1,14 +1,19 @@
-var config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 var processor = require('../../processors/inline-tags');
 var di = require('di');
 var log = require('winston');
 
 describe("inline-tags processor", function() {
-  
+  var config;
+
+  beforeEach(function() {
+    config = new Config();
+  });
+
   it("should be called 'inline-tags'", function() {
     expect(processor.name).toEqual('inline-tags');
   });
-  
+
 
   it("should run after docs are rendered and before writing files", function() {
     expect(processor.runAfter).toEqual(['docs-rendered']);
@@ -58,7 +63,7 @@ describe("inline-tags processor", function() {
 
       // This processor should not return anything.  All its work is done on the docs, in place
       expect(results).toBeUndefined();
-      
+
       // We expect the unhandled tag to be reported
       expect(log.warn).toHaveBeenCalled();
       expect(log.warn.calls[0].args[0]).toMatch(/No handler provided for inline tag "\{@unhandledTag some description\}"/);

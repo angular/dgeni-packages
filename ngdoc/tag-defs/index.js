@@ -1,4 +1,3 @@
-var checkProperty = require('dgeni/lib/utils/check-property');
 var path = require('canonical-path');
 var _ = require('lodash');
 
@@ -26,7 +25,7 @@ module.exports = [
       return name;
     }
   },
-  
+
 
   {
     name: 'area',
@@ -42,7 +41,6 @@ module.exports = [
     name: 'module',
     defaultFn: function(doc) {
       if ( doc.area === 'api' ) {
-        checkProperty(doc, 'file');
         // Calculate the module from the second segment of the file path
         // (the first being the area)
         return path.dirname(doc.file).split('/')[1];
@@ -104,7 +102,7 @@ module.exports = [
   {
     name: 'fullName'
   },
-  
+
   {
     name: 'scope',
     transformFn: function(doc, tag) { return true; }
@@ -114,7 +112,7 @@ module.exports = [
     name: 'priority',
     defaultFn: function(doc) { return 0; }
   },
-  
+
   { name: 'title' },
   { name: 'parent' },
 

@@ -1,13 +1,13 @@
 var rewire = require('rewire');
 var processor = rewire('../../processors/api-docs');
 var PartialNames = require('../../utils/partial-names').PartialNames;
-var Config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 var di = require('di');
 var _ = require('lodash');
 
 describe("api-docs config", function() {
   it("should provide defaults for its options", function() {
-    
+
     var config = _.extend(Config);
     config.set('rendering.contentsFolder', 'partials');
     processor.init(config, new di.Module());
@@ -23,10 +23,10 @@ describe("api-docs config", function() {
   it("should let us override the options", function() {
     var config = _.extend(Config);
     config.set('rendering.contentsFolder', 'partials');
-    
+
     config.set('processing.api-docs.path', 'XXX');
     processor.init(config, new di.Module());
-    
+
     expect(processor.__get__('options.path')).toEqual('XXX');
     expect(processor.__get__('options.moduleOutputPath')).toEqual('${area}/${name}/index.html');
   });
@@ -59,7 +59,7 @@ describe("api-docs processor", function() {
       'ngMock': doc2
     });
   });
-  
+
   it("should extract the container and member from the name if it is a memberOf type", function() {
     var doc = {
       docType: 'method',

@@ -2,12 +2,15 @@ var _ = require('lodash');
 var logger = require('winston');
 var tagDefs = require('../../tag-defs');
 var tagParser = require('../../processors/tag-parser');
-var config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 
 describe('tag definitions', function() {
 
+  var config;
+
   function parseDoc(content) {
     var doc;
+    config = new Config();
     config.set('processing.tagDefinitions', tagDefs);
     tagParser.init(config);
 
@@ -77,7 +80,7 @@ describe('tag definitions', function() {
   });
 
   describe("param", function() {
-    
+
     it("should add param tags to a params array on the doc", function() {
       var doc = parseDoc(
         "@param {string} paramName description of param\n" +

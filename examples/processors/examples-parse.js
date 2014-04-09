@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var log = require('winston');
 var path = require('canonical-path');
-var trimIndentation = require('dgeni/lib/utils/trim-indentation');
-var marked = require('dgeni/lib/utils/marked');
+var trimIndentation = require('../../lib/utils/trim-indentation');
+var marked = require('marked');
 
 var EXAMPLE_REGEX = /<example([^>]*)>([\S\s]+?)<\/example>/g;
 var ATTRIBUTE_REGEX = /\s*([^=]+)\s*=\s*(?:(?:"([^"]+)")|(?:'([^']+)'))/g;
@@ -74,7 +74,7 @@ module.exports = {
         example.id = id;
         example.doc = doc;
         example.outputFolder = path.join(outputFolder, example.id);
-        
+
         // store the example information for later
         log.debug('Storing example', id);
         examples[id] = example;
