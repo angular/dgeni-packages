@@ -1,5 +1,5 @@
-var marked = require('dgeni/lib/utils/marked');
-var trimIndentation = require('dgeni/lib/utils/trim-indentation');
+var marked = require('marked');
+var trimIndentation = require('../../lib/utils/trim-indentation');
 
 module.exports = {
   tags: ['marked'],

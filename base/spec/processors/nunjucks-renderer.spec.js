@@ -1,9 +1,9 @@
 var rewire = require('rewire');
 var plugin = rewire('../../processors/nunjucks-renderer');
-var config = require('dgeni/lib/utils/config').Config;
+var Config = require('dgeni').Config;
 
 describe("doc-renderer", function() {
-  var nunjucks, addFilterSpy, addExtensionSpy, injectables;
+  var nunjucks, addFilterSpy, addExtensionSpy, injectables, config;
 
   beforeEach(function() {
     injectables = jasmine.createSpyObj('injectables', ['value']);
@@ -15,6 +15,7 @@ describe("doc-renderer", function() {
     nunjucks.Environment.prototype.addFilter = addFilterSpy;
     nunjucks.Environment.prototype.addExtension = addExtensionSpy;
 
+    config = new Config();
     config.set('basePath', '/');
     config.set('rendering', {
       templateFolders: ['templates'],
@@ -31,7 +32,7 @@ describe("doc-renderer", function() {
     plugin.init(config, injectables);
 
     expect(nunjucks.Environment).toHaveBeenCalledWith(
-      jasmine.any(nunjucks.FileSystemLoader), 
+      jasmine.any(nunjucks.FileSystemLoader),
       nunjucksConfig
     );
   });

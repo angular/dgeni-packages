@@ -1,4 +1,4 @@
-var marked = require('dgeni/lib/utils/marked');
+var marked = require('marked');
 module.exports = {
   name: 'marked',
   process: function(str) {

@@ -1,10 +1,16 @@
 var _ = require('lodash');
 var path = require('canonical-path');
 var log = require('winston');
+var fs = require('q-io/fs');
 var Q = require('q');
-var writer = require('dgeni/lib/utils/doc-writer');
 
 var outputFolder;
+
+function writeFile(file, content) {
+  return fs.makeTree(fs.directory(file)).then(function() {
+    return fs.write(file, content, 'wb');
+  });
+}
 
 module.exports = {
   name: 'write-files',
@@ -24,12 +30,14 @@ module.exports = {
         var outputFile = path.resolve(outputFolder, doc.outputPath);
 
         log.silly('writing file', outputFile);
-        return writer.writeFile(outputFile, doc.renderedContent).then(function() {
+        return writeFile(outputFile, doc.renderedContent).then(function() {
           log.debug('written file', outputFile);
           return outputFile;
         });
 
       }
-    }));
+    })).then(function() {
+      return docs;
+    });
   }
 };

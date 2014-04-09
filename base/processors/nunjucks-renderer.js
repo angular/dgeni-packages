@@ -3,8 +3,7 @@ var path = require('canonical-path');
 var Q = require('q');
 var nunjucks = require('nunjucks');
 var log = require('winston');
-var writer = require('dgeni/lib/utils/doc-writer');
-var templateFinderFactory = require('dgeni/lib/utils/template-finder');
+var templateFinderFactory = require('../../lib/utils/template-finder');
 var env, helpers;
 
 var plugin = module.exports = {

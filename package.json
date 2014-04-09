@@ -40,7 +40,9 @@
     "q-io": "~1.10.9",
     "nunjucks": "~1.0.1",
     "catharsis": "^0.7.0",
-    "esprima": "^1.0.4"
+    "esprima": "^1.0.4",
+    "change-case": "^2.1.0",
+    "marked": "~0.2.10"
   },
   "peerDependencies": {
     "dgeni": "~0.2.1"
