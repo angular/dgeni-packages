@@ -40,7 +40,7 @@ describe('doc-extractor', function() {
 
   it("should throw an error if the projectPath has not been set", function() {
     expect(function() {
-      plugin.init({ source: { files: [] }});
+      plugin.exports.projectPath[1]({ source: { files: [] }});
     }).toThrow();
   });
 
@@ -48,7 +48,6 @@ describe('doc-extractor', function() {
 
     var config = {
       source: {
-        projectPath: '.',
         extractors: [mockNgDocExtractor, mockJsExtractor],
         files: ['./docs', './src']
       }
@@ -58,8 +57,7 @@ describe('doc-extractor', function() {
       value: function() {}
     };
 
-    plugin.init(config, injectables);
-    plugin.process().then(function(docs) {
+    plugin.process([], '.', config).then(function(docs) {
       expect(docs.length).toEqual(4);
       expect(docs[0]).toEqual({
         file: "docs/a.js",

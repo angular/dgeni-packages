@@ -6,35 +6,34 @@ var _ = require('lodash');
 var glob = require('glob');
 var log = require('winston');
 
-var basePath, extractors, sourceFiles;
-
 module.exports = {
   name: 'file-extractor',
   description: 'A doc processor that extracts documents from files and adds them to the docs array',
   runAfter: ['loading-files'],
   runBefore: ['files-loaded'],
 
-  init: function(config, injectables) {
-
-    basePath = config.basePath || process.cwd();
-    extractors = config.source.extractors;
-    sourceFiles = config.source.files;
-
-    if ( !config.source.projectPath ) {
-      throw new Error('Missing configuration property.\n' +
-          'You must provide the path to the root of the project in `config.source.projectPath`');
-    }
-
-    injectables.value('projectPath', config.source.projectPath);
+  exports: {
+    projectPath: ['factory', function(config) {
+      var projectPath = config.get('source.projectPath');
+      if ( !projectPath ) {
+        throw new Error('Missing configuration property.\n' +
+            'You must provide the path to the root of the project in `config.source.projectPath`');
+      }
+      return projectPath;
+    }]
   },
 
-  process: function(docs, projectPath) {
+  process: function(docs, projectPath, config) {
+
+    var basePath = config.basePath || process.cwd();
+    var extractors = config.source.extractors;
+    var sourceFiles = config.source.files;
 
     return Q.all(_.map(sourceFiles, function(fileInfo) {
       var pattern, files;
 
       // These fileinfo patterns and basePaths should be relative to the basePath but if we don't have
-      // a basepath specified then we just use the config.basePath or current working directory 
+      // a basepath specified then we just use the config.basePath or current working directory
       if ( _.isString(fileInfo) ) {
         fileInfo = { pattern: fileInfo, basePath: basePath };
       } else if ( _.isObject(fileInfo) ) {
@@ -60,7 +59,7 @@ module.exports = {
           if ( extractor.pattern.test(file) ) {
             docPromises.push(qfs.read(path.resolve(fileInfo.basePath, file)).then(function(content) {
               var docs = extractor.processFile(file, content, fileInfo.basePath);
-              
+
               _.forEach(docs, function(doc) {
                 doc.fileName = path.basename(doc.file, '.'+doc.fileType);
                 doc.relativePath = path.relative(projectPath, path.resolve(doc.basePath, doc.file));
@@ -75,7 +74,7 @@ module.exports = {
 
       return Q.all(docPromises).then(_.flatten);
     }))
-    
+
     .then(_.flatten);
   }
 };
