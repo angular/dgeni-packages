@@ -29,7 +29,7 @@ describe("doc-renderer", function() {
     var nunjucksConfig = { foo: 'bar' };
     config.set('rendering.nunjucks.config', nunjucksConfig);
 
-    plugin.init(config, injectables);
+    plugin.exports.templateEngine[1](config);
 
     expect(nunjucks.Environment).toHaveBeenCalledWith(
       jasmine.any(nunjucks.FileSystemLoader),
@@ -44,7 +44,7 @@ describe("doc-renderer", function() {
     config.set('rendering.filters', [dummyFilter]);
     config.set('rendering.tags', [dummyExtension]);
 
-    plugin.init(config, injectables);
+    plugin.exports.templateEngine[1](config);
 
     expect(addFilterSpy).toHaveBeenCalledWith(dummyFilter.name, dummyFilter.process);
     expect(addExtensionSpy).toHaveBeenCalledWith('dummy', dummyExtension);
