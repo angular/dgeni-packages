@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var log = require('winston');
 var tagParserFactory = require('../lib/tagParser');
-var tagProcessors = require('../lib/tagProcessors');
+var defaultTagProcessors = require('../lib/tagProcessors');
 
 function formatBadTagErrorMessage(doc) {
   var id = (doc.id || doc.name);
@@ -27,19 +27,17 @@ function formatBadTagErrorMessage(doc) {
   return message + '\n';
 }
 
-var parseTags;
-
 var plugin = module.exports = {
   name: 'tag-parser',
   description: 'Parse the doc for tags',
   runAfter: ['parsing-tags'],
   runBefore: ['tags-parsed'],
-  init: function(config) {
+  process: function(docs, config) {
+
     var tagDefinitions = config.get('processing.tagDefinitions');
-    tagProcessors = config.get('processing.tagProcessors', tagProcessors);
-    parseTags = tagParserFactory(tagDefinitions, tagProcessors);
-  },
-  process: function(docs) {
+    var tagProcessors = config.get('processing.tagProcessors', defaultTagProcessors);
+    var parseTags = tagParserFactory(tagDefinitions, tagProcessors);
+
     _.forEach(docs, function(doc) {
       try {
         var tags = parseTags(doc.content, doc.startingLine);
