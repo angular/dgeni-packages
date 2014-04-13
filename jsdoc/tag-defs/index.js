@@ -64,7 +64,7 @@ module.exports = [
   { name: 'description' },
   { name: 'deprecated' },
   { name: 'private' },
-  { name: 'see'},
+  { name: 'see', multi: true },
   { name: 'usage' },
   { name: 'animations' },
   { name: 'constructor' },
