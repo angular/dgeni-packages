@@ -73,6 +73,6 @@ module.exports = [
   { name: 'global' },
   { name: 'namespace' },
   { name: 'kind' },
-  { name: 'function' }
+  { name: 'function' },
   { name: 'method' }
 ];
