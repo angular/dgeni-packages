@@ -5,37 +5,6 @@ var Config = require('dgeni').Config;
 var di = require('di');
 var _ = require('lodash');
 
-describe("api-docs config", function() {
-  var config;
-
-  beforeEach(function() {
-    config = new Config();
-  });
-
-  it("should provide defaults for its options", function() {
-
-    config.set('rendering.contentsFolder', 'partials');
-    processor.init(config, new di.Module());
-
-    expect(processor.__get__('options')).toEqual({
-      outputPath: '${area}/${module}/${docType}/${name}.html',
-      path: '${area}/${module}/${docType}/${name}',
-      moduleOutputPath: '${area}/${name}/index.html',
-      modulePath: '${area}/${name}'
-    });
-  });
-
-  it("should let us override the options", function() {
-
-    config.set('rendering.contentsFolder', 'partials');
-
-    config.set('processing.api-docs.path', 'XXX');
-    processor.init(config, new di.Module());
-
-    expect(processor.__get__('options.path')).toEqual('XXX');
-    expect(processor.__get__('options.moduleOutputPath')).toEqual('${area}/${name}/index.html');
-  });
-});
 
 describe("api-docs processor", function() {
   var config;
@@ -43,7 +12,6 @@ describe("api-docs processor", function() {
   beforeEach(function() {
     config = new Config();
     config.set('rendering.contentsFolder', 'partials');
-    processor.init(config, new di.Module());
   });
 
   it("should add module docs to the module map", function() {
@@ -58,7 +26,7 @@ describe("api-docs processor", function() {
       name: 'ngMock'
     };
     var moduleMap = {};
-    processor.process([doc1,doc2], new PartialNames(), moduleMap);
+    processor.process([doc1,doc2], config, new PartialNames(), moduleMap);
     expect(moduleMap).toEqual({
       'ng': doc1,
       'ngMock': doc2
@@ -74,7 +42,7 @@ describe("api-docs processor", function() {
       module: 'ng'
     };
 
-    processor.process([doc], new PartialNames());
+    processor.process([doc], config, new PartialNames());
 
     expect(doc.name).toEqual('get');
     expect(doc.memberof).toEqual('$http');
@@ -92,7 +60,7 @@ describe("api-docs processor", function() {
         components: []
       }
     };
-    processor.process([doc], new PartialNames(), moduleMap);
+    processor.process([doc], config, new PartialNames(), moduleMap);
 
     expect(moduleMap['ng'].components[0]).toBe(doc);
   });

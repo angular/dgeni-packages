@@ -1,30 +1,29 @@
 var _ = require('lodash');
 var log = require('winston');
 var path = require('canonical-path');
-var partialsPath;
-var options;
 
 module.exports = {
   name: 'api-docs',
   description: 'Compute the various fields for docs in the API area',
   runAfter: ['compute-id', 'partial-names'],
   runBefore: ['compute-path'],
-  init: function(config, injectables) {
-    injectables.value('moduleMap', Object.create(null));
-    partialsPath = config.get('rendering.contentsFolder');
+  exports: {
+    moduleMap: ['value', Object.create(null)]
+  },
+  process: function(docs, config, partialNames, moduleMap) {
+    var parts;
+
+    var partialsPath = config.get('rendering.contentsFolder');
     if ( !partialsPath ) {
       throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
     }
-    options = _.assign({
+
+    var options = _.assign({
       outputPath: '${area}/${module}/${docType}/${name}.html',
       path: '${area}/${module}/${docType}/${name}',
       moduleOutputPath: '${area}/${name}/index.html',
       modulePath: '${area}/${name}'
     }, config.get('processing.api-docs', {}));
-  },
-
-  process: function(docs, partialNames, moduleMap) {
-    var parts;
 
     // Compute some extra fields for docs in the API area
     _.forEach(docs, function(doc) {
