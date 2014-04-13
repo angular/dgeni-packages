@@ -2,8 +2,6 @@ var _ = require('lodash');
 var log = require('winston');
 var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
 
-var inlineTagDefinitions;
-
 // We add InlineTagHandler onto the end of the tag name to help prevent naming collisions
 // in the injector
 function handlerId(name) {
@@ -15,7 +13,7 @@ module.exports = {
   description: 'Search the docs for inline tags that need to have content injected',
   runAfter: ['docs-rendered'],
   runBefore: ['writing-files'],
-  init: function(config) {
+  process: function(docs, config, injector) {
 
     // A collection of inline tag definitions.  Each should have, as minimum `name` and `handlerFactory`
     // properties, but also optionally a definition and aliases tags
@@ -26,9 +24,7 @@ module.exports = {
     //   description: 'Handle inline link tags',
     //   aliases: ['codeLink']
     // }
-    inlineTagDefinitions = config.get('processing.inlineTagDefinitions', []);
-  },
-  process: function(docs, injector) {
+    var inlineTagDefinitions = config.get('processing.inlineTagDefinitions', []);
 
     var handlerFactories = {};
 
@@ -39,10 +35,10 @@ module.exports = {
       if ( !definition.handlerFactory ) {
         throw new Error('Invalid configuration: inlineTagDefinition ' + definition.name + ' missing handlerFactory');
       }
-      
-      // Add the 
+
+      // Add the
       handlerFactories[handlerId(definition.name)] = ['factory', definition.handlerFactory];
-      
+
       _.forEach(definition.aliases, function(alias) {
         handlerFactories[handlerId(alias)] = ['factory', definition.handlerFactory];
       });
@@ -54,12 +50,12 @@ module.exports = {
     _.forEach(docs, function(doc) {
 
       if ( doc.renderedContent ) {
-        
+
         // Replace any inline tags found in the rendered content
         doc.renderedContent = doc.renderedContent.replace(INLINE_TAG, function(match, tagName, tagDescription) {
 
           if ( handlerFactories[handlerId(tagName)] ) {
-            
+
             // Get the handler for this tag from the injector
             var handler = injector.get(handlerId(tagName));
 
@@ -80,7 +76,7 @@ module.exports = {
                           'Line: ' + doc.startingLine + '\n' +
                           'Message: \n' + e.message);
             }
-          
+
           } else {
             log.warn('No handler provided for inline tag "' + match + '" for "' + doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);
             return match;

@@ -58,8 +58,7 @@ describe("inline-tags processor", function() {
       config.set('processing.inlineTagDefinitions', [mockInlineTagDefinition]);
 
       // Run the processor
-      processor.init(config);
-      var results = processor.process(docs, injector);
+      var results = processor.process(docs, config, injector);
 
       // This processor should not return anything.  All its work is done on the docs, in place
       expect(results).toBeUndefined();
