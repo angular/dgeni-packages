@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var log = require('winston');
 var path = require('canonical-path');
-var trimIndentation = require('../../lib/utils/trim-indentation');
+var trimIndentation = require('../../utils/trim-indentation');
 var marked = require('marked');
 
 var EXAMPLE_REGEX = /<example([^>]*)>([\S\s]+?)<\/example>/g;
