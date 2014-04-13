@@ -1,5 +1,5 @@
-var trimIndentation = require('dgeni/lib/utils/trim-indentation');
-var code = require('dgeni/lib/utils/code');
+var trimIndentation = require('../../../utils/trim-indentation');
+var code = require('../../../utils/code');
 
 module.exports = {
   tags: ['code'],
