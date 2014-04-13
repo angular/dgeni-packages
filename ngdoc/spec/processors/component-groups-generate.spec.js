@@ -18,7 +18,7 @@ describe("component-groups processor", function() {
       ]
     }];
 
-    config = _.extend(Config);
+    config = new Config();
     config.set('rendering.contentsFolder', 'partials');
     processor.init(config);
     processor.process(docs, modules);

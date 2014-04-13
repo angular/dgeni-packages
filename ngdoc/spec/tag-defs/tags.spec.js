@@ -2,7 +2,7 @@ var _ = require('lodash');
 var logger = require('winston');
 var tagDefs = require('../../tag-defs');
 var tagParser = require('../../../jsdoc/processors/tag-parser');
-var config = require('dgeni').Config;
+var Config = require('dgeni').Config;
 
 describe('tag definitions', function() {
 
@@ -50,6 +50,10 @@ describe('tag definitions', function() {
   }
 
   describe("name", function() {
+
+    beforeEach(function() {
+      config = new Config();
+    });
 
     it("should throw an error if the tag is missing", function() {
       var doc = {

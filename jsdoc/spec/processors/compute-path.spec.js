@@ -6,7 +6,7 @@ var config;
 describe("compute-path doc processor", function() {
 
   beforeEach(function() {
-    config = Config();
+    config = new Config();
     config.set('rendering.contentsFolder', 'partials');
     processor.init(config);
   });

@@ -6,9 +6,14 @@ var di = require('di');
 var _ = require('lodash');
 
 describe("api-docs config", function() {
+  var config;
+
+  beforeEach(function() {
+    config = new Config();
+  });
+
   it("should provide defaults for its options", function() {
 
-    var config = _.extend(Config);
     config.set('rendering.contentsFolder', 'partials');
     processor.init(config, new di.Module());
 
@@ -21,7 +26,7 @@ describe("api-docs config", function() {
   });
 
   it("should let us override the options", function() {
-    var config = _.extend(Config);
+
     config.set('rendering.contentsFolder', 'partials');
 
     config.set('processing.api-docs.path', 'XXX');
@@ -36,7 +41,7 @@ describe("api-docs processor", function() {
   var config;
 
   beforeEach(function() {
-    config = _.extend(Config);
+    config = new Config();
     config.set('rendering.contentsFolder', 'partials');
     processor.init(config, new di.Module());
   });
