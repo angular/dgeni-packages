@@ -3,31 +3,37 @@ var Config = require('dgeni').Config;
 var _ = require('lodash');
 
 describe("examples-generate processor", function() {
-  var docs, examples;
+  var docs, examples, config;
+
   beforeEach(function() {
-    var config = new Config();
-    config.set('processing.examples.templateFolder', 'examples');
-    config.set('deployment.environments', [
-      {
-        name: 'default',
+    config = new Config({
+      processing: {
         examples: {
-          commonFiles: [],
-          dependencyPath: '.'
-        },
-      },
-
-      {
-        name: 'other',
-        examples: {
-          commonFiles: {
-            scripts: [ 'someFile.js', 'someOtherFile.js' ],
-          },
-          dependencyPath: '..'
+          templateFolder: 'examples'
         }
-      }
-    ]);
+      },
+      deployment: {
+        environments: [
+          {
+            name: 'default',
+            examples: {
+              commonFiles: [],
+              dependencyPath: '.'
+            },
+          },
 
-    plugin.init(config, { value: function() { }});
+          {
+            name: 'other',
+            examples: {
+              commonFiles: {
+                scripts: [ 'someFile.js', 'someOtherFile.js' ],
+              },
+              dependencyPath: '..'
+            }
+          }
+        ]
+      }
+    });
 
     docs = [
       { file: 'a.b.js' }
@@ -47,7 +53,7 @@ describe("examples-generate processor", function() {
       }
     };
 
-    plugin.process(docs, examples);
+    plugin.process(docs, examples, config);
 
   });
   it("should add an exampleDoc for each example deployment", function() {

@@ -105,7 +105,7 @@ module.exports = {
                'into the HTML pages and the protractor test files',
   runAfter: ['adding-extra-docs'],
   runBefore: ['extra-docs-added'],
-  init: function(config, injectables) {
+  process: function(docs, examples, config) {
 
     deployments = config.get('deployment.environments');
     if ( !deployments ) {
@@ -113,8 +113,7 @@ module.exports = {
     }
 
     templateFolder = config.get('processing.examples.templateFolder', 'examples');
-  },
-  process: function(docs, examples) {
+
     _.forOwn(examples, function(example) {
 
       var stylesheets = [];
