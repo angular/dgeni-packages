@@ -5,12 +5,11 @@ var log = require('winston');
 var _ = require('lodash');
 
 describe("examples-parse doc processor", function() {
+  var config;
 
   beforeEach(function() {
-    var config = new Config();
-    var injectables = { value: function() { } };
+    config = new Config();
     log.level = 'error';
-    plugin.init(config, injectables);
   });
 
   it("should be called examples", function() {
@@ -20,17 +19,19 @@ describe("examples-parse doc processor", function() {
 
   it("should extract example tags from the doc content", function() {
     var examples = {};
-    plugin.process([
-    {
-      content: 'a b c <example name="bar" moo1="nar1">some example content 1</example> x y z\n' +
-                'a b c <example name="bar" moo2="nar2">some example content 2</example> x y z'
-    },
-    {
-      content: 'j k l \n<example name="value">some content \n with newlines</example> j k l'
-    },
-    {
-      content: '<example name="with-files"><file name="app.js">aaa</file><file name="app.spec.js" type="spec">bbb</file></example>'
-    }], examples);
+    var docs = [
+      {
+        content: 'a b c <example name="bar" moo1="nar1">some example content 1</example> x y z\n' +
+                  'a b c <example name="bar" moo2="nar2">some example content 2</example> x y z'
+      },
+      {
+        content: 'j k l \n<example name="value">some content \n with newlines</example> j k l'
+      },
+      {
+        content: '<example name="with-files"><file name="app.js">aaa</file><file name="app.spec.js" type="spec">bbb</file></example>'
+      }
+    ];
+    plugin.process(docs, examples, config);
     expect(examples['example-bar']).toEqual(jasmine.objectContaining({ name:'bar', moo1:'nar1', id: 'example-bar'}));
     expect(examples['example-bar1']).toEqual(jasmine.objectContaining({ name:'bar', moo2:'nar2', id: 'example-bar1'}));
     expect(examples['example-value']).toEqual(jasmine.objectContaining({ name:'value', id: 'example-value'}));
@@ -48,10 +49,11 @@ describe("examples-parse doc processor", function() {
 
   it("should compute unique ids for each example", function() {
     var examples = [];
-    plugin.process([{
+    var docs = [{
       content: '<example name="bar">some example content 1</example>\n' +
                     '<example name="bar">some example content 2</example>'
-    }], examples);
+    }];
+    plugin.process(docs, examples, config);
     expect(examples['example-bar'].id).toEqual('example-bar');
     expect(examples['example-bar1'].id).toEqual('example-bar1');
   });
@@ -61,7 +63,7 @@ describe("examples-parse doc processor", function() {
       content: 'Some content before <example name="bar">some example content 1</example> and some after'
     };
 
-    plugin.process([doc], []);
+    plugin.process([doc], [], config);
 
     expect(doc.content).toEqual('Some content before {@runnableExample example-bar} and some after');
 

@@ -8,8 +8,6 @@ var EXAMPLE_REGEX = /<example([^>]*)>([\S\s]+?)<\/example>/g;
 var ATTRIBUTE_REGEX = /\s*([^=]+)\s*=\s*(?:(?:"([^"]+)")|(?:'([^']+)'))/g;
 var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
 
-// A holder for all the examples that have been found in the document
-var outputFolder;
 
 function extractAttributes(attributeText) {
   var attributes = Object.create(null);
@@ -55,15 +53,12 @@ module.exports = {
   description: 'Search the documentation for examples that need to be extracted',
   runAfter: ['files-loaded'],
   runBefore: ['parsing-tags'],
-  init: function(config, injectables) {
-    // Reset the unique name map
-    examples = Object.create(null);
-
-    injectables.value('examples', examples);
-
-    outputFolder = config.get('processing.examples.outputFolder', 'examples');
+  exports: {
+    examples: ['value', Object.create(null) ]
   },
-  process: function(docs, examples) {
+  process: function(docs, examples, config) {
+
+    var outputFolder = config.get('processing.examples.outputFolder', 'examples');
 
     _.forEach(docs, function(doc) {
       doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
