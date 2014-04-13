@@ -12,7 +12,7 @@ describe('tag definitions', function() {
     var doc;
     config = new Config();
     config.set('processing.tagDefinitions', tagDefs);
-    tagParser.init(config);
+
 
     if ( _.isString(content) ) {
       doc = {
@@ -24,7 +24,7 @@ describe('tag definitions', function() {
     } else {
       doc = content;
     }
-    tagParser.process([doc]);
+    tagParser.process([doc], config);
     return doc;
   }
 

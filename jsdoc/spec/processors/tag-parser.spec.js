@@ -12,7 +12,6 @@ describe("tag-parser doc processor plugin", function() {
       { name: 'description' },
       { name: 'param', canHaveName: true, canHaveType: true }
     ]);
-    plugin.init(config);
   });
 
   it("should have name 'tag-parser", function() {
@@ -25,7 +24,7 @@ describe("tag-parser doc processor plugin", function() {
       content: 'some content\n@ngdoc directive\n@description Some description info\n@param {function(*)|string|Array.<(function(*)|string)>} abc',
       startingLine: 245
     };
-    plugin.process([doc]);
+    plugin.process([doc], config);
     expect(doc.tags).toBeDefined();
     expect(doc.tags.description).toEqual('some content');
     expect(doc.tags.getTag('ngdoc')).toEqual(jasmine.objectContaining({ tagName: 'ngdoc', description: 'directive' }));
@@ -38,7 +37,8 @@ describe("tag-parser doc processor plugin", function() {
       content: '@param {function(*)|string|Array.<(function(*)|string)>} abc',
       startingLine: 245
     };
-    plugin.process([doc]);
+    debugger;
+    plugin.process([doc], config);
     var tag = doc.tags.getTag('param');
     expect(tag.typeExpression).toEqual('function(*)|string|Array.<(function(*)|string)>');
     expect(tag.type.type).toEqual('TypeUnion');
@@ -66,7 +66,7 @@ describe("tag-parser doc processor plugin", function() {
       content: '@param {string} abc',
       startingLine: 1
     };
-    plugin.process([doc]);
+    plugin.process([doc], config);
     expect(doc.tags.getTag('param').type).toEqual(jasmine.objectContaining(
       { type : 'NameExpression', name : 'string' }));
   });
@@ -76,7 +76,7 @@ describe("tag-parser doc processor plugin", function() {
       content: '@param {string=} abc',
       startingLine: 1
     };
-    plugin.process([doc]);
+    plugin.process([doc], config);
     expect(doc.tags.getTag('param').type).toEqual(jasmine.objectContaining({
       type: 'NameExpression', name: 'string', optional: true
     }));
@@ -87,7 +87,7 @@ describe("tag-parser doc processor plugin", function() {
       content: '@param {function(*)|string|Array.<(function(*)|string)>} abc',
       startingLine: 245
     };
-    plugin.process([doc]);
+    plugin.process([doc], config);
     var tag = doc.tags.getTag('param');
     expect(tag.typeList).toEqual([
       'function(*)',

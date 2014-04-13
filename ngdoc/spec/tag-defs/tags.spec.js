@@ -5,11 +5,16 @@ var tagParser = require('../../../jsdoc/processors/tag-parser');
 var Config = require('dgeni').Config;
 
 describe('tag definitions', function() {
+  var config;
 
-  function parseDoc(content) {
+  beforeEach(function() {
+    config = new Config();
+  });
+
+
+  var parseDoc = function(content) {
     var doc;
     config.set('processing.tagDefinitions', tagDefs);
-    tagParser.init(config);
 
     if ( _.isString(content) ) {
       doc = {
@@ -21,11 +26,11 @@ describe('tag definitions', function() {
     } else {
       doc = content;
     }
-    tagParser.process([doc]);
+    tagParser.process([doc], config);
     return doc;
-  }
+  };
 
-  function checkProperty(prop, name, description, typeList, isOptional, defaultValue, alias) {
+  var checkProperty = function(prop, name, description, typeList, isOptional, defaultValue, alias) {
     expect(prop.name).toEqual(name);
     expect(prop.description).toEqual(description);
     expect(prop.typeList).toEqual(typeList);
@@ -36,24 +41,20 @@ describe('tag definitions', function() {
     }
     expect(prop.defaultValue).toEqual(defaultValue);
     expect(prop.alias).toEqual(alias);
-  }
+  };
 
-  function doTransform(doc, name) {
+  var doTransform = function(doc, name) {
     var tag = doc.tags.getTag(name);
     var tagDef = tag.tagDef;
     return tagDef.transformFn(doc, tag);
-  }
+  };
 
-  function doDefault(doc, name) {
+  var doDefault = function(doc, name) {
     var tagDef = _.find(tagDefs, { name: name });
     return tagDef.defaultFn(doc);
-  }
+  };
 
   describe("name", function() {
-
-    beforeEach(function() {
-      config = new Config();
-    });
 
     it("should throw an error if the tag is missing", function() {
       var doc = {
