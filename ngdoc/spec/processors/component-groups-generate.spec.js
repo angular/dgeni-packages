@@ -20,8 +20,7 @@ describe("component-groups processor", function() {
 
     config = new Config();
     config.set('rendering.contentsFolder', 'partials');
-    processor.init(config);
-    processor.process(docs, modules);
+    processor.process(docs, config, modules);
 
     expect(docs.length).toEqual(2);
   });

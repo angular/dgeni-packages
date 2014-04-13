@@ -1,19 +1,18 @@
 var _ = require('lodash');
 var path = require('canonical-path');
-var partialsPath;
 
 module.exports = {
   name: 'component-groups-generate',
   description: 'Add new component-groups docs',
   runAfter: ['adding-extra-docs', 'api-docs'],
   runBefore: ['extra-docs-added'],
-  init: function(config) {
-    partialsPath = config.get('rendering.contentsFolder');
+  process: function(docs, config, moduleMap) {
+
+    var partialsPath = config.get('rendering.contentsFolder');
     if ( !partialsPath ) {
       throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
     }
-  },
-  process: function(docs, moduleMap) {
+
     _.forEach(moduleMap, function(module) {
 
       _(module.components)
