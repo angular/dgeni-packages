@@ -72,7 +72,7 @@ var plugin = module.exports = {
       try {
         data = _.defaults(Object.create(null), { doc: doc, docs: docs }, extraData, helpers);
         var templateFile = templateFinder(data.doc);
-        doc.renderedContent = env.render(templateFile, data);
+        doc.renderedContent = templateEngine.render(templateFile, data);
       } catch(ex) {
         console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
         throw new Error('Failed to render doc "' + doc.id + '" from file "' + doc.file + '" line ' + doc.startingLine + '\n Error Message follows:\n' + ex.stack);
