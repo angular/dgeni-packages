@@ -22,7 +22,7 @@ module.exports = function(config) {
     require('./processors/write-files')
   ]);
 
-  config.append('rendering.filters', require('rendering/filters/change-case'));
+  config.append('rendering.filters', require('./rendering/filters/change-case'));
 
   config.append('rendering.filters', [
     require('./rendering/filters/first-line'),
