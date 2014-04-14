@@ -7,6 +7,7 @@ module.exports = {
   name: 'compute-path',
   description: 'Compute the path and outputPath for docs that do not already have them',
   runAfter: ['tags-extracted'],
+  runBefore: ['rendering-docs'],
   process: function(docs, config) {
 
     var contentsFolder = config.get('rendering.contentsFolder');
