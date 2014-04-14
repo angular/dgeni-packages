@@ -1,5 +1,5 @@
 var marked = require('marked');
-var trimIndentation = require('../../lib/utils/trim-indentation');
+var trimIndentation = require('../../../utils/trim-indentation');
 
 module.exports = {
   tags: ['marked'],
