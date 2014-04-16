@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.append('source.extractors', require('./extractors/jsdoc'));
 
   config.append('processing.processors', [
-    { name: 'parsing-tags', runAfter: ['files-loaded'], runBefore: ['processing-docs'] },
+    { name: 'parsing-tags', runAfter: ['files-read'], runBefore: ['processing-docs'] },
     { name: 'tags-parsed', runAfter: ['parsing-tags'], runBefore: ['processing-docs'] },
     { name: 'extracting-tags', runAfter: ['tags-parsed'], runBefore: ['processing-docs'] },
     { name: 'tags-extracted', runAfter: ['extracting-tags'], runBefore: ['processing-docs'] }

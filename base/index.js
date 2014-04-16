@@ -1,9 +1,9 @@
 module.exports = function(config) {
 
   var processors =  config.append('processing.processors', [
-    { name: 'loading-files' },
-    { name: 'files-loaded', runAfter: ['loading-files'] },
-    { name: 'processing-docs', runAfter: ['loading-files'] },
+    { name: 'reading-files' },
+    { name: 'files-read', runAfter: ['reading-files'] },
+    { name: 'processing-docs', runAfter: ['files-read'] },
     { name: 'docs-processed', runAfter: ['processing-docs'] },
     { name: 'adding-extra-docs', runAfter: ['docs-processed'] },
     { name: 'extra-docs-added', runAfter: ['adding-extra-docs'] },
@@ -15,8 +15,8 @@ module.exports = function(config) {
 
 
   config.append('processing.processors', [
-    require('./processors/doc-extractor'),
-    require('./processors/name-from-code'),
+    require('./processors/read-files'),
+    require('./processors/code-name'),
     require('./processors/nunjucks-renderer'),
     require('./processors/escaped-comments'),
     require('./processors/write-files')
