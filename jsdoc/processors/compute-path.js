@@ -6,7 +6,7 @@ var path = require('canonical-path');
 module.exports = {
   name: 'compute-path',
   description: 'Compute the path and outputPath for docs that do not already have them',
-  runAfter: ['tags-extracted'],
+  runAfter: ['docs-processed'],
   runBefore: ['rendering-docs'],
   process: function(docs, config) {
 
@@ -16,6 +16,8 @@ module.exports = {
     }
 
     _.forEach(docs, function(doc) {
+      doc.path = doc.path || doc.name || doc.codeName;
+
       if ( !doc.path ) {
         doc.path = path.join(path.dirname(doc.file));
         if ( doc.fileName !== 'index' ) {
