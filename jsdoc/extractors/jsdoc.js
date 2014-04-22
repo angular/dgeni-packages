@@ -29,6 +29,10 @@ module.exports = {
         // Trim off leading and trailing whitespace
         text = text.trim();
 
+        // Extract the information about the code directly after this comment
+        var codeNode = walk.findNodeAfter(ast, comment.range[1]);
+        var codeAncestors = walk.ancestor(ast, codeNode.node);
+
         // Create a doc from this comment
         return {
           fileType: 'js',
@@ -37,7 +41,8 @@ module.exports = {
           file: filePath,
           basePath: basePath,
           content: text,
-          code: walk.findNodeAfter(ast, comment.range[1])
+          codeNode: codeNode,
+          codeAncestors: codeAncestors
         };
 
       })
