@@ -22,7 +22,7 @@ from jsdoc style comments in files.
 * `tag-extractor` - extracts the tags information and converts it to specific properties on
 the documents, based on a set of tag-definitions.  The `jsdoc` package contains definitions for the
 following tags: `name`, `memberof`, `param`, `property`, `returns`, `module`, `description`, `usage`,
-`animations`, `constructor`, `class`, `classdesc`, `global`, `namespace` and `kind`.
+`animations`, `constructor`, `class`, `classdesc`, `global`, `namespace`, `method`, `type` and `kind`.
 * `nunjucks-renderer` - uses the Nunjucks template library to render the documents into files, such
 as HTML or JS, based on templates.
 
