@@ -56,6 +56,14 @@ module.exports = [
   },
 
   {
+    name: 'type',
+    canHaveType: true,
+    transformFn: function(doc, tag) {
+      return tag;
+    }
+  },
+
+  {
     name: 'requires',
     multi: true
   },
