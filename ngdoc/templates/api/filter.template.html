@@ -9,7 +9,7 @@
   {% else %}
     {% code -%}
     {{ {$ doc.name $}_expression | {$ doc.name $}
-      {%- for param in doc.params %} : {$ param.name $}{% endfor -%}
+      {%- for param in doc.params %}{% if not loop.first %} : {$ param.name $}{% endif %}{% endfor -%}
     }}
     {%- endcode %}
   {% endif %}
