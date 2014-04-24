@@ -28,7 +28,11 @@ function findCodeName(node) {
     case 'ObjectExpression':
       return null;
     case 'Program':
-      return null;
+      return node.body[0] ? findCodeName(node.body[0]) : null;
+    case 'VariableDeclaration':
+      return findCodeName(node.declarations[0]);
+    case 'VariableDeclarator':
+      return node.id && node.id.name;
     default:
       log.warn('HELP!');
       log.warn(node);
@@ -37,12 +41,12 @@ function findCodeName(node) {
 }
 
 module.exports = {
-  name: 'name-from-code',
-  runAfter: ['processing-docs'],
-  runBefore: ['docs-processed'],
+  name: 'code-name',
+  runAfter: ['files-read'],
+  runBefore: ['processing-docs'],
   process: function(docs) {
     _.forEach(docs, function(doc) {
-      doc.name = doc.name || findCodeName(doc.code.node);
+      doc.codeName = findCodeName(doc.codeNode.node);
     });
     return docs;
   }

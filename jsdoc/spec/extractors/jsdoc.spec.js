@@ -39,9 +39,9 @@ describe("js doc extractor", function() {
     it("should find the next code item following the comment and attach it to the doc", function() {
       var docs = extractor.processFile('some/file.js', srcJsContent);
       expect(docs.length).toEqual(3);
-      expect(docs[0].code.node.type).toEqual('FunctionDeclaration');
-      expect(docs[1].code.node.type).toEqual('ExpressionStatement');
-      expect(docs[2].code.node.type).toEqual('ReturnStatement');
+      expect(docs[0].codeNode.node.type).toEqual('FunctionDeclaration');
+      expect(docs[1].codeNode.node.type).toEqual('ExpressionStatement');
+      expect(docs[2].codeNode.node.type).toEqual('ReturnStatement');
     });
 
     it("should not remove windows new line characters when stripping stars from comments", function() {

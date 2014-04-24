@@ -51,7 +51,7 @@ var uniqueName = function(container, name) {
 module.exports = {
   name: 'examples-parse',
   description: 'Search the documentation for examples that need to be extracted',
-  runAfter: ['files-loaded'],
+  runAfter: ['files-read'],
   runBefore: ['parsing-tags'],
   exports: {
     examples: ['value', Object.create(null) ]

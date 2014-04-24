@@ -7,10 +7,10 @@ var glob = require('glob');
 var log = require('winston');
 
 module.exports = {
-  name: 'file-extractor',
+  name: 'file-reader',
   description: 'A doc processor that extracts documents from files and adds them to the docs array',
-  runAfter: ['loading-files'],
-  runBefore: ['files-loaded'],
+  runAfter: ['reading-files'],
+  runBefore: ['files-read'],
 
   exports: {
     projectPath: ['factory', function(config) {
