@@ -30,7 +30,7 @@
     "url": "https://github.com/angular/dgeni-packages/issues"
   },
   "dependencies": {
-    "dgeni": "~0.2.1",
+    "dgeni": "~0.3.0",
     "canonical-path": "0.0.2",
     "lodash": "~2.4.1",
     "winston": "~0.7.2",
@@ -46,7 +46,7 @@
     "node-html-encoder": "0.0.2"
   },
   "peerDependencies": {
-    "dgeni": "~0.2.1"
+    "dgeni": "~0.3.0"
   },
   "devDependencies": {
     "rewire": "~2.0.0",
