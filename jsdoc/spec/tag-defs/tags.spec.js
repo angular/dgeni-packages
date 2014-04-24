@@ -121,6 +121,16 @@ describe('tag definitions', function() {
 
   });
 
+  describe("type", function() {
+
+    it("should transform into a type object", function() {
+      var doc = parseDoc("@type {string}");
+      var tag = doc.tags.getTag('type');
+      var variable = doTransform(doc, tag);
+      checkProperty(variable, undefined, '', ['string']);
+    });
+
+  });
 
   describe("returns/return", function() {
 
