@@ -25,6 +25,7 @@ describe("links inline tag handler", function() {
       file: 'some/file.js',
       startingLine: 200,
       renderedContent: "Some text with a {@link some/url link} to somewhere\n" +
+                       "Another text with a {@link another/url that spans\n two lines}\n" +
                        "Some example with a code link: {@link module:ngOther.directive:ngDirective}\n" +
                        "A link to reachable code: {@link ngInclude}"
     };
@@ -41,6 +42,10 @@ describe("links inline tag handler", function() {
 
   it("should convert urls to HTML anchors", function() {
     expect(linkHandler(doc, 'link', 'some/url link')).toEqual('<a href="some/url">link</a>');
+  });
+
+  it("should parse empty space within a link's title", function() {
+    expect(linkHandler(doc, 'link', 'another/url link that spans\n two lines')).toEqual('<a href="another/url">link that spans\n two lines</a>');
   });
 
   it("should convert code links to anchors with formatted code", function() {
