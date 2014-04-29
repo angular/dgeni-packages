@@ -1,4 +1,4 @@
-var INLINE_LINK = /(\S+)(?:\s+(.+))?/;
+var INLINE_LINK = /(\S+)(?:\s+([\s\S]+))?/;
 
 module.exports = {
   name: 'link',
