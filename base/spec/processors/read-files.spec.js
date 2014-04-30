@@ -1,8 +1,9 @@
 var Q = require('q');
 var MockFS = require('q-io/fs-mock');
 var rewire = require('rewire');
-var plugin = rewire('../../processors/doc-extractor');
+var plugin = rewire('../../processors/read-files');
 var _ = require('lodash');
+var Config = require('dgeni').Config;
 
 var mockFiles = {
   "docs": {
@@ -22,42 +23,48 @@ plugin.__set__('glob.sync', function(pattern) {
   return _.keys(mockFiles[pattern]);
 });
 
-var mockNgDocExtractor = {
+var mockNgDocFileReader = {
   pattern: /\.ngdoc$/,
   processFile: function(file, content) {
     return [{ content: content, file: file, fileType: 'ngdoc' }];
   }
 };
 
-var mockJsExtractor = {
+var mockJsFileReader = {
   pattern: /\.js$/,
   processFile: function(file, content) {
     return [{ content: content, file: file, fileType: 'js' }];
   }
 };
 
-describe('doc-extractor', function() {
+describe('read-files doc processor', function() {
+  var config;
+
+  beforeEach(function() {
+    config = new Config();
+  });
 
   it("should throw an error if the projectPath has not been set", function() {
     expect(function() {
-      plugin.exports.projectPath[1]({ source: { files: [] }});
+      plugin.process({ source: { files: [] }});
     }).toThrow();
   });
 
   it('should traverse the specified folder tree, reading each matching file', function() {
 
-    var config = {
+    config = new Config({
       source: {
-        fileReaders: [mockNgDocExtractor, mockJsExtractor],
+        projectPath: '.',
+        fileReaders: [mockNgDocFileReader, mockJsFileReader],
         files: ['./docs', './src']
       }
-    };
+    });
 
     var injectables = {
       value: function() {}
     };
 
-    plugin.process([], '.', config).then(function(docs) {
+    plugin.process([], config).then(function(docs) {
       expect(docs.length).toEqual(4);
       expect(docs[0]).toEqual({
         file: "docs/a.js",

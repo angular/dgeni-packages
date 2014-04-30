@@ -1,4 +1,4 @@
-var processor = require('../../processors/escaped-comments');
+var processor = require('../../processors/unescape-comments');
 
 describe("escaped-comments doc processor", function() {
   it("should convert HTML encoded comments back to their original form", function() {

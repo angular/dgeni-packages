@@ -1,10 +1,11 @@
 var rewire = require('rewire');
-var finderFactory = rewire('../../processors/templateFinder').exports[1];
+var finderProcessor = rewire('../../processors/templateFinder');
+var finderFactory = finderProcessor.exports.templateFinder[1];
 
 describe("templateFinder Helper", function() {
   var fs, finder, patterns, templateFolders;
   beforeEach(function() {
-    glob = finderFactory.__get__('glob');
+    glob = finderProcessor.__get__('glob');
     spyOn(glob, 'sync').andReturn([
       'a.x',
       'b.x',
