@@ -10,8 +10,8 @@ module.exports = function(config) {
   });
   config = basePackage(config);
 
-  config.append('source.extractors', require('./extractors/ngdoc'));
-  
+  config.append('source.fileReaders', require('./file-readers/ngdoc'));
+
   config.append('processing.tagDefinitions', require('./tag-defs'));
   config.append('processing.inlineTagDefinitions', [
     require('./inline-tag-defs/link')

@@ -3,7 +3,7 @@ module.exports = function(config) {
   require('../base')(config);
   require('../nunjucks')(config);
 
-  config.append('source.extractors', require('./extractors/jsdoc'));
+  config.append('source.fileReaders', require('./file-readers/jsdoc'));
 
   config.append('processing.processors', [
     { name: 'parsing-tags', runAfter: ['files-read'], runBefore: ['processing-docs'] },

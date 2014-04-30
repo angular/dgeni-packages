@@ -48,7 +48,7 @@ describe('doc-extractor', function() {
 
     var config = {
       source: {
-        extractors: [mockNgDocExtractor, mockJsExtractor],
+        fileReaders: [mockNgDocExtractor, mockJsExtractor],
         files: ['./docs', './src']
       }
     };

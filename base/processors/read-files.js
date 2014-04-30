@@ -24,7 +24,7 @@ module.exports = {
     }
 
     var basePath = config.basePath || process.cwd();
-    var extractors = config.source.extractors;
+    var fileReaders = config.source.fileReaders;
     var sourceFiles = config.source.files;
 
     return Q.all(_.map(sourceFiles, function(fileInfo) {
@@ -53,7 +53,7 @@ module.exports = {
 
       var docPromises = [];
       _.forEach(files, function(file) {
-        _.any(extractors, function(extractor) {
+        _.any(fileReaders, function(extractor) {
           if ( extractor.pattern.test(file) ) {
             docPromises.push(qfs.read(path.resolve(fileInfo.basePath, file)).then(function(content) {
               var docs = extractor.processFile(file, content, fileInfo.basePath);
