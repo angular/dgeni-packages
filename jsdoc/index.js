@@ -1,6 +1,7 @@
 module.exports = function(config) {
 
   require('../base')(config);
+  require('../nunjucks')(config);
 
   config.append('source.extractors', require('./extractors/jsdoc'));
 

@@ -15,10 +15,11 @@ module.exports = function(config) {
 
 
   config.append('processing.processors', [
-    require('./processors/read-files'),
     require('./processors/code-name'),
-    require('./processors/nunjucks-renderer'),
-    require('./processors/escaped-comments'),
+    require('./processors/read-files'),
+    require('./processors/render-docs'),
+    require('./processors/templateFinder'),
+    require('./processors/unescape-comments'),
     require('./processors/write-files')
   ]);
 
