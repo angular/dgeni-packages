@@ -1,4 +1,4 @@
-var jsExtractor = require('../../extractors/js');
+var jsExtractor = require('../../file-readers/js');
 
 var srcJsContent = require('./_test-data/srcJsFile.js');
 var docsFromJsContent = require('./_test-data/docsFromJsFile');

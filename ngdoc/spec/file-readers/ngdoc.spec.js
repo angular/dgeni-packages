@@ -1,4 +1,4 @@
-var ngdocExtractor = require('../../extractors/ngdoc');
+var ngdocExtractor = require('../../file-readers/ngdoc');
 
 describe("extractNgdoc", function() {
   describe("pattern", function() {

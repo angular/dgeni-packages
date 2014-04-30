@@ -6,24 +6,22 @@ var _ = require('lodash');
 var glob = require('glob');
 var log = require('winston');
 
+/**
+ * @dgPackage read-files
+ * @description A doc processor that reads documents from files and adds them to the docs array
+ */
 module.exports = {
-  name: 'file-reader',
-  description: 'A doc processor that extracts documents from files and adds them to the docs array',
+  name: 'read-files',
   runAfter: ['reading-files'],
   runBefore: ['files-read'],
 
-  exports: {
-    projectPath: ['factory', function(config) {
-      var projectPath = config.get('source.projectPath');
-      if ( !projectPath ) {
-        throw new Error('Missing configuration property.\n' +
-            'You must provide the path to the root of the project in `config.source.projectPath`');
-      }
-      return projectPath;
-    }]
-  },
+  process: function(docs, config) {
 
-  process: function(docs, projectPath, config) {
+    var projectPath = config.get('source.projectPath');
+    if ( !projectPath ) {
+      throw new Error('Missing configuration property.\n' +
+          'You must provide the path to the root of the project in `config.source.projectPath`');
+    }
 
     var basePath = config.basePath || process.cwd();
     var extractors = config.source.extractors;

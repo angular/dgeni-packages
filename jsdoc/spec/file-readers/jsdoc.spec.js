@@ -1,4 +1,4 @@
-var extractor = require('../../extractors/jsdoc');
+var extractor = require('../../file-readers/jsdoc');
 
 var srcJsContent = require('./_test-data/srcJsFile.js');
 var docsFromJsContent = require('./_test-data/docsFromJsFile');
