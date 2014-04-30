@@ -74,12 +74,12 @@ var changers = [
 module.exports = _.map(changers, function(changer) {
   return {
     name: changer + 'Case',
-    process: function(str) {
-      var output = changeCase[changer](str);
-      return output;
-    }
+    process: changeCase[changer]
   };
 });
 
 // Aliases
-module.exports.dashCase = module.exports.paramCase;
+module.exports.push({
+  name: 'dashCase',
+  process: changeCase.paramCase
+});
