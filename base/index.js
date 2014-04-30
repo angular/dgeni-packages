@@ -15,7 +15,6 @@ module.exports = function(config) {
 
 
   config.append('processing.processors', [
-    require('./processors/code-name'),
     require('./processors/read-files'),
     require('./processors/render-docs'),
     require('./processors/templateFinder'),

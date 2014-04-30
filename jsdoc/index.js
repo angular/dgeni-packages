@@ -14,6 +14,7 @@ module.exports = function(config) {
 
 
   config.append('processing.processors', [
+    require('./processors/code-name'),
     require('./processors/tag-parser'),
     require('./processors/tag-extractor'),
     require('./processors/compute-path'),
