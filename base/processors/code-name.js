@@ -2,6 +2,22 @@ var _ = require('lodash');
 var log = require('dgeni').log;
 
 /**
+ * @dgProcessor code-name
+ * @description  Infer the name of the document from name of the following code
+ */
+module.exports = {
+  name: 'code-name',
+  runAfter: ['files-read'],
+  runBefore: ['processing-docs'],
+  process: function(docs) {
+    _.forEach(docs, function(doc) {
+      doc.codeName = findCodeName(doc.codeNode.node);
+    });
+    return docs;
+  }
+};
+
+/**
  * Recurse down the code AST node that is associated with this doc for a name
  * @param  {Object} node The esprima node information for the code to find the name of
  * @return {String}      The name of the code or null if none found.
@@ -39,15 +55,3 @@ function findCodeName(node) {
       return null;
   }
 }
-
-module.exports = {
-  name: 'code-name',
-  runAfter: ['files-read'],
-  runBefore: ['processing-docs'],
-  process: function(docs) {
-    _.forEach(docs, function(doc) {
-      doc.codeName = findCodeName(doc.codeNode.node);
-    });
-    return docs;
-  }
-};
