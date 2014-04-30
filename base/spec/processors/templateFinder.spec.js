@@ -1,7 +1,7 @@
 var rewire = require('rewire');
-var finderFactory = rewire('../../lib/utils/template-finder');
+var finderFactory = rewire('../../processors/templateFinder').exports[1];
 
-describe("angular template-finder", function() {
+describe("templateFinder Helper", function() {
   var fs, finder, patterns, templateFolders;
   beforeEach(function() {
     glob = finderFactory.__get__('glob');

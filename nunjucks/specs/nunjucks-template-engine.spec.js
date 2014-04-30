@@ -1,13 +1,14 @@
 var rewire = require('rewire');
-var plugin = rewire('../../processors/nunjucks-renderer');
+var processor = rewire('../nunjucks-template-engine');
+var engineFactory = processor.exports.templateEngine[1];
 var Config = require('dgeni').Config;
 
-describe("doc-renderer", function() {
+describe("nunjucks-template-engine Helper", function() {
   var nunjucks, addFilterSpy, addExtensionSpy, injectables, config;
 
   beforeEach(function() {
     injectables = jasmine.createSpyObj('injectables', ['value']);
-    nunjucks = plugin.__get__('nunjucks');
+    nunjucks = processor.__get__('nunjucks');
     addFilterSpy = jasmine.createSpy('addFilter');
     addExtensionSpy = jasmine.createSpy('addExtension');
 
@@ -29,7 +30,7 @@ describe("doc-renderer", function() {
     var nunjucksConfig = { foo: 'bar' };
     config.set('rendering.nunjucks.config', nunjucksConfig);
 
-    plugin.exports.templateEngine[1](config);
+    engineFactory(config);
 
     expect(nunjucks.Environment).toHaveBeenCalledWith(
       jasmine.any(nunjucks.FileSystemLoader),
@@ -44,7 +45,7 @@ describe("doc-renderer", function() {
     config.set('rendering.filters', [dummyFilter]);
     config.set('rendering.tags', [dummyExtension]);
 
-    plugin.exports.templateEngine[1](config);
+    engineFactory(config);
 
     expect(addFilterSpy).toHaveBeenCalledWith(dummyFilter.name, dummyFilter.process);
     expect(addExtensionSpy).toHaveBeenCalledWith('dummy', dummyExtension);
