@@ -1,3 +1,7 @@
+/**
+ * @dgRenderFilter firstLine
+ * @description Extract the first line from the value
+ */
 module.exports = {
   name: 'firstLine',
   process: function(str) {

@@ -1,6 +1,10 @@
 var marked = require('marked');
 var trimIndentation = require('../../../utils/trim-indentation');
 
+/**
+ * @dgRenderTag marked
+ * @description Convert a block of template text from markdown to HTML
+ */
 module.exports = {
   tags: ['marked'],
 
