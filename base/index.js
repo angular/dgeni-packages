@@ -1,5 +1,7 @@
 module.exports = function(config) {
 
+  // Create a set of pseudo processors that act as markers to help position real
+  // processors at the right place in the pipeline
   var processors =  config.append('processing.processors', [
     { name: 'reading-files' },
     { name: 'files-read', runAfter: ['reading-files'] },
@@ -20,19 +22,6 @@ module.exports = function(config) {
     require('./processors/templateFinder'),
     require('./processors/unescape-comments'),
     require('./processors/write-files')
-  ]);
-
-  config.append('rendering.filters', require('./rendering/filters/change-case'));
-
-  config.append('rendering.filters', [
-    require('./rendering/filters/first-line'),
-    require('./rendering/filters/first-paragraph'),
-    require('./rendering/filters/json'),
-    require('./rendering/filters/marked')
-  ]);
-
-  config.append('rendering.tags', [
-    require('./rendering/tags/marked')
   ]);
 
   return config;

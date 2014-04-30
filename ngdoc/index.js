@@ -1,14 +1,15 @@
 var path = require('canonical-path');
 var packagePath = __dirname;
-var basePackage = require('../jsdoc');
 
 module.exports = function(config) {
+
+  require('../jsdoc')(config);
+  require('../nunjucks')(config);
 
   config.merge('rendering.nunjucks.config.tags', {
     variableStart: '{$',
     variableEnd: '$}'
   });
-  config = basePackage(config);
 
   config.append('source.fileReaders', require('./file-readers/ngdoc'));
 

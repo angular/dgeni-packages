@@ -1,7 +1,6 @@
 module.exports = function(config) {
 
   require('../base')(config);
-  require('../nunjucks')(config);
 
   config.append('source.fileReaders', require('./file-readers/jsdoc'));
 
