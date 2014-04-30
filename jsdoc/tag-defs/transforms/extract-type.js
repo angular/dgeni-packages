@@ -4,35 +4,17 @@
 var catharsis = require('catharsis');
 var TYPE_EXPRESSION_START = /\{[^@]/;
 
-
-/**
- * Process the type information in the tags
- * @param  {TagCollection} tags The collection of tags to process
- */
-module.exports = function(tag) {
-  try {
-    if ( tag.tagDef && tag.tagDef.canHaveType ) {
-      extractTypeExpression(tag);
-    }
-  } catch(e) {
-    tag.errors = tag.errors || [];
-    tag.errors.push(e);
-  }
-};
-
-
 /**
  * Extract a type expression from the tag text.
  *
  * @private
  * @param {Tag} tag The tag whose type should be extracted
  */
- function extractTypeExpression(tag) {
-  var description, start, position, count, length, expression;
-  
-  description = tag.description;
-  start = description.search(TYPE_EXPRESSION_START);
-  length = description.length;
+module.exports =  function extractTypeExpression(doc, tag, value) {
+  var start, position, count, length, expression;
+
+  start = value.search(TYPE_EXPRESSION_START);
+  length = value.length;
   if (start !== -1) {
     // advance to the first character in the type expression
     position = start + 1;
@@ -60,14 +42,16 @@ module.exports = function(tag) {
       position++;
     }
 
-    tag.description = (description.substring(0, start) + description.substring(position+1)).trim();
-    tag.typeExpression = description.slice(start+1, position).trim().replace('\\}', '}').replace('\\{', '{');
+    tag.typeExpression = value.slice(start+1, position).trim().replace('\\}', '}').replace('\\{', '{');
 
     tag.type = catharsis.parse(tag.typeExpression, {jsdoc: true});
     tag.typeList = getTypeStrings(tag.type);
     if ( tag.type.optional ) {
       tag.optional = true;
     }
+
+
+    return (value.substring(0, start) + value.substring(position+1)).trim();
   }
 }
 
