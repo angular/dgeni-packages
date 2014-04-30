@@ -4,23 +4,16 @@ var log = require('winston');
 var fs = require('q-io/fs');
 var Q = require('q');
 
-var outputFolder;
-
-function writeFile(file, content) {
-  return fs.makeTree(fs.directory(file)).then(function() {
-    return fs.write(file, content, 'wb');
-  });
-}
-
+/**
+ * @dgProcessor write-files
+ * @description Write the value of `doc.renderedContent` to a file a  `doc.outputPath`.
+ */
 module.exports = {
   name: 'write-files',
-  description: 'Write the renderedContent to the outputPath',
   runAfter:['writing-files'],
   runBefore: ['files-written'],
-  init: function(config) {
-    outputFolder = path.resolve(config.basePath, config.rendering.outputFolder);
-  },
-  process: function(docs) {
+  process: function(docs, config) {
+    var outputFolder = path.resolve(config.basePath, config.rendering.outputFolder);
     return Q.all(_.map(docs, function(doc) {
 
       if ( !doc.outputPath ) {
@@ -41,3 +34,9 @@ module.exports = {
     });
   }
 };
+
+function writeFile(file, content) {
+  return fs.makeTree(fs.directory(file)).then(function() {
+    return fs.write(file, content, 'wb');
+  });
+}
