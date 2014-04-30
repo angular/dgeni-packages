@@ -4,7 +4,7 @@
  */
 module.exports = function(config) {
 
-  config.append('processing.processors', [ { name: 'nunjucks-template-engine' } ]);
+  config.append('processing.processors', require('./nunjucks-template-engine'));
 
   config.append('rendering.filters', require('./rendering/filters/change-case'));
 
