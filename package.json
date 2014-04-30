@@ -3,8 +3,8 @@
   "version": "0.8.2",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
-    "test": "node ./node_modules/jasmine-node/bin/jasmine-node ngdoc/spec jsdoc/spec examples/spec",
-    "cover": "istanbul cover ./node_modules/jasmine-node/bin/jasmine-node -- ngdoc/spec jsdoc/spec examples/spec"
+    "test": "node ./node_modules/jasmine-node/bin/jasmine-node */spec",
+    "cover": "istanbul cover ./node_modules/jasmine-node/bin/jasmine-node -- */spec"
   },
   "repository": {
     "type": "git",
