@@ -1,5 +1,8 @@
 var path = require('canonical-path');
 var _ = require('lodash');
+var extractName = require('./transforms/extract-name');
+var extractType = require('./transforms/extract-type');
+var wholeTag = require('./transforms/whole-tag');
 
 module.exports = [
   {
@@ -14,10 +17,11 @@ module.exports = [
         throw new Error('Missing tag "@memberof" for doc of type "'+ doc.docType + '" in file "' + doc.file + '" at line ' + doc.startingLine);
       }
     },
-    transformFn: function(doc, tag) {
+    transforms: function(doc, tag, value) {
       if ( !(doc.docType === 'event' || doc.docType === 'property' || doc.docType === 'method') ) {
         throw new Error('"@'+ tag.name +'" tag found on non-'+ doc.docType +' document in file "' + doc.file + '" at line ' + doc.startingLine);
       }
+      return value;
     }
   },
 
@@ -26,11 +30,7 @@ module.exports = [
     name: 'param',
     multi: true,
     docProperty: 'params',
-    canHaveName: true,
-    canHaveType: true,
-    transformFn: function(doc, tag) {
-      return tag;
-    }
+    transforms: [ extractType, extractName, wholeTag ]
   },
 
 
@@ -38,29 +38,19 @@ module.exports = [
     name: 'property',
     multi: true,
     docProperty: 'properties',
-    canHaveName: true,
-    canHaveType: true,
-    transformFn: function(doc, tag) {
-      return tag;
-    }
+    transforms: [ extractType, extractName, wholeTag ]
   },
 
 
   {
     name: 'returns',
     aliases: ['return'],
-    canHaveType: true,
-    transformFn: function(doc, tag) {
-      return tag;
-    }
+    transforms: [ extractType, wholeTag ]
   },
 
   {
     name: 'type',
-    canHaveType: true,
-    transformFn: function(doc, tag) {
-      return tag;
-    }
+    transforms: [ extractType, wholeTag ]
   },
 
   {

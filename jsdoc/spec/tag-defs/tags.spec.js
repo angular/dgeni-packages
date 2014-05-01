@@ -1,80 +1,48 @@
 var _ = require('lodash');
-var logger = require('winston');
+
+var TagCollection = require('../../lib/TagCollection');
+var Tag = require('../../lib/Tag');
+
 var tagDefs = require('../../tag-defs');
-var tagParser = require('../../processors/tag-parser');
-var Config = require('dgeni').Config;
+var tagDefMap = require('../../processors/tagDefinitions').exports.tagDefMap[1](tagDefs);
+
+var tagExtractorFactory = require('../../processors/tagExtractor').exports.tagExtractor[1];
+
 
 describe('tag definitions', function() {
 
-  var config;
+  var tagExtractor;
 
-  function parseDoc(content) {
-    var doc;
-    config = new Config();
-    config.set('processing.tagDefinitions', tagDefs);
-
-
-    if ( _.isString(content) ) {
-      doc = {
-        basePath: '.',
-        file: 'src/some.js',
-        fileType: 'js'
-      };
-      doc.content = content;
-    } else {
-      doc = content;
-    }
-    tagParser.process([doc], config);
-    return doc;
-  }
-
-  function checkProperty(prop, name, description, typeList, isOptional, defaultValue, alias) {
-    expect(prop.name).toEqual(name);
-    expect(prop.description).toEqual(description);
-    expect(prop.typeList).toEqual(typeList);
-    if ( isOptional ) {
-      expect(prop.optional).toBeTruthy();
-    } else {
-      expect(prop.optional).toBeFalsy();
-    }
-    expect(prop.defaultValue).toEqual(defaultValue);
-    expect(prop.alias).toEqual(alias);
-  }
-
-  function doTransform(doc, tag) {
-    var tagDef = tag.tagDef;
-    return tagDef.transformFn(doc, tag);
-  }
-
-  function doDefault(doc, name) {
-    var tagDef = _.find(tagDefs, { name: name });
-    return tagDef.defaultFn(doc);
-  }
-
+  beforeEach(function() {
+    tagExtractor = tagExtractorFactory(tagDefs);
+  });
 
   describe("memberof", function() {
 
     it("should throw an exception if the tag exists and docType is not 'event', 'method' or 'property'", function() {
-      var doc = parseDoc("@memberof container");
-      var tag = doc.tags.getTag('memberof');
+      var tag = new Tag(tagDefMap['memberof'], 'memberof', 'container', 123);
+      var doc = createDoc(tag);
+
       expect(function() {
-        tag.tagDef.transformFn(doc, tag);
-      }).toThrow();
+        tagExtractor(doc);
+      }).toThrowError();
+
     });
 
     it("should throw an exception if the tag doesn't exist and docType is 'event', 'method' or 'property'", function() {
-      var doc = parseDoc("empty content");
+      var doc = createDoc([]);
+
       expect(function() {
         doc.docType = 'event';
-        doDefault(doc, 'memberof');
+        tagExtractor(doc);
       }).toThrow();
       expect(function() {
         doc.docType = 'property';
-        doDefault(doc, 'memberof');
+        tagExtractor(doc);
       }).toThrow();
       expect(function() {
         doc.docType = 'method';
-        doDefault(doc, 'memberof');
+        tagExtractor(doc);
       }).toThrow();
     });
   });
@@ -82,30 +50,20 @@ describe('tag definitions', function() {
   describe("param", function() {
 
     it("should add param tags to a params array on the doc", function() {
-      var doc = parseDoc(
-        "@param {string} paramName description of param\n" +
-        "@param {string=} optionalParam description of optional param\n" +
-        "@param {string} [optionalParam2] description of optional param\n" +
-        "@param {string} [paramWithDefault=xyz] description of param with default\n" +
-        "@param {string} paramName|alias description of param with alias\n"
-      );
+      var tag1 = new Tag(tagDefMap['param'], 'param', '{string} paramName description of param', 123);
+      var tag2 = new Tag(tagDefMap['param'], 'param', '{string=} optionalParam description of optional param', 123);
+      var tag3 = new Tag(tagDefMap['param'], 'param', '{string} [optionalParam2] description of optional param', 123);
+      var tag4 = new Tag(tagDefMap['param'], 'param', '{string} [paramWithDefault=xyz] description of param with default', 123);
+      var tag5 = new Tag(tagDefMap['param'], 'param', '{string} paramName|alias description of param with alias', 123);
+      var doc = createDoc([tag1, tag2, tag3, tag4, tag5]);
 
-      var paramTags = doc.tags.getTags('param');
+      tagExtractor(doc);
 
-      var param = doTransform(doc, paramTags[0]);
-      checkProperty(param, 'paramName', 'description of param', ['string']);
-
-      param = doTransform(doc, paramTags[1]);
-      checkProperty(param, 'optionalParam', 'description of optional param', ['string'], true);
-
-      param = doTransform(doc, paramTags[2]);
-      checkProperty(param, 'optionalParam2', 'description of optional param', ['string'], true);
-
-      param = doTransform(doc, paramTags[3]);
-      checkProperty(param, 'paramWithDefault', 'description of param with default', ['string'], true, 'xyz');
-
-      param = doTransform(doc, paramTags[4]);
-      checkProperty(param, 'paramName', 'description of param with alias', ['string'], false, undefined, 'alias');
+      checkProperty(doc.params[0], 'paramName', 'description of param', ['string']);
+      checkProperty(doc.params[1], 'optionalParam', 'description of optional param', ['string'], true);
+      checkProperty(doc.params[2], 'optionalParam2', 'description of optional param', ['string'], true);
+      checkProperty(doc.params[3], 'paramWithDefault', 'description of param with default', ['string'], true, 'xyz');
+      checkProperty(doc.params[4], 'paramName', 'description of param with alias', ['string'], false, undefined, 'alias');
     });
   });
 
@@ -113,10 +71,10 @@ describe('tag definitions', function() {
   describe("property", function() {
 
     it("should transform into a property object", function() {
-      var doc = parseDoc("@property {string} propertyName description of property");
-      var tag = doc.tags.getTag('property');
-      var property = doTransform(doc, tag);
-      checkProperty(property, 'propertyName', 'description of property', ['string']);
+      var tag = new Tag(tagDefMap['property'], 'property', '{string} propertyName description of property', 123);
+      var doc = createDoc(tag);
+      tagExtractor(doc);
+      checkProperty(doc.properties[0], 'propertyName', 'description of property', ['string']);
     });
 
   });
@@ -124,10 +82,10 @@ describe('tag definitions', function() {
   describe("type", function() {
 
     it("should transform into a type object", function() {
-      var doc = parseDoc("@type {string}");
-      var tag = doc.tags.getTag('type');
-      var variable = doTransform(doc, tag);
-      checkProperty(variable, undefined, '', ['string']);
+      var tag = new Tag(tagDefMap['type'], 'type', '{string}');
+      var doc = createDoc(tag);
+      tagExtractor(doc);
+      checkProperty(doc.type, undefined, '', ['string']);
     });
 
   });
@@ -135,13 +93,33 @@ describe('tag definitions', function() {
   describe("returns/return", function() {
 
     it("should transform into a returns object", function() {
-      var doc = parseDoc("@returns {string} description of returns");
-      var tag = doc.tags.getTag('returns');
-      var returns = doTransform(doc, tag);
-      checkProperty(returns, undefined, 'description of returns', ['string']);
+      var tag = new Tag(tagDefMap['returns'], 'returns', '{string} description of returns');
+      var doc = createDoc(tag);
+      tagExtractor(doc);
+      checkProperty(doc.returns, undefined, 'description of returns', ['string']);
     });
 
   });
 
 
 });
+
+function checkProperty(prop, name, description, typeList, isOptional, defaultValue, alias) {
+  expect(prop.name).toEqual(name);
+  expect(prop.description).toEqual(description);
+  expect(prop.typeList).toEqual(typeList);
+  if ( isOptional ) {
+    expect(prop.optional).toBeTruthy();
+  } else {
+    expect(prop.optional).toBeFalsy();
+  }
+  expect(prop.defaultValue).toEqual(defaultValue);
+  expect(prop.alias).toEqual(alias);
+}
+
+function createDoc(tags) {
+  if ( !_.isArray(tags)) { tags = [tags]; }
+  return {
+    tags: new TagCollection(tags)
+  };
+}
