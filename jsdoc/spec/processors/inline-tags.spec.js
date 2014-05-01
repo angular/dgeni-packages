@@ -65,7 +65,7 @@ describe("inline-tags processor", function() {
 
       // We expect the unhandled tag to be reported
       expect(log.warn).toHaveBeenCalled();
-      expect(log.warn.calls[0].args[0]).toMatch(/No handler provided for inline tag "\{@unhandledTag some description\}"/);
+      expect(log.warn.calls.argsFor(0)[0]).toMatch(/No handler provided for inline tag "\{@unhandledTag some description\}"/);
 
       // We expect the handler to have been invoked for the handledTag
       expect(tagsFound).toEqual([
