@@ -6,7 +6,7 @@ describe("templateFinder Helper", function() {
   var fs, finder, patterns, templateFolders;
   beforeEach(function() {
     glob = finderProcessor.__get__('glob');
-    spyOn(glob, 'sync').andReturn([
+    spyOn(glob, 'sync').and.returnValue([
       'a.x',
       'b.x',
       'c.x',
