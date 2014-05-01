@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "rewire": "~2.0.0",
-    "jasmine-node": "~1.13.1",
+    "jasmine-node": "~2.0.0",
     "di": "~0.0.1"
   },
   "contributors": [

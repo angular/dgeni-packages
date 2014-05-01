@@ -5,7 +5,7 @@ describe("marked custom filter", function() {
   var markedMock;
 
   beforeEach(function() {
-    markedMock = jasmine.createSpy('marked').andReturn('bar');
+    markedMock = jasmine.createSpy('marked').and.returnValue('bar');
     filter.__set__('marked', markedMock);
   });
   it("should have the name 'marked'", function() {

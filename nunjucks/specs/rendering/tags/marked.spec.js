@@ -5,16 +5,16 @@ describe("marked custom tag extension", function() {
   var markedMock;
 
   beforeEach(function() {
-    markedMock = jasmine.createSpy('marked').andCallFake(function(str) {return str;});
+    markedMock = jasmine.createSpy('marked').and.callFake(function(str) {return str;});
     extension.__set__('marked', markedMock);
   });
-   
+
   it("should specify the tags to match", function() {
     expect(extension.tags).toEqual(['marked']);
   });
 
   describe("process", function() {
-    
+
     it("should call the mock marked function when processing", function() {
       extension.process(null, function() { return 'some content'; });
       expect(markedMock).toHaveBeenCalledWith('some content');
