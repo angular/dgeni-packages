@@ -17,7 +17,7 @@ module.exports = {
     tagExtractor: ['factory', function tagExtractorFactory(tagDefinitions, defaultTransforms) {
 
       // Compute a default transformation function
-      defaultTransformFn = getTransformationFn(defaultTransforms);
+      var defaultTransformFn = getTransformationFn(defaultTransforms);
 
       // Add some useful methods to the tagDefs
       var tagDefs = _.map(tagDefinitions, function(tagDef) {
@@ -26,7 +26,7 @@ module.exports = {
         tagDef = _.clone(tagDef);
 
         // Compute this tagDefs specific transformation function
-        transformFn = getTransformationFn(tagDef.transforms || []);
+        var transformFn = getTransformationFn(tagDef.transforms);
 
         // Attach a transformation function to the cloned tagDef
         // running the specific transforms followed by the default transforms
@@ -100,10 +100,11 @@ module.exports = {
             }
           }
 
-          if ( doc.tags.badTags.length > 0 ) {
-            log.warn(formatBadTagErrorMessage(doc));
-          }
         });
+
+        if ( doc.tags.badTags.length > 0 ) {
+          log.warn(formatBadTagErrorMessage(doc));
+        }
       };
     }]
   }
@@ -155,7 +156,6 @@ function formatBadTagErrorMessage(doc) {
   var message = 'Invalid tags found in doc, starting at line ' + doc.startingLine + ', from file "' + doc.file + '"\n';
 
   _.forEach(doc.tags.badTags, function(badTag) {
-    //console.log(badTag);
     var description = (_.isString(badTag.description) && (badTag.description.substr(0, 20) + '...'));
     if ( badTag.name ) {
       description = badTag.name + ' ' + description;
