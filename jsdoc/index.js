@@ -16,6 +16,8 @@ module.exports = function(config) {
     require('./processors/code-name'),
     require('./processors/tagDefinitions'),
     require('./processors/tagParser'),
+    require('./processors/tagExtractor'),
+    require('./processors/defaultTagTransforms'),
     require('./processors/parse-tags'),
     require('./processors/extract-tags'),
     require('./processors/compute-path'),
