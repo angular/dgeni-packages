@@ -5,19 +5,19 @@ var log = require('winston');
  * Create a function that will extract information, to properties on the tag or doc, from the tags
  * that were parsed from the doc.
  *
- * @param  {Array} tagDefs
+ * @param  {Array} tagDefinitions
  *           A collection of tagDefinitions to extract from the parsed tags.
- * @param  {function(doc, tag, value)|Array.<function(doc, tag, value)>} [defaultTransforms]
+ * @param  {function(doc, tag, value)|Array.<function(doc, tag, value)>} [defaultTagTransforms]
  *           A single transformation function (or collection of transformation functions) to apply
  *           to every tag that is extracted.
  */
 module.exports = {
   name: 'tagExtractor',
   exports: {
-    tagExtractor: ['factory', function tagExtractorFactory(tagDefinitions, defaultTransforms) {
+    tagExtractor: ['factory', function tagExtractorFactory(tagDefinitions, defaultTagTransforms) {
 
       // Compute a default transformation function
-      var defaultTransformFn = getTransformationFn(defaultTransforms);
+      var defaultTransformFn = getTransformationFn(defaultTagTransforms);
 
       // Add some useful methods to the tagDefs
       var tagDefs = _.map(tagDefinitions, function(tagDef) {
