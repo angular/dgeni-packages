@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var util = require('../../utils/partial-names');
 
 describe("PartialNames", function() {
@@ -7,7 +8,7 @@ describe("PartialNames", function() {
       var partialNames = new util.PartialNames();
       var doc = { id: 'module:ng.service:$http#get' };
       partialNames.addDoc(doc);
-      expect(partialNames.map).toEqual({
+      expect(_.clone(partialNames.map)).toEqual({
         '$http#get': doc,
         'service:$http#get': doc,
         'ng.$http#get': doc,
@@ -27,7 +28,7 @@ describe("PartialNames", function() {
       partialNames.addDoc(doc1);
       partialNames.addDoc(doc2);
 
-      expect(partialNames.map).toEqual({
+      expect(_.clone(partialNames.map)).toEqual({
         '$log': [doc1, doc2],
         'service:$log': [doc1, doc2],
         'ng.$log': doc1,
@@ -42,7 +43,7 @@ describe("PartialNames", function() {
 
       partialNames.removeDoc(doc1);
 
-      expect(partialNames.map).toEqual({
+      expect(_.clone(partialNames.map)).toEqual({
         '$log': doc2,
         'service:$log': doc2,
         'ngMock.$log': doc2,
