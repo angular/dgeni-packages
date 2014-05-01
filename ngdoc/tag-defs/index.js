@@ -12,17 +12,16 @@ module.exports = [
   {
     name: 'name',
     required: true,
-    transformFn: function(doc, tag) {
+    transforms: function(doc, tag, value) {
       var INPUT_TYPE = /input\[(.+)\]/;
-      var name = tag['description'];
       if ( doc.docType === 'input' ) {
-        var match = INPUT_TYPE.exec(name);
+        var match = INPUT_TYPE.exec(value);
         if ( !match ) {
-          throw new Error('Invalid input directive name.  It should be of the form: "input[inputType]" but was "' + doc.name + '"');
+          throw new Error('Invalid input directive name.  It should be of the form: "input[inputType]" but was "' + value + '"');
         }
         doc.inputType = match[1];
       }
-      return name;
+      return value;
     }
   },
 
@@ -59,12 +58,12 @@ module.exports = [
         return { element: false, attribute: true, cssClass: false, comment: false };
       }
     },
-    transformFn: function(doc, tag) {
+    transforms: function(doc, tag, value) {
       return {
-        element: _.contains(tag.description, 'E'),
-        attribute: _.contains(tag.description, 'A'),
-        cssClass: _.contains(tag.description, 'C'),
-        comment: _.contains(tag.description, 'M')
+        element: _.contains(value, 'E'),
+        attribute: _.contains(value, 'A'),
+        cssClass: _.contains(value, 'C'),
+        comment: _.contains(value, 'M')
       };
     }
   },
@@ -72,9 +71,9 @@ module.exports = [
 
   {
     name: 'eventType',
-    transformFn: function(doc, tag) {
+    transforms: function(doc, tag, value) {
       var EVENTTYPE_REGEX = /^([^\s]*)\s+on\s+([\S\s]*)/;
-      var match = EVENTTYPE_REGEX.exec(tag.description);
+      var match = EVENTTYPE_REGEX.exec(value);
       // Attach the target to the doc
       doc.eventTarget = match[2];
       // And return the type
@@ -105,7 +104,7 @@ module.exports = [
 
   {
     name: 'scope',
-    transformFn: function(doc, tag) { return true; }
+    transforms: function(doc, tag) { return true; }
   },
 
   {

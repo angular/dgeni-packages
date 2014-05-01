@@ -1,96 +1,59 @@
 var _ = require('lodash');
-var logger = require('winston');
+var TagCollection = require('../../../jsdoc/lib/TagCollection');
+var Tag = require('../../../jsdoc/lib/Tag');
+
 var tagDefs = require('../../tag-defs');
-var tagParser = require('../../../jsdoc/processors/tag-parser');
-var Config = require('dgeni').Config;
+var tagDefMap = require('../../../jsdoc/processors/tagDefinitions').exports.tagDefMap[1](tagDefs);
+
+var tagExtractorFactory = require('../../../jsdoc/processors/tagExtractor').exports.tagExtractor[1];
 
 describe('tag definitions', function() {
-  var config;
+
+  var tagExtractor, nameTag, ngdocTag;
 
   beforeEach(function() {
-    config = new Config();
+    tagExtractor = tagExtractorFactory(tagDefs);
+    nameTag = new Tag(tagDefMap['name'], 'name', 'some-name', 123);
+    ngdocTag = new Tag(tagDefMap['ngdoc'], 'ngdoc', 'directive', 123);
   });
-
-
-  var parseDoc = function(content) {
-    var doc;
-    config.set('processing.tagDefinitions', tagDefs);
-
-    if ( _.isString(content) ) {
-      doc = {
-        basePath: '.',
-        file: 'src/some.js',
-        fileType: 'js'
-      };
-      doc.content = content;
-    } else {
-      doc = content;
-    }
-    tagParser.process([doc], config);
-    return doc;
-  };
-
-  var checkProperty = function(prop, name, description, typeList, isOptional, defaultValue, alias) {
-    expect(prop.name).toEqual(name);
-    expect(prop.description).toEqual(description);
-    expect(prop.typeList).toEqual(typeList);
-    if ( isOptional ) {
-      expect(prop.optional).toBeTruthy();
-    } else {
-      expect(prop.optional).toBeFalsy();
-    }
-    expect(prop.defaultValue).toEqual(defaultValue);
-    expect(prop.alias).toEqual(alias);
-  };
-
-  var doTransform = function(doc, name) {
-    var tag = doc.tags.getTag(name);
-    var tagDef = tag.tagDef;
-    return tagDef.transformFn(doc, tag);
-  };
-
-  var doDefault = function(doc, name) {
-    var tagDef = _.find(tagDefs, { name: name });
-    return tagDef.defaultFn(doc);
-  };
 
   describe("name", function() {
 
     it("should throw an error if the tag is missing", function() {
-      var doc = {
-        content: ''
-      };
-
-      doc = parseDoc(doc, 0);
+      var doc = createDoc([ngdocTag]);
       expect(function() {
-        doDefault(doc);
+        tagExtractor(doc);
       }).toThrow();
     });
 
-    it("should throw error if the docType is 'input' and the name is not a valid format", function() {
-      var doc = {
-        docType: 'input',
-        content: '@name input[checkbox]'
-      };
-      doc = parseDoc(doc, 0);
-      expect(doTransform(doc, 'name')).toEqual('input[checkbox]');
-      expect(doc.inputType).toEqual('checkbox');
+    it("should update the inputType if docType is input", function() {
 
-      doc = {
-        docType: 'directive',
-        content: '@name input[checkbox]'
-      };
-      doc = parseDoc(doc, 0);
-      expect(doTransform(doc, 'name')).toEqual('input[checkbox]');
+      nameTag.description = 'input[checkbox]';
+      ngdocTag.description = 'input';
+      var doc = createDoc([nameTag, ngdocTag]);
+      tagExtractor(doc);
+      expect(doc.name).toEqual('input[checkbox]');
+      expect(doc.inputType).toEqual('checkbox');
+    });
+
+    it("should not update the inputType if docType is not input", function() {
+
+      nameTag.description = 'input[checkbox]';
+      ngdocTag.description = 'directive';
+      var doc = createDoc([nameTag, ngdocTag]);
+      tagExtractor(doc);
+      expect(doc.name).toEqual('input[checkbox]');
       expect(doc.inputType).toBeUndefined();
 
-      doc = {
-        docType: 'input',
-        content: '@name invalidInputName'
-      };
-      doc = parseDoc(doc, 0);
+    });
+
+    it("should throw error if the docType is 'input' and the name is not a valid format", function() {
+
+      nameTag.description = 'invalidInputName';
+      ngdocTag.description = 'input';
+      var doc = createDoc([nameTag, ngdocTag]);
       expect(function() {
-        doTransform(doc, 'name');
+        tagExtractor(doc);
       }).toThrow();
 
     });
@@ -101,32 +64,25 @@ describe('tag definitions', function() {
   describe("area", function() {
 
     it("should be 'api' if the fileType is js", function() {
-      var doc = {
-        content: '',
-        fileType: 'js'
-      };
-      expect(doDefault(doc, 'area')).toEqual('api');
+
+      var doc = createDoc([nameTag, ngdocTag]);
+      tagExtractor(doc);
+      expect(doc.area).toEqual('api');
     });
 
     it("should compute the area from the file name", function() {
-      var doc = {
-        content: '',
-        fileType: 'ngdoc',
-        file: 'guide/scope/binding.ngdoc'
-      };
-      expect(doDefault(doc, 'area')).toEqual('guide');
+      var doc = createDoc([nameTag, ngdocTag], 'guide/scope/binding.ngdoc', 'ngdoc');
+      tagExtractor(doc);
+      expect(doc.area).toEqual('guide');
     });
   });
 
 
   describe("module", function() {
     it("extracts the module from the file name if it is from the api area", function() {
-      var doc = {
-        area: 'api',
-        file: 'src/ng/compile.js',
-        content: ''
-      };
-      expect(doDefault(doc, 'module')).toEqual('ng');
+      var doc = createDoc([nameTag, ngdocTag]);
+      tagExtractor(doc);
+      expect(doc.module).toEqual('ng');
     });
   });
 
@@ -135,29 +91,48 @@ describe('tag definitions', function() {
 
     it("should convert a restrict tag text to an object", function() {
 
-      expect(doTransform(parseDoc('@restrict A'), 'restrict'))
+      var restrictTag = new Tag(tagDefMap['restrict'], 'restrict', '', 123);
+
+      var doc = createDoc([nameTag, ngdocTag, restrictTag]);
+
+      restrictTag.description = 'A';
+      tagExtractor(doc);
+      expect(doc.restrict)
         .toEqual({ element: false, attribute: true, cssClass: false, comment: false });
 
-      expect(doTransform(parseDoc('@restrict C'), 'restrict'))
+      restrictTag.description = 'C';
+      tagExtractor(doc);
+      expect(doc.restrict)
         .toEqual({ element: false, attribute: false, cssClass: true, comment: false });
 
-      expect(doTransform(parseDoc('@restrict E'), 'restrict'))
+      restrictTag.description = 'E';
+      tagExtractor(doc);
+      expect(doc.restrict)
         .toEqual({ element: true, attribute: false, cssClass: false, comment: false });
 
-      expect(doTransform(parseDoc('@restrict M'), 'restrict'))
+      restrictTag.description = 'M';
+      tagExtractor(doc);
+      expect(doc.restrict)
         .toEqual({ element: false, attribute: false, cssClass: false, comment: true });
 
-      expect(doTransform(parseDoc('@restrict ACEM'), 'restrict'))
+      restrictTag.description = 'ACEM';
+      tagExtractor(doc);
+      expect(doc.restrict)
         .toEqual({ element: true, attribute: true, cssClass: true, comment: true });
     });
 
     it("should default to restricting to an attribute if no tag is found and the doc is for a directive", function() {
-      expect(doDefault({ docType: 'directive' }, 'restrict'))
+      var doc = createDoc([nameTag, ngdocTag]);
+      tagExtractor(doc);
+      expect(doc.restrict)
         .toEqual({ element: false, attribute: true, cssClass: false, comment: false });
     });
 
     it("should not add a restrict property if the docType is not 'directive'", function() {
-      expect(doDefault({ docType: 'other' }, 'restrict')).toBeUndefined();
+      var doc = createDoc([nameTag, ngdocTag]);
+      ngdocTag.description = 'other';
+      tagExtractor(doc);
+      expect(doc.restrict).toBeUndefined();
     });
   });
 
@@ -165,8 +140,10 @@ describe('tag definitions', function() {
   describe("eventType", function() {
 
     it("should add an eventTarget property to the doc and return the event type", function() {
-      var doc = parseDoc('@eventType broadcast on module:ng.directive:ngInclude');
-      expect(doTransform(doc, 'eventType')).toEqual('broadcast');
+      var eventTag = new Tag(tagDefMap['eventType'], 'eventType', 'broadcast on module:ng.directive:ngInclude', 123);
+      var doc = createDoc([nameTag, ngdocTag, eventTag]);
+      tagExtractor(doc);
+      expect(doc.eventType).toEqual('broadcast');
       expect(doc.eventTarget).toEqual('module:ng.directive:ngInclude');
     });
   });
@@ -175,10 +152,42 @@ describe('tag definitions', function() {
   describe("element", function() {
 
     it("should default to ANY if the document is a directive", function() {
-      expect(doDefault({ docType: 'directive' }, 'element')).toEqual('ANY');
-      expect(doDefault({ docType: 'filter' }, 'element')).toBeUndefined();
+      var doc = createDoc([nameTag, ngdocTag]);
+
+      ngdocTag.description = 'directive';
+      tagExtractor(doc);
+      expect(doc.element).toEqual('ANY');
+    });
+
+    it("should be undefined if the document is not a directive", function() {
+      var doc = createDoc([nameTag, ngdocTag]);
+      ngdocTag.description = 'filter';
+      tagExtractor(doc);
+      expect(doc.element).toBeUndefined();
     });
   });
 
 
 });
+
+function checkProperty(prop, name, description, typeList, isOptional, defaultValue, alias) {
+  expect(prop.name).toEqual(name);
+  expect(prop.description).toEqual(description);
+  expect(prop.typeList).toEqual(typeList);
+  if ( isOptional ) {
+    expect(prop.optional).toBeTruthy();
+  } else {
+    expect(prop.optional).toBeFalsy();
+  }
+  expect(prop.defaultValue).toEqual(defaultValue);
+  expect(prop.alias).toEqual(alias);
+}
+
+function createDoc(tags, file, fileType) {
+  if ( !_.isArray(tags)) { tags = [tags]; }
+  return {
+    tags: new TagCollection(tags),
+    file: file || 'src/ng/compile.js',
+    fileType: fileType || 'js'
+  };
+}
