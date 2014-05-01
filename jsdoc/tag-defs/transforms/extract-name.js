@@ -10,13 +10,13 @@ var NAME_AND_DESCRIPTION = /^\s*(\[([^\]=]+)(?:=([^\]]+))?\]|\S+)((?:[ \t]*\-\s*
  */
 module.exports = function extractName(doc, tag, value) {
 
-  return value.replace(NAME_AND_DESCRIPTION, function(match, name, optionalName, defaultValue, description, dashDescription) {
+  tag.description = value.replace(NAME_AND_DESCRIPTION, function(match, name, optionalName, defaultValue, description, dashDescription) {
     tag.name = optionalName || name;
 
     if ( optionalName ) {
       tag.optional = true;
     }
-    
+
     if ( defaultValue ) {
       tag.defaultValue = defaultValue;
     }
@@ -26,5 +26,7 @@ module.exports = function extractName(doc, tag, value) {
     tag.alias = aliasParts[1];
     return dashDescription || description || '';
   });
+
+  return tag.description;
 
 };
