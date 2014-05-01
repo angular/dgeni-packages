@@ -16,6 +16,12 @@ describe("tagDefinitions helper", function() {
     expect(tagDefinitions).toEqual([ tagDef1, tagDef2 ]);
   });
 
+  it("should error if the config does not contain any tag definitions", function() {
+    expect(function() {
+      tagDefinitionsProcessor.exports.tagDefinitionsp[1](new Config());
+    }).toThrow();
+  });
+
   it("should create a map of the tagDefinitions", function() {
     var tagDef1 = { name: 'tagDef1', aliases: [ 'tagDefA' ] };
     var tagDef2 = { name: 'tagDef2' };
