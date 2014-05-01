@@ -55,6 +55,6 @@ describe("links inline tag handler", function() {
   it("should check that any links in the links property of a doc reference a valid doc", function() {
     expect(function() {
       linkHandler(doc, 'link', 'module:ngOther.directive:ngDirective');
-    }).toThrow('Invalid link (does not match any doc): "module:ngOther.directive:ngDirective"');
+    }).toThrowError(/Invalid link \(does not match any doc\): "module:ngOther\.directive:ngDirective"/);
   });
 });
