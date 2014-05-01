@@ -21,7 +21,7 @@ module.exports =  function extractTypeExpression(doc, tag, value) {
     count = 1;
 
     while (position < length) {
-      switch (description[position]) {
+      switch (value[position]) {
         case '\\':
           // backslash is an escape character, so skip the next character
           position++;
@@ -49,11 +49,10 @@ module.exports =  function extractTypeExpression(doc, tag, value) {
     if ( tag.type.optional ) {
       tag.optional = true;
     }
-
-
-    return (value.substring(0, start) + value.substring(position+1)).trim();
+    tag.description = (value.substring(0, start) + value.substring(position+1)).trim();
+    return tag.description;
   }
-}
+};
 
 /** @private */
 function getTypeStrings(parsedType) {
