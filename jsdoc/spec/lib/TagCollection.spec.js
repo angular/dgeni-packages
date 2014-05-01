@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var TagCollection = require('../../lib/TagCollection');
 var Tag = require('../../lib/Tag');
 
@@ -11,7 +12,8 @@ describe("TagCollection", function() {
   it("should set up the object properties", function() {
     expect(tags.tags).toEqual([]);
     expect(tags.badTags).toEqual([]);
-    expect(tags.tagsByName).toEqual({});
+    // We clone so that toEqual works with our "bare" object
+    expect(_.clone(tags.tagsByName)).toEqual({});
     expect(tags.description).toEqual('');
   });
 
