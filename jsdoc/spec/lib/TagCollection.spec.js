@@ -11,7 +11,7 @@ describe("TagCollection", function() {
   it("should set up the object properties", function() {
     expect(tags.tags).toEqual([]);
     expect(tags.badTags).toEqual([]);
-    expect(tags.tagsByName).toEqual({});
+    expect(tags.tagsByName).toEqualMap({});
     expect(tags.description).toEqual('');
   });
 
@@ -19,7 +19,7 @@ describe("TagCollection", function() {
     spyOn(TagCollection.prototype, 'addTag');
     new TagCollection([{}, {}, {}]);
     expect(TagCollection.prototype.addTag).toHaveBeenCalled();
-    expect(TagCollection.prototype.addTag.calls.length).toEqual(3);
+    expect(TagCollection.prototype.addTag.calls.count()).toEqual(3);
   });
 
   describe("addTag", function() {
