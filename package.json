@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "node ./node_modules/jasmine-node/bin/jasmine-node */spec",
@@ -57,6 +57,10 @@
     "Peter Bacon Darwin <pete@bacondarwin.com>",
     "Andy Joslin <andytjoslin@gmail.com>",
     "Julie <ju.ralph@gmail.com>",
-    "Kevin Rowe <kevinrowe@outlook.com>"
+    "Kevin Rowe <kevinrowe@outlook.com>",
+    "Pascal Precht <pascal.precht@googlemail.com>",
+    "Konstantinos Rousis <rousisk@gmail.com>",
+    "Stéphane Reynaud <forresst@voila.fr>",
+    "Matthew Harris <ftmomatt@gmail.com>"
   ]
 }

@@ -1,3 +1,109 @@
+## v0.9.0 05/01/2014
+
+This is a major refactoring release which is compatible with Dgeni v0.3.x. There
+are many breaking changes.
+
+### New Packages
+
+The packages have been refactored into smaller more focussed sets of processors.
+
+* base - The minimal set of processors to get started with Dgeni
+* jsdoc - Tag parsing and extracting
+* nunjucks - The nunjucks template rendering engine. No longer in jsdoc - you must add this
+  explicitly to your config or you will get
+  `Error: No provider for "templateEngine"! (Resolving: templateEngine)`
+* ngdoc - The angular.js specific tag-defs, processors and templates.  This loads the jsdoc and
+  nunjucks packages for you.
+* examples - Processors to support the runnable examples feature in the angular.js docs site.
+
+### New Processor Exports
+
+With Dgeni 0.3.0 processors can declaratively export services to be injected into processors'
+`process()` method. This release take full advantage of this, refactoring the structure of the
+dependencies of various processors to simplify and enable more flexibility.
+
+### New Tag Definition Transforms
+
+Previously processing of tags was somewhat distributed between the tagParser and the tagExtractor,
+with various features rather hard-coded, such as `canHaveType` and `canHaveName`.  This has all been
+moved into **tag definition transforms**, which provide a much more flexible and powerful way to
+define how to transform the simple text "parsed" from the tag into a rich object that can be
+attached to the document.
+
+### Detailed List of Changes
+
+**Features**
+
+* feat(jsdoc/tag-defs): add `@type` tag       904aa00b
+* feat(jsdoc/tag-defs): add `@method` tag       6fc99313
+* feat(jsdoc file-reader): add more code metadata        7820317a
+* feat(jsdoc/name-from-code): extract the name of the doc from the code        1115c431
+
+**Refactorings**
+
+* refact(ngdoc/tag-defs): use new tagExtractor syntax       b0848557
+* refact(jsdoc/tag-defs): use new tagExtractor syntax       0048547e
+* refact(extract-tags processor): rename and use tagExtractor       d2ef2237
+* refact(tagExtractor): major reworking to use 'transformFns'       a90734ae
+* refact(parse-tags): simplify using tagParser        02cc093d
+* refact(tagParser): move into its own processor        1d2e689e
+* refact(tagDefinitions): move into its own processor       d2d916ef
+* refact(defaultTagTransforms): move into its own processor       354a9489
+* refact(tag-def/transforms): convert "tagProcessors" into tag "transforms"        d4ca4e94
+* refact(nunjucks): move basic filters and tags to nunjucks package        5547409c
+* refact(dash-case): change name to change-case        39ab9be1
+* refact(walk): remove unused code         66f86a50
+* refact(marked): remove unused code         4591bd90
+* refact(doc-writer): remove unused code         41c0cd12
+* refact(dash-case): remove unused code        8f9dd805
+* refact(check-property): remove unused code         6e39ba70
+* refact(code-name): move to jsdoc package         4061e64f
+* refact(packages): align with renames and moves of processors         a21f804e
+* refact(doc-extractor): complete rename to read-files         8bc760bf
+* refact(escaped-comments): rename to unescape-comments        d030ca95
+* refact(rendering): move nunjucks stuff out         0b36e95a
+* refact(code-name): rename        6e312504
+* refact(doc-extractor): rename to read-files        60ac908c
+* refact(partial-names processor): remove `init` and provide `exports`         0de2680a
+* refact(component-groups-generate processor): remove `init` and provide `exports`         61ba9cb1
+* refact(api-docs processor): remove `init` and provide `exports`        34d05b1f
+* refact(jsdoc processors): remove `init` and provide `exports`        3188ff14
+* refact(examples-parse): remove `init` and provide `exports`        5cbcbab6
+* refact(examples-generate): remove `init` and provide `exports`         0c006bb4
+* refact(nunjucks-renderer): remove `init` and provide `exports`         f4b42dd6
+* refact(doc-extractor): remove `init` and provide `exports`         fce833c9
+* refact(*): update due to utils move        0245eb22
+* refact(utils): moved here from dgeni         1f04843d
+* refact(jsdoc): moved stuff to base package         5f2ec6be
+
+**Bug Fixes**
+
+* fix(tagExtractor): invalid injectable parameter name        6c8790f3
+* fix(jsdoc): add defaultTagTransforms and tagExtractor processors        12ac7aa0
+* fix(jsdoc): tag-extractor processor was renamed       1931f4d4
+* fix(tagExtractor): accidental global vars       5de56780
+* fix(extract-type transform): ensure tag.description gets updated        0f911d8a
+* fix(extract-name transform): ensure tag.description gets updated        e347c847
+* fix(tagDefinitions): throw error if tag definitions are missing from the config       4777ec79
+* fix(nunjucks): correctly load up the template engine processor         071e52c7
+* fix(base processors): minor fixes to get the tests working         efd3e35f
+* fix(link inline tag): parse newlines in link's title       b2ebb415
+* fix(ngdoc): don't show first param in filter syntax        4f2ccf52
+* fix(walk): hack ancestor to kind of do what I want         f19b6940
+* fix(compute-path): ensure it runs early enough         fe1e0bd7
+* fix(jsdoc package): actually append processors to config         f2020d47
+* fix(marked tag): fix path to trim-indentation module         1206f8fe
+* fix(nunjucks-renderer): `env` changed to `templateEngine`        e4a756e0
+* fix(base package): load change-case filter locally         a74f2ee4
+* fix(compute-paths): ensure it is run before rendering        b50baa99
+* fix(jsdoc/tag-defs): Allow multiple `@see` tags        d73a842f
+* fix(tag-parser): don't overwrite default tag processors collection         9fc7f58e
+* fix(code): fix path to utilities         26c26e70
+* fix(examples-parse): fix path to utilities         1f9d1488
+* fix(jsdoc/tag-defs): missing comma         293ffde2
+* fix(jsdoc): fix typo in error message       b1e7dd08
+
+
 ## v0.8.2 03/22/2014
 
 **Bug Fixes**
