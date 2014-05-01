@@ -11,7 +11,7 @@ describe("TagCollection", function() {
   it("should set up the object properties", function() {
     expect(tags.tags).toEqual([]);
     expect(tags.badTags).toEqual([]);
-    expect(tags.tagsByName).toEqualMap({});
+    expect(tags.tagsByName).toEqual({});
     expect(tags.description).toEqual('');
   });
 
