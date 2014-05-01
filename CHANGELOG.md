@@ -104,6 +104,14 @@ attached to the document.
 * fix(jsdoc): fix typo in error message       b1e7dd08
 
 
+## v0.8.3 04/23/2014
+
+**Bug Fixes**
+
+* fix(ngdoc): don't show first param in filter syntax   9c5a7f26
+* fix(jsdoc): fix typo in error message   b1e7dd08
+
+
 ## v0.8.2 03/22/2014
 
 **Bug Fixes**
