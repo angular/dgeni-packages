@@ -35,6 +35,8 @@ function findCodeName(node) {
       return node.id && node.id.name;
     case 'MemberExpression':
       return findCodeName(node.property);
+    case 'CallExpression':
+      return findCodeName(node.callee);
     case 'Identifier':
       return node.name;
     case 'ReturnStatement':
@@ -50,7 +52,7 @@ function findCodeName(node) {
     case 'VariableDeclarator':
       return node.id && node.id.name;
     default:
-      log.warn('HELP!');
+      log.warn('HELP! Unrecognised node type: ' + node.type);
       log.warn(node);
       return null;
   }
