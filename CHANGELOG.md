@@ -1,3 +1,11 @@
+## v0.9.1 05/02/2014
+
+* fix(ngdoc/compute-path): use ngdoc specific version of this processor  3e17d31b
+* fix(code-name): cope with additional code situations   8b456b08
+* fix(jsdoc/trim-whitespace transform): only trim strings   5aa2376d
+* fix(jsdoc/jsdoc file-reader): cope with comments that have no code node   4e3857db
+* fix(code-name): recognise CallExpression nodes   14c5c103
+
 ## v0.9.0 05/01/2014
 
 This is a major refactoring release which is compatible with Dgeni v0.3.x. There
