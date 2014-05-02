@@ -11,7 +11,7 @@ module.exports = {
   runBefore: ['processing-docs'],
   process: function(docs) {
     _.forEach(docs, function(doc) {
-      doc.codeName = findCodeName(doc.codeNode.node);
+      doc.codeName = doc.codeNode && findCodeName(doc.codeNode.node);
     });
     return docs;
   }
@@ -45,6 +45,10 @@ function findCodeName(node) {
       return findCodeName(node.value) || findCodeName(node.key);
     case 'ObjectExpression':
       return null;
+    case 'ArrayExpression':
+      return null;
+    case 'Literal':
+      return node.value;
     case 'Program':
       return node.body[0] ? findCodeName(node.body[0]) : null;
     case 'VariableDeclaration':

@@ -9,4 +9,11 @@ describe('code-name doc processor', function() {
     expect(doc.codeName).toEqual('foo');
   });
 
+  it("should understand ArrayExpressions", function() {
+    var ast = jsParser.parse("$CompileProvider.$inject = ['$provide', '$$sanitizeUriProvider'];");
+    var doc = { codeNode: { node: ast } };
+    processor.process([doc]);
+    expect(doc.codeName).toEqual('$inject');
+  });
+
 });
