@@ -31,7 +31,7 @@ module.exports = {
 
         // Extract the information about the code directly after this comment
         var codeNode = walk.findNodeAfter(ast, comment.range[1]);
-        var codeAncestors = walk.ancestor(ast, codeNode.node);
+        var codeAncestors = codeNode && walk.ancestor(ast, codeNode.node);
 
         // Create a doc from this comment
         return {

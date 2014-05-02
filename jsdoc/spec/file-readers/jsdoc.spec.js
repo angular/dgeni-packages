@@ -44,6 +44,10 @@ describe("js doc extractor", function() {
       expect(docs[2].codeNode.node.type).toEqual('ReturnStatement');
     });
 
+    it("should not break if the comment has no code", function() {
+      extractor.processFile('some/file.js', 'function main() { } /** @some jsdoc comment */');
+    });
+
     it("should not remove windows new line characters when stripping stars from comments", function() {
         var docs = extractor.processFile('some/file.js', '/** Some jsdoc comment\r\n* over multiple\r\n* lines\r\n**/');
         expect(docs[0].content).toEqual('Some jsdoc comment\r\nover multiple\r\nlines');
