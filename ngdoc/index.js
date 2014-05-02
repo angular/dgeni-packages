@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var path = require('canonical-path');
 var packagePath = __dirname;
 
@@ -16,6 +17,13 @@ module.exports = function(config) {
   config.append('processing.tagDefinitions', require('./tag-defs'));
   config.append('processing.inlineTagDefinitions', [
     require('./inline-tag-defs/link')
+  ]);
+
+  // Replace the default compute-path processor
+  var processors = config.get('processing.processors');
+  _.remove(processors, {name: 'compute-path'});
+  config.append('processing.processors', [
+    require('./processors/compute-path')
   ]);
 
   config.append('processing.processors', [
