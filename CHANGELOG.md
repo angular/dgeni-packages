@@ -1,3 +1,7 @@
+## v0.9.2 05/09/2014
+
+* fix(jsdoc package): trim whitespace from tags   afa5c8c6
+
 ## v0.9.1 05/02/2014
 
 * fix(ngdoc/compute-path): use ngdoc specific version of this processor  3e17d31b
