@@ -26,5 +26,7 @@ module.exports = function(config) {
 
   config.append('processing.tagDefinitions', require('./tag-defs'));
 
+  config.append('processing.defaultTagTransforms', require('./tag-defs/transforms/trim-whitespace'));
+
   return config;
 };
