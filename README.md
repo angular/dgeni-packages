@@ -79,12 +79,30 @@ package:
 On top of the processors provided by the `jsdoc` package, this packages adds the following processors:
 
 * `api-docs` -
-This processor runs a bunch of computations that are specifically related to docs for API components.
-In particular, it will compute the package name for the module (e.g.
-angular or angular-sanitize, it collects up all documents that belong to the module and
-attaches them to the module doc in the `components` property, it computes the URL path to the document
-in the docs app and the outputPath to the final output file, it relates documents about angular
-services to their corresponding angular service provider document.
+
+This processor runs computations that are specifically related to docs for API components. It does the following:
+
+  - Computes the package name for the module (eg angular or angular-sanitize)
+  - Collects up all documents that belong to the module
+  - Attaches them to the module doc in the `components` property
+  - Computes the URL path to the document in the docs app and the outputPath to the final output file
+  - It relates documents about angular services to their corresponding provider document.
+
+api-docs has the following configuration options available (listed with the default values set):
+
+  ```js
+  config.set('processing.api-docs', {
+    outputPath: '${area}/${module}/${docType}/${name}.html', // The path to write an api document's page to.
+    path: '${area}/${module}/${docType}/${name}', // The url for a document's page.
+    moduleOutputPath: '${area}/${name}/index.html', // The path to write an api module's page to.
+    modulePath: '${area}/${name}', // The url for a module's page.
+    mergeableTypes: { // Which doc types will be merged into 'groups' under a parent document
+      method: 'methods',
+      property: 'properties',
+      event: 'events'
+   }
+  });
+  ```
 
 * `component-groups-generate` -
 
