@@ -25,6 +25,13 @@ module.exports = {
       modulePath: '${area}/${name}'
     }, config.get('processing.api-docs', {}));
 
+    // Merge the memberof docs into their parent doc
+    var mergeableTypes = config.merge('processing.api-docs.mergableTypes', {
+      method: 'methods',
+      property: 'properties',
+      event: 'events'
+    });
+
     // Compute some extra fields for docs in the API area
     _.forEach(docs, function(doc) {
 
@@ -66,13 +73,6 @@ module.exports = {
 
     });
 
-
-    // Merge the memberof docs into their parent doc
-    var mergeableTypes = {
-      method: 'methods',
-      property: 'properties',
-      event: 'events'
-    };
 
     docs = _.filter(docs, function(doc) {
 
