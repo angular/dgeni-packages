@@ -51,6 +51,8 @@ module.exports =  function extractTypeExpression(doc, tag, value) {
     }
     tag.description = (value.substring(0, start) + value.substring(position+1)).trim();
     return tag.description;
+  } else {
+    return value;
   }
 };
 
