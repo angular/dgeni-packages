@@ -26,11 +26,11 @@ module.exports = {
     }, config.get('processing.api-docs', {}));
 
     // Merge the memberof docs into their parent doc
-    var mergeableTypes = config.merge('processing.api-docs.mergableTypes', {
+    var mergeableTypes = _.assign({
       method: 'methods',
       property: 'properties',
       event: 'events'
-    });
+    }, config.get('processing.api-docs.mergeableTypes') || {});
 
     // Compute some extra fields for docs in the API area
     _.forEach(docs, function(doc) {
