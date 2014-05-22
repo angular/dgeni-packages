@@ -95,11 +95,7 @@ api-docs has the following configuration options available (listed with the defa
     outputPath: '${area}/${module}/${docType}/${name}.html', // The path to write an api document's page to.
     path: '${area}/${module}/${docType}/${name}', // The url for a document's page.
     moduleOutputPath: '${area}/${name}/index.html', // The path to write an api module's page to.
-    modulePath: '${area}/${name}', // The url for a module's page.
-    mergeableTypes: { // Which doc types will be merged into 'groups' under a parent document
-      method: 'methods',
-      property: 'properties',
-      event: 'events'
+    modulePath: '${area}/${name}' // The url for a module's page.
    }
   });
   ```
