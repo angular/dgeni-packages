@@ -1,3 +1,7 @@
+## v0.9.3 05/22/2014
+
+* fix(extract-type): cope with missing type   4584a423
+
 ## v0.9.2 05/09/2014
 
 * fix(jsdoc package): trim whitespace from tags   afa5c8c6
