@@ -1,7 +1,7 @@
 var Tag = require('../../../lib/Tag');
 var transform = require('../../../tag-defs/transforms/extract-name');
 
-describe("transform", function() {
+describe("extract-name transform", function() {
   var doc, tag, value;
 
   beforeEach(function() {
