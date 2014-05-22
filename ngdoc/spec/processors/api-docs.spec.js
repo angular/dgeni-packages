@@ -49,23 +49,6 @@ describe("api-docs processor", function() {
     expect(doc.isMember).toEqual(true);
   });
 
-  it("should extract the container and member from the name if it is a configured memberOf type", function() {
-    config.set('processing.api-docs.mergeableTypes', { language: 'languages' });
-    var doc = {
-      docType: 'language',
-      name: '$cache#put',
-      id: '$cache#put',
-      area: 'api',
-      module: 'ng'
-    };
-
-    processor.process([doc], config, new PartialNames());
-
-    expect(doc.name).toEqual('put');
-    expect(doc.memberof).toEqual('$cache');
-    expect(doc.isMember).toEqual(true);
-  });
-
   it("should attach each doc to its module", function() {
     var doc = {
       docType: 'service',
