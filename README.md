@@ -115,6 +115,16 @@ This package also provides a set of templates for generating an HTML file for ea
 directive, error, filter function, input, module, object, overview, provider, service, type and a
 number to support rendering of the runnable examples.
 
+You should be aware that because of the overlap in syntax between Nunjucks bindings and AngularJS
+bindings, the ngdoc package changes the default Nunjucks binding tags:
+
+``
+config.merge('rendering.nunjucks.config.tags', {
+    variableStart: '{$',
+    variableEnd: '$}'
+  });
+```
+
 ### `examples` Package
 
 This package is a mix in that provides additional processors for working with examples in the docs:
