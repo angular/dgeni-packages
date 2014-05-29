@@ -20,18 +20,18 @@ module.exports = {
     var projectPath = config.get('source.projectPath');
     if ( !projectPath ) {
       throw new Error('Missing configuration property.\n' +
-          'You must provide the path to the root of the project in `config.source.projectPath`');
+          'You must provide the path to the root of the project in `config:source.projectPath`');
     }
 
-    var basePath = config.basePath || process.cwd();
-    var fileReaders = config.source.fileReaders;
-    var sourceFiles = config.source.files;
+    var basePath = config.get('basePath') || process.cwd();
+    var fileReaders = config.get('source.fileReaders');
+    var sourceFiles = config.get('source.files');
 
     return Q.all(_.map(sourceFiles, function(fileInfo) {
       var pattern, files;
 
       // These fileinfo patterns and basePaths should be relative to the basePath but if we don't have
-      // a basepath specified then we just use the config.basePath or current working directory
+      // a basepath specified then we just use the config:basePath or current working directory
       if ( _.isString(fileInfo) ) {
         fileInfo = { pattern: fileInfo, basePath: basePath };
       } else if ( _.isObject(fileInfo) ) {

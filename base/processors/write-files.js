@@ -13,7 +13,7 @@ module.exports = {
   runAfter:['writing-files'],
   runBefore: ['files-written'],
   process: function(docs, config) {
-    var outputFolder = path.resolve(config.basePath, config.rendering.outputFolder);
+    var outputFolder = path.resolve(config.get('basePath'), config.get('rendering.outputFolder'));
     return Q.all(_.map(docs, function(doc) {
 
       if ( !doc.outputPath ) {

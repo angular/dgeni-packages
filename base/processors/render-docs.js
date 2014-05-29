@@ -20,7 +20,7 @@ var plugin = module.exports = {
   process: function render(docs, config, extraData, templateFinder, templateEngine) {
 
     // Extract any extra helper functions/data from the config
-    var helpers = _.defaults(Object.create(null), config.rendering.helpers);
+    var helpers = _.defaults(Object.create(null), config.get('rendering.helpers'));
 
 
     _.forEach(docs, function(doc) {

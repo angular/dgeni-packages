@@ -1,32 +1,30 @@
-module.exports = function(config) {
+var Package = require('dgeni').Package;
 
-  require('../base')(config);
+module.exports = new Package('jsdoc', ['base'])
 
+// Add in extra pseudo marker processors
+.processor({ name: 'parsing-tags', runAfter: ['files-read'], runBefore: ['processing-docs'] })
+.processor({ name: 'tags-parsed', runAfter: ['parsing-tags'], runBefore: ['processing-docs'] })
+.processor({ name: 'extracting-tags', runAfter: ['tags-parsed'], runBefore: ['processing-docs'] })
+.processor({ name: 'tags-extracted', runAfter: ['extracting-tags'], runBefore: ['processing-docs'] })
+
+// Add in the real processors for this package
+.processor(require('./processors/code-name'))
+.processor(require('./processors/parse-tags'))
+.processor(require('./processors/extract-tags'))
+.processor(require('./processors/compute-path'))
+.processor(require('./processors/inline-tags'))
+
+// Helper services
+.service('tagDefinitions', require('./services/tagDefinitions'))
+.service('tagDefMap', require('./services/tagDefMap'))
+.service('tagParser', require('./services/tagParser'))
+.service('tagExtractor', require('./services/tagExtractor'))
+.service('defaultTagTransforms', require('./services/defaultTagTransforms'))
+
+// Configure the basic file readers and jsdoc tag definitions
+.config(function(config) {
   config.append('source.fileReaders', require('./file-readers/jsdoc'));
-
-  config.append('processing.processors', [
-    { name: 'parsing-tags', runAfter: ['files-read'], runBefore: ['processing-docs'] },
-    { name: 'tags-parsed', runAfter: ['parsing-tags'], runBefore: ['processing-docs'] },
-    { name: 'extracting-tags', runAfter: ['tags-parsed'], runBefore: ['processing-docs'] },
-    { name: 'tags-extracted', runAfter: ['extracting-tags'], runBefore: ['processing-docs'] }
-  ]);
-
-
-  config.append('processing.processors', [
-    require('./processors/code-name'),
-    require('./processors/tagDefinitions'),
-    require('./processors/tagParser'),
-    require('./processors/tagExtractor'),
-    require('./processors/defaultTagTransforms'),
-    require('./processors/parse-tags'),
-    require('./processors/extract-tags'),
-    require('./processors/compute-path'),
-    require('./processors/inline-tags')
-  ]);
-
   config.append('processing.tagDefinitions', require('./tag-defs'));
-
   config.append('processing.defaultTagTransforms', require('./tag-defs/transforms/trim-whitespace'));
-
-  return config;
-};
+});

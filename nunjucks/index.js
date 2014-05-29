@@ -1,10 +1,14 @@
+var Package = require('dgeni').Package;
+
 /**
  * @dgPackage nunjucks
  * @description Provides a template engine powered by Nunjucks
  */
-module.exports = function(config) {
+module.exports = new Package('nunjucks')
 
-  config.append('processing.processors', require('./nunjucks-template-engine'));
+.service('templateEngine', require('./nunjucks-template-engine'))
+
+.config(function(config) {
 
   config.append('rendering.filters', require('./rendering/filters/change-case'));
 
@@ -19,4 +23,4 @@ module.exports = function(config) {
     require('./rendering/tags/marked')
   ]);
 
-};
+});
