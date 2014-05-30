@@ -116,6 +116,16 @@ Ce package fournit également un ensemble de templates pour générer un fichier
 directive, erreur, fonction de filtre, input, module, objet, aperçu, provider, service, type et un numéro
 pour supporter le rendu des exemples exécutables.
 
+Vous devez prendre conscience qu'à cause de la double utilisation dans la syntaxe des liaisons de Nunjucks et des liaisons d'AngularJS,
+le package ngdoc change les balises de liaison par défaut de Nunjucks :
+
+```
+config.merge('rendering.nunjucks.config.tags', {
+    variableStart: '{$',
+    variableEnd: '$}'
+  });
+```
+
 ### Le package `examples`
 
 Ce package est un mix qui fournit des processeurs supplémentaires pour travailler avec des exemples dans les docs :
