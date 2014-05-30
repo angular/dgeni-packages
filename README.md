@@ -118,7 +118,7 @@ number to support rendering of the runnable examples.
 You should be aware that because of the overlap in syntax between Nunjucks bindings and AngularJS
 bindings, the ngdoc package changes the default Nunjucks binding tags:
 
-``
+```
 config.merge('rendering.nunjucks.config.tags', {
     variableStart: '{$',
     variableEnd: '$}'
