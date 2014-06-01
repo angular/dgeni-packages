@@ -4,9 +4,10 @@ var Package = require('dgeni').Package;
  * @dgPackage nunjucks
  * @description Provides a template engine powered by Nunjucks
  */
-module.exports = new Package('nunjucks')
+module.exports = new Package('nunjucks', ['base'])
 
-.service('templateEngine', require('./nunjucks-template-engine'))
+.service('nunjucksConfig', require('.services/nunjucksConfig'))
+.service('templateEngine', require('.services/nunjucks-template-engine'))
 
 .config(function(config) {
 

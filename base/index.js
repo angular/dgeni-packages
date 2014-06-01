@@ -22,4 +22,7 @@ module.exports = new Package('base')
 .processor(require('./processors/write-files'))
 
 // Helper services
-.service('templateFinder', require('./services/templateFinder'));
+.service('templateFinder', require('./services/templateFinder'))
+.service('templateFolders', require('./services/templateFolders'))
+.service('templatePatterns', require('./services/templatePatterns'))
+.service('basePath', require('./services/basePath'));

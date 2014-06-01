@@ -7,20 +7,10 @@ var glob = require('glob');
  * @dgHelper templateFinder
  * Search a configured set of folders and patterns for templates that match a doc
  */
-module.exports = function templateFinderFactory(config) {
-
-  if ( !config || !config.get('rendering') || !config.get('rendering.templateFolders') || !config.get('rendering.templatePatterns') ) {
-    throw new Error('Invalid configuration.  You must provide the following config properties:\n' +
-      '{\n' +
-      '  rendering: {\n' +
-      '    templateFolders: [ ... ],\n' +
-      '    templatePatterns: [ ... ]\n' +
-      '  }\n' +
-      '}');
-  }
+module.exports = function templateFinderFactory(templateFolders, templatePatterns) {
 
   // Compile each of the patterns and store them for later
-  var patterns = _.map(config.get('rendering.templatePatterns'), function(pattern) {
+  var patterns = _.map(templatePatterns, function(pattern) {
 
     // Here we use the lodash micro templating.
     // The document will be available to the micro template as a `doc` variable
@@ -28,7 +18,7 @@ module.exports = function templateFinderFactory(config) {
   });
 
   // Traverse each templateFolder and store an index of the files found for later
-  var templateSets = _.map(config.get('rendering.templateFolders'), function(templateFolder) {
+  var templateSets = _.map(templateFolders, function(templateFolder) {
     return {
       templateFolder: templateFolder,
       templates: _.indexBy(glob.sync('**/*', { cwd: templateFolder }))

@@ -16,12 +16,11 @@ var plugin = module.exports = {
   name: 'render-docs',
   runAfter: ['rendering-docs'],
   runBefore: ['docs-rendered'],
-
+  config: { helpers: { default: Object.create(null) } },
   process: function render(docs, config, extraData, templateFinder, templateEngine) {
 
     // Extract any extra helper functions/data from the config
-    var helpers = _.defaults(Object.create(null), config.get('rendering.helpers'));
-
+    var helpers = config.get('rendering-docs.helpers');
 
     _.forEach(docs, function(doc) {
       log.debug('Rendering doc', doc.id, doc.name);

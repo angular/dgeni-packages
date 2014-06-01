@@ -5,8 +5,7 @@ var _ = require('lodash');
  * @dgProcessor nunjucks-template-engine
  * @description A nunjucks powered template rendering engine
  */
-module.exports = function nunjucksTemplateEngineFactory(
-                              templateFolders, nunjucksConfig, nunjucksFilters, nunjucksTags) {
+module.exports = function nunjucksTemplateEngineFactory(templateFolders, nunjucksConfig) {
 
   // Set any options on the nunjucks engine, such as using {$ $} for nunjucks interpolation
   // rather than {{ }}, which conflicts with AngularJS

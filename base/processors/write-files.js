@@ -3,6 +3,7 @@ var path = require('canonical-path');
 var log = require('winston');
 var fs = require('q-io/fs');
 var Q = require('q');
+var required = require('dgeni').Validate.required;
 
 /**
  * @dgProcessor write-files
@@ -12,8 +13,9 @@ module.exports = {
   name: 'write-files',
   runAfter:['writing-files'],
   runBefore: ['files-written'],
-  process: function(docs, config) {
-    var outputFolder = path.resolve(config.get('basePath'), config.get('rendering.outputFolder'));
+  config: { outputFolder: { validate: required } },
+  process: function(docs, config, basePath) {
+    var outputFolder = path.resolve(basePath, config.get('writing-files.outputFolder'));
     return Q.all(_.map(docs, function(doc) {
 
       if ( !doc.outputPath ) {

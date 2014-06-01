@@ -5,6 +5,9 @@ var qfs = require('q-io/fs');
 var _ = require('lodash');
 var glob = require('glob');
 var log = require('winston');
+var required = require('dgeni').Validate.required;
+
+
 
 /**
  * @dgPackage read-files
@@ -14,18 +17,15 @@ module.exports = {
   name: 'read-files',
   runAfter: ['reading-files'],
   runBefore: ['files-read'],
+  config: {
+    projectPath: { validate: required },
+    fileReaders: { validate: required },
+    sourceFiles: { validate: required }
+  },
+  process: function(docs, config, basePath) {
 
-  process: function(docs, config) {
-
-    var projectPath = config.get('source.projectPath');
-    if ( !projectPath ) {
-      throw new Error('Missing configuration property.\n' +
-          'You must provide the path to the root of the project in `config:source.projectPath`');
-    }
-
-    var basePath = config.get('basePath') || process.cwd();
-    var fileReaders = config.get('source.fileReaders');
-    var sourceFiles = config.get('source.files');
+    var fileReaders = config.get('fileReaders');
+    var sourceFiles = config.get('sourceFiles');
 
     return Q.all(_.map(sourceFiles, function(fileInfo) {
       var pattern, files;
@@ -37,7 +37,7 @@ module.exports = {
       } else if ( _.isObject(fileInfo) ) {
         fileInfo.basePath = fileInfo.basePath || basePath;
       } else {
-        throw new Error('Invalid files parameter. ' +
+        throw new Error('Invalid sourceFiles parameter. ' +
           'You must pass an array of items, each of which is either a string or an object of the form ' +
           '{ pattern: "...", basePath: "..." }');
       }

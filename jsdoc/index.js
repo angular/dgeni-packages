@@ -24,7 +24,7 @@ module.exports = new Package('jsdoc', ['base'])
 
 // Configure the basic file readers and jsdoc tag definitions
 .config(function(config) {
-  config.append('source.fileReaders', require('./file-readers/jsdoc'));
+  config.append('read-files.fileReaders', require('./file-readers/jsdoc'));
   config.append('processing.tagDefinitions', require('./tag-defs'));
   config.append('processing.defaultTagTransforms', require('./tag-defs/transforms/trim-whitespace'));
 });
