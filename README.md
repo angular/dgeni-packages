@@ -96,7 +96,6 @@ api-docs has the following configuration options available (listed with the defa
     path: '${area}/${module}/${docType}/${name}', // The url for a document's page.
     moduleOutputPath: '${area}/${name}/index.html', // The path to write an api module's page to.
     modulePath: '${area}/${name}' // The url for a module's page.
-   }
   });
   ```
 
