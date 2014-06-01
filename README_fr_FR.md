@@ -97,7 +97,6 @@ api-docs a les options de configuration suivantes de disponibles (énumérés av
     path: '${area}/${module}/${docType}/${name}', // L'url pour la page du document.
     moduleOutputPath: '${area}/${name}/index.html', // Le chemin pour écrire la page d'un module de l'api.
     modulePath: '${area}/${name}' // L'url pour la page du module.
-   }
   });
   ```
 
