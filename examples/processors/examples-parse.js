@@ -58,7 +58,8 @@ module.exports = {
   },
   process: function(docs, examples, config) {
 
-    var outputFolder = config.get('processing.examples.outputFolder', 'examples');
+    var outputFolder = config.get('processing.examples.outputFolder', 'examples'); // folder to output files in
+    var outputFolderPath = config.get('processing.examples.outputFolderPath', 'examples'); // url to output files
 
     _.forEach(docs, function(doc) {
       doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
@@ -69,6 +70,7 @@ module.exports = {
         example.id = id;
         example.doc = doc;
         example.outputFolder = path.join(outputFolder, example.id);
+        example.outputFolderPath = path.join(outputFolderPath, example.id);
 
         // store the example information for later
         log.debug('Storing example', id);

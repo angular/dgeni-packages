@@ -16,6 +16,10 @@ module.exports = function(config) {
   config = basePackage(config);
   config = examplesPackage(config);
 
+  // Optional config for output locations
+  config.set('processing.examples.outputFolder', 'docs/examples');
+  config.set('processing.examples.outputFolderPath', '/docs/examples');
+
   // Add your own configuration here
 };
 ```

@@ -3,7 +3,7 @@
 
 
 <div class="runnable-example"
-    path="{$ doc.example.outputFolder $}"
+    path="{$ doc.example.outputFolderPath $}"
     {%- for attrName, attrValue in doc.example.attributes %}
     {$ attrName $}="{$ attrValue $}"{% endfor %}>
 
@@ -12,11 +12,11 @@
     {$ attrName $}="{$ attrValue $}"{% endfor %}>
     {% code -%}
     {$ file.fileContents $}
-    {%- endcode %}  
+    {%- endcode %}
   </div>
 {% endfor %}
 
-  <iframe class="runnable-example-frame" src="{$ doc.example.outputFolder $}/index.html" name="{$ doc.example.id $}"></iframe>
+  <iframe class="runnable-example-frame" src="{$ doc.example.outputFolderPath $}/index.html" name="{$ doc.example.id $}"></iframe>
 </div>
 
 

@@ -43,6 +43,7 @@ describe("examples-generate processor", function() {
         id: 'a.b.c',
         doc: docs[0],
         outputFolder: 'examples',
+        outputFolderPath: 'examples',
         deps: 'dep1.js;dep2.js',
         files: {
           'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
@@ -87,7 +88,7 @@ describe("examples-generate processor", function() {
     expect(_.find(docs, { id: 'a.b.c' }).scripts).toEqual([
       { path : 'dep1.js' },
       { path : 'dep2.js' },
-      jasmine.objectContaining({ path: 'app.js'})
+      jasmine.objectContaining({ path: 'examples/app.js'})
     ]);
 
     expect(_.find(docs, { id: 'a.b.c-other' }).scripts).toEqual([
@@ -95,7 +96,7 @@ describe("examples-generate processor", function() {
       { path: 'someOtherFile.js' },
       { path : '../dep1.js' },
       { path : '../dep2.js' },
-      jasmine.objectContaining({ path: 'app.js'})
+      jasmine.objectContaining({ path: 'examples/app.js'})
     ]);
   });
 
