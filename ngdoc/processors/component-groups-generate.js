@@ -13,6 +13,11 @@ module.exports = {
       throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
     }
 
+    var apiConfig = config.get('processing.api-docs');
+    if ( !apiConfig ) {
+      throw new Error('Invalid configuration. You must provide config.processing.api-docs');
+    }
+
     _.forEach(moduleMap, function(module) {
 
       _(module.components)
@@ -22,6 +27,7 @@ module.exports = {
           delete docTypes.overview;
         })
         .map(function(docs, docType) {
+          var templateParams = { area: module.area, module: module.name, docType: docType, name: 'index'};
           return {
             id: module.id + '.' + docType,
             docType: 'componentGroup',
@@ -30,8 +36,8 @@ module.exports = {
             moduleDoc: module,
             area: module.area,
             components: docs,
-            outputPath: path.join(partialsPath, _.template('${module.area}/${module.name}/${docType}/index.html', { module: module, docType: docType })),
-            path: _.template('${module.area}/${module.name}/${docType}', { module: module, docType: docType })
+            outputPath: path.join(partialsPath, _.template(apiConfig.outputPath, templateParams)),
+            path: _.template(apiConfig.path, templateParams)
           };
         })
         .tap(function(groups) {
