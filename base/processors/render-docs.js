@@ -1,38 +1,48 @@
+require('es6-shim');
 var _ = require('lodash');
-var log = require('winston');
 
 /**
- * @dgProcessor render-doc
+ * @dgProcessor renderDoc
  * @description
- * Render the set of documents using the provided `templateEngine`, to the output folder,
- * using the extra data and the templates found by `templateFinder`.
- * @param  {object} docs             The documents to render
- * @param {Config} config            The Dgeni configuration object
- * @param {object} extraData         All the injectable components in the base injector
- * @param {object} templateFinder    A helper that can match docs to templates
+ * Render the set of documents using the provided `templateEngine`, to `doc.renderedContent`
+ * using the `extraData`, `helpers` and the templates found by `templateFinder`.
+ *
  * @param {object} templateEngine    The engine that will render the docs/templates
+ * @param {object} templateFinder    A helper that matches templates to docs
+ *
+ * @property {object} extraData      Extra data that will be passed to the rendering engine
+ * @property {object} helpers        Extra functions that will be passed to the rendering engine
  */
-var plugin = module.exports = {
-  name: 'render-docs',
-  runAfter: ['rendering-docs'],
-  runBefore: ['docs-rendered'],
-  config: { helpers: { default: Object.create(null) } },
-  process: function render(docs, config, extraData, templateFinder, templateEngine) {
+module.exports = function renderDocsProcessor(log, templateFinder, templateEngine) {
+  return {
+    helpers: new Map(),
+    extraData: new Map(),
 
-    // Extract any extra helper functions/data from the config
-    var helpers = config.get('rendering-docs.helpers');
+    $runAfter: ['rendering-docs'],
+    $runBefore: ['docs-rendered'],
+    $validate: {
+      helpers: { presence: true },
+      extraData: { presence: true }
+    },
+    $process: function render(docs) {
 
-    _.forEach(docs, function(doc) {
-      log.debug('Rendering doc', doc.id, doc.name);
-      try {
-        var data = _.defaults(Object.create(null), { doc: doc, docs: docs }, extraData, helpers);
-        var templateFile = templateFinder(data.doc);
-        doc.renderedContent = templateEngine.render(templateFile, data);
-      } catch(ex) {
-        console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
-        throw new Error('Failed to render doc "' + doc.id + '" from file "' + doc.file + '" line ' + doc.startingLine + '\n Error Message follows:\n' + ex.stack);
-      }
-    });
+      _.forEach(docs, function(doc) {
+        log.debug('Rendering doc', doc.id, doc.name);
+        try {
+          var data = _.defaults(Object.create(null),
+            { doc: doc, docs: docs },
+            this.extraData,
+            this.helpers);
+          var templateFile = templateFinder(data.doc);
+          doc.renderedContent = templateEngine.render(templateFile, data);
+        } catch(ex) {
+          console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
+          throw new Error('Failed to render doc "' + doc.id + '"' +
+            ' from file "' + doc.file + '" line ' + doc.startingLine + '\n' +
+            'Error Message follows:\n' + ex.stack);
+        }
+      });
 
-  }
+    }
+  };
 };

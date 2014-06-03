@@ -30,20 +30,21 @@
     "url": "https://github.com/angular/dgeni-packages/issues"
   },
   "dependencies": {
-    "dgeni": "angular/dgeni#new-config",
     "canonical-path": "0.0.2",
-    "lodash": "~2.4.1",
-    "winston": "~0.7.2",
-    "graceful-fs": "~2.0.1",
-    "q": "~1.0.0",
-    "glob": "~3.2.8",
-    "q-io": "~1.10.9",
-    "nunjucks": "~1.0.1",
     "catharsis": "^0.7.0",
-    "esprima": "^1.0.4",
     "change-case": "^2.1.0",
+    "dgeni": "angular/dgeni#new-config",
+    "es6-shim": "^0.11.1",
+    "esprima": "^1.0.4",
+    "glob": "~3.2.8",
+    "graceful-fs": "~2.0.1",
+    "lodash": "~2.4.1",
     "marked": "~0.2.10",
-    "node-html-encoder": "0.0.2"
+    "node-html-encoder": "0.0.2",
+    "nunjucks": "~1.0.1",
+    "q": "~1.0.0",
+    "q-io": "~1.10.9",
+    "winston": "~0.7.2"
   },
   "peerDependencies": {
     "dgeni": "~0.3.0"

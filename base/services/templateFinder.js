@@ -9,6 +9,13 @@ var glob = require('glob');
  */
 module.exports = function templateFinderFactory(templateFolders, templatePatterns) {
 
+  if ( templateFolders.length === 0 ) {
+    throw new Error('You must provide at least one template folder');
+  }
+  if ( templatePatterns.length === 0 ) {
+    throw new Error('You must provide at least one template pattern');
+  }
+
   // Compile each of the patterns and store them for later
   var patterns = _.map(templatePatterns, function(pattern) {
 

@@ -5,7 +5,8 @@ var _ = require('lodash');
  * @dgProcessor nunjucks-template-engine
  * @description A nunjucks powered template rendering engine
  */
-module.exports = function nunjucksTemplateEngineFactory(templateFolders, nunjucksConfig) {
+module.exports = function nunjucksTemplateEngineFactory(
+    templateFolders, nunjucksConfig, nunjucksFilters, nunjucksTags) {
 
   // Set any options on the nunjucks engine, such as using {$ $} for nunjucks interpolation
   // rather than {{ }}, which conflicts with AngularJS
@@ -14,13 +15,13 @@ module.exports = function nunjucksTemplateEngineFactory(templateFolders, nunjuck
 
 
   // Configure nunjucks with the custom filters
-  _.forEach(config.get('rendering.filters'), function(filter) {
+  _.forEach(nunjucksFilters, function(filter) {
     engine.addFilter(filter.name, filter.process);
   });
 
 
   // Configure nunjucks with the custom tags
-  _.forEach(config.get('rendering.tags'), function(tag) {
+  _.forEach(nunjucksTags, function(tag) {
     engine.addExtension(tag.tags[0], tag);
   });
 

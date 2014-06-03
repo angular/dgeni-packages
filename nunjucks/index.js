@@ -7,21 +7,23 @@ var Package = require('dgeni').Package;
 module.exports = new Package('nunjucks', ['base'])
 
 .service('nunjucksConfig', require('.services/nunjucksConfig'))
+.service('nunjucksTags', require('.services/nunjucksTags'))
+.service('nunjucksFilters', require('.services/nunjucksFilters'))
 .service('templateEngine', require('.services/nunjucks-template-engine'))
 
-.config(function(config) {
+.config(function(nunjucksTags) {
+  nunjucksTags.push(require('./rendering/tags/marked'));
+})
 
-  config.append('rendering.filters', require('./rendering/filters/change-case'));
+.config(function(nunjucksFilters) {
 
-  config.append('rendering.filters', [
-    require('./rendering/filters/first-line'),
-    require('./rendering/filters/first-paragraph'),
-    require('./rendering/filters/json'),
-    require('./rendering/filters/marked')
-  ]);
-
-  config.append('rendering.tags', [
-    require('./rendering/tags/marked')
-  ]);
+  nunjucksFilters = nunjucksFilters
+    .concat(require('./rendering/filters/change-case'))
+    .concat([
+      require('./rendering/filters/first-line'),
+      require('./rendering/filters/first-paragraph'),
+      require('./rendering/filters/json'),
+      require('./rendering/filters/marked')
+    ]);
 
 });
