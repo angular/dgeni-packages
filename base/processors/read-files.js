@@ -49,6 +49,11 @@ module.exports = {
 
       files = glob.sync(fileInfo.pattern, { cwd: fileInfo.basePath });
 
+      // Allow to exclude files using a filter
+      if ( _.isFunction(fileInfo.filter) ) {
+        files = files.filter(fileInfo.filter);
+      }
+
       log.debug('Found ' + files.length + ' files');
 
       var docPromises = [];
