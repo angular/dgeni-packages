@@ -7,11 +7,18 @@ var _ = require('lodash');
  * Render the set of documents using the provided `templateEngine`, to `doc.renderedContent`
  * using the `extraData`, `helpers` and the templates found by `templateFinder`.
  *
- * @param {object} templateEngine    The engine that will render the docs/templates
- * @param {object} templateFinder    A helper that matches templates to docs
+ * @param {TemplateEngine} templateEngine    The engine that will render the docs/templates. The
+ *                                           base package doesn't provide a default templateEngine.
+ *                                           There is a Nunjucks based engine in the nunjucks module.
+ * @param {TemplateFinder} templateFinder    A service that matches templates to docs.  A default
+ *                                           templateFinder is provided in this base package.
  *
- * @property {object} extraData      Extra data that will be passed to the rendering engine
- * @property {object} helpers        Extra functions that will be passed to the rendering engine
+ * @property {Map} extraData      Extra data that will be passed to the rendering engine. Your
+ *                                services and processors can add data to this object to be made
+ *                                available in templates when they are rendered.
+ * @property {Map} helpers        Extra helper functions that will be passed to the rendering engine.
+ *                                Your services and processors can add helper functions to this
+ *                                object to be made available in templates when they are rendered.
  */
 module.exports = function renderDocsProcessor(log, templateFinder, templateEngine) {
   return {
