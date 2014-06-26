@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 /**
- * @dgProcessor unescapeComments
+ * @dgProcessor unescapeCommentsProcessor
  * @description
  * Some files (like CSS) use the same comment markers as the jsdoc comments, such as /&amp;#42;.
  * To get around this we HTML encode them in the source.
