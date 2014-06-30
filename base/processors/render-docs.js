@@ -22,8 +22,8 @@ var _ = require('lodash');
  */
 module.exports = function renderDocsProcessor(log, templateFinder, templateEngine) {
   return {
-    helpers: new Map(),
-    extraData: new Map(),
+    helpers: {},
+    extraData: {},
 
     $runAfter: ['rendering-docs'],
     $runBefore: ['docs-rendered'],
@@ -33,10 +33,10 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
     },
     $process: function render(docs) {
 
-      _.forEach(docs, function(doc) {
+      docs.forEach(function(doc) {
         log.debug('Rendering doc', doc.id, doc.name);
         try {
-          var data = _.defaults(Object.create(null),
+          var data = _.defaults(
             { doc: doc, docs: docs },
             this.extraData,
             this.helpers);
@@ -48,7 +48,7 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
             ' from file "' + doc.file + '" line ' + doc.startingLine + '\n' +
             'Error Message follows:\n' + ex.stack);
         }
-      });
+      }, this);
 
     }
   };
