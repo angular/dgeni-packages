@@ -4,15 +4,23 @@ var path = require('canonical-path');
 var glob = require('glob');
 
 /**
- * @dgHelper templateFinder
- * Search a configured set of folders and patterns for templates that match a doc
+ * @dgService templateFinder
+ * @kind function
+ * @param {string[]} templateFolders A collection of folders to search for templates. The templateFinder
+ *                                   will also search all subfolders.
+ * @param {string[]} templatePatterns A collection of patterns to use to match templates against
+ *                                    documents. The patterns are expanded using lodash template
+ *                                    interpolation, by passing in the document to match as `doc`.
+ * @description
+ * Search a configured set of folders and patterns for templates that match a document.
+ *
  */
-module.exports = function templateFinderFactory(templateFolders, templatePatterns) {
+module.exports = function templateFinder(templateFolders, templatePatterns) {
 
-  if ( templateFolders.length === 0 ) {
+  if ( !templateFolders || !templateFolders.length ) {
     throw new Error('You must provide at least one template folder');
   }
-  if ( templatePatterns.length === 0 ) {
+  if ( !templatePatterns || !templatePatterns.length ) {
     throw new Error('You must provide at least one template pattern');
   }
 
