@@ -1,73 +1,186 @@
+require('es6-shim');
 var path = require('canonical-path');
 var Q = require('q');
 var gfs = require('graceful-fs');
 var qfs = require('q-io/fs');
 var _ = require('lodash');
 var glob = require('glob');
+var Minimatch = require("minimatch").Minimatch;
+
 
 /**
  * @dgPackage readFilesProcessor
+ *
  * @description Read documents from files and add them to the docs collection
+ *
+ * @property {string} basePath The path against which all paths to files are resolved
+ *
+ * @property {Array.<String|Object>} sourceFiles A collection of info about what files to read.
+ *      If the item is a string then it is treated as a glob pattern. If the item is an object then
+ *      it can have the following properties:
+ *
+ *      * `basePath` {string} the `relativeFile` property of the generated docs will be relative
+ *        to this path. This path is relative to `readFileProcessor.basePath`.  Defaults to `.`.
+ *      * `include` {string} glob pattern of files to include (relative to `readFileProcessor.basePath`)
+ *      * `exclude` {string} glob pattern of files to exclude (relative to `readFileProcessor.basePath`)
+ *      * `reader` {string} name of a file reader to use for these files
+ *
+ * @property {Array.<Function>} fileReaders A collection of file reader factories. A file reader is
+ *      an object that has the following properties/methods:
+ *
+ *      * `getDocs(fileInfo)` - this method is called to read the contents of the file specified
+ *         by the `fileInfo` object and return an array of documents.
+ *      * `defaultPattern {Regex}` - a regular expression used to match to source files if no fileReader
+ *         is specified in the sourceInfo item.
+ *
  */
-module.exports = function readFilesProcessor(log) {
+module.exports = function readFilesProcessor(log, injector) {
   return {
     $validate: {
       basePath: { presence: true },
-      projectPath: { presence: true },
+      sourceFiles: { presence: true },
       fileReaders: { presence: true },
-      sourceFiles: { presence: true }
     },
     $runAfter: ['reading-files'],
     $runBefore: ['files-read'],
-    $process: function(docs) {
+    $process: function() {
+      var fileReaders = loadFileReaders(injector, this.fileReaders);
+      var fileReaderMap = getFileReaderMap(fileReaders);
+      var basePath = this.basePath;
 
-      return Q.all(_.map(this.sourceFiles, function(fileInfo) {
-        var pattern, files;
+      var sourcePromises = this.sourceFiles.map(function(sourceInfo) {
 
-        // These fileinfo patterns and basePaths should be relative to the basePath but if we don't have
-        // a basepath specified then we just use the config:basePath or current working directory
-        if ( _.isString(fileInfo) ) {
-          fileInfo = { pattern: fileInfo, basePath: this.basePath };
-        } else if ( _.isObject(fileInfo) ) {
-          fileInfo.basePath = fileInfo.basePath || this.basePath;
-        } else {
-          throw new Error('Invalid sourceFiles parameter. ' +
-            'You must pass an array of items, each of which is either a string or an object of the form ' +
-            '{ pattern: "...", basePath: "..." }');
-        }
+        sourceInfo = normalizeSourceInfo(basePath, sourceInfo);
 
-        // Ensure that the pattern is relative
-        fileInfo.pattern = path.relative(fileInfo.basePath, path.resolve(fileInfo.basePath, fileInfo.pattern));
+        log.debug('Source Info:\n', sourceInfo);
 
-        log.debug('reading files: ', fileInfo);
+        return getSourceFiles(sourceInfo).then(function(files) {
 
-        files = glob.sync(fileInfo.pattern, { cwd: fileInfo.basePath });
+          var docsPromises = [];
 
-        log.debug('Found ' + files.length + ' files');
+          log.debug('Found ' + files.length + ' files:\n', files);
 
-        var docPromises = [];
-        _.forEach(files, function(file) {
-          _.any(this.fileReaders, function(extractor) {
-            if ( extractor.pattern.test(file) ) {
-              docPromises.push(qfs.read(path.resolve(fileInfo.basePath, file)).then(function(content) {
-                var docs = extractor.processFile(file, content, fileInfo.basePath);
+          files.forEach(function(file) {
 
-                _.forEach(docs, function(doc) {
-                  doc.fileName = path.basename(doc.file, '.'+doc.fileType);
-                  doc.relativePath = path.relative(this.projectPath, path.resolve(doc.basePath, doc.file));
-                });
+            // Load up each file and extract documents using the appropriate fileReader
+            var docsPromise = qfs.read(file).then(function(content) {
 
-                return docs;
-              }));
-              return true;
-            }
+              // Choose a file reader for this file
+              var fileReader = fileReaderMap.get(sourceInfo.fileReader) || matchFileReader(fileReaders, file);
+
+              log.debug('Reading File Contents\nFile Path:', file, '\nFile Reader:', fileReader.name);
+
+              var fileInfo = createFileInfo(file, content, sourceInfo, fileReader);
+
+              var docs = fileReader.getDocs(fileInfo);
+
+              // Attach the fileInfo object to each doc
+              docs.forEach(function(doc) {
+                doc.fileInfo = fileInfo;
+              });
+
+              return docs;
+            });
+
+            docsPromises.push(docsPromise);
+
           });
+          return Q.all(docsPromises).then(_.flatten);
         });
 
-        return Q.all(docPromises).then(_.flatten);
-      }))
-
-      .then(_.flatten);
+      });
+      return Q.all(sourcePromises).then(_.flatten);
     }
   };
 };
+
+function createFileInfo(file, content, sourceInfo, fileReader) {
+  return {
+    fileReader: fileReader.name,
+    filePath: file,
+    baseName: path.basename(file, path.extname(file)),
+    extension: path.extname(file).replace(/^\./, ''),
+    basePath: sourceInfo.basePath,
+    relativePath: path.relative(sourceInfo.basePath, file),
+    content: content
+  };
+}
+
+function loadFileReaders(injector, fileReaderProviders) {
+  return fileReaderProviders.map(function(fileReaderProvider) {
+    var fileReader = injector.invoke(fileReaderProvider);
+    fileReader.name = fileReader.name || fileReaderProvider.name;
+    return fileReader;
+  });
+}
+
+function getFileReaderMap(fileReaders) {
+  var fileReaderMap = new Map();
+  fileReaders.forEach(function(fileReader) {
+    fileReaderMap.set(fileReader.name, fileReader);
+  });
+  return fileReaderMap;
+}
+
+
+function matchFileReader(fileReaders, file) {
+  // We can't use fileReaders.find here because q-io overrides the es6-shim find() function
+  var found = _.find(fileReaders, function(fileReader) {
+    // If no defaultPattern is defined then match everything
+    return !fileReader.defaultPattern || fileReader.defaultPattern.test(file);
+  });
+  if ( !found ) { throw new Error('No file reader found for ' + file); }
+  return found;
+}
+
+/**
+ * Resolve the relative include/exclude paths in the sourceInfo object,
+ * @private
+ */
+function normalizeSourceInfo(basePath, sourceInfo) {
+
+  if ( _.isString(sourceInfo) ) {
+    sourceInfo = { include: sourceInfo };
+  } else if ( !_.isObject(sourceInfo) ) {
+
+    throw new Error('Invalid sourceFiles parameter. ' +
+      'You must pass an array of items, each of which is either a string or an object of the form ' +
+      '{ include: "...", basePath: "...", exclude: "...", fileReader: "..." }');
+  }
+
+  sourceInfo.basePath = path.resolve(basePath, sourceInfo.basePath || '.');
+  sourceInfo.include = path.resolve(basePath, sourceInfo.include);
+  sourceInfo.exclude = sourceInfo.exclude && path.resolve(basePath, sourceInfo.exclude);
+
+  return sourceInfo;
+}
+
+
+function getSourceFiles(sourceInfo) {
+
+  var excludeMatcher = sourceInfo.exclude && new Minimatch(sourceInfo.exclude);
+
+  var filesPromise = Q.nfcall(glob, sourceInfo.include);
+
+  return filesPromise.then(function(files) {
+
+    // Filter the files on whether they match the `exclude` property and whether they are files
+    var filteredFilePromises = files.map(function(file) {
+
+      if ( excludeMatcher && excludeMatcher.match(file) ) {
+        // Return a promise for `null` if the path is excluded
+        // Doing this first - it is synchronous - saves us even making the isFile call if not needed
+        return Q(null);
+      } else {
+        // Return a promise for the file if path is a file, otherwise return a promise for `null`
+        return qfs.isFile(file).then(function(isFile) { return isFile ? file : null; });
+      }
+    });
+
+    // Return a promise to a filtered list of files, those that are files and not excluded
+    // (i.e. those that are not `null` from the previous block of code)
+    return Q.all(filteredFilePromises).then(function(filteredFiles) {
+      return filteredFiles.filter(function(filteredFile) { return filteredFile; });
+    });
+  });
+}

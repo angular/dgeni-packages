@@ -1,96 +1,164 @@
 var Q = require('q');
-var MockFS = require('q-io/fs-mock');
-var rewire = require('rewire');
-var plugin = rewire('../../processors/read-files');
+var path = require('canonical-path');
+var readFilesFactory = require('../../processors/read-files');
 var _ = require('lodash');
-var Config = require('dgeni').Config;
 
-var mockFiles = {
-  "docs": {
-    "a.js": "// Mock code file",
-    "b.ngdoc": "mock documentation file"
-  },
-  "src": {
-    "a.js": "// Mock code file",
-    "b.js": "// Other mock code file"
-  }
+function tidyUp(promise, done) {
+  return promise.then(function() {
+    done();
+  },function(err) {
+    console.log('ERROR', err.stack);
+    done(err);
+  });
+}
+
+var mockLog = jasmine.createSpyObj('mockLog', ['silly', 'debug', 'info', 'warn', 'error']);
+// Uncomment this line if you are debugging and want to see the log messages
+//mockLog.debug.and.callFake(console.log);
+
+var mockInjector = {
+  invoke: function(fn) { return fn(); }
 };
 
-plugin.__set__('fs', MockFS(mockFiles));
-plugin.__set__('glob.sync', function(pattern) {
-  // Strip off the "./" from the start of the pattern
-  pattern = pattern.replace(/^\.\//,'');
-  return _.keys(mockFiles[pattern]);
-});
 
-var mockNgDocFileReader = {
-  pattern: /\.ngdoc$/,
-  processFile: function(file, content) {
-    return [{ content: content, file: file, fileType: 'ngdoc' }];
-  }
-};
-
-var mockJsFileReader = {
-  pattern: /\.js$/,
-  processFile: function(file, content) {
-    return [{ content: content, file: file, fileType: 'js' }];
-  }
-};
 
 describe('read-files doc processor', function() {
-  var config;
 
+  var processor;
   beforeEach(function() {
-    config = new Config();
+    processor = readFilesFactory(mockLog, mockInjector);
   });
 
-  it("should throw an error if the projectPath has not been set", function() {
-    expect(function() {
-      plugin.process({ source: { files: [] }});
-    }).toThrow();
+
+  it('should iterate over matching files, providing fileInfo to the reader', function(done) {
+
+    function mockFileReader() {
+      return {
+        getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+      };
+    }
+
+
+    processor.basePath = path.resolve(__dirname, '../fixtures');
+    processor.fileReaders = [mockFileReader];
+    processor.sourceFiles = ['docs/*'];
+
+    var promise = processor.$process().then(function(docs) {
+      expect(docs.length).toEqual(2);
+      expect(docs[0].fileInfo).toEqual({
+        fileReader: 'mockFileReader',
+        filePath: path.resolve(processor.basePath, 'docs/a.js'),
+        baseName: 'a',
+        extension: 'js',
+        basePath: processor.basePath,
+        relativePath: 'docs/a.js',
+        content: '// Mock code file'
+      });
+      expect(docs[0].fileInfo2).toBe(docs[0].fileInfo);
+      expect(docs[1].fileInfo).toEqual({
+        fileReader: 'mockFileReader',
+        filePath: path.resolve(processor.basePath, 'docs/b.ngdoc'),
+        baseName: 'b',
+        extension: 'ngdoc',
+        basePath: processor.basePath,
+        relativePath: 'docs/b.ngdoc',
+        content: 'mock documentation file'
+      });
+      expect(docs[1].fileInfo2).toBe(docs[1].fileInfo);
+    });
+
+    tidyUp(promise, done);
   });
 
-  it('should traverse the specified folder tree, reading each matching file', function() {
+  describe('fileReaders', function() {
 
-    config = new Config({
-      source: {
-        projectPath: '.',
-        fileReaders: [mockNgDocFileReader, mockJsFileReader],
-        files: ['./docs', './src']
+    function mockNgDocFileReader() {
+      return {
+        defaultPattern: /\.ngdoc$/,
+        getDocs: function(fileInfo) { return [{}]; }
+      };
+    }
+
+    function mockJsFileReader() {
+      return {
+        defaultPattern: /\.js$/,
+        getDocs: function(fileInfo) { return [{}]; }
+      };
+    }
+
+    it("should use the first file reader that matches if none is specified for a sourceInfo", function(done) {
+
+      processor.basePath = path.resolve(__dirname, '../fixtures');
+      processor.fileReaders = [mockNgDocFileReader, mockJsFileReader];
+      processor.sourceFiles = ['docs/*'];
+
+      var promise = processor.$process().then(function(docs) {
+        expect(docs[0].fileInfo.extension).toEqual('js');
+        expect(docs[0].fileInfo.fileReader).toEqual('mockJsFileReader');
+        expect(docs[1].fileInfo.extension).toEqual('ngdoc');
+        expect(docs[1].fileInfo.fileReader).toEqual('mockNgDocFileReader');
+      });
+
+      tidyUp(promise, done);
+    });
+
+    it("should use the fileReader named in the sourceInfo, rather than try to match one", function(done) {
+      processor.basePath = path.resolve(__dirname, '../fixtures');
+      processor.fileReaders = [mockNgDocFileReader, mockJsFileReader];
+      processor.sourceFiles = [{ include: 'docs/*', fileReader: 'mockJsFileReader' }];
+
+      var promise = processor.$process().then(function(docs) {
+        expect(docs[0].fileInfo.extension).toEqual('js');
+        expect(docs[0].fileInfo.fileReader).toEqual('mockJsFileReader');
+        expect(docs[1].fileInfo.extension).toEqual('ngdoc');
+        expect(docs[1].fileInfo.fileReader).toEqual('mockJsFileReader');
+      });
+
+      tidyUp(promise, done);
+    });
+  });
+
+  describe('exclusions', function() {
+    it("should exclude files that match the exclude property of a sourceInfo", function(done) {
+
+      function mockFileReader() {
+        return {
+          getDocs: function(fileInfo) { return [{ }]; }
+        };
       }
+
+      processor.basePath = path.resolve(__dirname, '../fixtures');
+      processor.fileReaders = [mockFileReader];
+      processor.sourceFiles = [{ include: 'docs/*', exclude:'**/*.ngdoc' }];
+
+      var promise = processor.$process().then(function(docs) {
+        expect(docs.length).toEqual(1);
+        expect(docs[0].fileInfo.extension).toEqual('js');
+      });
+      tidyUp(promise, done);
     });
+  });
 
-    var injectables = {
-      value: function() {}
-    };
+  describe("relative paths", function() {
+    it("should set the relativePath on the doc.fileInfo property correctly", function(done) {
 
-    plugin.process([], config).then(function(docs) {
-      expect(docs.length).toEqual(4);
-      expect(docs[0]).toEqual({
-        file: "docs/a.js",
-        content: "// Mock code file",
-        fileType: 'js',
-        fileName: "a"
+      function mockFileReader() {
+        return {
+          getDocs: function(fileInfo) { return [{ }]; }
+        };
+      }
+
+      processor.basePath = path.resolve(__dirname, '../fixtures');
+      processor.fileReaders = [mockFileReader];
+      processor.sourceFiles = [{ include: 'src/**/*', basePath:'src' }];
+
+      var promise = processor.$process().then(function(docs) {
+        expect(docs.length).toEqual(2);
+        expect(docs[0].fileInfo.relativePath).toEqual('f1/a.js');
+        expect(docs[1].fileInfo.relativePath).toEqual('f2/b.js');
       });
-      expect(docs[1]).toEqual({
-        file: "docs/b.ngdoc",
-        content: "mock documentation file",
-        fileType: 'ngdoc',
-        fileName: 'b'
-      });
-      expect(docs[2]).toEqual({
-        file: "src/a.js",
-        content: "// Mock code file",
-        fileType: 'js',
-        fileName: 'a'
-      });
-      expect(docs[3]).toEqual({
-        file: "src/b.js",
-        content: "// Other mock code file",
-        fileType: 'js',
-        fileName: 'a'
-      }).done();
+
+      tidyUp(promise, done);
     });
-
   });
 });
