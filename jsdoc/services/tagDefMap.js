@@ -1,12 +1,16 @@
+require('es6-shim');
 var _ = require('lodash');
-module.exports = function tagDefMapFactory(tagDefinitions) {
+
+module.exports = function tagDefMap(tagDefinitions) {
   // Create a map of the tagDefinitions so that we can look up tagDefs based on name or alias
-  var tagDefMap = Object.create(null);
-  _.forEach(tagDefinitions, function(tagDefinition) {
-    tagDefMap[tagDefinition.name] = tagDefinition;
-    _.forEach(tagDefinition.aliases, function(alias) {
-      tagDefMap[alias] = tagDefinition;
-    });
+  var map = new Map();
+  tagDefinitions.forEach(function(tagDefinition) {
+    map.set(tagDefinition.name, tagDefinition);
+    if ( tagDefinition.aliases ) {
+      tagDefinition.aliases.forEach(function(alias) {
+        map.set(alias, tagDefinition);
+      });
+    }
   });
-  return tagDefMap;
+  return map;
 };
