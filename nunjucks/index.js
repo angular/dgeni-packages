@@ -6,10 +6,10 @@ var Package = require('dgeni').Package;
  */
 module.exports = new Package('nunjucks', ['base'])
 
-.service('nunjucksConfig', require('.services/nunjucksConfig'))
-.service('nunjucksTags', require('.services/nunjucksTags'))
-.service('nunjucksFilters', require('.services/nunjucksFilters'))
-.service('templateEngine', require('.services/nunjucks-template-engine'))
+.factory(require('./services/nunjucksConfig'))
+.factory(require('./services/nunjucksTags'))
+.factory(require('./services/nunjucksFilters'))
+.factory('templateEngine', require('./services/nunjucks-template-engine'))
 
 .config(function(nunjucksTags) {
   nunjucksTags.push(require('./rendering/tags/marked'));

@@ -1,3 +1,3 @@
-module.exports = function nunjucksConfigFactory(config) {
-  return config.get('rendering.nunjucks.config', {});
+module.exports = function nunjucksConfig(config) {
+  return {};
 };
