@@ -1,8 +1,6 @@
 module.exports = [
 {
-  file : 'some/file.js',
   startingLine : 3,
-  fileType : 'js',
   content:
     "@ngdoc object\n" +
     "@name ng/$controllerProvider\n" +
@@ -14,9 +12,7 @@ module.exports = [
     "{@link ng/$controllerProvider#methods_register register} method."
 },
 {
-  file: 'some/file.js',
   startingLine: 18,
-  fileType : 'js',
   content:
     "@ngdoc function\n" +
     "@name ng/$controllerProvider#register\n" +
@@ -27,9 +23,7 @@ module.exports = [
     "   annotations in the array notation).",
 },
 {
-  file: 'some/file.js',
   startingLine: 39,
-  fileType : 'js',
   content:
      "@ngdoc function\n" +
      "@name ng/$controller\n" +

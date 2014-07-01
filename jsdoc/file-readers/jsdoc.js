@@ -4,10 +4,10 @@ var walk = require('../lib/walk');
 var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
 module.exports = {
-  pattern: /\.js$/,
-  processFile: function(filePath, contents, basePath) {
+  defaultPattern: /\.js$/,
+  getDocs: function(fileInfo) {
 
-    var ast = jsParser.parse(contents, {
+    var ast = jsParser.parse(fileInfo.content, {
       loc: true,
       range: true,
       comment: true
@@ -35,11 +35,8 @@ module.exports = {
 
         // Create a doc from this comment
         return {
-          fileType: 'js',
           startingLine: comment.loc.start.line,
           endingLine: comment.loc.end.line,
-          file: filePath,
-          basePath: basePath,
           content: text,
           codeNode: codeNode,
           codeAncestors: codeAncestors
