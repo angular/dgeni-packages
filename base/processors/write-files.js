@@ -23,13 +23,14 @@ module.exports = function writeFilesProcessor(log) {
     $runAfter:['writing-files'],
     $runBefore: ['files-written'],
     $process: function(docs) {
+      var outputFolder = this.outputFolder;
       return Q.all(_.map(docs, function(doc) {
 
         if ( !doc.outputPath ) {
           log.debug('Document "' + doc.id + ', ' + doc.docType + '" has no outputPath.');
         } else {
 
-          var outputFile = path.resolve(this.outputFolder, doc.outputPath);
+          var outputFile = path.resolve(outputFolder, doc.outputPath);
 
           log.silly('writing file', outputFile);
           return writeFile(outputFile, doc.renderedContent).then(function() {
