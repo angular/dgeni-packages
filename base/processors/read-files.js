@@ -28,7 +28,7 @@ var Minimatch = require("minimatch").Minimatch;
  * @property {Array.<Function>} fileReaders A collection of file reader factories. A file reader is
  *      an object that has the following properties/methods:
  *
- *      * `getDocs(fileInfo)` - this method is called to read the contents of the file specified
+ *      * `getDocs(fileInfo)` - this method is called to read the content of the file specified
  *         by the `fileInfo` object and return an array of documents.
  *      * `defaultPattern {Regex}` - a regular expression used to match to source files if no fileReader
  *         is specified in the sourceInfo item.
@@ -68,7 +68,7 @@ module.exports = function readFilesProcessor(log, injector) {
               // Choose a file reader for this file
               var fileReader = fileReaderMap.get(sourceInfo.fileReader) || matchFileReader(fileReaders, file);
 
-              log.debug('Reading File Contents\nFile Path:', file, '\nFile Reader:', fileReader.name);
+              log.debug('Reading File Content\nFile Path:', file, '\nFile Reader:', fileReader.name);
 
               var fileInfo = createFileInfo(file, content, sourceInfo, fileReader);
 
