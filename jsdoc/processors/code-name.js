@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 /**
  * @dgProcessor codeNameProcessor
  * @description  Infer the name of the document from name of the following code
@@ -9,7 +7,7 @@ module.exports = function codeNameProcessor(log) {
     $runAfter: ['files-read'],
     $runBefore: ['processing-docs'],
     $process: function(docs) {
-      _.forEach(docs, function(doc) {
+      docs.forEach(function(doc) {
         doc.codeName = doc.codeNode && findCodeName(doc.codeNode.node);
       });
       return docs;
