@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var path = require('canonical-path');
 
 /**
@@ -7,27 +6,29 @@ var path = require('canonical-path');
  */
 module.exports = function computePathProcessor() {
   return {
+    contentsFolder: null,
+    $validate: {
+      outputFolder: { presence: true }
+    },
     $runAfter: ['docs-processed'],
     $runBefore: ['rendering-docs'],
     $process: function(docs) {
 
-      var contentsFolder = config.get('rendering.contentsFolder');
-      if ( !contentsFolder ) {
-        throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
-      }
+      var outputFolder = this.outputFolder;
 
-      _.forEach(docs, function(doc) {
+      docs.forEach(function(doc) {
+
         doc.path = doc.path || doc.name || doc.codeName;
 
         if ( !doc.path ) {
-          doc.path = path.join(path.dirname(doc.file));
-          if ( doc.fileName !== 'index' ) {
-            doc.path += '/' + doc.fileName;
+          doc.path = path.join(path.dirname(doc.fileInfo.file));
+          if ( doc.fileInfo.baseName !== 'index' ) {
+            doc.path = path.join(doc.path,doc.fileInfo.baseName);
           }
         }
 
         if ( !doc.outputPath ) {
-          doc.outputPath = contentsFolder + '/' + doc.path + '.html';
+          doc.outputPath = path.join(outputFolder, doc.path + '.html');
         }
       });
     }
