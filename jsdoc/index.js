@@ -1,6 +1,6 @@
 var Package = require('dgeni').Package;
 
-module.exports = new Package('jsdoc', ['base'])
+module.exports = new Package('jsdoc', [require('../base')])
 
 // Add in extra pseudo marker processors
 .processor({ name: 'parsing-tags', runAfter: ['files-read'], runBefore: ['processing-docs'] })
@@ -16,11 +16,11 @@ module.exports = new Package('jsdoc', ['base'])
 .processor(require('./processors/inline-tags'))
 
 // Helper services
-.service('tagDefinitions', require('./services/tagDefinitions'))
-.service('tagDefMap', require('./services/tagDefMap'))
-.service('tagParser', require('./services/tagParser'))
-.service('tagExtractor', require('./services/tagExtractor'))
-.service('defaultTagTransforms', require('./services/defaultTagTransforms'))
+.factory(require('./services/tagDefinitions'))
+.factory(require('./services/tagDefMap'))
+.factory(require('./services/tagParser'))
+.factory(require('./services/tagExtractor'))
+.factory(require('./services/defaultTagTransforms'))
 
 // Configure the basic file readers and jsdoc tag definitions
 .config(function(config) {

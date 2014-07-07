@@ -1,8 +1,8 @@
-var package = require('../index');
-var Config = require('dgeni').Config;
+var jsdocPackage = require('../index');
+var Package = require('dgeni').Package;
 
 describe('jsdoc package', function() {
-  it("should load the package", function() {
-    package(new Config());
+  it("should be instance of Package", function() {
+      expect(jsdocPackage instanceof Package).toBeTruthy();
   });
 });
