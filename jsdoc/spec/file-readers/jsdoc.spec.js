@@ -1,24 +1,29 @@
 var path = require('canonical-path');
-var fileReader = require('../../file-readers/jsdoc');
+var fileReaderFactory = require('../../file-readers/jsdoc');
 
 var srcJsContent = require('./_test-data/srcJsFile.js');
 var docsFromJsContent = require('./_test-data/docsFromJsFile');
 
 
-function createFileInfo(file, content, basePath) {
-  return {
-    fileReader: fileReader.name,
-    filePath: file,
-    baseName: path.basename(file, path.extname(file)),
-    extension: path.extname(file).replace(/^\./, ''),
-    basePath: basePath,
-    relativePath: path.relative(basePath, file),
-    content: content
-  };
-}
-
-
 describe("jsdoc fileReader", function() {
+
+  var fileReader;
+
+  var createFileInfo = function(file, content, basePath) {
+    return {
+      fileReader: fileReader.name,
+      filePath: file,
+      baseName: path.basename(file, path.extname(file)),
+      extension: path.extname(file).replace(/^\./, ''),
+      basePath: basePath,
+      relativePath: path.relative(basePath, file),
+      content: content
+    };
+  };
+
+  beforeEach(function() {
+    fileReader = fileReaderFactory();
+  });
 
   describe("defaultPattern", function() {
 
