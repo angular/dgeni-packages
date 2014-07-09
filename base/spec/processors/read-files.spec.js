@@ -16,32 +16,30 @@ var mockLog = jasmine.createSpyObj('mockLog', ['silly', 'debug', 'info', 'warn',
 // Uncomment this line if you are debugging and want to see the log messages
 //mockLog.debug.and.callFake(console.log);
 
-var mockInjector = {
-  invoke: function(fn) { return fn(); }
+var mockGetInjectables = function(objects) {
+  return jasmine.createSpy().and.returnValue(objects);
+};
+
+var createReadFilesProcessor = function(fileReaders, sourceFiles, basePath) {
+  var processor = readFilesFactory(mockLog, mockGetInjectables(fileReaders));
+  processor.fileReaders = fileReaders;
+  processor.sourceFiles = sourceFiles;
+  processor.basePath = path.resolve(__dirname, basePath);
+  return processor;
 };
 
 
 
 describe('read-files doc processor', function() {
 
-  var processor;
-  beforeEach(function() {
-    processor = readFilesFactory(mockLog, mockInjector);
-  });
-
-
   it('should iterate over matching files, providing fileInfo to the reader', function(done) {
 
-    function mockFileReader() {
-      return {
-        getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
-      };
-    }
+    var mockFileReader = {
+      name: 'mockFileReader',
+      getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+    };
 
-
-    processor.basePath = path.resolve(__dirname, '../fixtures');
-    processor.fileReaders = [mockFileReader];
-    processor.sourceFiles = ['docs/*'];
+    processor = createReadFilesProcessor([mockFileReader], ['docs/*'], '../fixtures');
 
     var promise = processor.$process().then(function(docs) {
       expect(docs.length).toEqual(2);
@@ -72,25 +70,21 @@ describe('read-files doc processor', function() {
 
   describe('fileReaders', function() {
 
-    function mockNgDocFileReader() {
-      return {
-        defaultPattern: /\.ngdoc$/,
-        getDocs: function(fileInfo) { return [{}]; }
-      };
-    }
+    var mockNgDocFileReader = {
+      name: 'mockNgDocFileReader',
+      defaultPattern: /\.ngdoc$/,
+      getDocs: function(fileInfo) { return [{}]; }
+    };
 
-    function mockJsFileReader() {
-      return {
-        defaultPattern: /\.js$/,
-        getDocs: function(fileInfo) { return [{}]; }
-      };
-    }
+    var mockJsFileReader = {
+      name: 'mockJsFileReader',
+      defaultPattern: /\.js$/,
+      getDocs: function(fileInfo) { return [{}]; }
+    };
 
     it("should use the first file reader that matches if none is specified for a sourceInfo", function(done) {
 
-      processor.basePath = path.resolve(__dirname, '../fixtures');
-      processor.fileReaders = [mockNgDocFileReader, mockJsFileReader];
-      processor.sourceFiles = ['docs/*'];
+      processor = createReadFilesProcessor([mockNgDocFileReader, mockJsFileReader], ['docs/*'], '../fixtures');
 
       var promise = processor.$process().then(function(docs) {
         expect(docs[0].fileInfo.extension).toEqual('js');
@@ -103,9 +97,7 @@ describe('read-files doc processor', function() {
     });
 
     it("should use the fileReader named in the sourceInfo, rather than try to match one", function(done) {
-      processor.basePath = path.resolve(__dirname, '../fixtures');
-      processor.fileReaders = [mockNgDocFileReader, mockJsFileReader];
-      processor.sourceFiles = [{ include: 'docs/*', fileReader: 'mockJsFileReader' }];
+      processor = createReadFilesProcessor([mockNgDocFileReader, mockJsFileReader], [{ include: 'docs/*', fileReader: 'mockJsFileReader' }], '../fixtures');
 
       var promise = processor.$process().then(function(docs) {
         expect(docs[0].fileInfo.extension).toEqual('js');
@@ -121,15 +113,12 @@ describe('read-files doc processor', function() {
   describe('exclusions', function() {
     it("should exclude files that match the exclude property of a sourceInfo", function(done) {
 
-      function mockFileReader() {
-        return {
-          getDocs: function(fileInfo) { return [{ }]; }
-        };
-      }
+      var mockFileReader = {
+        name: 'mockFileReader',
+        getDocs: function(fileInfo) { return [{ }]; }
+      };
 
-      processor.basePath = path.resolve(__dirname, '../fixtures');
-      processor.fileReaders = [mockFileReader];
-      processor.sourceFiles = [{ include: 'docs/*', exclude:'**/*.ngdoc' }];
+      processor = createReadFilesProcessor([mockFileReader], [{ include: 'docs/*', exclude:'**/*.ngdoc' }], '../fixtures');
 
       var promise = processor.$process().then(function(docs) {
         expect(docs.length).toEqual(1);
@@ -142,15 +131,12 @@ describe('read-files doc processor', function() {
   describe("relative paths", function() {
     it("should set the relativePath on the doc.fileInfo property correctly", function(done) {
 
-      function mockFileReader() {
-        return {
-          getDocs: function(fileInfo) { return [{ }]; }
-        };
-      }
+      var mockFileReader = {
+        name: 'mockFileReader',
+        getDocs: function(fileInfo) { return [{ }]; }
+      };
 
-      processor.basePath = path.resolve(__dirname, '../fixtures');
-      processor.fileReaders = [mockFileReader];
-      processor.sourceFiles = [{ include: 'src/**/*', basePath:'src' }];
+      processor = createReadFilesProcessor([mockFileReader], [{ include: 'src/**/*', basePath:'src' }], '../fixtures');
 
       var promise = processor.$process().then(function(docs) {
         expect(docs.length).toEqual(2);

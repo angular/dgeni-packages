@@ -34,7 +34,7 @@ var Minimatch = require("minimatch").Minimatch;
  *         is specified in the sourceInfo item.
  *
  */
-module.exports = function readFilesProcessor(log, injector) {
+module.exports = function readFilesProcessor(log, getInjectables) {
   return {
     $validate: {
       basePath: { presence: true },
@@ -44,7 +44,7 @@ module.exports = function readFilesProcessor(log, injector) {
     $runAfter: ['reading-files'],
     $runBefore: ['files-read'],
     $process: function() {
-      var fileReaders = loadFileReaders(injector, this.fileReaders);
+      var fileReaders = getInjectables(this.fileReaders);
       var fileReaderMap = getFileReaderMap(fileReaders);
       var basePath = this.basePath;
 
@@ -106,13 +106,6 @@ function createFileInfo(file, content, sourceInfo, fileReader) {
   };
 }
 
-function loadFileReaders(injector, fileReaderProviders) {
-  return fileReaderProviders.map(function(fileReaderProvider) {
-    var fileReader = injector.invoke(fileReaderProvider);
-    fileReader.name = fileReader.name || fileReaderProvider.name;
-    return fileReader;
-  });
-}
 
 function getFileReaderMap(fileReaders) {
   var fileReaderMap = new Map();
