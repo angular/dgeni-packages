@@ -6,9 +6,7 @@ var writeFilesFactory = rewire('../../processors/write-files');
 var mockWriteFile = jasmine.createSpy('writeFile').and.returnValue(Q());
 writeFilesFactory.__set__('writeFile', mockWriteFile);
 
-var mockLog = jasmine.createSpyObj('mockLog', ['silly', 'debug', 'info', 'warn', 'error']);
-// Uncomment this line if you are debugging and want to see the log messages
-//mockLog.debug.and.callFake(console.log);
+var mockLog = require('dgeni/lib/mocks/log')(/* true */);
 
 describe("writeFilesProcessor", function() {
   it("should write each document to a file", function() {
