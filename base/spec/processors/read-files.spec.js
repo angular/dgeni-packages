@@ -2,6 +2,7 @@ var Q = require('q');
 var path = require('canonical-path');
 var readFilesFactory = require('../../processors/read-files');
 var _ = require('lodash');
+var mockLog = require('dgeni/lib/mocks/log')(/* true */);
 
 function tidyUp(promise, done) {
   return promise.then(function() {
@@ -11,10 +12,6 @@ function tidyUp(promise, done) {
     done(err);
   });
 }
-
-var mockLog = jasmine.createSpyObj('mockLog', ['silly', 'debug', 'info', 'warn', 'error']);
-// Uncomment this line if you are debugging and want to see the log messages
-//mockLog.debug.and.callFake(console.log);
 
 var mockGetInjectables = function(objects) {
   return jasmine.createSpy().and.returnValue(objects);
