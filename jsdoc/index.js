@@ -15,12 +15,6 @@ module.exports = new Package('jsdoc', [require('../base')])
 .processor(require('./processors/compute-path'))
 .processor(require('./processors/inline-tags'))
 
-// Helper services
-.factory(require('./services/tagDefinitions'))
-.factory(require('./services/tagDefMap'))
-.factory(require('./services/tagParser'))
-.factory(require('./services/tagExtractor'))
-.factory(require('./services/defaultTagTransforms'))
 
 // Configure the basic file readers and jsdoc tag definitions
 .config(function(config) {
