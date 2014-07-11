@@ -1,12 +1,9 @@
 var renderDocsFactory = require('../../processors/render-docs');
 
 var mockLog, mockTemplateFinder, mockTemplateEngine;
+var mockLog = require('dgeni/lib/mocks/log')(/* true */);
 
 beforeEach(function() {
-  mockLog = jasmine.createSpyObj('mockLog', ['silly', 'debug', 'info', 'warn', 'error']);
-  // Uncomment this line if you are debugging and want to see the log messages
-  //mockLog.debug.and.callFake(console.log);
-
   mockTemplateFinder = jasmine.createSpy('templateFinder').and.returnValue('SOME TEMPLATE');
   mockTemplateEngine = jasmine.createSpyObj('templateEngine', ['render']);
 });
