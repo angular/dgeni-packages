@@ -1,89 +1,95 @@
 var _ = require('lodash');
-var log = require('winston');
+require('es6-shim');
 var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
 
-// We add InlineTagHandler onto the end of the tag name to help prevent naming collisions
-// in the injector
-function handlerId(name) {
-  return name + 'InlineTagHandler';
-}
+/**
+ * @dgProcessor inlineTagProcessor
+ * @description
+ * Search the docs for inline tags that need to have content injected.
+ * 
+ * Inline tags are defined by a collection of inline tag definitions.  Each definition is an injectable function,
+ * which should create an object containing, as minimum, a `name` property and a `handler` method, but also,
+ * optionally, `description` and `aliases` properties.
+ * 
+ * * The `name` should be the canonical tag name that should be handled.
+ * * The `aliases` should be an array of additional tag names that should be handled.
+ * * The `handler` should be a method of the form: `function(doc, tagName, tagDescription, docs) { ... }`
+ * The
+ * For example:
+ * 
+ * ```
+ * function(partialNames) {
+ *   return {
+ *     name: 'link',
+ *     handler: function(doc, tagName, tagDescription, docs) { ... }},
+ *     description: 'Handle inline link tags',
+ *     aliases: ['codeLink']
+ *   };
+ * }
+ * ```
+ */
+module.exports = function inlineTagProcessor(log, getInjectables) {
+  return {
+    inlineTagDefinitions: [],
+    $validate: { inlineTagDefinitions: { presence: true } },
+    $runAfter: ['docs-rendered'],
+    $runBefore: ['writing-files'],
+    $process: function(docs) {
 
-module.exports = {
-  name: 'inline-tags',
-  description: 'Search the docs for inline tags that need to have content injected',
-  runAfter: ['docs-rendered'],
-  runBefore: ['writing-files'],
-  process: function(docs, config, injector) {
-
-    // A collection of inline tag definitions.  Each should have, as minimum `name` and `handlerFactory`
-    // properties, but also optionally a definition and aliases tags
-    // e.g.
-    // {
-    //   name: 'link',
-    //   handlerFactory: function(docs, partialNames) { return function handler(doc, tagName, tagDescription) { ... }},
-    //   description: 'Handle inline link tags',
-    //   aliases: ['codeLink']
-    // }
-    var inlineTagDefinitions = config.get('processing.inlineTagDefinitions', []);
-
-    var handlerFactories = {};
-
-    _.forEach(inlineTagDefinitions, function(definition, index) {
-      if ( !definition.name ) {
-        throw new Error('Invalid configuration: inlineTagDefinition at position ' + index + ' is missing a name property');
-      }
-      if ( !definition.handlerFactory ) {
-        throw new Error('Invalid configuration: inlineTagDefinition ' + definition.name + ' missing handlerFactory');
-      }
-
-      // Add the
-      handlerFactories[handlerId(definition.name)] = ['factory', definition.handlerFactory];
-
-      _.forEach(definition.aliases, function(alias) {
-        handlerFactories[handlerId(alias)] = ['factory', definition.handlerFactory];
-      });
-    });
-
-    injector = injector.createChild([handlerFactories]);
+      var definitions = getInjectables(this.inlineTagDefinitions);
+      var definitionMap = getMap(definitions);
 
       // Walk the docs and parse the inline-tags
-    _.forEach(docs, function(doc) {
+      _.forEach(docs, function(doc) {
 
-      if ( doc.renderedContent ) {
+        if ( doc.renderedContent ) {
 
-        // Replace any inline tags found in the rendered content
-        doc.renderedContent = doc.renderedContent.replace(INLINE_TAG, function(match, tagName, tagDescription) {
+          // Replace any inline tags found in the rendered content
+          doc.renderedContent = doc.renderedContent.replace(INLINE_TAG, function(match, tagName, tagDescription) {
 
-          if ( handlerFactories[handlerId(tagName)] ) {
+            var definition = definitionMap.get(tagName);
+            if ( definition ) {
 
-            // Get the handler for this tag from the injector
-            var handler = injector.get(handlerId(tagName));
+              try {
 
-            try {
+                // It is easier to trim the description here than to fiddle around with the INLINE_TAG regex
+                tagDescription = tagDescription && tagDescription.trim();
 
-              // It is easier to trim the description here than to fiddle around with the INLINE_TAG regex
-              tagDescription = tagDescription && tagDescription.trim();
+                // Call the handler with the parameters that its factory would not have been able to get from the injector
+                return definition.handler(doc, tagName, tagDescription, docs);
 
-              // Call the handler with the parameters that its factory would not have been able to get
-              // from the injector
-              return handler(doc, tagName, tagDescription);
+              } catch(e) {
+                throw new Error('There was a problem running the @' + tagName +
+                            ' inline tag handler for ' + match + '\n' +
+                            'Doc: ' + doc.id + '\n' +
+                            'File: ' + doc.file + '\n' +
+                            'Line: ' + doc.startingLine + '\n' +
+                            'Message: \n' + e.message);
+              }
 
-            } catch(e) {
-              throw new Error('There was a problem running the @' + tagName +
-                          ' inline tag handler for ' + match + '\n' +
-                          'Doc: ' + doc.id + '\n' +
-                          'File: ' + doc.file + '\n' +
-                          'Line: ' + doc.startingLine + '\n' +
-                          'Message: \n' + e.message);
+            } else {
+              log.warn('No handler provided for inline tag "' + match + '" for "' + doc.id + '"' +
+                        '" in file "' + doc.file + '" at line ' + doc.startingLine);
+              return match;
             }
 
-          } else {
-            log.warn('No handler provided for inline tag "' + match + '" for "' + doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);
-            return match;
-          }
-
-        });
-      }
-    });
-  }
+          });
+        }
+      });
+    }
+  };
 };
+
+function getMap(objects) {
+  var map = new Map();
+  objects.forEach(function(object) {
+    map.set(object.name, object);
+    if ( object.aliases ) {
+      object.aliases.forEach(function(alias) {
+        map.set(alias, object);
+      });
+    }
+  });
+  return map; 
+}
+

@@ -1,27 +1,26 @@
-var Config = require('dgeni').Config;
-var processor = require('../../processors/inline-tags');
-var di = require('di');
-var log = require('winston');
+var factory = require('../../processors/inline-tags');
+var mockLog = require('dgeni/lib/mocks/log')();
+
+function createProcessor() {
+  var mockGetInjectables = jasmine.createSpy().and.callFake(function(objects) { return objects; });
+  return factory(mockLog, mockGetInjectables);
+}
 
 describe("inline-tags processor", function() {
-  var config;
 
-  beforeEach(function() {
-    config = new Config();
-  });
-
-  it("should be called 'inline-tags'", function() {
-    expect(processor.name).toEqual('inline-tags');
+  it("should have the correct name", function() {
+    expect(factory.name).toEqual('inlineTagProcessor');
   });
 
 
   it("should run after docs are rendered and before writing files", function() {
-    expect(processor.runAfter).toEqual(['docs-rendered']);
-    expect(processor.runBefore).toEqual(['writing-files']);
+    var processor = createProcessor();
+    expect(processor.$runAfter).toEqual(['docs-rendered']);
+    expect(processor.$runBefore).toEqual(['writing-files']);
   });
 
 
-  describe("process", function() {
+  describe("$process", function() {
 
     it("should parse the inline tags from the renderedContent", function() {
 
@@ -37,35 +36,28 @@ describe("inline-tags processor", function() {
       };
       var docs = [doc];
 
+      // Provide a mock tag handler to track what tags have been handled
       var tagsFound = [];
       var mockInlineTagDefinition = {
         name: 'handledTag',
-        handlerFactory: function(docs) {
-          return function(doc, tagName, tagDescription) {
-            tagsFound.push({ name: tagName, description: tagDescription });
-            return '<Tag Handled>';
-          };
+        handler: function(doc, tagName, tagDescription, docs) {
+          tagsFound.push({ name: tagName, description: tagDescription });
+          return '<Tag Handled>';
         }
       };
 
-      // We spy on log.warn since this will be called on each missing handler
-      spyOn(log, 'warn');
-
-      // Create the injector that the processor will use
-      var injector = new di.Injector([ { docs: ['value', docs] } ]);
-
-      // Provide a mock inline tag handler
-      config.set('processing.inlineTagDefinitions', [mockInlineTagDefinition]);
+      var processor = createProcessor();
+      processor.inlineTagDefinitions = [mockInlineTagDefinition];
 
       // Run the processor
-      var results = processor.process(docs, config, injector);
+      var results = processor.$process(docs);
 
       // This processor should not return anything.  All its work is done on the docs, in place
       expect(results).toBeUndefined();
 
       // We expect the unhandled tag to be reported
-      expect(log.warn).toHaveBeenCalled();
-      expect(log.warn.calls.argsFor(0)[0]).toMatch(/No handler provided for inline tag "\{@unhandledTag some description\}"/);
+      expect(mockLog.warn).toHaveBeenCalled();
+      expect(mockLog.warn.calls.argsFor(0)[0]).toMatch(/No handler provided for inline tag "\{@unhandledTag some description\}"/);
 
       // We expect the handler to have been invoked for the handledTag
       expect(tagsFound).toEqual([
