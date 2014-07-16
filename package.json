@@ -52,7 +52,6 @@
   },
   "devDependencies": {
     "rewire": "~2.0.0",
-    "minijasminenode2": "^1.0.0",
     "di": "~0.0.1"
   },
   "contributors": [
