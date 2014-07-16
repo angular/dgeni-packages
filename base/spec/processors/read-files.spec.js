@@ -13,17 +13,14 @@ function tidyUp(promise, done) {
   });
 }
 
-var mockGetInjectables = function(objects) {
-  return jasmine.createSpy().and.returnValue(objects);
-};
-
-var createReadFilesProcessor = function(fileReaders, sourceFiles, basePath) {
-  var processor = readFilesFactory(mockLog, mockGetInjectables(fileReaders));
+function createReadFilesProcessor(fileReaders, sourceFiles, basePath) {
+  var mockGetInjectables = jasmine.createSpy().and.callFake(function(objects) { return objects; });
+  var processor = readFilesFactory(mockLog, mockGetInjectables);
   processor.fileReaders = fileReaders;
   processor.sourceFiles = sourceFiles;
   processor.basePath = path.resolve(__dirname, basePath);
   return processor;
-};
+}
 
 
 
