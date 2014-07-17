@@ -13,6 +13,11 @@ module.exports = {
       throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
     }
 
+    var options = _.assign({
+      outputPath: '${module.area}/${module.name}/${docType}/index.html',
+      path: '${module.area}/${module.name}/${docType}'
+    }, config.get('processing.component-groups', {}));
+
     _.forEach(moduleMap, function(module) {
 
       _(module.components)
@@ -30,8 +35,8 @@ module.exports = {
             moduleDoc: module,
             area: module.area,
             components: docs,
-            outputPath: path.join(partialsPath, _.template('${module.area}/${module.name}/${docType}/index.html', { module: module, docType: docType })),
-            path: _.template('${module.area}/${module.name}/${docType}', { module: module, docType: docType })
+            outputPath: path.join(partialsPath, _.template(options.outputPath, { module: module, docType: docType })),
+            path: _.template(options.path, { module: module, docType: docType })
           };
         })
         .tap(function(groups) {
