@@ -1,3 +1,8 @@
+## v0.9.4 07/17/2014
+
+* fix(utils/code): encode HTML entities   5091e1c1
+* fix(ng-doc/component-groups-generate processor): use path/outputPath specified in processing.api-...  f2c3776f
+
 ## v0.9.3 05/22/2014
 
 * fix(extract-type): cope with missing type   4584a423

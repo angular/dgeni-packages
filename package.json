@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "node ./node_modules/jasmine-node/bin/jasmine-node */spec",
@@ -61,6 +61,7 @@
     "Pascal Precht <pascal.precht@googlemail.com>",
     "Konstantinos Rousis <rousisk@gmail.com>",
     "Stéphane Reynaud <forresst@voila.fr>",
-    "Matthew Harris <ftmomatt@gmail.com>"
+    "Matthew Harris <ftmomatt@gmail.com>",
+    "Nick Shearer <nick.shearer@software.dell.com>"
   ]
 }
