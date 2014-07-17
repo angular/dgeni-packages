@@ -7,6 +7,9 @@ describe("code utility", function() {
   it("should HTML encode the string", function() {
     expect(code('<div>&</div>')).toEqual('<pre><code>&lt;div&gt;&amp;&lt;/div&gt;</code></pre>');
   });
+  it("should encode HTML entities", function() {
+    expect(code('<div>&#10;</div>')).toEqual('<pre><code>&lt;div&gt;&amp;#10;&lt;/div&gt;</code></pre>');
+  });
 
   describe("inline", function() {
     it("should only wrap in a code tag", function() {
