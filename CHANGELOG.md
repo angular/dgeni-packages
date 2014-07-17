@@ -1,4 +1,12 @@
+## v0.9.5 07/17/2014
+
+* fix(ng-doc/component-groups-generate): allow path/outputPath to be configurable    48d105bc
+* Revert "fix(ng-doc/component-groups-generate processor): use path/outputPath specified in process...     71ced7dd
+
+
 ## v0.9.4 07/17/2014
+
+** WARNING - this release had an invalid breaking change. Don't use it **
 
 * fix(utils/code): encode HTML entities   5091e1c1
 * fix(ng-doc/component-groups-generate processor): use path/outputPath specified in processing.api-...  f2c3776f
