@@ -1,13 +1,18 @@
 var renderDocsFactory = require('../../processors/render-docs');
 
-var mockLog, mockTemplateFinder, mockTemplateEngine;
+var mockLog, mockTemplateFinder, mockTemplateEngine, mockRender;
 var mockLog = require('dgeni/lib/mocks/log')(/* true */);
 
 beforeEach(function() {
   mockTemplateFinder = {
     findTemplate: createSpy('findTemplate').and.returnValue('SOME TEMPLATE')
   };
-  mockTemplateEngine = jasmine.createSpyObj('templateEngine', ['render']);
+  mockTemplateEngine = {
+    getRenderer: function() {
+      return mockRender;
+    }
+  };
+  mockRender = jasmine.createSpy('render');
 });
 
 describe("render-docs", function() {
@@ -31,17 +36,17 @@ describe("render-docs", function() {
 
     processor.$process(docs);
 
-    expect(mockTemplateEngine.render.calls.count()).toEqual(2);
-    expect(mockTemplateEngine.render.calls.argsFor(0)).toEqual(['SOME TEMPLATE',
+    expect(mockRender.calls.count()).toEqual(2);
+    expect(mockRender.calls.argsFor(0)).toEqual(['SOME TEMPLATE',
       { doc: doc1, docs: docs, someProp: someProp, someMethod: someMethod }]);
-    expect(mockTemplateEngine.render.calls.argsFor(1)).toEqual(['SOME TEMPLATE',
+    expect(mockRender.calls.argsFor(1)).toEqual(['SOME TEMPLATE',
       { doc: doc2, docs: docs, someProp: someProp, someMethod: someMethod }]);
   });
 
   it("should place the result of calling templateEngine.render into doc.renderedContent", function() {
     var doc1 = { id: 1 }, doc2 = { id: 2 }, docs = [ doc1, doc2 ];
 
-    mockTemplateEngine.render.and.returnValue('RENDERED CONTENT');
+    mockRender.and.returnValue('RENDERED CONTENT');
 
     var processor = renderDocsFactory(mockLog, mockTemplateFinder, mockTemplateEngine);
 

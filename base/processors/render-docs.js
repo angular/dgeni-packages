@@ -7,11 +7,15 @@ var _ = require('lodash');
  * Render the set of documents using the provided `templateEngine`, to `doc.renderedContent`
  * using the `extraData`, `helpers` and the templates found by `templateFinder`.
  *
- * @param {TemplateEngine} templateEngine    The engine that will render the docs/templates. The
- *                                           base package doesn't provide a default templateEngine.
- *                                           There is a Nunjucks based engine in the nunjucks module.
+ * @param {Logger} log                       A service for logging error and information messages
  * @param {TemplateFinder} templateFinder    A service that matches templates to docs.  A default
  *                                           templateFinder is provided in this base package.
+ * @param {TemplateEngine} templateEngine    An instance of a templateEngine that will render the
+ *                                           docs/templates. A templateEngine is an object that has
+ *                                           a `getRenderer()` method, which itself returns a
+ *                                           `render(template, data)` function. The base package
+ *                                           doesn't provide a default templateEngine.
+ *                                           There is a Nunjucks based engine in the nunjucks module.
  *
  * @property {Map} extraData      Extra data that will be passed to the rendering engine. Your
  *                                services and processors can add data to this object to be made
@@ -31,7 +35,9 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
       helpers: { presence: true },
       extraData: { presence: true }
     },
-    $process: function render(docs) {
+    $process: function process(docs) {
+
+      var render = templateEngine.getRenderer();
 
       docs.forEach(function(doc) {
         log.debug('Rendering doc', doc.id, doc.name);
@@ -41,7 +47,7 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
             this.extraData,
             this.helpers);
           var templateFile = templateFinder.findTemplate(data.doc);
-          doc.renderedContent = templateEngine.render(templateFile, data);
+          doc.renderedContent = render(templateFile, data);
         } catch(ex) {
           console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
           throw new Error('Failed to render doc "' + doc.id + '"' +
