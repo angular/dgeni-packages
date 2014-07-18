@@ -14,8 +14,7 @@ function tidyUp(promise, done) {
 }
 
 function createReadFilesProcessor(fileReaders, sourceFiles, basePath) {
-  var mockGetInjectables = jasmine.createSpy().and.callFake(function(objects) { return objects; });
-  var processor = readFilesFactory(mockLog, mockGetInjectables);
+  var processor = readFilesFactory(mockLog);
   processor.fileReaders = fileReaders;
   processor.sourceFiles = sourceFiles;
   processor.basePath = path.resolve(__dirname, basePath);
@@ -25,6 +24,19 @@ function createReadFilesProcessor(fileReaders, sourceFiles, basePath) {
 
 
 describe('read-files doc processor', function() {
+
+  it("should complain if a file reader is not valid", function() {
+    expect(function() {
+      var processor = createReadFilesProcessor([ {} ], ['docs/*'], '../fixtures');
+      processor.$process();
+    }).toThrowError('Invalid File Reader: It must have a name property');
+
+
+    expect(function() {
+      var processor = createReadFilesProcessor([ { name: 'badFileReader' } ], ['docs/*'], '../fixtures');
+      processor.$process();
+    }).toThrowError('Invalid File Reader: "badFileReader": It must have a getDocs property');
+  });
 
   it('should iterate over matching files, providing fileInfo to the reader', function(done) {
 

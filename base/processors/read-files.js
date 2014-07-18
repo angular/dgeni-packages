@@ -25,16 +25,16 @@ var Minimatch = require("minimatch").Minimatch;
  *      * `exclude` {string} glob pattern of files to exclude (relative to `readFileProcessor.basePath`)
  *      * `reader` {string} name of a file reader to use for these files
  *
- * @property {Array.<Function>} fileReaders A collection of file reader factories. A file reader is
- *      an object that has the following properties/methods:
- *
+ * @property {Array.<Function>} fileReaders A collection of file readers. A file reader is an object
+ *                                          that has the following properties/methods:
+ *      * `name` - the name of the file reader so that sourceFiles can reference it
  *      * `getDocs(fileInfo)` - this method is called to read the content of the file specified
  *         by the `fileInfo` object and return an array of documents.
  *      * `defaultPattern {Regex}` - a regular expression used to match to source files if no fileReader
  *         is specified in the sourceInfo item.
  *
  */
-module.exports = function readFilesProcessor(log, getInjectables) {
+module.exports = function readFilesProcessor(log) {
   return {
     $validate: {
       basePath: { presence: true },
@@ -44,7 +44,7 @@ module.exports = function readFilesProcessor(log, getInjectables) {
     $runAfter: ['reading-files'],
     $runBefore: ['files-read'],
     $process: function() {
-      var fileReaders = getInjectables(this.fileReaders);
+      var fileReaders = this.fileReaders;
       var fileReaderMap = getFileReaderMap(fileReaders);
       var basePath = this.basePath;
 
@@ -110,6 +110,14 @@ function createFileInfo(file, content, sourceInfo, fileReader) {
 function getFileReaderMap(fileReaders) {
   var fileReaderMap = new Map();
   fileReaders.forEach(function(fileReader) {
+
+    if ( !fileReader.name ) {
+      throw new Error('Invalid File Reader: It must have a name property');
+    }
+    if ( typeof fileReader.getDocs !== 'function' ) {
+      throw new Error('Invalid File Reader: "' + fileReader.name + '": It must have a getDocs property');
+    }
+
     fileReaderMap.set(fileReader.name, fileReader);
   });
   return fileReaderMap;
