@@ -3,7 +3,7 @@ var jsParser = require('esprima');
 
 var mockLog = jasmine.createSpyObj('log', ['error', 'warn', 'info', 'debug', 'silly']);
 
-ddescribe('code-name doc processor', function() {
+describe('code-name doc processor', function() {
   it("should understand CallExpressions", function() {
     var processor = codeNameProcessorFactory(mockLog);
     var ast = jsParser.parse('(function foo() { })()');
