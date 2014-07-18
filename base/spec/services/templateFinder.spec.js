@@ -1,30 +1,49 @@
 var rewire = require('rewire');
 var templateFinderFactory = rewire('../../services/templateFinder');
+var mockLog = require('dgeni/lib/mocks/log')(false);
 
-describe("templateFinderFactory", function() {
+describe("templateFinder", function() {
 
-  it("should complain if no template folders were provided", function() {
-    expect(function() {
-      templateFinderFactory(null, ['some-pattern']);
-    }).toThrow();
-    expect(function() {
-      templateFinderFactory([], ['some-pattern']);
-    }).toThrow();
+  var templateFinder;
+
+  beforeEach(function() {
+    templateFinder = templateFinderFactory(mockLog);
   });
 
+  describe("setTemplateFolders()", function() {
 
-  it("should complain if no template patterns were provided", function() {
-    expect(function() {
-      templateFinderFactory(['x/y/z'], null);
-    }).toThrow();
-    expect(function() {
-      templateFinderFactory(['x/y/z'], []);
-    }).toThrow();
+    it("should complain if no template folders were provided", function() {
+
+      expect(function() {
+        templateFinder.setTemplateFolders(null);
+      }).toThrow();
+
+      expect(function() {
+        templateFinder.setTemplateFolders([]);
+      }).toThrow();
+
+    });
   });
 
-  describe("templateFinder", function() {
+  describe("setTemplatePatterns()", function() {
 
-    var glob, templateFinder, patterns, templateFolders;
+    it("should complain if no template patterns were provided", function() {
+
+      expect(function() {
+        templateFinder.setTemplatePatterns(null);
+      }).toThrow();
+
+      expect(function() {
+        templateFinder.setTemplatePatterns([]);
+      }).toThrow();
+
+    });
+  });
+
+  describe("findTemplate", function() {
+
+    var glob, patterns, templateFolders;
+
     beforeEach(function() {
       glob = templateFinderFactory.__get__('glob');
       spyOn(glob, 'sync').and.returnValue([
@@ -37,28 +56,34 @@ describe("templateFinderFactory", function() {
       ];
       templateFolders = ['abc'];
 
-      templateFinder = templateFinderFactory(templateFolders, patterns);
+      templateFinder.setTemplateFolders(templateFolders);
+      templateFinder.setTemplatePatterns(patterns);
     });
+
 
     it("should match id followed by doctype if both are provided and the file exists", function() {
-      expect(templateFinder({ docType: 'a', id: 'c'})).toEqual('c.a.x');
+      expect(templateFinder.findTemplate({ docType: 'a', id: 'c'})).toEqual('c.a.x');
     });
+
 
     it("should match id before docType", function() {
-      expect(templateFinder({ docType: 'a', id: 'b' })).toEqual('b.x');
+      expect(templateFinder.findTemplate({ docType: 'a', id: 'b' })).toEqual('b.x');
     });
+
 
     it("should match docType if id doesn't match", function() {
-      expect(templateFinder({ docType: 'a', id: 'missing' })).toEqual('a.x');
+      expect(templateFinder.findTemplate({ docType: 'a', id: 'missing' })).toEqual('a.x');
     });
 
+
     it("should match docType if id is undefined", function() {
-      expect(templateFinder({ docType: 'a' })).toEqual('a.x');
+      expect(templateFinder.findTemplate({ docType: 'a' })).toEqual('a.x');
     });
+
 
     it("should throw an error if no template was found", function() {
       expect(function() {
-        templateFinder({docType:'missing'});
+        templateFinder.findTemplate({docType:'missing'});
       }).toThrow();
     });
 

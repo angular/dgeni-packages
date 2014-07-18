@@ -23,6 +23,4 @@ module.exports = new Package('base')
 .processor(require('./processors/write-files'))
 
 // Helper services
-.factory(require('./services/templateFinder'))
-.factory(require('./services/templateFolders'))
-.factory(require('./services/templatePatterns'));
+.factory(require('./services/templateFinder'));
