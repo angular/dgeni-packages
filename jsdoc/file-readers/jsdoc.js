@@ -3,7 +3,7 @@ var jsParser = require('esprima');
 var walk = require('../lib/walk');
 var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
-module.exports = function() {
+module.exports = function jsdocFileReader() {
   return {
     defaultPattern: /\.js$/,
     getDocs: function(fileInfo) {
