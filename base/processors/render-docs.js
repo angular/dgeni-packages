@@ -40,7 +40,7 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
             { doc: doc, docs: docs },
             this.extraData,
             this.helpers);
-          var templateFile = templateFinder(data.doc);
+          var templateFile = templateFinder.findTemplate(data.doc);
           doc.renderedContent = templateEngine.render(templateFile, data);
         } catch(ex) {
           console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
