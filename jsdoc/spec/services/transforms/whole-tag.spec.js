@@ -1,4 +1,4 @@
-var transform = require('../../../tag-defs/transforms/whole-tag');
+var transform = require('../../../services/transforms/whole-tag');
 
 describe("whole-tag transform", function() {
   it("should return the whole tag", function() {
