@@ -1,4 +1,4 @@
-module.exports = function(extractNameTransform, extractTypeTransform, wholeTagTransform) {
+module.exports = function(extractTypeTransform, extractNameTransform, wholeTagTransform) {
   return {
     name: 'param',
     multi: true,
