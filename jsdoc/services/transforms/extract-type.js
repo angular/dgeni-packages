@@ -10,7 +10,7 @@ var TYPE_EXPRESSION_START = /\{[^@]/;
  * @private
  * @param {Tag} tag The tag whose type should be extracted
  */
-module.exports =  function extractTypeExpression(doc, tag, value) {
+module.exports =  function extractTypeTransform(doc, tag, value) {
   var start, position, count, length, expression;
 
   start = value.search(TYPE_EXPRESSION_START);
