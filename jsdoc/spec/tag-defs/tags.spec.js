@@ -16,17 +16,6 @@ describe('tag definitions', function() {
     tagExtractor = tagExtractorFactory(tagDefs);
   });
 
-  describe("returns/return", function() {
-
-    it("should transform into a returns object", function() {
-      var tag = new Tag(tagDefMap['returns'], 'returns', '{string} description of returns');
-      var doc = createDoc(tag);
-      tagExtractor(doc);
-      checkProperty(doc.returns, undefined, 'description of returns', ['string']);
-    });
-
-  });
-
 
 });
 
