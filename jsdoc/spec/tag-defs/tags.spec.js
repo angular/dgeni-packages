@@ -16,17 +16,6 @@ describe('tag definitions', function() {
     tagExtractor = tagExtractorFactory(tagDefs);
   });
 
-  describe("property", function() {
-
-    it("should transform into a property object", function() {
-      var tag = new Tag(tagDefMap['property'], 'property', '{string} propertyName description of property', 123);
-      var doc = createDoc(tag);
-      tagExtractor(doc);
-      checkProperty(doc.properties[0], 'propertyName', 'description of property', ['string']);
-    });
-
-  });
-
   describe("type", function() {
 
     it("should transform into a type object", function() {
