@@ -2,52 +2,57 @@ var rewire = require('rewire');
 var engineFactory = rewire('../../services/nunjucks-template-engine');
 
 describe("nunjucksTemplateEngine service", function() {
-  var nunjucks, addFilterSpy, addExtensionSpy, templateFolders, nunjucksConfig, nunjucksFilters, nunjucksTags;
+  var nunjucks, addFilterSpy, addExtensionSpy, engine;
 
   beforeEach(function() {
 
     nunjucks = engineFactory.__get__('nunjucks');
-    addFilterSpy = jasmine.createSpy('addFilter');
-    addExtensionSpy = jasmine.createSpy('addExtension');
 
     nunjucks.Environment = jasmine.createSpy('Environment');
-    nunjucks.Environment.prototype.addFilter = addFilterSpy;
-    nunjucks.Environment.prototype.addExtension = addExtensionSpy;
+    nunjucks.Environment.prototype.addFilter = addFilterSpy = jasmine.createSpy('addFilter');
+    nunjucks.Environment.prototype.addExtension = addExtensionSpy = jasmine.createSpy('addExtension');
 
-
-    templateFolders = ['templates'];
-    nunjucksConfig = {};
-    nunjucksFilters = [];
-    nunjucksTags = [];
+    engine = engineFactory();
   });
 
-  it("should have a return an instance of Environment", function() {
-    var engine = engineFactory(templateFolders, nunjucksConfig, nunjucksFilters, nunjucksTags);
-    expect(engine instanceof nunjucks.Environment).toBeTruthy();
-  });
+  describe("getRenderer()", function() {
 
-  it("should configure nunjucks", function() {
+    it("should configure nunjucks", function() {
 
-    nunjucksConfig = { foo: 'bar' };
+      engine.templateFolders = ['templates'];
+      engine.config = { foo: 'bar' };
 
-    engineFactory(templateFolders, nunjucksConfig, nunjucksFilters, nunjucksTags);
+      var render = engine.getRenderer();
+      expect(render).toEqual(jasmine.any(Function));
 
-    expect(nunjucks.Environment).toHaveBeenCalledWith(
-      jasmine.any(nunjucks.FileSystemLoader),
-      nunjucksConfig
-    );
-  });
+      expect(nunjucks.Environment).toHaveBeenCalledWith(
+        jasmine.any(nunjucks.FileSystemLoader),
+        engine.config
+      );
+    });
 
-  it("should load the given custom filters and tags", function() {
 
-    var dummyFilter = { name: 'test', process: function() {} }, dummyExtension = { tags: ['dummy']};
+    it("should load the given custom filters", function() {
 
-    nunjucksFilters = [dummyFilter];
-    nunjucksTags = [dummyExtension];
+      var dummyFilter = { name: 'test', process: function() {} };
+      engine.filters.push(dummyFilter);
 
-    engineFactory(templateFolders, nunjucksConfig, nunjucksFilters, nunjucksTags);
+      var render = engine.getRenderer();
+      expect(render).toEqual(jasmine.any(Function));
 
-    expect(addFilterSpy).toHaveBeenCalledWith(dummyFilter.name, dummyFilter.process);
-    expect(addExtensionSpy).toHaveBeenCalledWith('dummy', dummyExtension);
+      expect(addFilterSpy).toHaveBeenCalledWith(dummyFilter.name, dummyFilter.process);
+    });
+
+
+    it("should load the given custom tags", function() {
+
+      var dummyExtension = { tags: ['dummy']};
+      engine.tags.push(dummyExtension);
+
+      var render = engine.getRenderer();
+      expect(render).toEqual(jasmine.any(Function));
+
+      expect(addExtensionSpy).toHaveBeenCalledWith('dummy', dummyExtension);
+    });
   });
 });

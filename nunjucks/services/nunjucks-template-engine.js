@@ -1,29 +1,40 @@
 var nunjucks = require('nunjucks');
-var _ = require('lodash');
 
 /**
  * @dgService nunjucksTemplateEngine
  * @description A nunjucks powered template rendering engine
  */
-module.exports = function nunjucksTemplateEngine(
-                              templateFolders, nunjucksConfig, nunjucksFilters, nunjucksTags) {
+module.exports = function nunjucksTemplateEngine() {
 
-  // Set any options on the nunjucks engine, such as using {$ $} for nunjucks interpolation
-  // rather than {{ }}, which conflicts with AngularJS
-  var loader = new nunjucks.FileSystemLoader(templateFolders, true);
-  var engine = new nunjucks.Environment(loader, nunjucksConfig);
+  return {
 
+    /**
+     * Nunjucks specific options, such as using `{$ $}` for nunjucks interpolation
+     * rather than `{{ }}`, which conflicts with AngularJS
+     */
+    config: {},
 
-  // Configure nunjucks with the custom filters
-  _.forEach(nunjucksFilters, function(filter) {
-    engine.addFilter(filter.name, filter.process);
-  });
+    templateFolders: [],
+    filters: [],
+    tags: [],
 
+    getRenderer: function() {
+      var loader = new nunjucks.FileSystemLoader(this.templateFolders, true);
+      var engine = new nunjucks.Environment(loader, this.config);
 
-  // Configure nunjucks with the custom tags
-  _.forEach(nunjucksTags, function(tag) {
-    engine.addExtension(tag.tags[0], tag);
-  });
+      // Configure nunjucks with the custom filters
+      this.filters.forEach(function(filter) {
+        engine.addFilter(filter.name, filter.process);
+      });
 
-  return engine;
+      // Configure nunjucks with the custom tags
+      this.tags.forEach(function(tag) {
+        engine.addExtension(tag.tags[0], tag);
+      });
+
+      return function render(template, data) {
+        return engine.render(template, data);
+      };
+    }
+  };
 };

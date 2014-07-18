@@ -6,9 +6,8 @@ var Package = require('dgeni').Package;
  */
 module.exports = new Package('nunjucks', ['base'])
 
-.factory(require('./services/nunjucksConfig'))
-.factory(require('./services/nunjucksTags'))
-.factory(require('./services/nunjucksFilters'))
+// We give the engine an explicit name here as it is providing a specific
+// implementation of a templateEngine
 .factory('templateEngine', require('./services/nunjucks-template-engine'))
 
 .config(function(nunjucksTags) {
