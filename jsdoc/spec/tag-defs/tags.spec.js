@@ -16,27 +16,6 @@ describe('tag definitions', function() {
     tagExtractor = tagExtractorFactory(tagDefs);
   });
 
-  describe("param", function() {
-
-    it("should add param tags to a params array on the doc", function() {
-      var tag1 = new Tag(tagDefMap['param'], 'param', '{string} paramName description of param', 123);
-      var tag2 = new Tag(tagDefMap['param'], 'param', '{string=} optionalParam description of optional param', 123);
-      var tag3 = new Tag(tagDefMap['param'], 'param', '{string} [optionalParam2] description of optional param', 123);
-      var tag4 = new Tag(tagDefMap['param'], 'param', '{string} [paramWithDefault=xyz] description of param with default', 123);
-      var tag5 = new Tag(tagDefMap['param'], 'param', '{string} paramName|alias description of param with alias', 123);
-      var doc = createDoc([tag1, tag2, tag3, tag4, tag5]);
-
-      tagExtractor(doc);
-
-      checkProperty(doc.params[0], 'paramName', 'description of param', ['string']);
-      checkProperty(doc.params[1], 'optionalParam', 'description of optional param', ['string'], true);
-      checkProperty(doc.params[2], 'optionalParam2', 'description of optional param', ['string'], true);
-      checkProperty(doc.params[3], 'paramWithDefault', 'description of param with default', ['string'], true, 'xyz');
-      checkProperty(doc.params[4], 'paramName', 'description of param with alias', ['string'], false, undefined, 'alias');
-    });
-  });
-
-
   describe("property", function() {
 
     it("should transform into a property object", function() {
