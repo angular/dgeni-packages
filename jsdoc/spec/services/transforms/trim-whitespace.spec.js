@@ -1,4 +1,4 @@
-var transform = require('../../../tag-defs/transforms/trim-whitespace');
+var transform = require('../../../services/transforms/trim-whitespace');
 
 describe("trim-whitespace", function() {
 
