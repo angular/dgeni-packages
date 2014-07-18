@@ -6,7 +6,7 @@ module.exports = [
   require('./property'),
   require('./returns'),
   require('./type'),
-  require('.requires'),
+  require('./requires'),
   require('./module'),
   require('./description'),
   require('./deprecated'),
@@ -21,5 +21,5 @@ module.exports = [
   require('./namespace'),
   require('./kind'),
   require('./function'),
-  require('.method')
+  require('./method')
 ];
