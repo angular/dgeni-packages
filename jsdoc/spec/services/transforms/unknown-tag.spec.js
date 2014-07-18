@@ -1,4 +1,4 @@
-var transform = require('../../../tag-defs/transforms/unknown-tag');
+var transform = require('../../../services/transforms/unknown-tag');
 
 describe("unknown-tag transform", function() {
   it("should add an error to the tag if it has no tagDef", function() {
