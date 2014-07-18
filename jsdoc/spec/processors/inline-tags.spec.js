@@ -2,8 +2,7 @@ var factory = require('../../processors/inline-tags');
 var mockLog = require('dgeni/lib/mocks/log')();
 
 function createProcessor() {
-  var mockGetInjectables = jasmine.createSpy().and.callFake(function(objects) { return objects; });
-  return factory(mockLog, mockGetInjectables);
+  return factory(mockLog);
 }
 
 describe("inline-tags processor", function() {

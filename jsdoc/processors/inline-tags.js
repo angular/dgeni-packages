@@ -6,17 +6,17 @@ var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
  * @dgProcessor inlineTagProcessor
  * @description
  * Search the docs for inline tags that need to have content injected.
- * 
+ *
  * Inline tags are defined by a collection of inline tag definitions.  Each definition is an injectable function,
  * which should create an object containing, as minimum, a `name` property and a `handler` method, but also,
  * optionally, `description` and `aliases` properties.
- * 
+ *
  * * The `name` should be the canonical tag name that should be handled.
  * * The `aliases` should be an array of additional tag names that should be handled.
  * * The `handler` should be a method of the form: `function(doc, tagName, tagDescription, docs) { ... }`
  * The
  * For example:
- * 
+ *
  * ```
  * function(partialNames) {
  *   return {
@@ -28,15 +28,14 @@ var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
  * }
  * ```
  */
-module.exports = function inlineTagProcessor(log, getInjectables) {
+module.exports = function inlineTagProcessor(log) {
   return {
-    inlineTagDefinitions: [],
     $validate: { inlineTagDefinitions: { presence: true } },
     $runAfter: ['docs-rendered'],
     $runBefore: ['writing-files'],
     $process: function(docs) {
 
-      var definitions = getInjectables(this.inlineTagDefinitions);
+      var definitions = this.inlineTagDefinitions;
       var definitionMap = getMap(definitions);
 
       // Walk the docs and parse the inline-tags
@@ -90,6 +89,6 @@ function getMap(objects) {
       });
     }
   });
-  return map; 
+  return map;
 }
 
