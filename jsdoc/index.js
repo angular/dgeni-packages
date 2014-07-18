@@ -21,9 +21,16 @@ module.exports = new Package('jsdoc', [require('../base')])
 .factory(require('./services/transforms/unknown-tag'))
 .factory(require('./services/transforms/whole-tag'))
 
-// Configure the basic file readers and jsdoc tag definitions
-.config(function(readFilesProcessor, parseTagsProcessor, extractTagsProcessor, trimWhitespaceTransform) {
+// Configure the processors
+
+.config(function(readFilesProcessor, jsdocFileReader) {
   readFilesProcessor.fileReaders = [require('./file-readers/jsdoc')];
-  parseTagsProcessorprocessing.tagDefinitions = require('./tag-defs');
-  extractTagsProcessor.defaultTagTransforms = [require('./tag-defs/transforms/trim-whitespace')];
+})
+
+.config(function(parseTagsProcessor, getInjectables) {
+  parseTagsProcessorprocessing.tagDefinitions = getInjectables(require('./tag-defs'));
+})
+
+.config(function(extractTagsProcessor, trimWhitespaceTransform) {
+  extractTagsProcessor.defaultTagTransforms = [trimWhitespaceTransform];
 });
