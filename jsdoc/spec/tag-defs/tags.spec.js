@@ -4,7 +4,6 @@ var TagCollection = require('../../lib/TagCollection');
 var Tag = require('../../lib/Tag');
 
 var tagDefs = require('../../tag-defs');
-var tagDefMap = require('../../processors/tagDefinitions').exports.tagDefMap[1](tagDefs);
 
 var tagExtractorFactory = require('../../processors/tagExtractor').exports.tagExtractor[1];
 
@@ -15,36 +14,6 @@ describe('tag definitions', function() {
 
   beforeEach(function() {
     tagExtractor = tagExtractorFactory(tagDefs);
-  });
-
-  describe("memberof", function() {
-
-    it("should throw an exception if the tag exists and docType is not 'event', 'method' or 'property'", function() {
-      var tag = new Tag(tagDefMap['memberof'], 'memberof', 'container', 123);
-      var doc = createDoc(tag);
-
-      expect(function() {
-        tagExtractor(doc);
-      }).toThrowError();
-
-    });
-
-    it("should throw an exception if the tag doesn't exist and docType is 'event', 'method' or 'property'", function() {
-      var doc = createDoc([]);
-
-      expect(function() {
-        doc.docType = 'event';
-        tagExtractor(doc);
-      }).toThrow();
-      expect(function() {
-        doc.docType = 'property';
-        tagExtractor(doc);
-      }).toThrow();
-      expect(function() {
-        doc.docType = 'method';
-        tagExtractor(doc);
-      }).toThrow();
-    });
   });
 
   describe("param", function() {
