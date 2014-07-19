@@ -1,45 +1,16 @@
-var plugin = require('../../processors/examples-generate');
-var Config = require('dgeni').Config;
+var generateExamplesProcessorFactory = require('../../processors/examples-generate');
+var mockLog = require('dgeni/lib/mocks/log');
 var _ = require('lodash');
 
 describe("examples-generate processor", function() {
-  var docs, examples, config;
+  var templateFolder, deployments, docs, examples;
 
   beforeEach(function() {
-    config = new Config({
-      processing: {
-        examples: {
-          templateFolder: 'examples'
-        }
-      },
-      deployment: {
-        environments: [
-          {
-            name: 'default',
-            examples: {
-              commonFiles: [],
-              dependencyPath: '.'
-            },
-          },
 
-          {
-            name: 'other',
-            examples: {
-              commonFiles: {
-                scripts: [ 'someFile.js', 'someOtherFile.js' ],
-              },
-              dependencyPath: '..'
-            }
-          }
-        ]
-      }
-    });
+    docs = [{ file: 'a.b.js' }];
 
-    docs = [
-      { file: 'a.b.js' }
-    ];
-    examples = { 'a.b.c':
-      {
+    examples = {
+      'a.b.c': {
         id: 'a.b.c',
         doc: docs[0],
         outputFolder: 'examples',
@@ -53,7 +24,20 @@ describe("examples-generate processor", function() {
       }
     };
 
-    plugin.process(docs, examples, config);
+    processor = generateExamplesProcessorFactory(mockLog, examples);
+    processor.templateFolder = 'examples';
+    processor.deployments = [
+      {
+        name: 'default',
+        examples: { commonFiles: [], dependencyPath: '.' },
+      },
+      {
+        name: 'other',
+        examples: { commonFiles: { scripts: [ 'someFile.js', 'someOtherFile.js' ], }, dependencyPath: '..' }
+      }
+    ];
+
+    processor.$process(docs);
 
   });
   it("should add an exampleDoc for each example deployment", function() {
