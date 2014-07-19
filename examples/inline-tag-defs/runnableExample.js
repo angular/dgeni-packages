@@ -1,8 +1,13 @@
-module.exports = {
-  name: 'runnableExample',
-  description: 'Inject the specified runnable example into the doc',
-  handlerFactory: function(examples) {
-    return function(doc, tagName, description) {
+/**
+ * @dgService runnableExampleInlineTagDef
+ * @description
+ * Inject the specified runnable example into the doc
+ */
+module.exports = function runnableExampleInlineTagDef(examples) {
+  return {
+    name: 'runnableExample',
+
+    handler: function(doc, tagName, description) {
 
       // The tag description should contain the id of the runnable example doc
       var example = examples[description];
@@ -14,6 +19,6 @@ module.exports = {
       }
 
       return example.runnableExampleDoc.renderedContent;
-    };
-  }
+    }
+  };
 };

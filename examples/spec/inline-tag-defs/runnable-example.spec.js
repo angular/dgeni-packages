@@ -1,17 +1,25 @@
-var tagDefinition = require('../../inline-tag-defs/runnableExample');
+require('es6-shim');
+var tagDefinitionFactory = require('../../inline-tag-defs/runnableExample');
 
-describe("runnableExample inline tag definition", function() {
-  it("should have the correct name", function() {
-    expect(tagDefinition.name).toEqual('runnableExample');
-  });
+describe("runnableExampleInlineTagDef", function() {
 
-  it("should lookup the runnableExampleDoc identified in the tag description and return its renderedContent", function() {
-    var handler = tagDefinition.handlerFactory({ 'some-example' : {
+  var examples, tagDef;
+
+  beforeEach(function() {
+    examples = new Map();
+    examples.set('some-example', {
       runnableExampleDoc: {
         renderedContent: 'The rendered content of the some-example example'
       }
-    }});
+    });
+    tagDef = tagDefinitionFactory(examples);
+  });
 
-    expect(handler({}, 'runnableExample', 'some-example')).toEqual('The rendered content of the some-example example');
+  it("should have the correct name", function() {
+    expect(tagDef.name).toEqual('runnableExample');
+  });
+
+  it("should lookup the runnableExampleDoc identified in the tag description and return its renderedContent", function() {
+    expect(tagDef.handler({}, 'runnableExample', 'some-example')).toEqual('The rendered content of the some-example example');
   });
 });
