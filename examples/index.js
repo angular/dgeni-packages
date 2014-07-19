@@ -1,23 +1,19 @@
 var path = require('canonical-path');
 var packagePath = __dirname;
+var Package = require('dgeni').Package;
 
-module.exports = function(config) {
+module.exports = new Package('examples')
 
-  config.append('processing.processors', [
-    require('./processors/examples-parse'),
-    require('./processors/examples-generate'),
-  ]);
+.processor(require('./processors/examples-parse'))
+.processor(require('./processors/examples-generate'))
 
-  config.append('processing.inlineTagDefinitions', [
-    require('./inline-tag-defs/runnableExample')
-  ]);
+.factory(require('./services/examples'))
 
-  config.set('processing.examples.commonFiles', {
-    scripts: [],
-    stylesheets: []
-  });
+.config(function(templateEngine, generateExamplesProcessor) {
+  generateExamplesProcessor.templateFolder = path.resolve(packagePath, 'templates');
+  templateEngine.templateFolders.shift(generateExamplesProcessor.templateFolder);
+})
 
-  config.prepend('rendering.templateFolders', path.resolve(packagePath, 'templates'));
-
-  return config;
-};
+.config(function(inlineTagProcessor) {
+  inlineTagProcessor.inlineTagDefinitions.push(require('./inline-tag-defs/runnableExample'));
+});
