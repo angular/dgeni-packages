@@ -1,4 +1,4 @@
-var code = require('../code');
+var code = require('../../services/code');
 
 describe("code utility", function() {
   it("should wrap the string in code and pre tags", function() {

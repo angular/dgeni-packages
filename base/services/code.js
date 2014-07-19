@@ -1,12 +1,12 @@
 var encoder = new require('node-html-encoder').Encoder();
-module.exports = function(str, inline, lang) {
- 
+module.exports = function code(str, inline, lang) {
+
   // Encode any HTML entities in the code string
   str = encoder.htmlEncode(str);
 
   // If a language is provided then attach a CSS class to the code element
   lang = lang ? ' class="lang-' + lang + '"' : '';
-  
+
   str = '<code' + lang + '>' + str + '</code>';
 
   // If not inline then wrap the code element in a pre element

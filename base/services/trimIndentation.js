@@ -59,7 +59,7 @@ function trimIndent(text, indent) {
 }
 
 // The primary export is a function that does the intentation trimming
-module.exports = function(text) {
+module.exports = function trimIndentation(text) {
   return trimIndent(text, calcIndent(text));
 };
 
