@@ -1,12 +1,14 @@
 var rewire = require('rewire');
-var extension = rewire('../../../rendering/tags/marked');
+var extensionFactory = rewire('../../../rendering/tags/marked');
 
 describe("marked custom tag extension", function() {
-  var markedMock;
+  var extension, markedMock, trimSpy;
 
   beforeEach(function() {
     markedMock = jasmine.createSpy('marked').and.callFake(function(str) {return str;});
-    extension.__set__('marked', markedMock);
+    extensionFactory.__set__('marked', markedMock);
+    trimSpy = jasmine.createSpyObj('trimSpy', ['calcIndent', 'trimIndent', 'reindent']);
+    extension = extensionFactory(trimSpy);
   });
 
   it("should specify the tags to match", function() {
@@ -16,13 +18,12 @@ describe("marked custom tag extension", function() {
   describe("process", function() {
 
     it("should call the mock marked function when processing", function() {
+      trimSpy.trimIndent.and.callFake(function(value) { return value; });
       extension.process(null, function() { return 'some content'; });
       expect(markedMock).toHaveBeenCalledWith('some content');
     });
 
     it("should trim indentation from content", function() {
-      var trimSpy = jasmine.createSpyObj('trimSpy', ['calcIndent', 'trimIndent', 'reindent']);
-      extension.__set__('trimIndentation', trimSpy);
       extension.process(null, function() { return 'some content'; });
       expect(trimSpy.calcIndent).toHaveBeenCalled();
       expect(trimSpy.trimIndent).toHaveBeenCalled();
