@@ -3,6 +3,23 @@ var jsParser = require('esprima');
 var walk = require('../lib/walk');
 var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
+/**
+ * @dgService jsdocFileReader
+ * @description
+ * This file reader will pull a doc for each jsdoc style comment in the source file
+ * (by default .js)
+ *
+ * The doc will initially have the form:
+ * ```
+ * {
+ *   content: 'the content of the comment',
+ *   startingLine: xxx,
+ *   endingLine: xxx,
+ *   codeNode: someASTNode
+ *   codeAncestors: arrayOfASTNodes
+ * }
+ * ```
+ */
 module.exports = function jsdocFileReader() {
   return {
     defaultPattern: /\.js$/,
