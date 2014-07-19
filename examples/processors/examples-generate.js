@@ -18,8 +18,7 @@ module.exports = function generateExamplesProcessor(log, examples) {
       templateFolder: { presence: true}
     },
     $process: function(docs) {
-
-      _.forOwn(examples, function(example) {
+      examples.forEach(function(example) {
 
         var stylesheets = [];
         var scripts = [];

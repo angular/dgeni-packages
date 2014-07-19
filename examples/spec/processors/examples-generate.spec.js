@@ -1,3 +1,4 @@
+require('es6-shim');
 var generateExamplesProcessorFactory = require('../../processors/examples-generate');
 var mockLog = require('dgeni/lib/mocks/log');
 var _ = require('lodash');
@@ -9,20 +10,20 @@ describe("examples-generate processor", function() {
 
     docs = [{ file: 'a.b.js' }];
 
-    examples = {
-      'a.b.c': {
-        id: 'a.b.c',
-        doc: docs[0],
-        outputFolder: 'examples',
-        deps: 'dep1.js;dep2.js',
-        files: {
-          'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
-          'app.js': { type: 'js', name: 'app.js', fileContents: 'app.js content' },
-          'app.css': { type: 'css', name: 'app.css', fileContents: 'app.css content' },
-          'app.spec.js': { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' }
-        }
+    examples = new Map();
+
+    examples.set('a.b.c', {
+      id: 'a.b.c',
+      doc: docs[0],
+      outputFolder: 'examples',
+      deps: 'dep1.js;dep2.js',
+      files: {
+        'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
+        'app.js': { type: 'js', name: 'app.js', fileContents: 'app.js content' },
+        'app.css': { type: 'css', name: 'app.css', fileContents: 'app.css content' },
+        'app.spec.js': { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' }
       }
-    };
+    });
 
     processor = generateExamplesProcessorFactory(mockLog, examples);
     processor.templateFolder = 'examples';
