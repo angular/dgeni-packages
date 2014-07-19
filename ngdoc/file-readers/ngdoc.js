@@ -1,23 +1,25 @@
 /**
+ * @dgService ngdocFileReader
  * @description
- * This extractor will pull the content from an ngdoc file
+ * This file reader will pull the contents from a text file (by default .ngdoc)
+ *
  * The doc will initially have the form:
+ * ```
  * {
- *   fileType: 'ngdoc',
- *   file: 'path/to/file.ngdoc'
  *   content: 'the content of the file',
+ *   startingLine: 1
  * }
+ * ```
  */
-module.exports = {
-  pattern: /\.ngdoc$/,
-  processFile: function(filePath, contents, basePath) {
-    // We return a single element array because ngdoc files only contain one document
-    return [{
-      content: contents,
-      file: filePath,
-      basePath: basePath,
-      fileType: 'ngdoc',
-      startingLine: 1
-    }];
-  }
+module.exports = function ngdocFileReader() {
+  return {
+    defaultPattern: /\.ngdoc$/,
+    getDocs: function(fileInfo) {
+      // We return a single element array because ngdoc files only contain one document
+      return [{
+        content: fileInfo.content,
+        startingLine: 1
+      }];
+    }
+  };
 };

@@ -1,20 +1,42 @@
-var ngdocExtractor = require('../../file-readers/ngdoc');
+var ngdocFileReaderFactory = require('../../file-readers/ngdoc');
+var path = require('canonical-path');
 
-describe("extractNgdoc", function() {
-  describe("pattern", function() {
-    it("should only match ngdoc files", function() {
-      expect(ngdocExtractor.pattern.test('abc.ngdoc')).toBeTruthy();
-      expect(ngdocExtractor.pattern.test('abc.js')).toBeFalsy();
+describe("ngdocFileReader", function() {
+
+  var fileReader;
+
+  var createFileInfo = function(file, content, basePath) {
+    return {
+      fileReader: fileReader.name,
+      filePath: file,
+      baseName: path.basename(file, path.extname(file)),
+      extension: path.extname(file).replace(/^\./, ''),
+      basePath: basePath,
+      relativePath: path.relative(basePath, file),
+      content: content
+    };
+  };
+
+
+  beforeEach(function() {
+    fileReader = ngdocFileReaderFactory();
+  });
+
+
+  describe("defaultPattern", function() {
+    it("should match .ngdoc files", function() {
+      expect(fileReader.defaultPattern.test('abc.ngdoc')).toBeTruthy();
+      expect(fileReader.defaultPattern.test('abc.js')).toBeFalsy();
     });
   });
-  describe("process", function() {
+
+
+  describe("getDocs", function() {
     it('should return an object containing info about the file and its contents', function() {
-      expect(ngdocExtractor.processFile('foo/bar.ngdoc', 'A load of content', 'base/path')).toEqual([{
+      var fileInfo = createFileInfo('foo/bar.ngdoc', 'A load of content', 'base/path');
+      expect(fileReader.getDocs(fileInfo)).toEqual([{
         content: 'A load of content',
-        file: 'foo/bar.ngdoc',
-        fileType: 'ngdoc',
-        startingLine: 1,
-        basePath: 'base/path'
+        startingLine: 1
       }]);
     });
   });
