@@ -10,9 +10,9 @@ var path = require('canonical-path');
  * @param  {String} title An optional title to return in the link information
  * @return {Object}       The link information
  */
-module.exports = function(partialNameMap, code) {
+module.exports = function getLinkInfo(partialNameMap, code) {
 
-  return function getLinkInfo(url, title, currentDoc) {
+  return function getLinkInfoImpl(url, title, currentDoc) {
     var linkInfo = {
       url: url,
       type: 'url',
@@ -48,7 +48,7 @@ module.exports = function(partialNameMap, code) {
 
     } else if ( url.indexOf('#') > 0 ) {
       var pathAndHash = url.split('#');
-      linkInfo = getLinkInfo(pathAndHash[0], title);
+      linkInfo = getLinkInfoImpl(pathAndHash[0], title);
       linkInfo.url = linkInfo.url + '#' + pathAndHash[1];
       return linkInfo;
 
