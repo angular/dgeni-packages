@@ -1,13 +1,13 @@
-var rewire = require('rewire');
-var codeTag = rewire('../../../rendering/tags/code');
+var codeTagFactory = require('../../../rendering/tags/code');
 var nunjucks = require('nunjucks');
 
 describe("code custom tag", function() {
-  var codeSpy, env;
+  var codeTag, trimIndentationSpy, codeSpy, env;
 
   beforeEach(function() {
+    trimIndentationSpy = jasmine.createSpy('trimIndentation').and.callFake(function(value) { return value.trim(); });
     codeSpy = jasmine.createSpy('code');
-    codeTag.__set__('code', codeSpy);
+    codeTag = codeTagFactory(trimIndentationSpy, codeSpy);
 
     env = nunjucks.configure('views');
     env.addExtension(codeTag.tags[0], codeTag);
