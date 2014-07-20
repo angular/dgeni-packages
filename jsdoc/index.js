@@ -21,10 +21,12 @@ module.exports = new Package('jsdoc', [require('../base')])
 .factory(require('./services/transforms/unknown-tag'))
 .factory(require('./services/transforms/whole-tag'))
 
+.factory(require('./file-readers/jsdoc'))
+
 // Configure the processors
 
 .config(function(readFilesProcessor, jsdocFileReader) {
-  readFilesProcessor.fileReaders = [require('./file-readers/jsdoc')];
+  readFilesProcessor.fileReaders = [jsdocFileReader];
 })
 
 .config(function(parseTagsProcessor, getInjectables) {
