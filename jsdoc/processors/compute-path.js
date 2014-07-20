@@ -6,7 +6,6 @@ var path = require('canonical-path');
  */
 module.exports = function computePathProcessor() {
   return {
-    contentsFolder: null,
     $validate: {
       outputFolder: { presence: true }
     },
