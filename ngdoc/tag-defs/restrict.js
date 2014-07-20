@@ -7,11 +7,12 @@ module.exports = function() {
       }
     },
     transforms: function(doc, tag, value) {
+      value = value || '';
       return {
-        element: _.contains(value, 'E'),
-        attribute: _.contains(value, 'A'),
-        cssClass: _.contains(value, 'C'),
-        comment: _.contains(value, 'M')
+        element: value.indexOf('E') !== -1,
+        attribute: value.indexOf('A') !== -1,
+        cssClass: value.indexOf('C') !== -1,
+        comment: value.indexOf('M') !== -1
       };
     }
   };
