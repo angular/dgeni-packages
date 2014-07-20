@@ -5,8 +5,8 @@
  * @param  {Array} codeNameParts A collection of parts for a code name
  * @return {Array}               A collection of partial names
  */
-module.exports = function() {
-  return function getPartialNames(codeNameParts) {
+module.exports = function getPartialNames() {
+  return function(codeNameParts) {
 
     var methodName;
     var partialNames = [];
