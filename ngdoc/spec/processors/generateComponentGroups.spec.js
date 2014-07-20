@@ -1,8 +1,7 @@
 var _ = require('lodash');
-var processor = require('../../processors/component-groups-generate');
-var Config = require('dgeni').Config;
+var processorFactory = require('../../processors/generateComponentGroups');
 
-describe("component-groups processor", function() {
+describe("generateComponentGroupsProcessor", function() {
   it("should create a new doc for each group of components (by docType) in each module", function() {
     var docs = [];
     var modules = [{
@@ -17,10 +16,12 @@ describe("component-groups processor", function() {
         { docType: 'b', id: 'a3' }
       ]
     }];
+    var mockApiDocsProcessor = {
+      apiDocsPath: 'partials'
+    };
 
-    config = new Config();
-    config.set('rendering.contentsFolder', 'partials');
-    processor.process(docs, config, modules);
+    var processor = processorFactory(modules, mockApiDocsProcessor);
+    processor.$process(docs);
 
     expect(docs.length).toEqual(2);
   });
