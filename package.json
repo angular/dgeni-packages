@@ -3,8 +3,8 @@
   "version": "0.9.3",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
-    "test": "minijasminenode2 */spec",
-    "cover": "istanbul cover minijasminenode2 -- */spec"
+    "test": "jasmine-node */spec",
+    "cover": "istanbul cover jasmine-node -- */spec"
   },
   "repository": {
     "type": "git",
@@ -51,8 +51,9 @@
     "dgeni": "~0.3.0"
   },
   "devDependencies": {
-    "rewire": "~2.0.0",
-    "di": "~0.0.1"
+    "istanbul": "^0.2.7",
+    "jasmine-node": "^2.0.0",
+    "rewire": "~2.0.0"
   },
   "contributors": [
     "Peter Bacon Darwin <pete@bacondarwin.com>",
