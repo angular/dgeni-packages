@@ -1,17 +1,18 @@
-var rewire = require('rewire');
-var processor = rewire('../../processors/api-docs');
-var PartialNames = require('../../utils/partial-names').PartialNames;
-var Config = require('dgeni').Config;
-var di = require('di');
+var processorFactory = require('../../processors/apiDocs');
+var partialNameMap = require('../../services/partialNameMap');
+var mockLog = require('dgeni/lib/mocks/log')(false);
+
 var _ = require('lodash');
 
 
 describe("api-docs processor", function() {
-  var config;
+  var processor, moduleMap;
 
   beforeEach(function() {
-    config = new Config();
-    config.set('rendering.contentsFolder', 'partials');
+    moduleMap = {};
+    processor = processorFactory(mockLog, partialNameMap, moduleMap);
+
+    //config.set('rendering.contentsFolder', 'partials');
   });
 
   it("should add module docs to the module map", function() {
@@ -25,8 +26,7 @@ describe("api-docs processor", function() {
       docType: 'module',
       name: 'ngMock'
     };
-    var moduleMap = {};
-    processor.process([doc1,doc2], config, new PartialNames(), moduleMap);
+    processor.$process([doc1,doc2]);
     expect(moduleMap).toEqual({
       'ng': doc1,
       'ngMock': doc2
@@ -42,7 +42,7 @@ describe("api-docs processor", function() {
       module: 'ng'
     };
 
-    processor.process([doc], config, new PartialNames());
+    processor.$process([doc]);
 
     expect(doc.name).toEqual('get');
     expect(doc.memberof).toEqual('$http');
@@ -55,14 +55,14 @@ describe("api-docs processor", function() {
       id: 'module:ng.service:$http',
       module: 'ng'
     };
-    var moduleMap = {
+    moduleMap = {
       'ng': {
         components: []
       }
     };
-    processor.process([doc], config, new PartialNames(), moduleMap);
+    processor.$process([doc]);
 
-    expect(moduleMap['ng'].components[0]).toBe(doc);
+    expect(moduleMap.ng.components[0]).toBe(doc);
   });
 
 });
