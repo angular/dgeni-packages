@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var log = require('winston');
 
 module.exports = {
   name: 'link',
