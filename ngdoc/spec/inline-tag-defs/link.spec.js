@@ -1,19 +1,11 @@
-var _ = require('lodash');
-var logger = require('winston');
-var linkTagDef = require('../../inline-tag-defs/link');
-var PartialNames = require('../../utils/partial-names').PartialNames;
+var tagDefFactory = require('../../inline-tag-defs/link');
 
 describe("links inline tag handler", function() {
-  var doc, links, logLevel, partialNames, linkHandler;
-
-  it("should have name 'link'", function() {
-    expect(linkTagDef.name).toEqual('link');
-  });
+  var tagDef, getLinkInfoSpy, doc, links;
 
   beforeEach(function() {
-    logLevel = logger.level;
-    logger.level = 'warn';
-    spyOn(logger, 'warn');
+    getLinkInfoSpy = jasmine.createSpy('getLinkInfo');
+    tagDef = tagDefFactory(getLinkInfoSpy);
 
     doc = {
       id: 'module:ng.directive:ngInclude',
@@ -30,31 +22,31 @@ describe("links inline tag handler", function() {
                        "A link to reachable code: {@link ngInclude}"
     };
 
-    partialNames = new PartialNames();
-    partialNames.addDoc(doc);
-
-    linkHandler = linkTagDef.handlerFactory(partialNames);
   });
 
-  afterEach(function() {
-    logger.level = logLevel;
+  it("should have name 'link'", function() {
+    expect(tagDef.name).toEqual('link');
   });
 
-  it("should convert urls to HTML anchors", function() {
-    expect(linkHandler(doc, 'link', 'some/url link')).toEqual('<a href="some/url">link</a>');
+  it("should use the result of getLinkInfo to create a HTML anchor", function() {
+    getLinkInfoSpy.and.returnValue({
+      valid: true,
+      url: 'some/url',
+      title: 'link'
+    });
+    expect(tagDef.handler(doc, 'link', 'some/url link')).toEqual('<a href="some/url">link</a>');
+    expect(getLinkInfoSpy).toHaveBeenCalled();
   });
 
-  it("should parse empty space within a link's title", function() {
-    expect(linkHandler(doc, 'link', 'another/url link that spans\n two lines')).toEqual('<a href="another/url">link that spans\n two lines</a>');
-  });
 
-  it("should convert code links to anchors with formatted code", function() {
-    expect(linkHandler(doc, 'link', 'ngInclude')).toEqual('<a href="api/ng/directive/ngInclude"><code>ngInclude</code></a>');
-  });
-
-  it("should check that any links in the links property of a doc reference a valid doc", function() {
+  it("should throw an error if the link is invalid", function() {
+    getLinkInfoSpy.and.returnValue({
+      valid: false,
+      error: 'Invalid link (does not match any doc): "module:ngOther.directive:ngDirective"'
+    });
     expect(function() {
-      linkHandler(doc, 'link', 'module:ngOther.directive:ngDirective');
-    }).toThrowError(/Invalid link \(does not match any doc\): "module:ngOther\.directive:ngDirective"/);
+      tagDef.handler(doc, 'link', 'module:ngOther.directive:ngDirective');
+    }).toThrowError('Invalid link (does not match any doc): "module:ngOther.directive:ngDirective"');
+    expect(getLinkInfoSpy).toHaveBeenCalled();
   });
 });
