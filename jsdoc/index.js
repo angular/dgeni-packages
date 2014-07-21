@@ -30,7 +30,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 })
 
 .config(function(parseTagsProcessor, getInjectables) {
-  parseTagsProcessorprocessing.tagDefinitions = getInjectables(require('./tag-defs'));
+  parseTagsProcessor.tagDefinitions = getInjectables(require('./tag-defs'));
 })
 
 .config(function(extractTagsProcessor, trimWhitespaceTransform) {
