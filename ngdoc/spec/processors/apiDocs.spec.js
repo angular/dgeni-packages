@@ -35,6 +35,19 @@ describe("api-docs processor", function() {
     });
   });
 
+  it("should compute the packageName and packageFile if not already provided", function() {
+    var doc1 = { area: 'api', docType: 'module', name: 'ng' };
+    var doc2 = { area: 'api', docType: 'module', name: 'ngResource' };
+    var doc3 = { area: 'api', docType: 'module', name: 'ngMock', packageName: 'angular-mocks' };
+    processor.$process([doc1,doc2, doc3]);
+    expect(doc1.packageName).toEqual('angular');
+    expect(doc1.packageFile).toEqual('angular.js');
+    expect(doc2.packageName).toEqual('angular-resource');
+    expect(doc2.packageFile).toEqual('angular-resource.js');
+    expect(doc3.packageName).toEqual('angular-mocks');
+    expect(doc3.packageFile).toEqual('angular-mocks.js');
+  });
+
   it("should extract the container and member from the name if it is a memberOf type", function() {
     var doc = {
       docType: 'method',

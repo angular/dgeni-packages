@@ -11,5 +11,6 @@ module.exports = [
   require('./fullName'),
   require('./priority'),
   require('./title'),
-  require('./parent')
+  require('./parent'),
+  require('./packageName')
 ];
