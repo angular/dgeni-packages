@@ -20,6 +20,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 .factory(require('./services/transforms/extract-type'))
 .factory(require('./services/transforms/unknown-tag'))
 .factory(require('./services/transforms/whole-tag'))
+.factory(require('./services/transforms/trim-whitespace'))
 
 .factory(require('./file-readers/jsdoc'))
 
