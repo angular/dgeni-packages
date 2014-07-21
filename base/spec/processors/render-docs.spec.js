@@ -1,18 +1,17 @@
 var renderDocsFactory = require('../../processors/render-docs');
 
-var mockLog, mockTemplateFinder, mockTemplateEngine, mockRender;
+var mockLog, mockTemplateFinder, mockTemplateEngine, renderSpy, findTemplateSpy;
 var mockLog = require('dgeni/lib/mocks/log')(/* true */);
 
 beforeEach(function() {
+  findTemplateSpy = createSpy('findTemplate').and.returnValue('SOME TEMPLATE');
+  renderSpy = jasmine.createSpy('render');
   mockTemplateFinder = {
-    findTemplate: createSpy('findTemplate').and.returnValue('SOME TEMPLATE')
+    getFinder: function() { return findTemplateSpy; }
   };
   mockTemplateEngine = {
-    getRenderer: function() {
-      return mockRender;
-    }
+    getRenderer: function() { return renderSpy; }
   };
-  mockRender = jasmine.createSpy('render');
 });
 
 describe("render-docs", function() {
@@ -21,9 +20,9 @@ describe("render-docs", function() {
     var doc1 = {}, doc2 = {}, docs = [ doc1, doc2 ];
     var processor = renderDocsFactory(mockLog, mockTemplateFinder, mockTemplateEngine);
     processor.$process(docs);
-    expect(mockTemplateFinder.findTemplate.calls.count()).toEqual(2);
-    expect(mockTemplateFinder.findTemplate.calls.argsFor(0)).toEqual([doc1]);
-    expect(mockTemplateFinder.findTemplate.calls.argsFor(1)).toEqual([doc2]);
+    expect(findTemplateSpy.calls.count()).toEqual(2);
+    expect(findTemplateSpy.calls.argsFor(0)).toEqual([doc1]);
+    expect(findTemplateSpy.calls.argsFor(1)).toEqual([doc2]);
   });
 
   it("should call the templateEngine.render with the template and data", function() {
@@ -36,17 +35,17 @@ describe("render-docs", function() {
 
     processor.$process(docs);
 
-    expect(mockRender.calls.count()).toEqual(2);
-    expect(mockRender.calls.argsFor(0)).toEqual(['SOME TEMPLATE',
+    expect(renderSpy.calls.count()).toEqual(2);
+    expect(renderSpy.calls.argsFor(0)).toEqual(['SOME TEMPLATE',
       { doc: doc1, docs: docs, someProp: someProp, someMethod: someMethod }]);
-    expect(mockRender.calls.argsFor(1)).toEqual(['SOME TEMPLATE',
+    expect(renderSpy.calls.argsFor(1)).toEqual(['SOME TEMPLATE',
       { doc: doc2, docs: docs, someProp: someProp, someMethod: someMethod }]);
   });
 
   it("should place the result of calling templateEngine.render into doc.renderedContent", function() {
     var doc1 = { id: 1 }, doc2 = { id: 2 }, docs = [ doc1, doc2 ];
 
-    mockRender.and.returnValue('RENDERED CONTENT');
+    renderSpy.and.returnValue('RENDERED CONTENT');
 
     var processor = renderDocsFactory(mockLog, mockTemplateFinder, mockTemplateEngine);
 

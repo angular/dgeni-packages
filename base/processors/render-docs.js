@@ -38,6 +38,7 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
     $process: function process(docs) {
 
       var render = templateEngine.getRenderer();
+      var findTemplate = templateFinder.getFinder();
 
       docs.forEach(function(doc) {
         log.debug('Rendering doc', doc.id, doc.name);
@@ -46,7 +47,7 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
             { doc: doc, docs: docs },
             this.extraData,
             this.helpers);
-          var templateFile = templateFinder.findTemplate(data.doc);
+          var templateFile = findTemplate(data.doc);
           doc.renderedContent = render(templateFile, data);
         } catch(ex) {
           console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
