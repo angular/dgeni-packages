@@ -1,10 +1,10 @@
 var nunjucks = require('nunjucks');
 
 /**
- * @dgService nunjucksTemplateEngine
+ * @dgService templateEngine
  * @description A nunjucks powered template rendering engine
  */
-module.exports = function nunjucksTemplateEngine() {
+module.exports = function templateEngine() {
 
   return {
 
