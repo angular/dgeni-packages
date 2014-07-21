@@ -8,7 +8,7 @@ var NAME_AND_DESCRIPTION = /^\s*(\[([^\]=]+)(?:=([^\]]+))?\]|\S+)((?:[ \t]*\-\s*
  * Extract the name information from a tag
  * @param  {Tag} tag The tag to process
  */
-module.exports = function extractNameTranform() {
+module.exports = function extractNameTransform() {
   return function(doc, tag, value) {
 
     tag.description = value.replace(NAME_AND_DESCRIPTION, function(match, name, optionalName, defaultValue, description, dashDescription) {
