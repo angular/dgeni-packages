@@ -1,3 +1,8 @@
+## v0.9.6 07/21/2014
+
+* feat(api-docs): allow packageName to be specified as a tag  08:08 PM  Peter Bacon Darwin  211a4cb4
+
+
 ## v0.9.5 07/17/2014
 
 * fix(ng-doc/component-groups-generate): allow path/outputPath to be configurable    48d105bc
