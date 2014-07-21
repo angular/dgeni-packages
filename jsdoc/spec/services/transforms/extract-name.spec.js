@@ -1,11 +1,12 @@
-var transform = require('../../../services/transforms/extract-name');
+var transformFactory = require('../../../services/transforms/extract-name');
 
 describe("extract-name transform", function() {
-  var doc, tag, value;
+  var doc, tag, value, transform;
 
   beforeEach(function() {
     doc = {};
     tag = {};
+    transform = transformFactory();
   });
 
   it("should extract the name from the description", function() {

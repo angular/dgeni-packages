@@ -1,10 +1,13 @@
-var transform = require('../../../services/transforms/extract-type');
+var transformFactory = require('../../../services/transforms/extract-type');
 
 describe("extract-type transform", function() {
+
+  var transform;
 
   beforeEach(function() {
     doc = {};
     tag = {};
+    transform = transformFactory();
   });
 
   it("should extract the type from the description", function() {

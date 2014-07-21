@@ -10,94 +10,96 @@ var TYPE_EXPRESSION_START = /\{[^@]/;
  * @private
  * @param {Tag} tag The tag whose type should be extracted
  */
-module.exports =  function extractTypeTransform(doc, tag, value) {
-  var start, position, count, length, expression;
+module.exports =  function extractTypeTransform() {
+  return function(doc, tag, value) {
+    var start, position, count, length, expression;
 
-  start = value.search(TYPE_EXPRESSION_START);
-  length = value.length;
-  if (start !== -1) {
-    // advance to the first character in the type expression
-    position = start + 1;
-    count = 1;
+    start = value.search(TYPE_EXPRESSION_START);
+    length = value.length;
+    if (start !== -1) {
+      // advance to the first character in the type expression
+      position = start + 1;
+      count = 1;
 
-    while (position < length) {
-      switch (value[position]) {
-        case '\\':
-          // backslash is an escape character, so skip the next character
-          position++;
+      while (position < length) {
+        switch (value[position]) {
+          case '\\':
+            // backslash is an escape character, so skip the next character
+            position++;
+            break;
+          case '{':
+            count++;
+            break;
+          case '}':
+            count--;
+            break;
+          default:
+            // do nothing
+        }
+
+        if (count === 0) {
           break;
-        case '{':
-          count++;
-          break;
-        case '}':
-          count--;
-          break;
-        default:
-          // do nothing
+        }
+        position++;
       }
 
-      if (count === 0) {
+      tag.typeExpression = value.slice(start+1, position).trim().replace('\\}', '}').replace('\\{', '{');
+
+      tag.type = catharsis.parse(tag.typeExpression, {jsdoc: true});
+      tag.typeList = getTypeStrings(tag.type);
+      if ( tag.type.optional ) {
+        tag.optional = true;
+      }
+      tag.description = (value.substring(0, start) + value.substring(position+1)).trim();
+      return tag.description;
+    } else {
+      return value;
+    }
+  };
+
+  /** @private */
+  function getTypeStrings(parsedType) {
+    var types = [];
+
+    var TYPES = catharsis.Types;
+    var util = require('util');
+
+    switch(parsedType.type) {
+      case TYPES.AllLiteral:
+        types.push('*');
         break;
-      }
-      position++;
+      case TYPES.FunctionType:
+        types.push(catharsis.stringify(parsedType));
+        break;
+      case TYPES.NameExpression:
+        types.push(parsedType.name);
+        break;
+      case TYPES.NullLiteral:
+        types.push('null');
+        break;
+      case TYPES.RecordType:
+        types.push('Object');
+        break;
+      case TYPES.TypeApplication:
+        types.push( catharsis.stringify(parsedType) );
+        break;
+      case TYPES.TypeUnion:
+        parsedType.elements.forEach(function(element) {
+          types = types.concat( getTypeStrings(element) );
+        });
+        break;
+      case TYPES.UndefinedLiteral:
+        types.push('undefined');
+        break;
+      case TYPES.UnknownLiteral:
+        types.push('?');
+        break;
+      default:
+        // this shouldn't happen
+        throw new Error( util.format('unrecognized type %s in parsed type: %j', parsedType.type,
+          parsedType) );
     }
 
-    tag.typeExpression = value.slice(start+1, position).trim().replace('\\}', '}').replace('\\{', '{');
-
-    tag.type = catharsis.parse(tag.typeExpression, {jsdoc: true});
-    tag.typeList = getTypeStrings(tag.type);
-    if ( tag.type.optional ) {
-      tag.optional = true;
-    }
-    tag.description = (value.substring(0, start) + value.substring(position+1)).trim();
-    return tag.description;
-  } else {
-    return value;
+    return types;
   }
 };
-
-/** @private */
-function getTypeStrings(parsedType) {
-  var types = [];
-
-  var TYPES = catharsis.Types;
-  var util = require('util');
-
-  switch(parsedType.type) {
-    case TYPES.AllLiteral:
-      types.push('*');
-      break;
-    case TYPES.FunctionType:
-      types.push(catharsis.stringify(parsedType));
-      break;
-    case TYPES.NameExpression:
-      types.push(parsedType.name);
-      break;
-    case TYPES.NullLiteral:
-      types.push('null');
-      break;
-    case TYPES.RecordType:
-      types.push('Object');
-      break;
-    case TYPES.TypeApplication:
-      types.push( catharsis.stringify(parsedType) );
-      break;
-    case TYPES.TypeUnion:
-      parsedType.elements.forEach(function(element) {
-        types = types.concat( getTypeStrings(element) );
-      });
-      break;
-    case TYPES.UndefinedLiteral:
-      types.push('undefined');
-      break;
-    case TYPES.UnknownLiteral:
-      types.push('?');
-      break;
-    default:
-      // this shouldn't happen
-      throw new Error( util.format('unrecognized type %s in parsed type: %j', parsedType.type,
-        parsedType) );
-  }
-
-  return types;
-}
