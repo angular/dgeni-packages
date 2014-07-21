@@ -2,11 +2,11 @@ var computePathProcessorFactory = require('../../processors/compute-path');
 var _ = require('lodash');
 
 describe("compute-path doc processor", function() {
-  var processor;
+  var processor, mockWriteFilesProcessor;
 
   beforeEach(function() {
-    processor = computePathProcessorFactory();
-    processor.outputFolder = 'partials';
+    mockWriteFilesProcessor = { outputFolder: 'partials' };
+    processor = computePathProcessorFactory(mockWriteFilesProcessor);
   });
 
   it("should compute the path of the document from its file name", function() {

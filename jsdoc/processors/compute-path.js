@@ -4,16 +4,13 @@ var path = require('canonical-path');
  * @dgProcessor computePath
  * @description Compute the path and outputPath for docs that do not already have them
  */
-module.exports = function computePathProcessor() {
+module.exports = function computePathProcessor(writeFilesProcessor) {
   return {
-    $validate: {
-      outputFolder: { presence: true }
-    },
     $runAfter: ['docs-processed'],
     $runBefore: ['rendering-docs'],
     $process: function(docs) {
 
-      var outputFolder = this.outputFolder;
+      var outputFolder = writeFilesProcessor.outputFolder;
 
       docs.forEach(function(doc) {
 
