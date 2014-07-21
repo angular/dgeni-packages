@@ -10,20 +10,17 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
   return {
     $runAfter: ['compute-id', 'collectPartialNamesProcessor'],
     $runBefore: ['compute-path'],
+    $validation: {
+      apiDocsPath: { presence: true },
+    },
     $process: function(docs) {
       var parts;
 
-      var partialsPath = config.get('rendering.contentsFolder');
-      if ( !partialsPath ) {
-        throw new Error('Invalid configuration. You must provide config.rendering.contentsFolder');
-      }
-
-      var options = _.assign({
-        outputPath: '${area}/${module}/${docType}/${name}.html',
-        path: '${area}/${module}/${docType}/${name}',
-        moduleOutputPath: '${area}/${name}/index.html',
-        modulePath: '${area}/${name}'
-      }, config.get('processing.api-docs', {}));
+      var apiDocsPath = this.apiDocsPath;
+      var outputPathTemplate = this.outputPathTemplate || '${area}/${module}/${docType}/${name}.html';
+      var apiPathTemplate = this.apiPathTemplate || '${area}/${module}/${docType}/${name}';
+      var moduleOutputPathTemplate = this.moduleOutputPathTemplate || '${area}/${name}/index.html';
+      var modulePathTemplate = this.modulePathTemplate || '${area}/${name}';
 
       // Compute some extra fields for docs in the API area
       _.forEach(docs, function(doc) {
@@ -32,8 +29,8 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
 
           if ( doc.docType === 'module' ) {
 
-            doc.outputPath = path.join(partialsPath, _.template(options.moduleOutputPath, doc));
-            doc.path = _.template(options.modulePath, doc);
+            doc.outputPathTemplate = path.join(apiDocsPath, _.template(moduleOutputPathTemplate, doc));
+            doc.path = _.template(modulePathTemplate, doc);
 
             moduleMap[doc.name] = doc;
 
@@ -59,8 +56,8 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
               doc.name = parts[1];
             }
 
-            doc.outputPath = path.join(partialsPath, _.template(options.outputPath, doc));
-            doc.path = _.template(options.path, doc);
+            doc.outputPathTemplate = path.join(apiDocsPath, _.template(outputPathTemplate, doc));
+            doc.path = _.template(apiPathTemplate, doc);
           }
         }
 
@@ -79,16 +76,16 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
         if ( doc.isMember ) {
           log.debug('child doc found', doc.id, doc.memberof);
 
-          var containerDoc = partialNames.getDoc(doc.memberof);
+          var containerDocs = partialNameMap.getDocs(doc.memberof);
 
-          if ( !containerDoc ) {
+          if ( containerDocs.length === 0 ) {
             log.warn('Missing container document "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);
             return;
           }
-          if ( _.isArray(containerDoc) ) {
+          if ( containerDocs.length > 0 ) {
             // The memberof field was ambiguous, try prepending the module name too
-            containerDoc = partialNames.getDoc(_.template('${module}.${memberof}', doc));
-            if ( !containerDoc || _.isArray(containerDoc) ) {
+            containerDocs = partialNameMap.getDocs(_.template('${module}.${memberof}', doc));
+            if ( containerDocs.length !== 1 ) {
               log.warn('Ambiguous container document reference "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);
               return;
             } else {
@@ -96,6 +93,7 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
             }
           }
 
+          var containerDoc = containerDocs[0];
           var containerProperty = mergeableTypes[doc.docType];
           var container = containerDoc[containerProperty] = containerDoc[containerProperty] || [];
           container.push(doc);
@@ -109,18 +107,18 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
       _.forEach(docs, function(doc) {
         if ( doc.docType === 'provider' ) {
           var serviceId = doc.id.replace(/provider:/, 'service:').replace(/Provider$/, '');
-          var serviceDoc = partialNames.getDoc(serviceId);
+          var serviceDocs = partialNameMap.getDocs(serviceId);
 
-          if ( !serviceDoc ) {
+          if ( serviceDocs.length === 0 ) {
             log.warn('Missing service "' + serviceId + '" for provider "' + doc.id + '"');
-          } else if ( _.isArray(serviceDoc) ) {
+          } else if ( serviceDoc.length > 1 ) {
             log.warn('Ambiguous service name "' + serviceId + '" for provider "' + doc.id + '"\n' +
               _.reduce(doc, function(msg, doc) {
                 return msg + '\n  "' + doc.id + '"';
               }, 'Matching docs: '));
           } else {
-            doc.serviceDoc = serviceDoc;
-            serviceDoc.providerDoc = doc;
+            doc.serviceDoc = serviceDocs[0];
+            serviceDocs[0].providerDoc = doc;
           }
         }
       });

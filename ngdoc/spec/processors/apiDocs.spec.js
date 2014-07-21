@@ -1,18 +1,20 @@
 var processorFactory = require('../../processors/apiDocs');
-var partialNameMap = require('../../services/partialNameMap');
+var getPartialNamesFactory = require('../../services/getPartialNames');
+var parseCodeNameFactory = require('../../services/parseCodeName');
+var partialNameMapFactory = require('../../services/partialNameMap');
 var mockLog = require('dgeni/lib/mocks/log')(false);
 
 var _ = require('lodash');
 
 
 describe("api-docs processor", function() {
-  var processor, moduleMap;
+  var processor, moduleMap, partialNameMap;
 
   beforeEach(function() {
     moduleMap = {};
+    partialNameMap = partialNameMapFactory(getPartialNamesFactory(), parseCodeNameFactory());
     processor = processorFactory(mockLog, partialNameMap, moduleMap);
-
-    //config.set('rendering.contentsFolder', 'partials');
+    processor.apiDocsPath = 'partials';
   });
 
   it("should add module docs to the module map", function() {
@@ -55,11 +57,7 @@ describe("api-docs processor", function() {
       id: 'module:ng.service:$http',
       module: 'ng'
     };
-    moduleMap = {
-      'ng': {
-        components: []
-      }
-    };
+    moduleMap.ng = { components: [] };
     processor.$process([doc]);
 
     expect(moduleMap.ng.components[0]).toBe(doc);
