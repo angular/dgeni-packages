@@ -10,39 +10,10 @@ describe("templateFinder", function() {
     templateFinder = templateFinderFactory(mockLog);
   });
 
-  describe("setTemplateFolders()", function() {
 
-    it("should complain if no template folders were provided", function() {
+  describe("getFinder", function() {
 
-      expect(function() {
-        templateFinder.setTemplateFolders(null);
-      }).toThrow();
-
-      expect(function() {
-        templateFinder.setTemplateFolders([]);
-      }).toThrow();
-
-    });
-  });
-
-  describe("setTemplatePatterns()", function() {
-
-    it("should complain if no template patterns were provided", function() {
-
-      expect(function() {
-        templateFinder.setTemplatePatterns(null);
-      }).toThrow();
-
-      expect(function() {
-        templateFinder.setTemplatePatterns([]);
-      }).toThrow();
-
-    });
-  });
-
-  describe("findTemplate", function() {
-
-    var glob, patterns, templateFolders;
+    var glob, patterns, templateFolders, findTemplate;
 
     beforeEach(function() {
       glob = templateFinderFactory.__get__('glob');
@@ -56,34 +27,36 @@ describe("templateFinder", function() {
       ];
       templateFolders = ['abc'];
 
-      templateFinder.setTemplateFolders(templateFolders);
-      templateFinder.setTemplatePatterns(patterns);
+      templateFinder.templateFolders = templateFolders;
+      templateFinder.templatePatterns = patterns;
+
+      findTemplate = templateFinder.getFinder();
     });
 
 
     it("should match id followed by doctype if both are provided and the file exists", function() {
-      expect(templateFinder.findTemplate({ docType: 'a', id: 'c'})).toEqual('c.a.x');
+      expect(findTemplate({ docType: 'a', id: 'c'})).toEqual('c.a.x');
     });
 
 
     it("should match id before docType", function() {
-      expect(templateFinder.findTemplate({ docType: 'a', id: 'b' })).toEqual('b.x');
+      expect(findTemplate({ docType: 'a', id: 'b' })).toEqual('b.x');
     });
 
 
     it("should match docType if id doesn't match", function() {
-      expect(templateFinder.findTemplate({ docType: 'a', id: 'missing' })).toEqual('a.x');
+      expect(findTemplate({ docType: 'a', id: 'missing' })).toEqual('a.x');
     });
 
 
     it("should match docType if id is undefined", function() {
-      expect(templateFinder.findTemplate({ docType: 'a' })).toEqual('a.x');
+      expect(findTemplate({ docType: 'a' })).toEqual('a.x');
     });
 
 
     it("should throw an error if no template was found", function() {
       expect(function() {
-        templateFinder.findTemplate({docType:'missing'});
+        findTemplate({docType:'missing'});
       }).toThrow();
     });
 
