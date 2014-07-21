@@ -43,9 +43,11 @@ module.exports = {
           // Compute the package name and filename for the module
           var match = /^ng(.*)/.exec(doc.name);
           if ( match ) {
-            var packageName = match[1].toLowerCase();
-            if ( packageName ) { packageName = '-' + packageName; }
-            doc.packageName = 'angular' + packageName;
+            if ( !doc.packageName ) {
+              var packageName = match[1].toLowerCase();
+              if ( packageName ) { packageName = '-' + packageName; }
+              doc.packageName = 'angular' + packageName;
+            }
             doc.packageFile = doc.packageName + '.js';
           }
 

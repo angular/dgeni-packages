@@ -114,5 +114,6 @@ module.exports = [
 
   { name: 'title' },
   { name: 'parent' },
+  { name: 'packageName' }
 
 ];
