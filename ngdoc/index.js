@@ -13,7 +13,7 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 .processor(require('./processors/apiDocs'))
 .processor(require('./processors/generateComponentGroups'))
 .processor(require('./processors/compute-path')) // Override the current computePathProcessor with our own
-.processor(require('./processors/compute-id'))
+.processor(require('./processors/computeId'))
 .processor(require('./processors/filter-ngdocs'))
 .processor(require('./processors/collectPartialNames'))
 

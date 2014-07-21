@@ -1,27 +1,33 @@
-var processor = require('../../processors/compute-id');
+var processorFactory = require('../../processors/computeId');
 
-describe("compute-id doc processor", function() {
+describe("computeId doc processor", function() {
+  var processor;
+
+  beforeEach(function() {
+    processor = processorFactory();
+  });
+
   it("should compute the id of api modules", function() {
     var doc = { area: 'api', docType: 'module', name: 'ng' };
-    processor.process([doc]);
+    processor.$process([doc]);
     expect(doc.id).toEqual('module:ng');
   });
 
   it("should compute the id of api components", function() {
     var doc = { area: 'api', docType: 'service', module: 'ngRoute', name: '$route' };
-    processor.process([doc]);
+    processor.$process([doc]);
     expect(doc.id).toEqual('module:ngRoute.service:$route');
   });
 
   it("should compute the id of error docs from the name", function() {
     var doc = { area: 'error', docType: 'error', name: '$compile:ctreq' };
-    processor.process([doc]);
+    processor.$process([doc]);
     expect(doc.id).toEqual('$compile:ctreq');
   });
 
   it("should compute the id of other docs from the file", function() {
     var doc = { area: 'guide', docType: 'overview', name: 'Some Doc', file: 'a/b/foo.ngdoc', fileName: 'foo' };
-    processor.process([doc]);
+    processor.$process([doc]);
     expect(doc.id).toEqual('foo');
   });
 });
