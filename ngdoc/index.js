@@ -9,6 +9,7 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 .factory(require('./services/getPartialNames'))
 .factory(require('./services/parseCodeName'))
 .factory(require('./services/partialNameMap'))
+.factory(require('./services/moduleMap'))
 
 .processor(require('./processors/apiDocs'))
 .processor(require('./processors/generateComponentGroups'))
