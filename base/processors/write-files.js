@@ -8,17 +8,12 @@ var Q = require('q');
  * @param {Object} log A service that provides logging
  * @description Write the value of `doc.renderedContent` to a file a  `doc.outputPath`.
  * @property {String} outputFolder The base path to the folder where files are outputted
- * @property {String} contentsFolder The path relative to the outputFolder where normal documents
- *                                   are outputted.  This is compared to auxiliary files that may be
- *                                   output elsewhere.
  */
 module.exports = function writeFilesProcessor(log) {
   return {
     outputFolder: null,
-    contentsFolder: null,
     $validate: {
       outputFolder: { presence: true },
-      contentsFolder: { presence: true }
     },
     $runAfter:['writing-files'],
     $runBefore: ['files-written'],
