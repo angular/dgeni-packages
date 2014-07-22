@@ -13,6 +13,7 @@ function createExampleDoc(example, deployment, stylesheets, scripts) {
   var commonFiles = (deployment.examples && deployment.examples.commonFiles) || {};
   var dependencyPath = deployment.examples.dependencyPath || '.';
 
+
   var exampleDoc = {
     id: example.id + deploymentQualifier,
     docType: 'example',
@@ -20,7 +21,7 @@ function createExampleDoc(example, deployment, stylesheets, scripts) {
     file: example.doc.file,
     startingLine: example.doc.startingLine,
     example: example,
-    path: example.id + deploymentQualifier,
+    path: example.outputFolderPath + '/index' + deploymentQualifier + '.html',
     outputPath: example.outputFolder + '/index' + deploymentQualifier + '.html'
   };
 
@@ -58,7 +59,7 @@ function createFileDoc(example, file) {
     file: example.doc.file,
     startingLine: example.doc.startingLine,
     example: example,
-    path: file.name,
+    path: example.outputFolderPath + '/' + file.name,
     outputPath: outputPath(example, file.name),
     fileContents: file.fileContents
   };
@@ -71,7 +72,9 @@ function createRunnableExampleDoc(example) {
     docType: 'runnableExample',
     file: example.doc.file,
     startingLine: example.doc.startingLine,
-    example: example
+    example: example,
+    path: example.outputFolderPath + '/' + example.doc.file,
+    outputPath: example.outputFolder + '/' + example.doc.file
   };
   return exampleDoc;
 }
