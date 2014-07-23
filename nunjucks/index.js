@@ -7,9 +7,10 @@ var Package = require('dgeni').Package;
 module.exports = new Package('nunjucks', ['base'])
 
 .factory(require('./services/nunjucks-template-engine'))
+.factory(require('./rendering/tags/marked'))
 
-.config(function(templateEngine) {
-  templateEngine.tags.push(require('./rendering/tags/marked'));
+.config(function(templateEngine, markedNunjucksTag) {
+  templateEngine.tags.push(markedNunjucksTag);
   templateEngine.filters = templateEngine.filters
     .concat(require('./rendering/filters/change-case'))
     .concat([
