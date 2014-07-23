@@ -35,14 +35,14 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 })
 
 
-.config(function(templateEngine, getInjectables) {
+.config(function(templateFinder, templateEngine, getInjectables) {
+
+  templateFinder.templateFolders.unshift(path.resolve(__dirname, 'templates'));
 
   templateEngine.config.tags = {
     variableStart: '{$',
     variableEnd: '$}'
   };
-
-  templateEngine.templateFolders.shift(path.resolve(packagePath, 'templates'));
 
   templateEngine.templatePatterns = [
     '${ doc.template }',
