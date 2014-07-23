@@ -1,4 +1,4 @@
-module.exports = function(trimIndentation, code) {
+module.exports = function(trimIndentation, encodeCodeBlock) {
   return {
     tags: ['code'],
 
@@ -20,7 +20,7 @@ module.exports = function(trimIndentation, code) {
         lang = undefined;
       }
       var trimmedString = trimIndentation(content());
-      var codeString = code(trimmedString, false, lang);
+      var codeString = encodeCodeBlock(trimmedString, false, lang);
       return codeString;
     }
   };
