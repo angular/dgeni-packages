@@ -25,8 +25,8 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 
 
 .config(function(parseTagsProcessor, getInjectables) {
-  parseTagsProcessorprocessing.tagDefinitions =
-      parseTagsProcessorprocessing.tagDefinitions.concat(getInjectables(require('./tag-defs')));
+  parseTagsProcessor.tagDefinitions =
+      parseTagsProcessor.tagDefinitions.concat(getInjectables(require('./tag-defs')));
 })
 
 
