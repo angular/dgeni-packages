@@ -59,11 +59,12 @@ function trimIndent(text, indent) {
 }
 
 // The primary export is a function that does the intentation trimming
-module.exports = function trimIndentation(text) {
-  return trimIndent(text, calcIndent(text));
+module.exports = function trimIndentation() {
+  var trimIndentationImpl = function(text) {
+      return trimIndent(text, calcIndent(text));
+  };
+  trimIndentationImpl.calcIndent = calcIndent;
+  trimIndentationImpl.trimIndent = trimIndent;
+  trimIndentationImpl.reindent = reindent;
+  return trimIndentationImpl;
 };
-
-// We also expose the parts of the algorithm so that you have more control
-module.exports.calcIndent = calcIndent;
-module.exports.trimIndent = trimIndent;
-module.exports.reindent = reindent;

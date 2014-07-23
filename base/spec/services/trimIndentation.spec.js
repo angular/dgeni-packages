@@ -1,6 +1,10 @@
-var trimIndentation = require('../../services/trimIndentation');
+var trimIndentationFactory = require('../../services/trimIndentation');
 
 describe("trimIndentation", function() {
+  var trimIndentation;
+  beforeEach(function() {
+    trimIndentation = trimIndentationFactory();
+  });
   it("should trim simple leading white-space from a single line of text", function() {
     expect(trimIndentation('   abc  ')).toEqual('abc  ');
   });
