@@ -5,7 +5,7 @@
  */
 module.exports = function collectPartialNamesProcessor(partialNameMap) {
   return {
-    $runAfter: ['compute-id'],
+    $runAfter: ['computeIdProcessor'],
     $process: function(docs) {
       docs.forEach(function(doc) {
         partialNameMap.addDoc(doc);
