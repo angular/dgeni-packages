@@ -24,5 +24,5 @@ module.exports = new Package('base')
 
 // Helper services
 .factory(require('./services/templateFinder'))
-.factory(require('./services/code'))
+.factory(require('./services/encodeCodeBlock'))
 .factory(require('./services/trimIndentation'));

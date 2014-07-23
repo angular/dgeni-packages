@@ -1,5 +1,5 @@
 var encoder = new require('node-html-encoder').Encoder();
-module.exports = function code(str, inline, lang) {
+module.exports = function encodeCodeBlock(str, inline, lang) {
 
   // Encode any HTML entities in the code string
   str = encoder.htmlEncode(str);
