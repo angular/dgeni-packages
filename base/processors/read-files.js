@@ -150,8 +150,8 @@ function normalizeSourceInfo(basePath, sourceInfo) {
   }
 
   sourceInfo.basePath = path.resolve(basePath, sourceInfo.basePath || '.');
-  sourceInfo.include = path.resolve(basePath, sourceInfo.include);
-  sourceInfo.exclude = sourceInfo.exclude && path.resolve(basePath, sourceInfo.exclude);
+  sourceInfo.include = path.resolve(sourceInfo.basePath, sourceInfo.include);
+  sourceInfo.exclude = sourceInfo.exclude && path.resolve(sourceInfo.basePath, sourceInfo.exclude);
 
   return sourceInfo;
 }
