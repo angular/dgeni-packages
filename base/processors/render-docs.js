@@ -41,7 +41,7 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
       var findTemplate = templateFinder.getFinder();
 
       docs.forEach(function(doc) {
-        log.debug('Rendering doc', doc.id, doc.name);
+        log.debug('Rendering doc:', doc.id || doc.name || doc.path);
         try {
           var data = _.defaults(
             { doc: doc, docs: docs },
@@ -51,8 +51,8 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
           doc.renderedContent = render(templateFile, data);
         } catch(ex) {
           console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
-          throw new Error('Failed to render doc "' + doc.id + '"' +
-            ' from file "' + doc.file + '" line ' + doc.startingLine + '\n' +
+          throw new Error('Failed to render doc "' + (doc.id || doc.name || doc.path) + '"' +
+            ' from file "' + doc.fileInfo.filePath + '" line ' + doc.startingLine + '\n' +
             'Error Message follows:\n' + ex.stack);
         }
       }, this);
