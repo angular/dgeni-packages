@@ -22,6 +22,7 @@ var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
  */
 module.exports = function jsdocFileReader() {
   return {
+    name: 'jsdocFileReader',
     defaultPattern: /\.js$/,
     getDocs: function(fileInfo) {
 
