@@ -6,6 +6,7 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 .factory(require('./file-readers/ngdoc'))
 .factory(require('./inline-tag-defs/link'))
 .factory(require('./services/getLinkInfo'))
+.factory(require('./services/getTypeClass'))
 .factory(require('./services/getPartialNames'))
 .factory(require('./services/parseCodeName'))
 .factory(require('./services/partialNameMap'))
