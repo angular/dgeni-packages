@@ -16,7 +16,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
     $process: function(docs) {
       var tagExtractor = createTagExtractor(parseTagsProcessor.tagDefinitions, this.defaultTagTransforms);
       docs.forEach(function(doc) {
-        log.debug('extracting tags from "' + doc.file + '"" at line #' + doc.startingLine);
+        log.debug('extracting tags from "' + doc.fileInfo.filePath + '"" at line #' + doc.startingLine);
         tagExtractor(doc);
       });
     }
@@ -95,10 +95,12 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
   }
 
   function applyDefault(doc, docProperty, tagDef) {
+    log.silly(' - tag not found');
     // Apply the default function if there is one
     if ( tagDef.defaultFn ) {
-      log.silly(' - tag not found, applying default value function');
+      log.silly('   - applying default value function');
       var defaultValue = tagDef.defaultFn(doc);
+      log.silly('     - default value: ', defaultValue);
       if ( defaultValue !== undefined ) {
         // If the defaultFn returns a value then use this as the document property
         if ( tagDef.multi ) {
@@ -128,6 +130,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
       // Transform and apply the tag to the document
       doc[docProperty] = tagDef.getProperty(doc, tags[0]);
     }
+    log.silly('   - tag extracted: ', doc[docProperty]);
   }
 
   /**
