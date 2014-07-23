@@ -30,7 +30,7 @@ var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
  */
 module.exports = function inlineTagProcessor(log) {
   return {
-    $validate: { inlineTagDefinitions: { presence: true } },
+    inlineTagDefinitions: [],
     $runAfter: ['docs-rendered'],
     $runBefore: ['writing-files'],
     $process: function(docs) {
