@@ -9,7 +9,7 @@ var path = require('canonical-path');
 module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
   return {
     $runAfter: ['computeIdProcessor', 'collectPartialNamesProcessor'],
-    $runBefore: ['compute-path'],
+    $runBefore: ['computePathProcessor'],
     $validation: {
       apiDocsPath: { presence: true },
     },
