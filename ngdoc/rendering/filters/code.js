@@ -1,8 +1,8 @@
-module.exports = function(code) {
+module.exports = function(encodeCodeBlock) {
   return {
     name: 'code',
     process: function(str, lang) {
-      return code(str, true, lang);
+      return encodeCodeBlock(str, true, lang);
     }
   };
 };
