@@ -10,7 +10,7 @@ module.exports = new Package('nunjucks', ['base'])
 
 .config(function(templateEngine) {
   templateEngine.tags.push(require('./rendering/tags/marked'));
-  templateEngine.tags = templateEngine.tags
+  templateEngine.filters = templateEngine.filters
     .concat(require('./rendering/filters/change-case'))
     .concat([
       require('./rendering/filters/first-line'),
