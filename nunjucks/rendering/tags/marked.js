@@ -4,7 +4,7 @@ var marked = require('marked');
  * @dgRenderTag marked
  * @description Convert a block of template text from markdown to HTML
  */
-module.exports = function(trimIndentation) {
+module.exports = function markedNunjucksTag(trimIndentation) {
   return {
     tags: ['marked'],
 
