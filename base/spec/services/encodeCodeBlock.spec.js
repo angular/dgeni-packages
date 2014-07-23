@@ -1,6 +1,12 @@
-var encodeCodeBlock = require('../../services/encodeCodeBlock');
+var encodeCodeBlockFactory = require('../../services/encodeCodeBlock');
 
 describe("code utility", function() {
+  var encodeCodeBlock;
+
+  beforeEach(function() {
+    encodeCodeBlock = encodeCodeBlockFactory();
+  });
+
   it("should wrap the string in code and pre tags", function() {
     expect(encodeCodeBlock('abc')).toEqual('<pre><code>abc</code></pre>');
   });
