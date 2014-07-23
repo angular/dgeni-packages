@@ -9,7 +9,17 @@ function createTagDefContainer(tagDefs) {
   };
 }
 
+function createDoc(tags) {
+  return {
+    fileInfo: {
+      filePath: 'some/file.js'
+    },
+    tags: new TagCollection(tags)
+  };
+}
+
 describe("extractTagsProcessor", function() {
+
   it("should have name the correct name", function() {
     expect(factory.name).toEqual('extractTagsProcessor');
   });
@@ -19,9 +29,7 @@ describe("extractTagsProcessor", function() {
       var tagDef = { name: 'a' };
       var processor = factory(mockLog, createTagDefContainer([tagDef]));
       var tag = new Tag(tagDef, 'a', 'some content', 123);
-      var doc = {
-        tags: new TagCollection([tag])
-      };
+      var doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('some content');
@@ -34,9 +42,7 @@ describe("extractTagsProcessor", function() {
       var processor = factory(mockLog, createTagDefContainer([tagDef]));
 
       var tag = new Tag(tagDef, 'a', 'some content', 123);
-      var doc = {
-        tags: new TagCollection([tag])
-      };
+      var doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toBeUndefined();
@@ -52,12 +58,8 @@ describe("extractTagsProcessor", function() {
 
       var tag1 = new Tag(tagDef, 'a', 'some content', 123);
       var tag2 = new Tag(tagDef, 'a', 'some other content', 256);
-      var docA = {
-        tags: new TagCollection([tag1])
-      };
-      var docB = {
-        tags: new TagCollection([tag1, tag2])
-      };
+      var docA = createDoc([tag1]);
+      var docB = createDoc([tag1, tag2]);
 
       processor.$process([docA]);
       expect(docA.a).toEqual(['some content']);
@@ -71,10 +73,8 @@ describe("extractTagsProcessor", function() {
     it("should throw an error if the tag is missing", function() {
       var tagDef = { name: 'a', required: true };
       var processor = factory(mockLog, createTagDefContainer([tagDef]));
-      var doc = {
-        tags: new TagCollection()
-      };
-      expect(function() { 
+      var doc = createDoc([]);
+      expect(function() {
         processor.$process([doc]);
       }).toThrow();
     });
@@ -88,9 +88,7 @@ describe("extractTagsProcessor", function() {
 
       var tag = new Tag(tagDef, 'a', 'some content', 123);
       tag.b = 'special value';
-      var doc = {
-        tags: new TagCollection([tag])
-      };
+      var doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('special value');
@@ -104,9 +102,8 @@ describe("extractTagsProcessor", function() {
       var defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
       var tagDef = { name: 'a', defaultFn: defaultFn };
       var processor = factory(mockLog, createTagDefContainer([tagDef]));
-      var doc = {
-        tags: new TagCollection()
-      };
+      var doc = createDoc([]);
+
       processor.$process([doc]);
       expect(doc.a).toEqual('default value');
       expect(defaultFn).toHaveBeenCalled();
@@ -118,9 +115,8 @@ describe("extractTagsProcessor", function() {
         var defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
         var tagDef = { name: 'a', defaultFn: defaultFn, multi: true };
         var processor = factory(mockLog, createTagDefContainer([tagDef]));
-        var doc = {
-          tags: new TagCollection()
-        };
+        var doc = createDoc([]);
+
         processor.$process([doc]);
         expect(doc.a).toEqual(['default value']);
         expect(defaultFn).toHaveBeenCalled();
@@ -140,9 +136,7 @@ describe("extractTagsProcessor", function() {
         var processor = factory(mockLog, createTagDefContainer([tagDef]));
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = {
-          tags: new TagCollection([tag])
-        };
+        var doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content*A*');
@@ -155,9 +149,7 @@ describe("extractTagsProcessor", function() {
         var processor = factory(mockLog, createTagDefContainer([tagDef]));
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = {
-          tags: new TagCollection([tag])
-        };
+        var doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content');
@@ -175,9 +167,7 @@ describe("extractTagsProcessor", function() {
         var processor = factory(mockLog, createTagDefContainer([tagDef]));
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = {
-          tags: new TagCollection([tag])
-        };
+        var doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content*A**B*');
@@ -191,9 +181,7 @@ describe("extractTagsProcessor", function() {
         var processor = factory(mockLog, createTagDefContainer([tagDef]));
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = {
-          tags: new TagCollection([tag])
-        };
+        var doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content');
@@ -214,9 +202,7 @@ describe("extractTagsProcessor", function() {
 
       var tag1 = new Tag(tagDef1, 'a', 'some content', 123);
       var tag2 = new Tag(tagDef2, 'b', 'some other content', 123);
-      var doc = {
-        tags: new TagCollection([tag1, tag2])
-      };
+      var doc = createDoc([tag1, tag2]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('some content*A*');
@@ -232,10 +218,8 @@ describe("extractTagsProcessor", function() {
       var processor = factory(mockLog, createTagDefContainer([tagDef1]));
       processor.defaultTagTransforms = [addB];
 
-      var tag1 = new Tag(tagDef1, 'a', 'some content', 123);
-      var doc = {
-        tags: new TagCollection([tag1])
-      };
+      var tag = new Tag(tagDef1, 'a', 'some content', 123);
+      var doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('some content*A**B*');
