@@ -3,10 +3,10 @@ var Package = require('dgeni').Package;
 module.exports = new Package('jsdoc', [require('../base')])
 
 // Add in extra pseudo marker processors
-.processor({ name: 'parsing-tags', runAfter: ['files-read'], runBefore: ['processing-docs'] })
-.processor({ name: 'tags-parsed', runAfter: ['parsing-tags'], runBefore: ['processing-docs'] })
-.processor({ name: 'extracting-tags', runAfter: ['tags-parsed'], runBefore: ['processing-docs'] })
-.processor({ name: 'tags-extracted', runAfter: ['extracting-tags'], runBefore: ['processing-docs'] })
+.processor({ name: 'parsing-tags', $runAfter: ['files-read'], $runBefore: ['processing-docs'] })
+.processor({ name: 'tags-parsed', $runAfter: ['parsing-tags'], $runBefore: ['processing-docs'] })
+.processor({ name: 'extracting-tags', $runAfter: ['tags-parsed'], $runBefore: ['processing-docs'] })
+.processor({ name: 'tags-extracted', $runAfter: ['extracting-tags'], $runBefore: ['processing-docs'] })
 
 // Add in the real processors for this package
 .processor(require('./processors/code-name'))
