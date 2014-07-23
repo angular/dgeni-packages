@@ -61,14 +61,14 @@ module.exports = function inlineTagProcessor(log) {
                 throw new Error('There was a problem running the @' + tagName +
                             ' inline tag handler for ' + match + '\n' +
                             'Doc: ' + doc.id + '\n' +
-                            'File: ' + doc.file + '\n' +
+                            'File: ' + doc.fileInfo.filePath + '\n' +
                             'Line: ' + doc.startingLine + '\n' +
                             'Message: \n' + e.message);
               }
 
             } else {
               log.warn('No handler provided for inline tag "' + match + '" for "' + doc.id + '"' +
-                        '" in file "' + doc.file + '" at line ' + doc.startingLine);
+                        '" in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
               return match;
             }
 

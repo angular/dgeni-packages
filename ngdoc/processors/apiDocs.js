@@ -81,14 +81,14 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
           var containerDocs = partialNameMap.getDocs(doc.memberof);
 
           if ( containerDocs.length === 0 ) {
-            log.warn('Missing container document "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);
+            log.warn('Missing container document "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
             return;
           }
           if ( containerDocs.length > 0 ) {
             // The memberof field was ambiguous, try prepending the module name too
             containerDocs = partialNameMap.getDocs(_.template('${module}.${memberof}', doc));
             if ( containerDocs.length !== 1 ) {
-              log.warn('Ambiguous container document reference "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.file + '" at line ' + doc.startingLine);
+              log.warn('Ambiguous container document reference "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
               return;
             } else {
               doc.memberof = _.template('${module}.${memberof}', doc);

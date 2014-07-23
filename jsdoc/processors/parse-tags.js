@@ -22,7 +22,7 @@ module.exports = function parseTagsProcessor(log) {
         try {
           doc.tags = tagParser(doc.content, doc.startingLine);
         } catch(e) {
-          log.error('Error parsing tags for doc starting at ' + doc.startingLine + ' in file ' + doc.file);
+          log.error('Error parsing tags for doc starting at ' + doc.startingLine + ' in file ' + doc.fileInfo.filePath);
           throw e;
         }
       });
