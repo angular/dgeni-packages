@@ -4,13 +4,11 @@ var path = require('canonical-path');
  * @dgProcessor computePath
  * @description Compute the path and outputPath for docs that do not already have them
  */
-module.exports = function computePathProcessor(writeFilesProcessor) {
+module.exports = function computePathProcessor(log) {
   return {
     $runAfter: ['docs-processed'],
     $runBefore: ['rendering-docs'],
     $process: function(docs) {
-
-      var outputFolder = writeFilesProcessor.outputFolder;
 
       docs.forEach(function(doc) {
 
@@ -24,8 +22,10 @@ module.exports = function computePathProcessor(writeFilesProcessor) {
         }
 
         if ( !doc.outputPath ) {
-          doc.outputPath = path.join(outputFolder, doc.path + '.html');
+          doc.outputPath = path.join(doc.path + '.html');
         }
+
+        log.silly('computed path:', '"' + doc.path + '"', 'and outputPath:', '"' + doc.outputPath + '"');
       });
     }
   };
