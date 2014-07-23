@@ -32,8 +32,8 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
     $runAfter: ['rendering-docs'],
     $runBefore: ['docs-rendered'],
     $validate: {
-      helpers: { presence: true },
-      extraData: { presence: true }
+      helpers: {  },
+      extraData: {  }
     },
     $process: function process(docs) {
 
