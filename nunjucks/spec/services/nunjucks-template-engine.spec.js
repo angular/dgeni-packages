@@ -2,7 +2,7 @@ var rewire = require('rewire');
 var engineFactory = rewire('../../services/nunjucks-template-engine');
 
 describe("nunjucksTemplateEngine service", function() {
-  var nunjucks, addFilterSpy, addExtensionSpy, engine;
+  var nunjucks, addFilterSpy, addExtensionSpy, engine, mockTemplateFinder;
 
   beforeEach(function() {
 
@@ -12,7 +12,10 @@ describe("nunjucksTemplateEngine service", function() {
     nunjucks.Environment.prototype.addFilter = addFilterSpy = jasmine.createSpy('addFilter');
     nunjucks.Environment.prototype.addExtension = addExtensionSpy = jasmine.createSpy('addExtension');
 
-    engine = engineFactory();
+    mockTemplateFinder = {
+      templateFolders: 'templates'
+    };
+    engine = engineFactory(mockTemplateFinder);
   });
 
   describe("getRenderer()", function() {
