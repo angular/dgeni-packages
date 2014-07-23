@@ -4,7 +4,7 @@ var nunjucks = require('nunjucks');
  * @dgService templateEngine
  * @description A nunjucks powered template rendering engine
  */
-module.exports = function templateEngine() {
+module.exports = function templateEngine(templateFinder) {
 
   return {
 
@@ -14,12 +14,11 @@ module.exports = function templateEngine() {
      */
     config: {},
 
-    templateFolders: [],
     filters: [],
     tags: [],
 
     getRenderer: function() {
-      var loader = new nunjucks.FileSystemLoader(this.templateFolders, true);
+      var loader = new nunjucks.FileSystemLoader(templateFinder.templateFolders, true);
       var engine = new nunjucks.Environment(loader, this.config);
 
       // Configure nunjucks with the custom filters
