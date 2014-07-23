@@ -1,10 +1,11 @@
-var filter = require('../../../rendering/filters/type-class');
+var filterFactory = require('../../../rendering/filters/type-class');
 
 describe("type-class filter", function() {
-  it("should convert the given type into a CSS class", function() {
-    expect(filter.process('object')).toEqual('label type-hint type-hint-object');
-    expect(filter.process('string')).toEqual('label type-hint type-hint-string');
-    expect(filter.process('function()')).toEqual('label type-hint type-hint-function');
-    expect(filter.process('Regex')).toEqual('label type-hint type-hint-regex');
+  it("should call getTypeClass", function() {
+    var getTypeClassSpy = jasmine.createSpy('getTypeClass');
+    var filter = filterFactory(getTypeClassSpy);
+
+    filter.process('object');
+    expect(getTypeClassSpy).toHaveBeenCalled();
   });
 });
