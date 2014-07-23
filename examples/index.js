@@ -10,9 +10,9 @@ module.exports = new Package('examples')
 .factory(require('./services/examples'))
 .factory(require('./inline-tag-defs/runnableExample'))
 
-.config(function(templateEngine, generateExamplesProcessor) {
+.config(function(templateFinder, generateExamplesProcessor) {
   generateExamplesProcessor.templateFolder = path.resolve(packagePath, 'templates');
-  templateEngine.templateFolders.shift(generateExamplesProcessor.templateFolder);
+  templateFinder.templateFolders.unshift(generateExamplesProcessor.templateFolder);
 })
 
 .config(function(inlineTagProcessor, runnableExampleInlineTagDef) {
