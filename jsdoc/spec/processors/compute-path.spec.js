@@ -1,12 +1,12 @@
 var computePathProcessorFactory = require('../../processors/compute-path');
 var _ = require('lodash');
+var mockLog = require('dgeni/lib/mocks/log')(false);
 
 describe("compute-path doc processor", function() {
-  var processor, mockWriteFilesProcessor;
+  var processor;
 
   beforeEach(function() {
-    mockWriteFilesProcessor = { outputFolder: 'partials' };
-    processor = computePathProcessorFactory(mockWriteFilesProcessor);
+    processor = computePathProcessorFactory(mockLog);
   });
 
   it("should compute the path of the document from its file name", function() {
@@ -26,9 +26,9 @@ describe("compute-path doc processor", function() {
     processor.$process([doc1, doc2]);
 
     expect(doc1.path).toEqual('a/b/c/foo');
-    expect(doc1.outputPath).toEqual('partials/a/b/c/foo.html');
+    expect(doc1.outputPath).toEqual('a/b/c/foo.html');
     expect(doc2.path).toEqual('x/y/z');
-    expect(doc2.outputPath).toEqual('partials/x/y/z.html');
+    expect(doc2.outputPath).toEqual('x/y/z.html');
   });
 
   it("should not change the path if one is already present", function() {
@@ -43,7 +43,7 @@ describe("compute-path doc processor", function() {
     processor.$process([doc]);
 
     expect(doc.path).toEqual('a/b/c');
-    expect(doc.outputPath).toEqual('partials/a/b/c.html');
+    expect(doc.outputPath).toEqual('a/b/c.html');
   });
 
 
