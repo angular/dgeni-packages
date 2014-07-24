@@ -24,7 +24,7 @@ var _ = require('lodash');
  *                                Your services and processors can add helper functions to this
  *                                object to be made available in templates when they are rendered.
  */
-module.exports = function renderDocsProcessor(log, templateFinder, templateEngine) {
+module.exports = function renderDocsProcessor(log, templateFinder, templateEngine, createDocMessage) {
   return {
     helpers: {},
     extraData: {},
@@ -50,10 +50,8 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
           var templateFile = findTemplate(data.doc);
           doc.renderedContent = render(templateFile, data);
         } catch(ex) {
-          console.log(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
-          throw new Error('Failed to render doc "' + (doc.id || doc.name || doc.path) + '"' +
-            ' from file "' + doc.fileInfo.filePath + '" line ' + doc.startingLine + '\n' +
-            'Error Message follows:\n' + ex.stack);
+          log.debug(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
+          throw new Error(createDocMessage('Failed to render', doc, ex));
         }
       }, this);
 
