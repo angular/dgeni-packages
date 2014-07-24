@@ -6,7 +6,7 @@ var Tag = require('../lib/Tag');
  * @dgProcessor parseTagsProcessor
  * @description Parse the doc for jsdoc style tags
  */
-module.exports = function parseTagsProcessor(log) {
+module.exports = function parseTagsProcessor(log, createDocMessage) {
   return {
     tagDefinitions: [],
     $validate: {
@@ -22,8 +22,9 @@ module.exports = function parseTagsProcessor(log) {
         try {
           doc.tags = tagParser(doc.content, doc.startingLine);
         } catch(e) {
-          log.error('Error parsing tags for doc starting at ' + doc.startingLine + ' in file ' + doc.fileInfo.filePath);
-          throw e;
+          var message = createDocMessage('Error parsing tags', doc, e);
+          log.error(message);
+          throw new Error(message);
         }
       });
     }
