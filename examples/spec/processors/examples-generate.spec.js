@@ -12,17 +12,19 @@ describe("examples-generate processor", function() {
 
     examples = new Map();
 
+    files = new Map();
+
+    files.set('index.html', { type: 'html', name: 'index.html', fileContents: 'index.html content' });
+    files.set('app.js', { type: 'js', name: 'app.js', fileContents: 'app.js content' });
+    files.set('app.css', { type: 'css', name: 'app.css', fileContents: 'app.css content' });
+    files.set('app.spec.js', { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' });
+
     examples.set('a.b.c', {
       id: 'a.b.c',
       doc: docs[0],
       outputFolder: 'examples',
       deps: 'dep1.js;dep2.js',
-      files: {
-        'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
-        'app.js': { type: 'js', name: 'app.js', fileContents: 'app.js content' },
-        'app.css': { type: 'css', name: 'app.css', fileContents: 'app.css content' },
-        'app.spec.js': { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' }
-      }
+      files: files
     });
 
     processor = generateExamplesProcessorFactory(mockLog, examples);

@@ -24,13 +24,11 @@ module.exports = function generateExamplesProcessor(log, examples) {
         var scripts = [];
 
         // The index file is special, see createExampleDoc()
-        example.indexFile = example.files['index.html'];
+        example.indexFile = example.files.get('index.html');
+        example.files.delete('index.html');
 
         // Create a new document for each file of the example
-        _(example.files)
-        // We don't want to create a file for index.html, see createExampleDoc()
-        .omit('index.html')
-        .forEach(function(file) {
+        example.files.forEach(function(file) {
 
           var fileDoc = this.createFileDoc(example, file);
           docs.push(fileDoc);
@@ -137,12 +135,7 @@ module.exports = function generateExamplesProcessor(log, examples) {
 
     createManifestDoc: function(example) {
 
-      var files = _(example.files)
-        .omit('index.html')
-        .map(function(file) {
-          return file.name;
-        })
-        .value();
+      var files = example.files.keys();
 
       var manifestDoc = {
         id: example.id + '-manifest',
