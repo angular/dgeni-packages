@@ -1,11 +1,12 @@
 var tagDefFactory = require('../../inline-tag-defs/link');
+var createDocMessageFactory = require('../../../base/services/createDocMessage');
 
 describe("links inline tag handler", function() {
   var tagDef, getLinkInfoSpy, doc, links;
 
   beforeEach(function() {
     getLinkInfoSpy = jasmine.createSpy('getLinkInfo');
-    tagDef = tagDefFactory(getLinkInfoSpy);
+    tagDef = tagDefFactory(getLinkInfoSpy, createDocMessageFactory());
 
     doc = {
       id: 'module:ng.directive:ngInclude',
@@ -46,7 +47,7 @@ describe("links inline tag handler", function() {
     });
     expect(function() {
       tagDef.handler(doc, 'link', 'module:ngOther.directive:ngDirective');
-    }).toThrowError('Invalid link (does not match any doc): "module:ngOther.directive:ngDirective"');
+    }).toThrowError('Invalid link (does not match any doc): "module:ngOther.directive:ngDirective" - doc "module:ng.directive:ngInclude"');
     expect(getLinkInfoSpy).toHaveBeenCalled();
   });
 });
