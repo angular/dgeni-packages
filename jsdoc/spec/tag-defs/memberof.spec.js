@@ -1,10 +1,11 @@
 var tagDefFactory = require('../../tag-defs/memberof');
+var createDocMessageFactory = require('../../../base/services/createDocMessage');
 
 describe("memberof tag-def", function() {
   var tagDef;
 
   beforeEach(function() {
-    tagDef = tagDefFactory();
+    tagDef = tagDefFactory(createDocMessageFactory());
   });
 
   describe('transforms', function() {
