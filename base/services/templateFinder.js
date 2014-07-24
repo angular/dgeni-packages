@@ -7,7 +7,7 @@ var glob = require('glob');
  * @description
  * Search a configured set of folders and patterns for templates that match a document.
  */
-module.exports = function templateFinder(log) {
+module.exports = function templateFinder(log, createDocMessage) {
 
   return {
 
@@ -63,8 +63,8 @@ module.exports = function templateFinder(log) {
         });
 
         if ( !templatePath ) {
-          throw new Error(
-            'No template found for "' + (doc.id || doc.name || doc.docType) + '" document.\n' +
+          throw new Error(createDocMessage(
+            'No template found./n' +
             'The following template patterns were tried:\n' +
             _.reduce(this.patternMatchers, function(str, pattern) {
               return str + '  "' + pattern(doc) + '"\n';
@@ -72,8 +72,8 @@ module.exports = function templateFinder(log) {
             'The following folders were searched:\n' +
             _.reduce(this.templateSets, function(str, templateSet) {
               return str + '  "' + templateSet.templateFolder + '"\n';
-            }, '')
-          );
+            }, ''),
+          doc));
         }
 
         return templatePath;
