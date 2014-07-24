@@ -14,13 +14,13 @@ describe("computePathProcessor", function() {
   it("should compute the path of the document from its file name", function() {
     var doc1 = {
       fileInfo: {
-        file: 'a/b/c/foo.ngdoc',
+        filePath: 'a/b/c/foo.ngdoc',
         baseName: 'foo'
       }
     };
     var doc2 = {
       fileInfo: {
-        file: 'x/y/z/index.html',
+        filePath: 'x/y/z/index.html',
         baseName: 'index'
       }
     };
@@ -36,7 +36,7 @@ describe("computePathProcessor", function() {
   it("should not change the path if one is already present", function() {
     var doc = {
       fileInfo: {
-        file: 'x/y/z/index.html',
+        filePath: 'x/y/z/index.html',
         baseName: 'index'
       },
       path: 'a/b/c'
@@ -52,7 +52,7 @@ describe("computePathProcessor", function() {
   it("should not change the outputPath if one is already present", function() {
     var doc = {
       fileInfo: {
-        file: 'x/y/z/index.html',
+        filePath: 'x/y/z/index.html',
         baseName: 'index'
       },
       outputPath: 'a/b/c/foo.bar'

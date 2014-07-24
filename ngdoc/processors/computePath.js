@@ -14,7 +14,7 @@ module.exports = function computePathProcessor(apiDocsProcessor) {
       docs.forEach(function(doc) {
 
         if ( !doc.path ) {
-          doc.path = path.join(path.dirname(doc.fileInfo.file));
+          doc.path = path.join(path.dirname(doc.fileInfo.filePath));
           if ( doc.fileInfo.baseName !== 'index' ) {
             doc.path += '/' + doc.fileInfo.baseName;
           }
