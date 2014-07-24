@@ -45,7 +45,7 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
     variableEnd: '$}'
   };
 
-  templateEngine.templatePatterns = [
+  templateFinder.templatePatterns = [
     '${ doc.template }',
     '${doc.area}/${ doc.id }.${ doc.docType }.template.html',
     '${doc.area}/${ doc.id }.template.html',
