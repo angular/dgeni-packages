@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function(createDocMessage) {
   return {
     name: 'name',
     required: true,
@@ -7,7 +7,7 @@ module.exports = function() {
       if ( doc.docType === 'input' ) {
         var match = INPUT_TYPE.exec(value);
         if ( !match ) {
-          throw new Error('Invalid input directive name.  It should be of the form: "input[inputType]" but was "' + value + '"');
+          throw new Error(createDocMessage('Invalid input directive name.  It should be of the form: "input[inputType]" but was "' + value + '"', doc));
         }
         doc.inputType = match[1];
       }

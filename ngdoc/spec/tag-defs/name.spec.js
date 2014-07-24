@@ -1,10 +1,11 @@
 var tagDefFactory = require('../../tag-defs/name');
+var createDocMessageFactory = require('../../../base/services/createDocMessage');
 
 describe("name tag-def", function() {
   var tagDef;
 
   beforeEach(function() {
-    tagDef = tagDefFactory();
+    tagDef = tagDefFactory(createDocMessageFactory());
   });
 
   it("should update the inputType if docType is input", function() {
