@@ -1,6 +1,7 @@
 require('es6-shim');
 var parseExamplesProcessorFactory = require('../../processors/examples-parse');
 var mockLog = require('dgeni/lib/mocks/log')(false);
+var createDocMessageFactory = require('../../../base/services/createDocMessage');
 var _ = require('lodash');
 
 describe("examples-parse doc processor", function() {
@@ -10,7 +11,7 @@ describe("examples-parse doc processor", function() {
   beforeEach(function() {
     examples = new Map();
     mockTrimIndentation = jasmine.createSpy('trimIndentation').and.callFake(function(value) { return value; });
-    processor = parseExamplesProcessorFactory(mockLog, examples, mockTrimIndentation);
+    processor = parseExamplesProcessorFactory(mockLog, examples, mockTrimIndentation, createDocMessageFactory());
   });
 
   it("should extract example tags from the doc content", function() {

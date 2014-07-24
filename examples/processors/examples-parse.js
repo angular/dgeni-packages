@@ -11,7 +11,7 @@ var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
  * @description
  * Search the documentation for examples that need to be extracted
  */
-module.exports = function parseExamplesProcessor(log, examples, trimIndentation) {
+module.exports = function parseExamplesProcessor(log, examples, trimIndentation, createDocMessage) {
   return {
     outputFolder: undefined,
     $runAfter: ['files-read'],
@@ -21,24 +21,28 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation)
       var outputFolder = this.outputFolder || 'examples';
 
       docs.forEach(function(doc) {
-        doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
+        try {
+          doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
 
-          var example = extractAttributes(attributeText);
-          var id = uniqueName(examples, 'example-' + (example.name || 'example'));
-          _.assign(example, {
-            attributes: _.omit(example, ['files', 'doc']),
-            files: extractFiles(exampleText),
-            id: id,
-            doc: doc,
-            outputFolder: path.join(outputFolder, id)
+            var example = extractAttributes(attributeText);
+            var id = uniqueName(examples, 'example-' + (example.name || 'example'));
+            _.assign(example, {
+              attributes: _.omit(example, ['files', 'doc']),
+              files: extractFiles(exampleText),
+              id: id,
+              doc: doc,
+              outputFolder: path.join(outputFolder, id)
+            });
+
+            // store the example information for later
+            log.debug('Storing example', id);
+            examples.set(id, example);
+
+            return '{@runnableExample ' + id + '}';
           });
-
-          // store the example information for later
-          log.debug('Storing example', id);
-          examples.set(id, example);
-
-          return '{@runnableExample ' + id + '}';
-        });
+        } catch(error) {
+          throw new Error(createDocMessage('Failed to parse examples', doc, error));
+        }
       });
 
     }
