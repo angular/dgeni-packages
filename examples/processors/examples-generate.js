@@ -73,8 +73,9 @@ module.exports = function generateExamplesProcessor(log, examples) {
         id: example.id + deploymentQualifier,
         docType: 'example',
         template: path.join(this.templateFolder, 'index.template.html'),
-        file: example.doc.fileInfo.filePath,
+        fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
+        endingLine: example.doc.endingLine,
         example: example,
         path: example.id + deploymentQualifier,
         outputPath: example.outputFolder + '/index' + deploymentQualifier + '.html'
@@ -111,8 +112,9 @@ module.exports = function generateExamplesProcessor(log, examples) {
         docType: 'example-' + file.type,
         id: example.id + '/' + file.name,
         template: path.join(this.templateFolder, 'template.' + file.type),
-        file: example.doc.fileInfo.filePath,
+        fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
+        endingLine: example.doc.endingLine,
         example: example,
         path: file.name,
         outputPath: this.outputPath(example, file.name),
@@ -125,8 +127,9 @@ module.exports = function generateExamplesProcessor(log, examples) {
       var exampleDoc = {
         id: example.id + '-runnableExample',
         docType: 'runnableExample',
-        file: example.doc.file,
+        fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
+        endingLine: example.doc.endingLine,
         example: example
       };
       return exampleDoc;
@@ -145,8 +148,9 @@ module.exports = function generateExamplesProcessor(log, examples) {
         id: example.id + '-manifest',
         docType: 'example-manifest',
         template: path.join(this.templateFolder, 'manifest.template.json'),
-        file: example.doc.file,
+        fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
+        endingLine: example.doc.endingLine,
         example: example,
         files: files,
         outputPath: this.outputPath(example, 'manifest.json')
