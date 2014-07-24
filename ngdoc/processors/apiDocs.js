@@ -88,7 +88,7 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap, creat
             // The memberof field was ambiguous, try prepending the module name too
             containerDocs = partialNameMap.getDocs(_.template('${module}.${memberof}', doc));
             if ( containerDocs.length !== 1 ) {
-              log.warn(createDocMessage('Ambiguous container document reference'+ doc.memberof));
+              log.warn(createDocMessage('Ambiguous container document reference: '+ doc.memberof));
               return;
             } else {
               doc.memberof = _.template('${module}.${memberof}', doc);
