@@ -5,7 +5,7 @@ var _ = require('lodash');
  * @description
  * Extract the information from the tags that were parsed
  */
-module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
+module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDocMessage) {
   return {
     defaultTagTransforms: [],
     $validate: {
@@ -16,7 +16,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
     $process: function(docs) {
       var tagExtractor = createTagExtractor(parseTagsProcessor.tagDefinitions, this.defaultTagTransforms);
       docs.forEach(function(doc) {
-        log.debug('extracting tags from "' + doc.fileInfo.filePath + '"" at line #' + doc.startingLine);
+        log.debug(createDocMessage('extracting tags', doc));
         tagExtractor(doc);
       });
     }
@@ -32,7 +32,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
    *           A single transformation function (or collection of transformation functions) to apply
    *           to every tag that is extracted.
    */
-  function createTagExtractor(tagDefinitions, defaultTagTransforms) {
+  function createTagExtractor(tagDefinitions, defaultTagTransforms, createDocMessage) {
 
     // Compute a default transformation function
     var defaultTransformFn = getTransformationFn(defaultTagTransforms);
@@ -77,7 +77,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
 
           // This tag is required so throw an error
           if ( tagDef.required ) {
-            throw new Error('Missing tag "' + tagDef.name + '" in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
+            throw new Error(createDocMessage('Missing tag "' + tagDef.name, doc));
           }
 
           applyDefault(doc, docProperty, tagDef);
@@ -124,7 +124,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
     } else {
       // We only expect one tag for this tag def
       if ( tags.length > 1 ) {
-        throw new Error('Only one of "' + tagDef.name + '" (or its aliases) allowed. There were ' + tags.length + ' in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
+        throw new Error(createDocMessage('Only one of "' + tagDef.name + '" (or its aliases) allowed. There were ' + tags.length, doc));
       }
 
       // Transform and apply the tag to the document
@@ -175,7 +175,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor) {
   function formatBadTagErrorMessage(doc) {
     var id = (doc.id || doc.name);
     id = id ? '"' + id + '" ' : '';
-    var message = 'Invalid tags found in doc, starting at line ' + doc.startingLine + ', from file "' + doc.fileInfo.filePath + '"\n';
+    var message = createDocMessage('Invalid tags found', doc) + '\n';
 
     _.forEach(doc.tags.badTags, function(badTag) {
       var description = (_.isString(badTag.description) && (badTag.description.substr(0, 20) + '...'));
