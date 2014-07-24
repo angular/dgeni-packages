@@ -35,8 +35,8 @@ describe("examples-parse doc processor", function() {
 
     // Jasmine doesn't like that the files property hasn't got a hasOwnProperty method because it was created using Object.create(null);
     // So we map it into something else
-    var files = _.map(examples.get('example-with-files').files, function(file) { return _.clone(file); });
-    expect(files).toEqual([
+//    var files = _.map(examples.get('example-with-files').files, function(file) { return _.clone(file); });
+    expect(Array.from(examples.get('example-with-files').files)).toEqual([
       jasmine.objectContaining({ name: 'app.js', type: 'js', fileContents: 'aaa', language: 'js' }),
       jasmine.objectContaining({ name: 'app.spec.js', type: 'spec', fileContents: 'bbb', language: 'js' })
     ]);

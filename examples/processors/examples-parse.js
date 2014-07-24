@@ -1,3 +1,4 @@
+require('es6-shim');
 var _ = require('lodash');
 var path = require('canonical-path');
 
@@ -57,7 +58,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
   }
 
   function extractFiles(exampleText) {
-    var files = Object.create(null);
+    var files = new Map();
     exampleText.replace(FILE_REGEX, function(match, attributesText, contents) {
       var file = extractAttributes(attributesText);
       if ( !file.name ) {
@@ -71,7 +72,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
       file.attributes = _.omit(file, ['fileContents']);
 
       // Store this file information
-      files[file.name] = file;
+      files.set(file.name, file);
     });
     return files;
   }
