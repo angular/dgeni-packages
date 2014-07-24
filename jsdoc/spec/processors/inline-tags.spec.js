@@ -1,8 +1,9 @@
 var factory = require('../../processors/inline-tags');
 var mockLog = require('dgeni/lib/mocks/log')();
+var createDocMessageFactory = require('../../../base/services/createDocMessage');
 
 function createProcessor() {
-  return factory(mockLog);
+  return factory(mockLog, createDocMessageFactory());
 }
 
 describe("inline-tags processor", function() {
@@ -56,7 +57,7 @@ describe("inline-tags processor", function() {
 
       // We expect the unhandled tag to be reported
       expect(mockLog.warn).toHaveBeenCalled();
-      expect(mockLog.warn.calls.argsFor(0)[0]).toMatch(/No handler provided for inline tag "\{@unhandledTag some description\}"/);
+      expect(mockLog.warn.calls.argsFor(0)[0]).toContain('No handler provided for inline tag "{@unhandledTag some description}"');
 
       // We expect the handler to have been invoked for the handledTag
       expect(tagsFound).toEqual([

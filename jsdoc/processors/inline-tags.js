@@ -28,7 +28,7 @@ var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
  * }
  * ```
  */
-module.exports = function inlineTagProcessor(log) {
+module.exports = function inlineTagProcessor(log, createDocMessage) {
   return {
     inlineTagDefinitions: [],
     $runAfter: ['docs-rendered'],
@@ -58,17 +58,11 @@ module.exports = function inlineTagProcessor(log) {
                 return definition.handler(doc, tagName, tagDescription, docs);
 
               } catch(e) {
-                throw new Error('There was a problem running the @' + tagName +
-                            ' inline tag handler for ' + match + '\n' +
-                            'Doc: ' + doc.id + '\n' +
-                            'File: ' + doc.fileInfo.filePath + '\n' +
-                            'Line: ' + doc.startingLine + '\n' +
-                            'Message: \n' + e.message);
+                throw new Error(createDocMessage('There was a problem running the @' + tagName + ' inline tag handler for ' + match, doc, e));
               }
 
             } else {
-              log.warn('No handler provided for inline tag "' + match + '" for "' + doc.id + '"' +
-                        '" in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
+              log.warn(createDocMessage('No handler provided for inline tag "' + match + '"', doc));
               return match;
             }
 
