@@ -26,7 +26,7 @@ describe("computeId doc processor", function() {
   });
 
   it("should compute the id of other docs from the file", function() {
-    var doc = { area: 'guide', docType: 'overview', name: 'Some Doc', file: 'a/b/foo.ngdoc', fileName: 'foo' };
+    var doc = { area: 'guide', docType: 'overview', name: 'Some Doc', fileInfo: { filePath: 'a/b/foo.ngdoc', baseName: 'foo' } };
     processor.$process([doc]);
     expect(doc.id).toEqual('foo');
   });

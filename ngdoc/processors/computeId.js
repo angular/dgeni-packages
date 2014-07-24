@@ -1,17 +1,16 @@
 var _ = require('lodash');
-var partialsFolder;
 
 /**
  * @dgProcessor computeIdProcessor
  * @description
  * Compute the id property of the doc based on the tags and other meta-data
  */
-module.exports = function computeIdProcessor() {
+module.exports = function computeIdProcessor(log) {
   return {
     $runAfter: ['tags-extracted'],
     $process: function(docs) {
 
-      _.forEach(docs, function(doc) {
+      docs.forEach(function(doc) {
 
         if ( doc.area === 'api' && doc.docType !== 'overview' ) {
 
@@ -28,7 +27,7 @@ module.exports = function computeIdProcessor() {
           if (doc.docType === 'error') {
             doc.id = doc.name;
           } else {
-            doc.id = doc.fileName;
+            doc.id = doc.fileInfo.baseName;
           }
 
         }
