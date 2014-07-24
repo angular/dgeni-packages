@@ -1,5 +1,6 @@
 require('es6-shim');
 var tagDefinitionFactory = require('../../inline-tag-defs/runnableExample');
+var createDocMessageFactory = require('../../../base/services/createDocMessage');
 
 describe("runnableExampleInlineTagDef", function() {
 
@@ -12,7 +13,7 @@ describe("runnableExampleInlineTagDef", function() {
         renderedContent: 'The rendered content of the some-example example'
       }
     });
-    tagDef = tagDefinitionFactory(examples);
+    tagDef = tagDefinitionFactory(examples, createDocMessageFactory());
   });
 
   it("should have the correct name", function() {
