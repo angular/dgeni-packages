@@ -6,11 +6,11 @@ var path = require('canonical-path');
  * @description
  * Compute the various fields for docs in the API area
  */
-module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
+module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap, createDocMessage) {
   return {
     $runAfter: ['computeIdProcessor', 'collectPartialNamesProcessor'],
     $runBefore: ['computePathProcessor'],
-    $validation: {
+    $validate: {
       apiDocsPath: { presence: true },
     },
     $process: function(docs) {
@@ -81,14 +81,14 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
           var containerDocs = partialNameMap.getDocs(doc.memberof);
 
           if ( containerDocs.length === 0 ) {
-            log.warn('Missing container document "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
+            log.warn(createDocMessage('Missing container document'+ doc.memberof, doc));
             return;
           }
           if ( containerDocs.length > 0 ) {
             // The memberof field was ambiguous, try prepending the module name too
             containerDocs = partialNameMap.getDocs(_.template('${module}.${memberof}', doc));
             if ( containerDocs.length !== 1 ) {
-              log.warn('Ambiguous container document reference "'+ doc.memberof + '" referenced by "'+ doc.id + '" in file "' + doc.fileInfo.filePath + '" at line ' + doc.startingLine);
+              log.warn(createDocMessage('Ambiguous container document reference'+ doc.memberof));
               return;
             } else {
               doc.memberof = _.template('${module}.${memberof}', doc);
@@ -112,12 +112,13 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap) {
           var serviceDocs = partialNameMap.getDocs(serviceId);
 
           if ( serviceDocs.length === 0 ) {
-            log.warn('Missing service "' + serviceId + '" for provider "' + doc.id + '"');
-          } else if ( serviceDoc.length > 1 ) {
-            log.warn('Ambiguous service name "' + serviceId + '" for provider "' + doc.id + '"\n' +
+            log.warn(createDocMessage('Missing service "' + serviceId + '" for provider', doc));
+          } else if ( serviceDocs.length > 1 ) {
+            log.warn(createDocMessage('Ambiguous service name "' + serviceId + '" for provider\n' +
               _.reduce(doc, function(msg, doc) {
                 return msg + '\n  "' + doc.id + '"';
-              }, 'Matching docs: '));
+              }, 'Matching docs: '),
+              doc));
           } else {
             doc.serviceDoc = serviceDocs[0];
             serviceDocs[0].providerDoc = doc;

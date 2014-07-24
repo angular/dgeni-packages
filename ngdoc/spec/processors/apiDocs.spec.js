@@ -3,6 +3,7 @@ var getPartialNamesFactory = require('../../services/getPartialNames');
 var parseCodeNameFactory = require('../../services/parseCodeName');
 var partialNameMapFactory = require('../../services/partialNameMap');
 var mockLog = require('dgeni/lib/mocks/log')(false);
+var createDocMessageFactory = require('../../../base/services/createDocMessage');
 
 var _ = require('lodash');
 
@@ -13,7 +14,7 @@ describe("api-docs processor", function() {
   beforeEach(function() {
     moduleMap = {};
     partialNameMap = partialNameMapFactory(getPartialNamesFactory(), parseCodeNameFactory());
-    processor = processorFactory(mockLog, partialNameMap, moduleMap);
+    processor = processorFactory(mockLog, partialNameMap, moduleMap, createDocMessageFactory());
     processor.apiDocsPath = 'partials';
   });
 
