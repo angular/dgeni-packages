@@ -61,5 +61,5 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
     require('./rendering/filters/type-class')
   ]));
 
-  templateEngine.tags.concat(getInjectables([require('./rendering/tags/code')]));
+  templateEngine.tags = templateEngine.tags.concat(getInjectables([require('./rendering/tags/code')]));
 });
