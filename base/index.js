@@ -21,6 +21,7 @@ module.exports = new Package('base')
 .processor(require('./processors/render-docs'))
 .processor(require('./processors/unescape-comments'))
 .processor(require('./processors/write-files'))
+.processor(require('./processors/debugDumpProcessor'))
 
 // Helper services
 .factory(require('./services/templateFinder'))
