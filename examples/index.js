@@ -2,7 +2,7 @@ var path = require('canonical-path');
 var packagePath = __dirname;
 var Package = require('dgeni').Package;
 
-module.exports = new Package('examples')
+module.exports = new Package('examples', ['jsdoc'])
 
 .processor(require('./processors/examples-parse'))
 .processor(require('./processors/examples-generate'))
@@ -11,10 +11,10 @@ module.exports = new Package('examples')
 .factory(require('./inline-tag-defs/runnableExample'))
 
 .config(function(templateFinder, generateExamplesProcessor) {
-  generateExamplesProcessor.templateFolder = path.resolve(packagePath, 'templates');
-  templateFinder.templateFolders.unshift(generateExamplesProcessor.templateFolder);
+  generateExamplesProcessor.templateFolder = 'examples';
+  templateFinder.templateFolders.unshift(path.resolve(packagePath, 'templates'));
 })
 
 .config(function(inlineTagProcessor, runnableExampleInlineTagDef) {
-  inlineTagProcessor.inlineTagDefinitions.push(require('./inline-tag-defs/runnableExample'));
+  inlineTagProcessor.inlineTagDefinitions.push(runnableExampleInlineTagDef);
 });
