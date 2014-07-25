@@ -3,7 +3,7 @@ module.exports = function encodeCodeBlock() {
   return function(str, inline, lang) {
 
     // Encode any HTML entities in the code string
-    str = encoder.htmlEncode(str);
+    str = encoder.htmlEncode(str, true);
 
     // If a language is provided then attach a CSS class to the code element
     lang = lang ? ' class="lang-' + lang + '"' : '';

@@ -10,8 +10,13 @@ describe("code utility", function() {
   it("should wrap the string in code and pre tags", function() {
     expect(encodeCodeBlock('abc')).toEqual('<pre><code>abc</code></pre>');
   });
+
   it("should HTML encode the string", function() {
     expect(encodeCodeBlock('<div>&</div>')).toEqual('<pre><code>&lt;div&gt;&amp;&lt;/div&gt;</code></pre>');
+  });
+
+  it("should encode HTML entities", function() {
+    expect(encodeCodeBlock('<div>&#10;</div>')).toEqual('<pre><code>&lt;div&gt;&amp;#10;&lt;/div&gt;</code></pre>');
   });
 
   describe("inline", function() {
