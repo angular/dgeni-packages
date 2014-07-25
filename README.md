@@ -15,70 +15,110 @@ Out of the box there are the following packages:
   nunjucks packages for you.
 * examples - Processors to support the runnable examples feature in the angular.js docs site.
 
-#### `base` Package
+## `base` Package
 
-This package contains the following processors:
+### Processors
 
-* `read-files` - used to load up documents from files.  This processor can be configured to use a
+* `debugDumpProcessor` - dump the current state of the docs array to a file (disabled by default)
+* `readFilesProcessor` - used to load up documents from files.  This processor can be configured to use a
 set of **file readers**. There are file readers in the `jsdoc` and `ngdoc` packages.
-* `render-docs` - render the documents into a property (`doc.renderedContent`) using a
+* `renderDocsProcessor` - render the documents into a property (`doc.renderedContent`) using a
 `templateEngine`, which must be provided separately - see `nunjucks` package.
-* `templateFinder` - search folders using patterns to find a template that matches a given document.
-* `unescape-comments` - unescape comment markers that would break the jsdoc comment style,
+* `unescapeCommentsProcessor` - unescape comment markers that would break the jsdoc comment style,
 e.g. `*/`
-* `write-files` - write the docs to disk
+* `writeFilesProcessor` - write the docs to disk
 
-#### `nunjucks` Package
+### Services
+
+* `createDocMessage` - a helper for creating nice messages about documents (useful in logging and
+errors)
+* `encodeDocBlock` - convert a block of code into HTML
+* `templateFinder` - search folders using patterns to find a template that matches a given document.
+* `trimIndentation` - "intelligently" trim whitespace indentation from the start of each line of a block
+of text.
+
+
+The template used to render the doc is computed by the `templateFinder`, which uses the first match
+from a set of patterns in a set of folders, provided in the configuration. This allows a lot of control to provide
+generic templates for most situations and specific templates for exceptional cases.
+
+Here is an example of some standard template patterns:
+
+```js
+templateFinder.templatePatterns = [
+  '${ doc.template }',
+  '${doc.area}/${ doc.id }.${ doc.docType }.template.html',
+  '${doc.area}/${ doc.id }.template.html',
+  '${doc.area}/${ doc.docType }.template.html',
+  '${ doc.id }.${ doc.docType }.template.html',
+  '${ doc.id }.template.html',
+  '${ doc.docType }.template.html'
+]
+```
+
+
+## `nunjucks` Package
 
 This package provides a nunjucks driven implementation of the `templateEngine` required by the
-`base` package `render-docs` processor.
+`base` package `renderDocsPocessor`. The "nunjucks" JavaScript template tool-kit to generates HTML
+based on the data in each document. We have nunjucks templates, tags and filters that
+can render links and text as markdown and will highlight code.
+
+### Services
 
 * `nunjucks-template-engine` - provide a `templateEngine` that uses the Nunjucks template library
 to render the documents into text, such as HTML or JS, based on templates.
 
-#### `jsdoc` Package
+## `jsdoc` Package
 
-This package contains the following file-readers:
+### File Readers:
 
 * `jsdoc` - can read documents from jsdoc style comments in source code files.
 
-This package contains the following processors:
+### Processors
 
-* `code-name` - infer the name of the document from the code following the document in the source
+* `codeNameProcessor` - infer the name of the document from the code following the document in the source
 file.
-* `compute-path` - infer the path to the document, used for writing the file and for navigation
+* `computePathProcessor` - infer the path to the document, used for writing the file and for navigation
 to the document in a web app.
-* `defaultTagTransforms` - provide a collection of tag transform functions to apply to every tag.
-See the transforms in the `tagExtractor` processor.
-* `parse-tags` - use a `tagParser` to parses the jsdoc tags in the document content.
-* `extract-tags` - use a `tagExtractor` to extract information from the parsed tags.
-* `inline-tags` - Search the docs for inline tags that need to have content injected
-* `tagDefinitions` - provides a collection of tag definitions, and a map of the same, to be used by
-the `tagParser` and `tagExtractor`.
-* `tagExtractor` - provides a service to extract tags information and convert it to specific
-properties on the document, based on a set of tag-definitions.
+* `parseTagsProcessor` - use a `tagParser` to parses the jsdoc tags in the document content.
+* `extractTagsProcessor` - use a `tagExtractor` to extract information from the parsed tags.
+* `inlineTagsProcessor` - Search the docs for inline tags that need to have content injected
+
+### Tag Definitions
+
 The `jsdoc` package contains definitions for a number of standard jsdoc tags including: `name`,
 `memberof`, `param`, `property`, `returns`, `module`, `description`, `usage`,
 `animations`, `constructor`, `class`, `classdesc`, `global`, `namespace`, `method`, `type` and
 `kind`.
-* `tagParser` - provides a service to parse the content of a document to get all the jsdoc style
-tags out.
+
+### Services
+
+This package provides a number of tagTransform services that are used in tag Definitions to transform
+the value of the tag from the string in the comment to something more meaningful in the doc.
+
+* `extractNameTransform` - extract a name from a tag
+* `extractTypeTransform` - extract a type from a tag
+* `trimWhitespaceTransform` - trim whitespace from before and after the tag value
+* `unknownTagTransform` - add an error to the tag if it is unknown
+* `wholeTagTransform` - Use the whole tag as the value rather than using a tag property
+
+### Templates
 
 **This package does not provide any templates nor a `templateEngine` to render templates (use the
 `nunjucks` package to add this).**
 
-### `ngdoc` Package
+## `ngdoc` Package
 
-The `ngdoc` Package also loads up the `jsdoc` and `nunjucks` packages automatically.
+The `ngdoc` Package depends upon the `jsdoc` and `nunjucks` packages.
 
-This package contains the following file readers, in addition to those provided by the `jsdocs`
-package:
+## File Readers
 
 * `ngdoc` - can pull a single document from an ngdoc content file.
 
-On top of the processors provided by the `jsdoc` package, this packages adds the following processors:
+### Processors
 
-* `api-docs` -
+* `apiDocsProcessor` -
 
 This processor runs computations that are specifically related to docs for API components. It does the following:
 
@@ -88,30 +128,47 @@ This processor runs computations that are specifically related to docs for API c
   - Computes the URL path to the document in the docs app and the outputPath to the final output file
   - It relates documents about angular services to their corresponding provider document.
 
-api-docs has the following configuration options available (listed with the default values set):
+apiDocsProcessor has the following configuration options available (listed with the default values set):
 
   ```js
-  config.set('processing.api-docs', {
-    outputPath: '${area}/${module}/${docType}/${name}.html', // The path to write an api document's page to.
-    path: '${area}/${module}/${docType}/${name}', // The url for a document's page.
-    moduleOutputPath: '${area}/${name}/index.html', // The path to write an api module's page to.
-    modulePath: '${area}/${name}' // The url for a module's page.
-   }
+  apiDocsProcessor.apiDocsPath = undefined; // This is a required property that you must set
+  apiDocsProcessor.outputPathTemplate = '${area}/${module}/${docType}/${name}.html';
+  apiDocsProcessor.apiPathTemplate = '${area}/${module}/${docType}/${name}';
+  apiDocsProcessor.moduleOutputPathTemplate = '${area}/${name}/index.html';
+  apiDocsProcessor.modulePathTemplate = '${area}/${name}';
   });
   ```
 
-* `component-groups-generate` -
+* `generateComponentGroupsProcessor` -
+Generate documents for each group of components (by type) within a module
 
-* `compute-id` -
+* `computeIdProcessor` -
+Compute the id property of the doc based on the tags and other meta-data
 
-* `filter-ngdocs` -
+* `computePathProcessor` -
+Compute the path and outputPath for docs that do not already have them
+
+* `filterNgdocsProcessor` -
 For AngularJS we are only interested in documents that contain the @ngdoc tag.  This processor
 removes docs that do not contain this tag.
 
-* `partial-names` -
+* `collectPartialNames` -
+Add all the docs to the partialNameMap
 
 
-This package also provides a set of templates for generating an HTML file for each document: api,
+### Services
+
+* `getLinkInfo()`
+* `getPartialNames()`
+* `gettypeClass()`
+* `moduleMap`
+* `parseCodeName()`
+* `patialNameMap`
+
+
+### Templates
+
+This package provides a set of templates for generating an HTML file for each document: api,
 directive, error, filter function, input, module, object, overview, provider, service, type and a
 number to support rendering of the runnable examples.
 
@@ -119,53 +176,26 @@ You should be aware that because of the overlap in syntax between Nunjucks bindi
 bindings, the ngdoc package changes the default Nunjucks binding tags:
 
 ``
-config.merge('rendering.nunjucks.config.tags', {
-    variableStart: '{$',
-    variableEnd: '$}'
-  });
+templateEngine.config.tags = {
+  variableStart: '{$',
+  variableEnd: '$}'
+};
 ```
 
-### `examples` Package
+## `examples` Package
 
-This package is a mix in that provides additional processors for working with examples in the docs:
+This package is a mix-in that provides functionality for working with examples in the docs.
 
-* `examples-parse` -
-Parse the `<example>` tags from the content, generating new docs that will be converted to extra
-files that can be loaded by the application and used, for example, in live in-place demos of the
-examples and e2e testing.
-* `examples-generate` -
+### Processors
 
+* `parseExamplesProcessor` -
+Parse the `<example>` tags from the content and add them to the `examples` service
+* `generateExamplesProcessor` -
+Add new docs to the docs collection for each example in the `examples` service that will be rendered
+as files that can be run in the browser, for example as live in-place demos of the examples or for
+e2e testing.
 
+### Services
 
-## HTML Rendering
+* examples - a hash map holding each example by name
 
-We render each of these documents as an HTML page. We use the "nunjucks" JavaScript template
-tool-kit to generate HTML based on the data in each document. We have nunjucks tags and filters that
-can render links and text as markdown and will highlight code.
-
-The template used to render the doc is computed by a `templateFinder`, which uses the first match
-from a set of patterns in a set of folders, provided in the configuration. This allows a lot of control to provide
-generic templates for most situations and specific templates for exceptional cases.
-
-Here is an example of the angularjs patterns:
-
-```
-rendering: {
-
-      ...
-
-      templatePatterns: [
-        '${ doc.template }',
-        '${ doc.id }.${ doc.docType }.template.html',
-        '${ doc.id }.template.html',
-        '${ doc.docType }.template.html'
-      ],
-
-      ...
-
-      templateFolders: [
-        'templates'
-      ]
-
-    },
-```
