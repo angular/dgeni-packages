@@ -1,3 +1,99 @@
+## v0.10.0-beta.1 25th July 2014
+
+**This is a major rearchitecture in line with changing to
+[dgeni@0.4.0](https://github.com/angular/dgeni/blob/master/CHANGELOG.md#v040-beta1-25th-july-2014)**
+
+There are numerous breaking changes surrounding this release and that of dgeni 0.4.0.
+The most important changes are
+
+* Configuration is done directly on the Processors and Services using Configuration Blocks, which
+are defined on Packages.
+* Everything is now dependency injected. Dgeni deals with instantiating Processors and Services
+  but if you have properties on these that reference objects that should also be instantiated by the
+  DI system then you can either ask for them to be injected into the config block:
+
+  ```js
+  myPackage.config(function(processor1, someObj) {
+    processor1.someProp = someObj;
+  });
+  ```
+
+  use the `injector` directly:
+
+  ```js
+  myPackage.config(function(processor1, injector) {
+    processor1.someProp = injector.invoke(someObjFactory);
+  });
+  ```
+
+  or use the `getInjectables()` helper service:
+
+  ```js
+  myPackage.config(function(processor1, getInjectables) {
+    processor1.someProp = getInjectables([someObjFactory, someOtherObjFactory]);
+  });
+  ```
+
+* All real processors have changed their names from dash-case to camelCase. This is because it is
+easier for their names to be valid JavaScript identifiers.
+
+The most significant commits are:
+
+* fix(utils/code): encode HTML entities  13b99152
+* feat(base/debugDumpProcessor): add new processor   4c126792
+* feat(dgeni package): add initial package for documenting dgeni configurations  2bfa92b2
+* refact(parseExamplesProcessor): use Map() for example.files       d926879a
+* fix(ngdoc/module tag-def): module is the first segment of the relative path       649f3051
+* fix(jsdoc/description tag-def): capture non-tag specific description        ed68438d
+* feat(base/createDocMessage): add new service        db11bc44
+* fix(*): doc.file is now doc.fileInfo.filePath       fb600502
+* fix(ngdoc/collectPartialNamesProcessor): compute-id was renamed to computeIdProcessor       0158fb3b
+* fix(ngdoc/apiDocs): compute-path was renamed to computePathProcessor        9396f8c3
+* fix(ngdoc/apiDocsProcessor): compute-id was renamed to computeIdProcessor       a83d7fc9
+* feat(ngdoc package): add getTypeClass service       addebf63
+* refact(base/code): rename to encodeCodeBlock        2ae134ff
+* feat(getTypeClass): add new service       9c49ff9d
+* fix(ngdocFileReader): must have an explicit name        9c5dd397
+* test(nunjucks/templateEngine): templateEngine now relies on templateFinder        0269acf5
+* fix(nunjucks/marked custom tag): add service name for DI injection       9069c24f
+* refact(trimIndentation): convert to DI service        3ab6c9ed
+* fix(nunjucks/templateEngine): get the templateFolders from the templateFinder       8760aa7f
+* fix(inlineTagProcessor): inline tag definitions are optional        380dd474
+* fix(computePathProcessor): let writeFileProcessor deal with outputFolder        4057deb8
+* fix(jsdoc fileReader): file-readers need explicit names       cad6d043
+* fix(jsdoc package): pseudo processors need to use $runBefore, etc.        5d32020f
+* fix(renderDocsProcessor): extra and helpers and optional        6bc1f16a
+* fix(readFilesProcessor): resolve include and exclude paths correctly        f7ea5f78
+* refact(computePathProcessor): read outputFolder config from writeFilesProcessor       828b48c3
+* feat(api-docs): allow packageName to be specified as a tag        83c7e1fa
+* fix(jsdoc package): add trimWhitespaceTransform to package        75f52df1
+* refact(templateFinder): now call getFinder() to get the actual function       e8c015d9
+* refact(jsdoc transforms): convert to DI services        5e92ff46
+* feat(ngdocs/moduleMap): add new service to support apiDocsProcessor et al       19a37a27
+* fix(runnableExample inline-tag): examples is now a Map        d1857779
+* test(tag-defs): split out tests into separate files       9be421f7
+* fix(jsdoc package): jsdocFileReader should be loaded as a service       0c92271c
+* refact(ngdoc/tag-defs): convert to DI injectables       d8512597
+* refact(ngdoc/link inline tag): convert to DI injectable       77e51df3
+* refact(ngdoc/code tag): convert to DI injectable        1d23cd4e
+* refact(ngdoc/code filter): convert to DI injectable       8c871b3d
+* feat(getLinkInfo): add new service        32aa8427
+* refact(partialNameMap): rename and convert to DI service        49acc949
+* feat(getPartialNames): add new service        c6326268
+* feat(parseCodeName): add new service        e02fe91c
+* refact(base/services): move code and trimIndentation to be DI services        00d17816
+* refact(examples service): move to its own service (as part of no-config update)       16d7819e
+* refact(renderDocsProcessor): templateEngine now has a `getRenderer()` method        4f50737b
+* refact(jsdoc): convert transforms to services       6dc5417f
+* refact(extractTagsProcessor): move computation into smaller functions       fa1821c1
+* refact(tagExtractor): move into the extractTagsProcessor        49e51da4
+* refact(tagParser): move into the parseTagsProcessor       efba4e9b
+* feat(read-files): add path exclusion and update to no-config        6853d759
+* refact(*): update to use new processor configuration style        c54fd8d6
+* refact(*): use new dgeni Packages       128c2e61
+
+
+
 ## v0.9.3 05/22/2014
 
 * fix(extract-type): cope with missing type   4584a423
