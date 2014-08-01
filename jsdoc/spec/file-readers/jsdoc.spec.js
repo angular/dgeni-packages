@@ -46,8 +46,14 @@ describe("jsdoc fileReader", function() {
       expect(docs[2]).toEqual(jasmine.objectContaining(docsFromJsContent[2]));
     });
 
+    it("should set the docType to js", function() {
+      var fileInfo = createFileInfo('some/file.js', '/** @some jsdoc comment */', '.');
+      var docs = fileReader.getDocs(fileInfo);
+      expect(docs[0].docType).toEqual('js');
+    });
 
-      it("should strip off the leading whitespace/stars from each line of the comments", function() {
+
+    it("should strip off the leading whitespace/stars from each line of the comments", function() {
       var fileInfo = createFileInfo('some/file.js', '/** abc  \n  * other stuff  \n\t\t*last line.\n*/\n', '.');
       var docs = fileReader.getDocs(fileInfo);
       expect(docs[0].content).toEqual('abc  \nother stuff  \nlast line.');

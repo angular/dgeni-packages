@@ -58,7 +58,8 @@ module.exports = function jsdocFileReader() {
             endingLine: comment.loc.end.line,
             content: text,
             codeNode: codeNode,
-            codeAncestors: codeAncestors
+            codeAncestors: codeAncestors,
+            docType: 'js'
           };
 
         })
