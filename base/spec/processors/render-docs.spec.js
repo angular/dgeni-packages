@@ -1,6 +1,6 @@
 var renderDocsFactory = require('../../processors/render-docs');
 
-var mockLog, mockTemplateFinder, mockTemplateEngine, renderSpy, findTemplateSpy;
+var mockTemplateFinder, mockTemplateEngine, renderSpy, findTemplateSpy;
 var mockLog = require('dgeni/lib/mocks/log')(/* true */);
 
 beforeEach(function() {
