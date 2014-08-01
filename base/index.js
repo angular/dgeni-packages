@@ -1,4 +1,5 @@
 var Package = require('dgeni').Package;
+var path = require('canonical-path');
 
 // Define the `base` package
 module.exports = new Package('base')
@@ -11,7 +12,9 @@ module.exports = new Package('base')
 .processor({ name: 'docs-processed', $runAfter: ['processing-docs'] })
 .processor({ name: 'adding-extra-docs', $runAfter: ['docs-processed'] })
 .processor({ name: 'extra-docs-added', $runAfter: ['adding-extra-docs'] })
-.processor({ name: 'rendering-docs', $runAfter: ['extra-docs-added'] })
+.processor({ name: 'computing-paths', $runAfter: ['extra-docs-added'] })
+.processor({ name: 'paths-computed', $runAfter: ['computing-paths'] })
+.processor({ name: 'rendering-docs', $runAfter: ['paths-computed'] })
 .processor({ name: 'docs-rendered', $runAfter: ['rendering-docs'] })
 .processor({ name: 'writing-files', $runAfter: ['docs-rendered'] })
 .processor({ name: 'files-written', $runAfter: ['writing-files'] })
@@ -22,9 +25,30 @@ module.exports = new Package('base')
 .processor(require('./processors/unescape-comments'))
 .processor(require('./processors/write-files'))
 .processor(require('./processors/debugDumpProcessor'))
+.processor(require('./processors/computePaths'))
 
 // Helper services
 .factory(require('./services/templateFinder'))
 .factory(require('./services/encodeCodeBlock'))
 .factory(require('./services/trimIndentation'))
-.factory(require('./services/createDocMessage'));
+.factory(require('./services/createDocMessage'))
+
+// Configure the processors
+.config(function(computePathsProcessor) {
+  computePathsProcessor.pathTemplates = [
+    // Default path processor template
+    {
+      getPath: function(doc) {
+        var docPath = path.dirname(doc.fileInfo.relativePath);
+        if ( doc.fileInfo.baseName !== 'index' ) {
+          docPath = path.join(docPath, doc.fileInfo.baseName);
+        }
+        return docPath;
+      },
+      getOutputPath: function(doc) {
+        return doc.path +
+            ( doc.fileInfo.baseName === 'index' ? '/index.html' : '.html');
+      }
+    }
+  ];
+});
