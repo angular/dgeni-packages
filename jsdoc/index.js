@@ -1,3 +1,4 @@
+var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
 module.exports = new Package('jsdoc', [require('../base')])
@@ -35,4 +36,24 @@ module.exports = new Package('jsdoc', [require('../base')])
 
 .config(function(extractTagsProcessor, trimWhitespaceTransform) {
   extractTagsProcessor.defaultTagTransforms = [trimWhitespaceTransform];
+})
+
+// Configure the processors
+.config(function(computePathsProcessor) {
+  computePathsProcessor.pathTemplates = [
+    // Default path processor template
+    {
+      getPath: function(doc) {
+        var docPath = path.dirname(doc.fileInfo.relativePath);
+        if ( doc.fileInfo.baseName !== 'index' ) {
+          docPath = path.join(docPath, doc.fileInfo.baseName);
+        }
+        return doc.name || doc.codeName || docPath;
+      },
+      getOutputPath: function(doc) {
+        return doc.path +
+            ( doc.fileInfo.baseName === 'index' ? '/index.html' : '.html');
+      }
+    }
+  ];
 });
