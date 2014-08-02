@@ -34,28 +34,28 @@ describe('jsdoc package', function() {
 
 
     it("should compute the path of the document from its name or codeName", function(done) {
-      var doc1 = { fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' }, name: 'fooName', codeName: 'fooCodeName' };
-      var doc2 = { fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' }, codeName: 'xyz' };
+      var doc1 = { docType: 'js', fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' }, name: 'fooName', codeName: 'fooCodeName' };
+      var doc2 = { docType: 'js', fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' }, codeName: 'xyz' };
 
         runDgeni([doc1,doc2]).then(function(docs) {
           expect(doc1.path).toEqual('fooName');
           expect(doc1.outputPath).toEqual('fooName.html');
           expect(doc2.path).toEqual('xyz');
-          expect(doc2.outputPath).toEqual('xyz/index.html');
+          expect(doc2.outputPath).toEqual('xyz.html');
           done();
         });
     });
 
 
     it("should compute the path of the document from its file name", function(done) {
-      var doc1 = { fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' } };
-      var doc2 = { fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' } };
+      var doc1 = { docType: 'js', fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' } };
+      var doc2 = { docType: 'js', fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' } };
 
         runDgeni([doc1,doc2]).then(function(docs) {
           expect(doc1.path).toEqual('a/b/c/foo');
           expect(doc1.outputPath).toEqual('a/b/c/foo.html');
           expect(doc2.path).toEqual('x/y/z');
-          expect(doc2.outputPath).toEqual('x/y/z/index.html');
+          expect(doc2.outputPath).toEqual('x/y/z.html');
           done();
         });
     });
