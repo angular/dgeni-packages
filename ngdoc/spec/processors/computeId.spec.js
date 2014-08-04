@@ -30,6 +30,12 @@ describe("computeId doc processor", function() {
     processor.$process([doc]);
     expect(doc.id).toEqual('foo');
   });
+
+  it("should not touch the id if it is already defined", function() {
+    var doc = { id: 'already-here', area: 'api', docType: 'service', module: 'ngRoute', name: '$route' };
+    processor.$process([doc]);
+    expect(doc.id).toEqual('already-here');
+  });
 });
 
 

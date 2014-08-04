@@ -12,6 +12,8 @@ module.exports = function computeIdProcessor(log) {
 
       docs.forEach(function(doc) {
 
+        if ( doc.id ) return;
+
         if ( doc.area === 'api' && doc.docType !== 'overview' ) {
 
           if ( doc.docType === 'module' ) {
