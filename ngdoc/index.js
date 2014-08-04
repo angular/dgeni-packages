@@ -14,7 +14,6 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 
 .processor(require('./processors/apiDocs'))
 .processor(require('./processors/generateComponentGroups'))
-.processor(require('./processors/computePath')) // Override the current computePathProcessor with our own
 .processor(require('./processors/computeId'))
 .processor(require('./processors/filterNgdocs'))
 .processor(require('./processors/collectPartialNames'))
@@ -62,4 +61,23 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
   ]));
 
   templateEngine.tags = templateEngine.tags.concat(getInjectables([require('./rendering/tags/code')]));
+
+})
+
+.config(function(computePathsProcessor) {
+  computePathsProcessor.pathTemplates.push({
+    docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type' ],
+    pathTemplate: '${area}/${module}/${docType}/${name}',
+    outputPathTemplate: '${area}/${module}/${docType}/${name}.html'
+  });
+  computePathsProcessor.pathTemplates.push({
+    docTypes: ['module' ],
+    pathTemplate: '${area}/${name}',
+    outputPathTemplate: '${area}/${name}/index.html'
+  });
+  computePathsProcessor.pathTemplates.push({
+    docTypes: ['componentGroup' ],
+    pathTemplate: '${module.area}/${module.name}/${groupType}',
+    outputPathTemplate: '${module.area}/${module.name}/${groupType}/index.html'
+  });
 });

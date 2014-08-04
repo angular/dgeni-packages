@@ -6,13 +6,11 @@ var path = require('canonical-path');
  * @description
  * Generate documents for each group of components (by type) within a module
  */
-module.exports = function generateComponentGroupsProcessor(moduleMap, apiDocsProcessor) {
+module.exports = function generateComponentGroupsProcessor(moduleMap) {
   return {
     $runAfter: ['adding-extra-docs', 'apiDocsProcessor'],
     $runBefore: ['extra-docs-added'],
     $process: function(docs) {
-
-      var apiDocsPath = apiDocsProcessor.apiDocsPath;
 
       _.forEach(moduleMap, function(module) {
 
@@ -30,9 +28,7 @@ module.exports = function generateComponentGroupsProcessor(moduleMap, apiDocsPro
               module: module.name,
               moduleDoc: module,
               area: module.area,
-              components: docs,
-              outputPath: path.join(apiDocsPath, _.template('${module.area}/${module.name}/${docType}/index.html', { module: module, docType: docType })),
-              path: _.template('${module.area}/${module.name}/${docType}', { module: module, docType: docType })
+              components: docs
             };
           })
           .tap(function(groups) {

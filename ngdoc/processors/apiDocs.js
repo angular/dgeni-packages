@@ -9,18 +9,11 @@ var path = require('canonical-path');
 module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap, createDocMessage) {
   return {
     $runAfter: ['computeIdProcessor', 'collectPartialNamesProcessor'],
-    $runBefore: ['computePathProcessor'],
-    $validate: {
-      apiDocsPath: { presence: true },
-    },
+    $runBefore: ['computePathsProcessor'],
     $process: function(docs) {
       var parts;
 
       var apiDocsPath = this.apiDocsPath;
-      var outputPathTemplate = this.outputPathTemplate || '${area}/${module}/${docType}/${name}.html';
-      var apiPathTemplate = this.apiPathTemplate || '${area}/${module}/${docType}/${name}';
-      var moduleOutputPathTemplate = this.moduleOutputPathTemplate || '${area}/${name}/index.html';
-      var modulePathTemplate = this.modulePathTemplate || '${area}/${name}';
 
       // Compute some extra fields for docs in the API area
       _.forEach(docs, function(doc) {
@@ -28,9 +21,6 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap, creat
         if ( doc.area === 'api' && doc.docType !== 'overview' ) {
 
           if ( doc.docType === 'module' ) {
-
-            doc.outputPathTemplate = path.join(apiDocsPath, _.template(moduleOutputPathTemplate, doc));
-            doc.path = _.template(modulePathTemplate, doc);
 
             moduleMap[doc.name] = doc;
 
@@ -57,9 +47,6 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap, creat
               doc.memberof = parts[0];
               doc.name = parts[1];
             }
-
-            doc.outputPathTemplate = path.join(apiDocsPath, _.template(outputPathTemplate, doc));
-            doc.path = _.template(apiPathTemplate, doc);
           }
         }
 
