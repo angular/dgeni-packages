@@ -58,10 +58,6 @@ module.exports = function generateExamplesProcessor(log, examples) {
       }, this);
     },
 
-    outputPath: function(example, fileName) {
-      return path.join(example.outputFolder, fileName);
-    },
-
     createExampleDoc: function(example, deployment, stylesheets, scripts) {
       var deploymentQualifier = deployment.name === 'default' ? '' : ('-' + deployment.name);
       var commonFiles = (deployment.examples && deployment.examples.commonFiles) || {};
@@ -69,14 +65,13 @@ module.exports = function generateExamplesProcessor(log, examples) {
 
       var exampleDoc = {
         id: example.id + deploymentQualifier,
+        deployment: deploymentQualifier,
         docType: 'example',
         template: path.join(this.templateFolder, 'index.template.html'),
         fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
         endingLine: example.doc.endingLine,
         example: example,
-        path: example.id + deploymentQualifier,
-        outputPath: example.outputFolder + '/index' + deploymentQualifier + '.html'
       };
 
       // Copy in the common scripts and stylesheets
@@ -114,8 +109,6 @@ module.exports = function generateExamplesProcessor(log, examples) {
         startingLine: example.doc.startingLine,
         endingLine: example.doc.endingLine,
         example: example,
-        path: file.name,
-        outputPath: this.outputPath(example, file.name),
         fileContents: file.fileContents
       };
       return fileDoc;
@@ -138,7 +131,7 @@ module.exports = function generateExamplesProcessor(log, examples) {
       var files = example.files.keys();
 
       var manifestDoc = {
-        id: example.id + '-manifest',
+        id: example.id + '/manifest.json',
         docType: 'example-manifest',
         template: path.join(this.templateFolder, 'manifest.template.json'),
         fileInfo: example.doc.fileInfo,
@@ -146,7 +139,6 @@ module.exports = function generateExamplesProcessor(log, examples) {
         endingLine: example.doc.endingLine,
         example: example,
         files: files,
-        outputPath: this.outputPath(example, 'manifest.json')
       };
       return manifestDoc;
     }

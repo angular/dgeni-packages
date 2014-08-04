@@ -14,12 +14,9 @@ var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
  */
 module.exports = function parseExamplesProcessor(log, examples, trimIndentation, createDocMessage) {
   return {
-    outputFolder: undefined,
     $runAfter: ['files-read'],
     $runBefore: ['parsing-tags'],
     $process: function(docs) {
-
-      var outputFolder = this.outputFolder || 'examples';
 
       docs.forEach(function(doc) {
         try {
@@ -31,8 +28,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
               attributes: _.omit(example, ['files', 'doc']),
               files: extractFiles(exampleText),
               id: id,
-              doc: doc,
-              outputFolder: path.join(outputFolder, id)
+              doc: doc
             });
 
             // store the example information for later

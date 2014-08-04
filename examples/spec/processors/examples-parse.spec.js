@@ -33,13 +33,19 @@ describe("examples-parse doc processor", function() {
     expect(examples.get('example-value')).toEqual(jasmine.objectContaining({ name:'value', id: 'example-value'}));
     expect(examples.get('example-with-files')).toEqual(jasmine.objectContaining({ name: 'with-files', id: 'example-with-files'}));
 
-    // Jasmine doesn't like that the files property hasn't got a hasOwnProperty method because it was created using Object.create(null);
-    // So we map it into something else
-//    var files = _.map(examples.get('example-with-files').files, function(file) { return _.clone(file); });
-    expect(Array.from(examples.get('example-with-files').files)).toEqual([
-      jasmine.objectContaining({ name: 'app.js', type: 'js', fileContents: 'aaa', language: 'js' }),
-      jasmine.objectContaining({ name: 'app.spec.js', type: 'spec', fileContents: 'bbb', language: 'js' })
-    ]);
+    // Jasmine doesn't like the files (and attributes) properties because they are Maps. So we access the object properties one-by-one
+    var files = examples.get('example-with-files').files;
+    var file = files.get('app.js');
+    expect(file.name).toEqual('app.js');
+    expect(file.type).toEqual('js');
+    expect(file.fileContents).toEqual('aaa');
+    expect(file.language).toEqual('js');
+
+    file = files.get('app.spec.js');
+    expect(file.name).toEqual('app.spec.js');
+    expect(file.type).toEqual('spec');
+    expect(file.fileContents).toEqual('bbb');
+    expect(file.language).toEqual('js');
   });
 
 

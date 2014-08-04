@@ -17,4 +17,30 @@ module.exports = new Package('examples', ['jsdoc'])
 
 .config(function(inlineTagProcessor, runnableExampleInlineTagDef) {
   inlineTagProcessor.inlineTagDefinitions.push(runnableExampleInlineTagDef);
+})
+
+.config(function(computePathsProcessor) {
+  computePathsProcessor.pathTemplates.push({
+    docTypes: ['example'],
+    pathTemplate: '${example.id}/${id}',
+    outputPathTemplate: '../examples/${example.id}/index${deployment}.html'
+  });
+  computePathsProcessor.pathTemplates.push({
+    docTypes: [
+      'example-css',
+      'example-html',
+      'example-js',
+      'example-json',
+      'example-protractor',
+      'example-scenario',
+      'example-spec',
+      'example-manifest' ],
+    pathTemplate: '${id}',
+    outputPathTemplate: '../examples/${id}'
+  });
+  computePathsProcessor.pathTemplates.push({
+    docTypes: ['runnableExample' ],
+    getPath: function() {},
+    getOutputPath: function() {}
+  });
 });

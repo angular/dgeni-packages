@@ -74,7 +74,7 @@ describe("examples-generate processor", function() {
     expect(_.find(docs, { id: 'a.b.c' }).scripts).toEqual([
       { path : 'dep1.js' },
       { path : 'dep2.js' },
-      jasmine.objectContaining({ path: 'app.js'})
+      jasmine.objectContaining({ docType : 'example-js', id : 'a.b.c/app.js' })
     ]);
 
     expect(_.find(docs, { id: 'a.b.c-other' }).scripts).toEqual([
@@ -82,7 +82,7 @@ describe("examples-generate processor", function() {
       { path: 'someOtherFile.js' },
       { path : '../dep1.js' },
       { path : '../dep2.js' },
-      jasmine.objectContaining({ path: 'app.js'})
+      jasmine.objectContaining({ docType : 'example-js', id : 'a.b.c/app.js' })
     ]);
   });
 
