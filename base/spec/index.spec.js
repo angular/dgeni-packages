@@ -43,6 +43,8 @@ describe('base package', function() {
         expect(doc2.path).toEqual('x/y/z');
         expect(doc2.outputPath).toEqual('x/y/z/index.html');
         done();
+      }, function(err) {
+        console.log('Failed: ', err.stack);
       });
     });
   });
