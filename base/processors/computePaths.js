@@ -46,23 +46,29 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
 
       docs.forEach(function(doc) {
 
-        if ( !doc.path ) {
-          var getPath = pathTemplateMap.get(doc.docType) || pathTemplateMap.get(null);
-          if ( !getPath ) {
-            throw new Error(createDocMessage('Missing path template', doc));
+        try {
+
+          if ( !doc.path ) {
+            var getPath = pathTemplateMap.get(doc.docType) || pathTemplateMap.get(null);
+            if ( !getPath ) {
+              throw new Error(createDocMessage('Missing path template', doc));
+            }
+            doc.path = getPath(doc);
           }
-          doc.path = getPath(doc);
+
+          if ( !doc.outputPath ) {
+            var getOutputPath = outputPathTemplateMap.get(doc.docType) || outputPathTemplateMap.get(null);
+            if ( !getOutputPath ) {
+              throw new Error(createDocMessage('Missing output path template', doc));
+            }
+            doc.outputPath = getOutputPath(doc);
+          }
+
+        } catch(err) {
+          throw new Error(createDocMessage('Failed to compute paths for doc', doc, err));
         }
 
-        if ( !doc.outputPath ) {
-          var getOutputPath = outputPathTemplateMap.get(doc.docType) || outputPathTemplateMap.get(null);
-          if ( !getOutputPath ) {
-            throw new Error(createDocMessage('Missing output path template', doc));
-          }
-          doc.outputPath = getOutputPath(doc);
-        }
-
-        log.silly('computed path:', '"' + doc.path + '"', 'and outputPath:', '"' + doc.outputPath + '"');
+        console.log('computed path for:', '"' + doc.id + '" (' + doc.docType + ') - "' + doc.path + '"', 'and outputPath:', '"' + doc.outputPath + '"');
       });
     }
   };
