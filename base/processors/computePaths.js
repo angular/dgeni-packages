@@ -68,7 +68,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
           throw new Error(createDocMessage('Failed to compute paths for doc', doc, err));
         }
 
-        console.log('computed path for:', '"' + doc.id + '" (' + doc.docType + ') - "' + doc.path + '"', 'and outputPath:', '"' + doc.outputPath + '"');
+        log.debug('computed path for:', '"' + doc.id + '" (' + doc.docType + ') - "' + doc.path + '"', 'and outputPath:', '"' + doc.outputPath + '"');
       });
     }
   };
