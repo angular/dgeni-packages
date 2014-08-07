@@ -2,8 +2,8 @@
 <h1>
   {%- if doc.title -%}
     {$ doc.title $}
-  {%- elif doc.module -%}
-    {$ doc.groupType | title $} components in {$ doc.module | code $}
+  {%- elif doc.moduleName -%}
+    {$ doc.groupType | title $} components in {$ doc.moduleName | code $}
   {%- else -%}
     Pages
   {%- endif -%}

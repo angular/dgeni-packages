@@ -25,7 +25,7 @@ module.exports = function generateComponentGroupsProcessor(moduleMap) {
               id: module.id + '.' + docType,
               docType: 'componentGroup',
               groupType: docType,
-              module: module.name,
+              moduleName: module.name,
               moduleDoc: module,
               area: module.area,
               components: docs

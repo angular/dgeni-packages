@@ -6,6 +6,7 @@ describe("generateComponentGroupsProcessor", function() {
     var docs = [];
     var modules = [{
       id: 'mod1',
+      name: 'mod1',
       components: [
         { docType: 'a', id: 'a1' },
         { docType: 'a', id: 'a2' },
@@ -24,5 +25,8 @@ describe("generateComponentGroupsProcessor", function() {
     processor.$process(docs);
 
     expect(docs.length).toEqual(2);
+
+    expect(docs[0].moduleName).toEqual('mod1');
+    expect(docs[0].moduleDoc).toEqual(jasmine.objectContaining({ id: 'mod1' }));
   });
 });
