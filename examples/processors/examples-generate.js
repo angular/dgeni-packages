@@ -14,8 +14,7 @@ module.exports = function generateExamplesProcessor(log, examples) {
     $runAfter: ['adding-extra-docs'],
     $runBefore: ['extra-docs-added'],
     $validate: {
-      deployments: { presence: true },
-      templateFolder: { presence: true}
+      deployments: { presence: true }
     },
     $process: function(docs) {
       _.forEach(examples, function(example) {
@@ -45,6 +44,7 @@ module.exports = function generateExamplesProcessor(log, examples) {
         _.forEach(this.deployments, function(deployment) {
           var exampleDoc = this.createExampleDoc(example, deployment, stylesheets, scripts);
           docs.push(exampleDoc);
+          example.deployments[deployment.name] = exampleDoc;
         }, this);
 
         // Create the doc that will be injected into the website as a runnable example
@@ -65,13 +65,14 @@ module.exports = function generateExamplesProcessor(log, examples) {
 
       var exampleDoc = {
         id: example.id + deploymentQualifier,
-        deployment: deploymentQualifier,
+        deployment: deployment,
+        deploymentQualifier: deploymentQualifier,
         docType: 'example',
-        template: path.join(this.templateFolder, 'index.template.html'),
         fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
         endingLine: example.doc.endingLine,
         example: example,
+        template: 'index.template.html'
       };
 
       // Copy in the common scripts and stylesheets
@@ -102,14 +103,15 @@ module.exports = function generateExamplesProcessor(log, examples) {
 
     createFileDoc: function(example, file) {
       var fileDoc = {
-        docType: 'example-' + file.type,
+        docType: 'example-file',
         id: example.id + '/' + file.name,
-        template: path.join(this.templateFolder, 'template.' + file.type),
         fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
         endingLine: example.doc.endingLine,
         example: example,
-        fileContents: file.fileContents
+        template: 'template.' + file.type,
+        fileContents: file.fileContents,
+        path: file.name
       };
       return fileDoc;
     },
@@ -121,7 +123,8 @@ module.exports = function generateExamplesProcessor(log, examples) {
         fileInfo: example.doc.fileInfo,
         startingLine: example.doc.startingLine,
         endingLine: example.doc.endingLine,
-        example: example
+        example: example,
+        template: 'inline/runnableExample.template.html'
       };
       return exampleDoc;
     },
@@ -132,13 +135,11 @@ module.exports = function generateExamplesProcessor(log, examples) {
 
       var manifestDoc = {
         id: example.id + '/manifest.json',
-        docType: 'example-manifest',
-        template: path.join(this.templateFolder, 'manifest.template.json'),
-        fileInfo: example.doc.fileInfo,
-        startingLine: example.doc.startingLine,
-        endingLine: example.doc.endingLine,
+        docType: 'example-file',
         example: example,
+        template: 'manifest.template.json',
         files: files,
+        path: 'manifest.json'
       };
       return manifestDoc;
     }

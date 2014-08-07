@@ -12,8 +12,8 @@ module.exports = new Package('examples', ['jsdoc'])
 .factory(require('./inline-tag-defs/runnableExample'))
 
 .config(function(templateFinder, generateExamplesProcessor) {
-  generateExamplesProcessor.templateFolder = 'examples';
-  templateFinder.templateFolders.unshift(path.resolve(packagePath, 'templates'));
+  templateFinder.templateFolders.push(path.resolve(packagePath, 'templates'));
+
 })
 
 .config(function(inlineTagProcessor, runnableExampleInlineTagDef) {
@@ -24,20 +24,11 @@ module.exports = new Package('examples', ['jsdoc'])
   computePathsProcessor.pathTemplates.push({
     docTypes: ['example'],
     pathTemplate: '${example.id}/${id}',
-    outputPathTemplate: '../examples/${example.id}/index${deployment}.html'
+    outputPathTemplate: 'examples/${example.id}/index${deploymentQualifier}.html'
   });
   computePathsProcessor.pathTemplates.push({
-    docTypes: [
-      'example-css',
-      'example-html',
-      'example-js',
-      'example-json',
-      'example-protractor',
-      'example-scenario',
-      'example-spec',
-      'example-manifest' ],
-    pathTemplate: '${id}',
-    outputPathTemplate: '../examples/${id}'
+    docTypes: ['example-file'],
+    outputPathTemplate: 'examples/${id}'
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['runnableExample' ],

@@ -28,7 +28,8 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
               attributes: _.omit(example, ['files', 'doc']),
               files: extractFiles(exampleText),
               id: id,
-              doc: doc
+              doc: doc,
+              deployments: {}
             });
 
             // store the example information for later

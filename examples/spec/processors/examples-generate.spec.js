@@ -24,8 +24,8 @@ describe("examples-generate processor", function() {
       doc: docs[0],
       outputFolder: 'examples',
       deps: 'dep1.js;dep2.js',
-      files: files
-    });
+      files: files,
+      deployments: {}
     };
 
     processor = generateExamplesProcessorFactory(mockLog, examples);
@@ -49,10 +49,10 @@ describe("examples-generate processor", function() {
     expect(exampleDocs.length).toBe(2);
 
     expect(exampleDocs[0]).toEqual(
-      jasmine.objectContaining({ docType: 'example', id:'a.b.c', template: 'examples/index.template.html'})
+      jasmine.objectContaining({ docType: 'example', id:'a.b.c', template: 'index.template.html'})
     );
     expect(exampleDocs[1]).toEqual(
-      jasmine.objectContaining({ docType: 'example', id:'a.b.c-other', template: 'examples/index.template.html'})
+      jasmine.objectContaining({ docType: 'example', id:'a.b.c-other', template: 'index.template.html'})
     );
 
     expect(exampleDocs[0].fileContents).toEqual('index.html content');
@@ -61,13 +61,13 @@ describe("examples-generate processor", function() {
 
   it("should add a fileDoc for each of the example's files", function() {
     expect(_.find(docs, { id: 'a.b.c/app.js' })).toEqual(
-      jasmine.objectContaining({ docType: 'example-js', template: 'examples/template.js' })
+      jasmine.objectContaining({ docType: 'example-file', template: 'template.js' })
     );
     expect(_.find(docs, { id: 'a.b.c/app.css' })).toEqual(
-      jasmine.objectContaining({ docType: 'example-css', template: 'examples/template.css' })
+      jasmine.objectContaining({ docType: 'example-file', template: 'template.css' })
     );
     expect(_.find(docs, { id: 'a.b.c/app.spec.js' })).toEqual(
-      jasmine.objectContaining({ docType: 'example-spec', template: 'examples/template.spec' })
+      jasmine.objectContaining({ docType: 'example-file', template: 'template.spec' })
     );
   });
 
@@ -75,7 +75,7 @@ describe("examples-generate processor", function() {
     expect(_.find(docs, { id: 'a.b.c' }).scripts).toEqual([
       { path : 'dep1.js' },
       { path : 'dep2.js' },
-      jasmine.objectContaining({ docType : 'example-js', id : 'a.b.c/app.js' })
+      jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.js' })
     ]);
 
     expect(_.find(docs, { id: 'a.b.c-other' }).scripts).toEqual([
@@ -83,7 +83,7 @@ describe("examples-generate processor", function() {
       { path: 'someOtherFile.js' },
       { path : '../dep1.js' },
       { path : '../dep2.js' },
-      jasmine.objectContaining({ docType : 'example-js', id : 'a.b.c/app.js' })
+      jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.js' })
     ]);
   });
 
@@ -93,7 +93,7 @@ describe("examples-generate processor", function() {
   });
 
   it("should add a manifest doc for each example", function() {
-    var manifestDocs = _.filter(docs, { docType: 'example-manifest' });
+    var manifestDocs = _.filter(docs, { docType: 'example-file', path: 'manifest.json' });
     expect(manifestDocs.length).toEqual(1);
 
   });

@@ -77,20 +77,20 @@ describe('examples package', function() {
       expect(docs.length).toEqual(4);
 
       expect(docs[0].id).toEqual('example-testExample/app.js');
-      expect(docs[0].path).toEqual('example-testExample/app.js');
-      expect(docs[0].outputPath).toEqual('../examples/example-testExample/app.js');
+      expect(docs[0].path).toEqual('app.js');
+      expect(docs[0].outputPath).toEqual('examples/example-testExample/app.js');
 
       expect(docs[1].id).toEqual('example-testExample-testDeployment');
       expect(docs[1].path).toEqual('example-testExample/example-testExample-testDeployment');
-      expect(docs[1].outputPath).toEqual('../examples/example-testExample/index-testDeployment.html');
+      expect(docs[1].outputPath).toEqual('examples/example-testExample/index-testDeployment.html');
 
       expect(docs[2].id).toEqual('example-testExample-runnableExample');
       expect(docs[2].path).toBeUndefined();
       expect(docs[2].outputPath).toBeUndefined();
 
       expect(docs[3].id).toEqual('example-testExample/manifest.json');
-      expect(docs[3].path).toEqual('example-testExample/manifest.json');
-      expect(docs[3].outputPath).toEqual('../examples/example-testExample/manifest.json');
+      expect(docs[3].path).toEqual('manifest.json');
+      expect(docs[3].outputPath).toEqual('examples/example-testExample/manifest.json');
 
       done();
     });
