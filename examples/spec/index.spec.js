@@ -23,11 +23,12 @@ describe('examples package', function() {
         };
       })
 
-      .config(function(readFilesProcessor, writeFilesProcessor, renderDocsProcessor, unescapeCommentsProcessor) {
+      .config(function(readFilesProcessor, writeFilesProcessor, renderDocsProcessor, unescapeCommentsProcessor, generateProtractorTestsProcessor) {
         readFilesProcessor.$enabled = false;
         writeFilesProcessor.$enabled = false;
         renderDocsProcessor.$enabled = false;
         unescapeCommentsProcessor.$enabled = false;
+        generateProtractorTestsProcessor.$enabled = false;
       })
 
       .config(function(generateExamplesProcessor) {
