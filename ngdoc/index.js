@@ -64,20 +64,28 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 
 })
 
-.config(function(computePathsProcessor) {
+.config(function(computePathsProcessor, createDocMessage) {
   computePathsProcessor.pathTemplates.push({
     docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type' ],
     pathTemplate: '${area}/${module}/${docType}/${name}',
-    outputPathTemplate: '${area}/${module}/${docType}/${name}.html'
+    outputPathTemplate: 'partials/${area}/${module}/${docType}/${name}.html'
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['module' ],
     pathTemplate: '${area}/${name}',
-    outputPathTemplate: '${area}/${name}/index.html'
+    outputPathTemplate: 'partials/${area}/${name}/index.html'
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['componentGroup' ],
-    pathTemplate: '${module.area}/${module.name}/${groupType}',
-    outputPathTemplate: '${module.area}/${module.name}/${groupType}/index.html'
+    pathTemplate: '${area}/${moduleName}/${groupType}',
+    outputPathTemplate: 'partials/${area}/${moduleName}/${groupType}/index.html'
   });
+  computePathsProcessor.pathTemplates.push({
+      getPath: function(doc) {
+        throw new Error(createDocMessage('No path template defined'));
+      },
+      getOutputPath: function(doc) {
+        throw new Error(createDocMessage('No outPath template defined'));
+      }
+    });
 });
