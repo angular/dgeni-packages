@@ -10,7 +10,7 @@ module.exports = function runnableExampleInlineTagDef(examples, createDocMessage
     handler: function(doc, tagName, description) {
 
       // The tag description should contain the id of the runnable example doc
-      var example = examples.get(description);
+      var example = examples[description];
       if ( !example ) {
         throw new Error(createDocMessage('No example exists with id "' + description + '".', doc));
       }

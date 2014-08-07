@@ -7,12 +7,12 @@ describe("runnableExampleInlineTagDef", function() {
   var examples, tagDef;
 
   beforeEach(function() {
-    examples = new Map();
-    examples.set('some-example', {
+    examples = {};
+    examples['some-example'] = {
       runnableExampleDoc: {
         renderedContent: 'The rendered content of the some-example example'
       }
-    });
+    };
     tagDef = tagDefinitionFactory(examples, createDocMessageFactory());
   });
 
