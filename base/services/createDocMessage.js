@@ -10,7 +10,7 @@ module.exports = function createDocMessage() {
       if ( doc.docType ) {
         message += ' (' + doc.docType + ') ';
       }
-      var filePath = doc.fileInfo && doc.fileInfo.filePath;
+      var filePath = doc.fileInfo && doc.fileInfo.relativePath;
       if ( filePath ) {
         message += ' - from file "' + filePath + '"';
         if ( doc.startingLine ) {
