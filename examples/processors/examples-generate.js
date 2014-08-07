@@ -18,17 +18,17 @@ module.exports = function generateExamplesProcessor(log, examples) {
       templateFolder: { presence: true}
     },
     $process: function(docs) {
-      examples.forEach(function(example) {
+      _.forEach(examples, function(example) {
 
         var stylesheets = [];
         var scripts = [];
 
         // The index file is special, see createExampleDoc()
-        example.indexFile = example.files.get('index.html');
-        example.files.delete('index.html');
+        example.indexFile = example.files['index.html'];
 
         // Create a new document for each file of the example
-        example.files.forEach(function(file) {
+        _.forEach(example.files, function(file, fileName) {
+          if ( fileName === 'index.html' ) return;
 
           var fileDoc = this.createFileDoc(example, file);
           docs.push(fileDoc);
@@ -128,7 +128,7 @@ module.exports = function generateExamplesProcessor(log, examples) {
 
     createManifestDoc: function(example) {
 
-      var files = example.files.keys();
+      var files = _.keys(example.files);
 
       var manifestDoc = {
         id: example.id + '/manifest.json',
