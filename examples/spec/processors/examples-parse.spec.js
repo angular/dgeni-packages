@@ -9,7 +9,7 @@ describe("examples-parse doc processor", function() {
   var processor, examples, mockTrimIndentation;
 
   beforeEach(function() {
-    examples = new Map();
+    examples = {};
     mockTrimIndentation = jasmine.createSpy('trimIndentation').and.callFake(function(value) { return value; });
     processor = parseExamplesProcessorFactory(mockLog, examples, mockTrimIndentation, createDocMessageFactory());
   });
@@ -28,20 +28,19 @@ describe("examples-parse doc processor", function() {
       }
     ];
     processor.$process(docs);
-    expect(examples.get('example-bar')).toEqual(jasmine.objectContaining({ name:'bar', moo1:'nar1', id: 'example-bar'}));
-    expect(examples.get('example-bar1')).toEqual(jasmine.objectContaining({ name:'bar', moo2:'nar2', id: 'example-bar1'}));
-    expect(examples.get('example-value')).toEqual(jasmine.objectContaining({ name:'value', id: 'example-value'}));
-    expect(examples.get('example-with-files')).toEqual(jasmine.objectContaining({ name: 'with-files', id: 'example-with-files'}));
+    expect(examples['example-bar']).toEqual(jasmine.objectContaining({ name:'bar', moo1:'nar1', id: 'example-bar'}));
+    expect(examples['example-bar1']).toEqual(jasmine.objectContaining({ name:'bar', moo2:'nar2', id: 'example-bar1'}));
+    expect(examples['example-value']).toEqual(jasmine.objectContaining({ name:'value', id: 'example-value'}));
+    expect(examples['example-with-files']).toEqual(jasmine.objectContaining({ name: 'with-files', id: 'example-with-files'}));
 
-    // Jasmine doesn't like the files (and attributes) properties because they are Maps. So we access the object properties one-by-one
-    var files = examples.get('example-with-files').files;
-    var file = files.get('app.js');
+    var files = examples['example-with-files'].files;
+    var file = files['app.js'];
     expect(file.name).toEqual('app.js');
     expect(file.type).toEqual('js');
     expect(file.fileContents).toEqual('aaa');
     expect(file.language).toEqual('js');
 
-    file = files.get('app.spec.js');
+    file = files['app.spec.js'];
     expect(file.name).toEqual('app.spec.js');
     expect(file.type).toEqual('spec');
     expect(file.fileContents).toEqual('bbb');
@@ -55,8 +54,8 @@ describe("examples-parse doc processor", function() {
                     '<example name="bar">some example content 2</example>'
     }];
     processor.$process(docs);
-    expect(examples.get('example-bar').id).toEqual('example-bar');
-    expect(examples.get('example-bar1').id).toEqual('example-bar1');
+    expect(examples['example-bar'].id).toEqual('example-bar');
+    expect(examples['example-bar1'].id).toEqual('example-bar1');
   });
 
   it("should inject a new set of elements in place of the example into the original markup to be used by the template", function() {

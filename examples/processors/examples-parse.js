@@ -33,7 +33,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
 
             // store the example information for later
             log.debug('Storing example', id);
-            examples.set(id, example);
+            examples[id] = example;
 
             return '{@runnableExample ' + id + '}';
           });
@@ -54,7 +54,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
   }
 
   function extractFiles(exampleText) {
-    var files = new Map();
+    var files = {};
     exampleText.replace(FILE_REGEX, function(match, attributesText, contents) {
       var file = extractAttributes(attributesText);
       if ( !file.name ) {
@@ -68,15 +68,15 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
       file.attributes = _.omit(file, ['fileContents']);
 
       // Store this file information
-      files.set(file.name, file);
+      files[file.name] = file;
     });
     return files;
   }
 
   function uniqueName(container, name) {
-    if ( container.has(name) ) {
+    if ( container[name] ) {
       var index = 1;
-      while(container.has(name + index)) {
+      while(container[name + index]) {
         index += 1;
       }
       name = name + index;
