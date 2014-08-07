@@ -1,3 +1,32 @@
+## v0.10.0-beta.2 7th August 2014
+
+Bug fixes and refactoring.  The big change in this revision is the introduction of the `computePathsProcessor`.
+
+* refact(examples): use computePathsProcessor      f85487f7
+* refact(examples/parseExamplesProcessor): ditch using ES6 Map for examples      c7d2b6db
+* refact(examples/generateExamplesProcessor): ditch using ES6 Map for examples       a770bf91
+* refact(examples/runnableExample inlineTag): ditch using ES6 Map for examples       f1b463dc
+* feat(examples/generateProtractorTestsProcessor): add new processor from Angular.js       c08b9be4
+* refact(examples/examples): ditch using ES6 Map       37ac555c
+* fix(ngdoc): ensure API docs go into 'partials' folder      e9aa9f81
+* fix(ngdoc/generateComponentGroupsProcessor): use moduleName and moduleDoc rather than module       a0f32a03
+* fix(ngdoc/module tagDef): don't calc module if docType is "overview"       ba819910
+* fix(ngdoc/area tagDef): docs now use relativePath not filePath       620a2b07
+* fix(createDocMessage): docs now use relativePath not filePath      efb7397c
+* fix(computePaths): use log.debug not console.log       1a8f18ba
+* refact(examples/templates): move files up a folder       7e7fdea5
+* feat(base/createDocMessage): include docType in message       7add32a5
+* feat(base/computePathsProcessor): improve error messages        14086ed2
+* refact(examples): use computePathProcessor from base package        f6891e9b
+* fix(computeIdProcessor): don't compute if id is already defined       bab945be
+* refact(ngdoc): use computePathProcessor from base package       fe187590
+* fix(jsdoc): add 'js' docType path template        a3d5f5b1
+* feat(jsdoc file-reader): give each read doc a `docType` of `"js"`       2f15a7cf
+* refact(jsdoc): use computePathProcessor from base package       90adbf8b
+* refact(jsdoc/computePathProcessor): use the computePathProcessor from base package        a2e7a6f8
+* feat(computePathsProcessor): add configurable processor       15179ce5
+
+
 ## v0.10.0-beta.1 25th July 2014
 
 **This is a major rearchitecture in line with changing to
