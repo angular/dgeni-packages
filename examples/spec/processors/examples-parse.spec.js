@@ -1,4 +1,3 @@
-require('es6-shim');
 var parseExamplesProcessorFactory = require('../../processors/examples-parse');
 var mockLog = require('dgeni/lib/mocks/log')(false);
 var createDocMessageFactory = require('../../../base/services/createDocMessage');

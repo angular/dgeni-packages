@@ -1,4 +1,3 @@
-require('es6-shim');
 var _ = require('lodash');
 var path = require('canonical-path');
 
@@ -11,22 +10,22 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
 
   var initializeMaps = function(pathTemplates) {
     if ( !pathTemplateMap || !outputPathTemplateMap ) {
-      pathTemplateMap = new Map();
-      outputPathTemplateMap = new Map();
+      pathTemplateMap = {};
+      outputPathTemplateMap = {};
 
       pathTemplates.forEach(function(template) {
         (template.docTypes || [null]).forEach(function(docType) {
 
           if ( template.getPath ) {
-            pathTemplateMap.set(docType, template.getPath);
+            pathTemplateMap[docType] = template.getPath;
           } else if ( template.pathTemplate ) {
-             pathTemplateMap.set(docType, _.template(template.pathTemplate));
+             pathTemplateMap[docType] = _.template(template.pathTemplate);
           }
 
           if ( template.getOutputPath ) {
-            outputPathTemplateMap.set(docType, template.getOutputPath);
+            outputPathTemplateMap[docType] = template.getOutputPath;
           } else if ( template.outputPathTemplate ) {
-             outputPathTemplateMap.set(docType, _.template(template.outputPathTemplate));
+             outputPathTemplateMap[docType] = _.template(template.outputPathTemplate);
           }
         });
       });
@@ -49,7 +48,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
         try {
 
           if ( !doc.path ) {
-            var getPath = pathTemplateMap.get(doc.docType) || pathTemplateMap.get(null);
+            var getPath = pathTemplateMap[doc.docType] || pathTemplateMap[null];
             if ( !getPath ) {
               throw new Error(createDocMessage('Missing path template', doc));
             }
@@ -57,7 +56,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
           }
 
           if ( !doc.outputPath ) {
-            var getOutputPath = outputPathTemplateMap.get(doc.docType) || outputPathTemplateMap.get(null);
+            var getOutputPath = outputPathTemplateMap[doc.docType] || outputPathTemplateMap[null];
             if ( !getOutputPath ) {
               throw new Error(createDocMessage('Missing output path template', doc));
             }

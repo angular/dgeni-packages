@@ -1,4 +1,3 @@
-require('es6-shim');
 var _ = require('lodash');
 
 /**
@@ -7,7 +6,7 @@ var _ = require('lodash');
  * A map of partial names to docs
  */
 module.exports = function partialNameMap(getPartialNames, parseCodeName) {
-  var map = new Map();
+  var map = {};
 
   return {
     /**
@@ -23,9 +22,9 @@ module.exports = function partialNameMap(getPartialNames, parseCodeName) {
       _.forEach(doc.partialNames, function(partialName) {
 
         // Try to get a list of docs that match this partialName
-        var matchedDocs = map.get(partialName) || [];
+        var matchedDocs = map[partialName] || [];
         matchedDocs.push(doc);
-        map.set(partialName, matchedDocs);
+        map[partialName] = matchedDocs;
 
       });
 
@@ -39,7 +38,7 @@ module.exports = function partialNameMap(getPartialNames, parseCodeName) {
 
       _.forEach(doc.partialNames, function(partialName) {
 
-        var matchedDocs = map.get(partialName);
+        var matchedDocs = map[partialName];
         if ( matchedDocs ) {
           // We have an array of docs so we need to remove the culprit
           var index = matchedDocs.indexOf(doc);
@@ -57,7 +56,7 @@ module.exports = function partialNameMap(getPartialNames, parseCodeName) {
      * @return {Array}              An array containing all matched docs
      */
     getDocs: function(partialName) {
-      return map.get(partialName) || [];
+      return map[partialName] || [];
     }
   };
 

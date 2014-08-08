@@ -1,4 +1,3 @@
-require('es6-shim');
 var path = require('canonical-path');
 var Q = require('q');
 var gfs = require('graceful-fs');
@@ -66,7 +65,7 @@ module.exports = function readFilesProcessor(log) {
             var docsPromise = qfs.read(file).then(function(content) {
 
               // Choose a file reader for this file
-              var fileReader = fileReaderMap.get(sourceInfo.fileReader) || matchFileReader(fileReaders, file);
+              var fileReader = fileReaderMap[sourceInfo.fileReader] || matchFileReader(fileReaders, file);
 
               log.debug('Reading File Content\nFile Path:', file, '\nFile Reader:', fileReader.name);
 
@@ -108,7 +107,7 @@ function createFileInfo(file, content, sourceInfo, fileReader) {
 
 
 function getFileReaderMap(fileReaders) {
-  var fileReaderMap = new Map();
+  var fileReaderMap = {};
   fileReaders.forEach(function(fileReader) {
 
     if ( !fileReader.name ) {
@@ -118,7 +117,7 @@ function getFileReaderMap(fileReaders) {
       throw new Error('Invalid File Reader: "' + fileReader.name + '": It must have a getDocs property');
     }
 
-    fileReaderMap.set(fileReader.name, fileReader);
+    fileReaderMap[fileReader.name] = fileReader;
   });
   return fileReaderMap;
 }

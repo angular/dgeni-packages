@@ -1,4 +1,3 @@
-require('es6-shim');
 var _ = require('lodash');
 
 /**

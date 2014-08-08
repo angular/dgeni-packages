@@ -1,4 +1,3 @@
-require('es6-shim');
 var tagDefinitionFactory = require('../../inline-tag-defs/runnableExample');
 var createDocMessageFactory = require('../../../base/services/createDocMessage');
 

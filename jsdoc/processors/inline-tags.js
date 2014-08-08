@@ -1,5 +1,4 @@
 var _ = require('lodash');
-require('es6-shim');
 var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
 
 /**
@@ -46,7 +45,7 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
           // Replace any inline tags found in the rendered content
           doc.renderedContent = doc.renderedContent.replace(INLINE_TAG, function(match, tagName, tagDescription) {
 
-            var definition = definitionMap.get(tagName);
+            var definition = definitionMap[tagName];
             if ( definition ) {
 
               try {
@@ -74,12 +73,12 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
 };
 
 function getMap(objects) {
-  var map = new Map();
-  objects.forEach(function(object) {
-    map.set(object.name, object);
+  var map = {};
+  _.forEach(objects, function(object) {
+    map[object.name] = object;
     if ( object.aliases ) {
-      object.aliases.forEach(function(alias) {
-        map.set(alias, object);
+      _.forEach(object.aliases, function(alias) {
+        map[alias] = object;
       });
     }
   });

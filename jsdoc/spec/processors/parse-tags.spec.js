@@ -1,5 +1,6 @@
 var factory = require('../../processors/parse-tags');
 var mockLog = require('dgeni/lib/mocks/log')();
+var createDocMessageSpy;
 
 describe("parse-tags processor", function() {
   var processor;
@@ -11,7 +12,8 @@ describe("parse-tags processor", function() {
   ];
 
   beforeEach(function() {
-    processor = factory(mockLog);
+    createDocMessageSpy = jasmine.createSpy().and.callFake(function(message) { return message; });
+    processor = factory(mockLog, createDocMessageSpy);
     processor.tagDefinitions = tagDefinitions;
   });
 

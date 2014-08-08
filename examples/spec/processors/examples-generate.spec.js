@@ -1,4 +1,3 @@
-require('es6-shim');
 var generateExamplesProcessorFactory = require('../../processors/examples-generate');
 var mockLog = require('dgeni/lib/mocks/log');
 var _ = require('lodash');
