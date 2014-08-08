@@ -6,7 +6,7 @@ var _ = require('lodash');
  * A map of partial names to docs
  */
 module.exports = function partialNameMap(getPartialNames, parseCodeName) {
-  var map = {};
+  var map = Object.create(null);
 
   return {
     /**
