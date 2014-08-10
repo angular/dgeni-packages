@@ -1,6 +1,11 @@
+## v0.9.7 10th August 2014
+
+* fix(ngdoc/macro.html): default param values are in `doc.defaultValue` property    f709d9da
+
+
 ## v0.9.6 07/21/2014
 
-* feat(api-docs): allow packageName to be specified as a tag  08:08 PM  Peter Bacon Darwin  211a4cb4
+* feat(api-docs): allow packageName to be specified as a tag   211a4cb4
 
 
 ## v0.9.5 07/17/2014
