@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var TagCollection = require('../lib/TagCollection');
 var Tag = require('../lib/Tag');
+var StringMap = require('stringmap');
 
 /**
  * @dgProcessor parseTagsProcessor
@@ -38,12 +39,12 @@ module.exports = function parseTagsProcessor(log, createDocMessage) {
  */
 function createTagDefMap(tagDefinitions) {
   // Create a map of the tagDefinitions so that we can look up tagDefs based on name or alias
-  var map = {};
+  var map = new StringMap();
   _.forEach(tagDefinitions, function(tagDefinition) {
-    map[tagDefinition.name] = tagDefinition;
+    map.set(tagDefinition.name, tagDefinition);
     if ( tagDefinition.aliases ) {
       _.forEach(tagDefinition.aliases, function(alias) {
-        map[alias] = tagDefinition;
+        map.set(alias, tagDefinition);
       });
     }
   });
@@ -87,7 +88,7 @@ function createTagParser(tagDefinitions) {
 
       // We ignore tags if we are in a code block
       match = TAG_MARKER.exec(line);
-      tagDef = match && tagDefMap[match[1]];
+      tagDef = match && tagDefMap.get(match[1]);
       if ( !inCode && match && ( !tagDef || !tagDef.ignore ) ) {
         // Only store tags that are unknown or not ignored
         current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
@@ -112,7 +113,7 @@ function createTagParser(tagDefinitions) {
 
       // We ignore tags if we are in a code block
       match = TAG_MARKER.exec(line);
-      tagDef = match && tagDefMap[match[1]];
+      tagDef = match && tagDefMap.get(match[1]);
       if ( !inCode && match && (!tagDef || !tagDef.ignore) ) {
         tags.addTag(current);
         current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
