@@ -5,7 +5,7 @@ var qfs = require('q-io/fs');
 var _ = require('lodash');
 var glob = require('glob');
 var Minimatch = require("minimatch").Minimatch;
-
+var StringMap = require('stringmap');
 
 /**
  * @dgPackage readFilesProcessor
@@ -65,7 +65,7 @@ module.exports = function readFilesProcessor(log) {
             var docsPromise = qfs.read(file).then(function(content) {
 
               // Choose a file reader for this file
-              var fileReader = fileReaderMap[sourceInfo.fileReader] || matchFileReader(fileReaders, file);
+              var fileReader = sourceInfo.fileReader ? fileReaderMap.get(sourceInfo.fileReader) : matchFileReader(fileReaders, file);
 
               log.debug('Reading File Content\nFile Path:', file, '\nFile Reader:', fileReader.name);
 
@@ -107,7 +107,7 @@ function createFileInfo(file, content, sourceInfo, fileReader) {
 
 
 function getFileReaderMap(fileReaders) {
-  var fileReaderMap = {};
+  var fileReaderMap = new StringMap();
   fileReaders.forEach(function(fileReader) {
 
     if ( !fileReader.name ) {
@@ -117,7 +117,7 @@ function getFileReaderMap(fileReaders) {
       throw new Error('Invalid File Reader: "' + fileReader.name + '": It must have a getDocs property');
     }
 
-    fileReaderMap[fileReader.name] = fileReader;
+    fileReaderMap.set(fileReader.name, fileReader);
   });
   return fileReaderMap;
 }
