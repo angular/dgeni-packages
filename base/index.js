@@ -31,24 +31,4 @@ module.exports = new Package('base')
 .factory(require('./services/templateFinder'))
 .factory(require('./services/encodeCodeBlock'))
 .factory(require('./services/trimIndentation'))
-.factory(require('./services/createDocMessage'))
-
-// Configure the processors
-.config(function(computePathsProcessor) {
-  computePathsProcessor.pathTemplates = [
-    // Default path processor template
-    {
-      getPath: function(doc) {
-        var docPath = path.dirname(doc.fileInfo.relativePath);
-        if ( doc.fileInfo.baseName !== 'index' ) {
-          docPath = path.join(docPath, doc.fileInfo.baseName);
-        }
-        return docPath;
-      },
-      getOutputPath: function(doc) {
-        return doc.path +
-            ( doc.fileInfo.baseName === 'index' ? '/index.html' : '.html');
-      }
-    }
-  ];
-});
+.factory(require('./services/createDocMessage'));

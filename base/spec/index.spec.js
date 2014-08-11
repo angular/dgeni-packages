@@ -1,4 +1,5 @@
 var basePackage = require('../index');
+var path = require('canonical-path');
 var Dgeni = require('dgeni');
 var mockLog = require('dgeni/lib/mocks/log');
 
@@ -27,12 +28,32 @@ describe('base package', function() {
           writeFilesProcessor.$enabled = false;
           renderDocsProcessor.$enabled = false;
           unescapeCommentsProcessor.$enabled = false;
+        })
+
+        .config(function(computePathsProcessor) {
+          computePathsProcessor.pathTemplates = [
+            // Default path processor template
+            {
+              docTypes: ['service', 'guide'],
+              getPath: function(doc) {
+                var docPath = path.dirname(doc.fileInfo.relativePath);
+                if ( doc.fileInfo.baseName !== 'index' ) {
+                  docPath = path.join(docPath, doc.fileInfo.baseName);
+                }
+                return docPath;
+              },
+              getOutputPath: function(doc) {
+                return doc.path +
+                    ( doc.fileInfo.baseName === 'index' ? '/index.html' : '.html');
+              }
+            }
+          ];
         });
 
       return new Dgeni([testPackage]).generate();
     }
 
-    it("should use default path templates", function(done) {
+    it("should use provided path templates", function(done) {
       var doc1 = { docType: 'service', fileInfo: { relativePath: 'a/b/c/d.js', baseName: 'd' } };
       var doc2 = { docType: 'guide', fileInfo: { relativePath: 'x/y/z/index', baseName: 'index' } };
 

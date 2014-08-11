@@ -10,9 +10,30 @@ describe("computePathsProcessor", function() {
   });
 
 
+  it("should do nothing but log a debug message if there is no path template for the given docType", function() {
+    processor.pathTemplates = [
+      {
+        docTypes: ['a'],
+        getPath: jasmine.createSpy('getPath').and.returnValue('index'),
+        getOutputPath: jasmine.createSpy('getOutputPath').and.returnValue('index.html'),
+        pathTemplate: '${ docType }',
+        outputPathTemplate: '${ docType }.html'
+      }
+    ];
+
+    var doc = { docType: 'b' };
+    processor.$process([doc]);
+    expect(processor.pathTemplates[0].getPath).not.toHaveBeenCalled();
+    expect(processor.pathTemplates[0].getOutputPath).not.toHaveBeenCalled();
+    expect(doc).toEqual({ docType: 'b' });
+    expect(mockLog.debug).toHaveBeenCalled();
+  });
+
+
   it("should compute path and outputPath using the getPath and getOutputPath functions", function() {
     processor.pathTemplates = [
       {
+        docTypes: ['a'],
         getPath: jasmine.createSpy('getPath').and.returnValue('index'),
         getOutputPath: jasmine.createSpy('getOutputPath').and.returnValue('index.html'),
         pathTemplate: '${ docType }',
@@ -30,6 +51,7 @@ describe("computePathsProcessor", function() {
   it("should compute the path using the template strings if no getPath/getOutputPath functions are specified", function() {
     processor.pathTemplates = [
       {
+        docTypes: ['a'],
         pathTemplate: '${ docType }',
         outputPathTemplate: '${ docType }.html'
       }
@@ -64,32 +86,10 @@ describe("computePathsProcessor", function() {
   });
 
 
-  it("should default to using the template with no docType", function() {
-    processor.pathTemplates = [
-      {
-        docTypes: ['a'],
-        pathTemplate: 'A',
-        outputPathTemplate: 'A.html'
-      },
-      {
-        pathTemplate: 'default',
-        outputPathTemplate: 'default.html'
-      }
-    ];
-
-    var docA = { docType: 'a' };
-    var docB = { docType: 'b' };
-
-    processor.$process([docA, docB]);
-
-    expect(docA).toEqual({ docType: 'a', path: 'A', outputPath: 'A.html' });
-    expect(docB).toEqual({ docType: 'b', path: 'default', outputPath: 'default.html' });
-  });
-
-
   it("should use the path if present (and not compute a new one)", function() {
     processor.pathTemplates = [
       {
+        docTypes: ['a'],
         getPath: jasmine.createSpy('getPath').and.returnValue('index'),
         getOutputPath: jasmine.createSpy('getOutputPath').and.returnValue('index.html'),
         pathTemplate: '${ docType }',

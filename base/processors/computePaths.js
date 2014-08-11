@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var path = require('canonical-path');
+var StringMap = require('stringmap');
 
 /**
  * @dgProcessor computePathsProcessor
@@ -10,24 +11,26 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
 
   var initializeMaps = function(pathTemplates) {
     if ( !pathTemplateMap || !outputPathTemplateMap ) {
-      pathTemplateMap = {};
-      outputPathTemplateMap = {};
+      pathTemplateMap = new StringMap();
+      outputPathTemplateMap = new StringMap();
 
       pathTemplates.forEach(function(template) {
-        (template.docTypes || [null]).forEach(function(docType) {
+        if ( template.docTypes ) {
+          template.docTypes.forEach(function(docType) {
 
-          if ( template.getPath ) {
-            pathTemplateMap[docType] = template.getPath;
-          } else if ( template.pathTemplate ) {
-             pathTemplateMap[docType] = _.template(template.pathTemplate);
-          }
+            if ( template.getPath ) {
+              pathTemplateMap[docType] = template.getPath;
+            } else if ( template.pathTemplate ) {
+               pathTemplateMap[docType] = _.template(template.pathTemplate);
+            }
 
-          if ( template.getOutputPath ) {
-            outputPathTemplateMap[docType] = template.getOutputPath;
-          } else if ( template.outputPathTemplate ) {
-             outputPathTemplateMap[docType] = _.template(template.outputPathTemplate);
-          }
-        });
+            if ( template.getOutputPath ) {
+              outputPathTemplateMap[docType] = template.getOutputPath;
+            } else if ( template.outputPathTemplate ) {
+               outputPathTemplateMap[docType] = _.template(template.outputPathTemplate);
+            }
+          });
+        }
       });
     }
   };
@@ -48,19 +51,21 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
         try {
 
           if ( !doc.path ) {
-            var getPath = pathTemplateMap[doc.docType] || pathTemplateMap[null];
+            var getPath = pathTemplateMap[doc.docType];
             if ( !getPath ) {
-              throw new Error(createDocMessage('Missing path template', doc));
+              log.debug(createDocMessage('No path template provided', doc));
+            } else {
+              doc.path = getPath(doc);
             }
-            doc.path = getPath(doc);
           }
 
           if ( !doc.outputPath ) {
-            var getOutputPath = outputPathTemplateMap[doc.docType] || outputPathTemplateMap[null];
+            var getOutputPath = outputPathTemplateMap[doc.docType];
             if ( !getOutputPath ) {
-              throw new Error(createDocMessage('Missing output path template', doc));
+              log.debug(createDocMessage('No output path template provided', doc));
+            } else {
+              doc.outputPath = getOutputPath(doc);
             }
-            doc.outputPath = getOutputPath(doc);
           }
 
         } catch(err) {
