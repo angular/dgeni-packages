@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
+var StringMap = require('stringmap');
 
 /**
  * @dgProcessor inlineTagProcessor
@@ -45,7 +46,7 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
           // Replace any inline tags found in the rendered content
           doc.renderedContent = doc.renderedContent.replace(INLINE_TAG, function(match, tagName, tagDescription) {
 
-            var definition = definitionMap[tagName];
+            var definition = definitionMap.get(tagName);
             if ( definition ) {
 
               try {
@@ -73,12 +74,12 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
 };
 
 function getMap(objects) {
-  var map = {};
+  var map = new StringMap();
   _.forEach(objects, function(object) {
-    map[object.name] = object;
+    map.set(object.name, object);
     if ( object.aliases ) {
       _.forEach(object.aliases, function(alias) {
-        map[alias] = object;
+        map.set(alias, object);
       });
     }
   });
