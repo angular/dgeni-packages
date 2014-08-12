@@ -136,7 +136,6 @@ apiDocsProcessor has the following configuration options available (listed with 
   apiDocsProcessor.apiPathTemplate = '${area}/${module}/${docType}/${name}';
   apiDocsProcessor.moduleOutputPathTemplate = '${area}/${name}/index.html';
   apiDocsProcessor.modulePathTemplate = '${area}/${name}';
-  });
   ```
 
 * `generateComponentGroupsProcessor` -
