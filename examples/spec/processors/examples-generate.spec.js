@@ -92,8 +92,9 @@ describe("examples-generate processor", function() {
   });
 
   it("should add a manifest doc for each example", function() {
-    var manifestDocs = _.filter(docs, { docType: 'example-file', path: 'manifest.json' });
-    expect(manifestDocs.length).toEqual(1);
-
+    var manifestDoc = _.filter(docs, { docType: 'example-file', template: 'manifest.template.json' })[0];
+    expect(manifestDoc.id).toEqual('a.b.c/manifest.json');
+    expect(manifestDoc.docType).toEqual('example-file');
+    expect(manifestDoc.example).toEqual(examples['a.b.c']);
   });
 });

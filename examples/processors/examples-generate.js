@@ -131,15 +131,16 @@ module.exports = function generateExamplesProcessor(log, examples) {
 
     createManifestDoc: function(example) {
 
-      var files = _.keys(example.files);
+      var files = _(example.files)
+        .keys()
+        .omit('index.html');
 
       var manifestDoc = {
         id: example.id + '/manifest.json',
         docType: 'example-file',
         example: example,
         template: 'manifest.template.json',
-        files: files,
-        path: 'manifest.json'
+        files: files
       };
       return manifestDoc;
     }
