@@ -81,7 +81,7 @@ describe('examples package', function() {
       expect(docs[0].outputPath).toEqual('examples/example-testExample/app.js');
 
       expect(docs[1].id).toEqual('example-testExample-testDeployment');
-      expect(docs[1].path).toEqual('example-testExample/example-testExample-testDeployment');
+      expect(docs[1].path).toEqual('examples/example-testExample');
       expect(docs[1].outputPath).toEqual('examples/example-testExample/index-testDeployment.html');
 
       expect(docs[2].id).toEqual('example-testExample-runnableExample');

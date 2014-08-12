@@ -23,7 +23,7 @@ module.exports = new Package('examples', ['jsdoc'])
 .config(function(computePathsProcessor) {
   computePathsProcessor.pathTemplates.push({
     docTypes: ['example'],
-    pathTemplate: '${example.id}/${id}',
+    pathTemplate: 'examples/${example.id}',
     outputPathTemplate: 'examples/${example.id}/index${deploymentQualifier}.html'
   });
   computePathsProcessor.pathTemplates.push({
