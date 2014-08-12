@@ -136,7 +136,6 @@ apiDocsProcessor a les options de configuration suivantes de disponibles (énum�
   apiDocsProcessor.apiPathTemplate = '${area}/${module}/${docType}/${name}', // L'url pour la page du document.
   apiDocsProcessor.moduleOutputPathTemplate = '${area}/${name}/index.html', // Le chemin pour écrire la page d'un module de l'api.
   apiDocsProcessor.modulePathTemplate = '${area}/${name}' // L'url pour la page du module.
-  });
   ```
 
 * `generateComponentGroupsProcessor` -
