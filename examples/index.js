@@ -32,7 +32,6 @@ module.exports = new Package('examples', ['jsdoc'])
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['runnableExample' ],
-    getPath: function() {},
-    getOutputPath: function() {}
+    pathTemplate: 'examples/${example.id}'
   });
 });
