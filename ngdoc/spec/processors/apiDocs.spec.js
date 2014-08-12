@@ -4,6 +4,7 @@ var parseCodeNameFactory = require('../../services/parseCodeName');
 var partialNameMapFactory = require('../../services/partialNameMap');
 var mockLog = require('dgeni/lib/mocks/log')(false);
 var createDocMessageFactory = require('../../../base/services/createDocMessage');
+var StringMap = require('stringmap');
 
 var _ = require('lodash');
 
@@ -12,7 +13,7 @@ describe("api-docs processor", function() {
   var processor, moduleMap, partialNameMap;
 
   beforeEach(function() {
-    moduleMap = {};
+    moduleMap = new StringMap();
     partialNameMap = partialNameMapFactory(getPartialNamesFactory(), parseCodeNameFactory());
     processor = processorFactory(mockLog, partialNameMap, moduleMap, createDocMessageFactory());
     processor.apiDocsPath = 'partials';
@@ -30,10 +31,10 @@ describe("api-docs processor", function() {
       name: 'ngMock'
     };
     processor.$process([doc1,doc2]);
-    expect(moduleMap).toEqual({
-      'ng': doc1,
-      'ngMock': doc2
-    });
+    expect(moduleMap.items()).toEqual([
+      ['ng', doc1],
+      ['ngMock', doc2]
+    ]);
   });
 
   it("should compute the packageName and packageFile if not already provided", function() {
@@ -71,10 +72,10 @@ describe("api-docs processor", function() {
       id: 'module:ng.service:$http',
       module: 'ng'
     };
-    moduleMap.ng = { components: [] };
+    moduleMap.set('ng', { components: [] });
     processor.$process([doc]);
 
-    expect(moduleMap.ng.components[0]).toBe(doc);
+    expect(moduleMap.get('ng').components[0]).toBe(doc);
   });
 
 });

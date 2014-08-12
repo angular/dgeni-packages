@@ -22,7 +22,7 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap, creat
 
           if ( doc.docType === 'module' ) {
 
-            moduleMap[doc.name] = doc;
+            moduleMap.set(doc.name, doc);
 
             // Create a place to store references to the module's components
             doc.components = [];
@@ -116,7 +116,7 @@ module.exports = function apiDocsProcessor(log, partialNameMap, moduleMap, creat
       // Attach each doc to its module
       _.forEach(docs, function(doc) {
         if ( doc.docType !== 'module' && doc.module ) {
-          var module = moduleMap[doc.module];
+          var module = moduleMap.get(doc.module);
           if ( module ) {
             module.components.push(doc);
           }

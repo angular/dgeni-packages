@@ -12,7 +12,7 @@ module.exports = function generateComponentGroupsProcessor(moduleMap) {
     $runBefore: ['extra-docs-added'],
     $process: function(docs) {
 
-      _.forEach(moduleMap, function(module) {
+      moduleMap.forEach(function(module) {
 
         _(module.components)
           .groupBy('docType')
