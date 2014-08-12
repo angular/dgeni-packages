@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<a href='http://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.tag or 'master' $}/{$ doc.relativePath $}#L{$ doc.startingLine $}' class='view-source pull-right btn btn-primary'>
+<a href='http://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.tag or 'master' $}/{$ doc.fileInfo.projectRelativePath $}#L{$ doc.startingLine $}' class='view-source pull-right btn btn-primary'>
   <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
 </a>
 
@@ -50,7 +50,7 @@
   {%- for example in doc.examples -%}
     {$ example | marked $}
   {%- endfor -%}
-  {% endif -%}  
+  {% endif -%}
   {% endblock %}
 </div>
 
