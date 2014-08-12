@@ -56,6 +56,7 @@ describe('read-files doc processor', function() {
         extension: 'js',
         basePath: processor.basePath,
         relativePath: 'docs/a.js',
+        projectRelativePath: 'docs/a.js',
         content: '// Mock code file'
       });
       expect(docs[0].fileInfo2).toBe(docs[0].fileInfo);
@@ -66,6 +67,7 @@ describe('read-files doc processor', function() {
         extension: 'ngdoc',
         basePath: processor.basePath,
         relativePath: 'docs/b.ngdoc',
+        projectRelativePath: 'docs/b.ngdoc',
         content: 'mock documentation file'
       });
       expect(docs[1].fileInfo2).toBe(docs[1].fileInfo);

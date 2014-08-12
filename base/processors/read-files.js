@@ -69,7 +69,7 @@ module.exports = function readFilesProcessor(log) {
 
               log.debug('Reading File Content\nFile Path:', file, '\nFile Reader:', fileReader.name);
 
-              var fileInfo = createFileInfo(file, content, sourceInfo, fileReader);
+              var fileInfo = createFileInfo(file, content, sourceInfo, fileReader, basePath);
 
               var docs = fileReader.getDocs(fileInfo);
 
@@ -93,7 +93,7 @@ module.exports = function readFilesProcessor(log) {
   };
 };
 
-function createFileInfo(file, content, sourceInfo, fileReader) {
+function createFileInfo(file, content, sourceInfo, fileReader, basePath) {
   return {
     fileReader: fileReader.name,
     filePath: file,
@@ -101,6 +101,7 @@ function createFileInfo(file, content, sourceInfo, fileReader) {
     extension: path.extname(file).replace(/^\./, ''),
     basePath: sourceInfo.basePath,
     relativePath: path.relative(sourceInfo.basePath, file),
+    projectRelativePath: path.relative(basePath, file),
     content: content
   };
 }
