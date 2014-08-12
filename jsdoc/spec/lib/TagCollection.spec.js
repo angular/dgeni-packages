@@ -13,7 +13,7 @@ describe("TagCollection", function() {
     expect(tags.tags).toEqual([]);
     expect(tags.badTags).toEqual([]);
     // We clone so that toEqual works with our "bare" object
-    expect(_.clone(tags.tagsByName)).toEqual({});
+    expect(tags.tagsByName.isEmpty()).toBe(true);
     expect(tags.description).toEqual('');
   });
 
@@ -29,7 +29,7 @@ describe("TagCollection", function() {
       var goodTag = { tagDef: { name: 'param'} };
       tags.addTag(goodTag);
       expect(tags.tags[0]).toBe(goodTag);
-      expect(tags.tagsByName['param'][0]).toBe(goodTag);
+      expect(tags.tagsByName.get('param')[0]).toBe(goodTag);
       expect(tags.badTags).toEqual([]);
     });
 
@@ -38,7 +38,7 @@ describe("TagCollection", function() {
       tags.addTag(badTag);
       expect(tags.badTags[0]).toBe(badTag);
       expect(tags.tags).toEqual([]);
-      expect(tags.tagsByName['param']).toBeUndefined();
+      expect(tags.tagsByName.get('param')).toBeUndefined();
     });
   });
 
@@ -48,7 +48,7 @@ describe("TagCollection", function() {
       tags.addTag(tag);
       tags.removeTag(tag);
       expect(tags.tags).toEqual([]);
-      expect(tags.tagsByName['param']).toEqual([]);
+      expect(tags.tagsByName.get('param')).toEqual([]);
     });
   });
 

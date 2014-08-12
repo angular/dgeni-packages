@@ -1,11 +1,12 @@
 var _ = require('lodash');
+var StringMap = require('stringmap');
 
 /**
  * A collection of tags that can be looked up by their tagDefinition.
  */
 var TagCollection = function(tags) {
   this.tags = [];
-  this.tagsByName = Object.create(null);
+  this.tagsByName = new StringMap();
   this.badTags = [];
   this.description = '';
 
@@ -24,9 +25,9 @@ TagCollection.prototype = {
     if ( !tag.errors && tag.tagDef ) {
       this.tags.push(tag);
 
-      var tags = this.tagsByName[tag.tagDef.name] || [];
+      var tags = this.tagsByName.get(tag.tagDef.name) || [];
       tags.push(tag);
-      this.tagsByName[tag.tagDef.name] = tags;
+      this.tagsByName.set(tag.tagDef.name, tags);
 
     } else {
       this.badTags.push(tag);
@@ -39,7 +40,7 @@ TagCollection.prototype = {
    */
   removeTag: function(tag) {
     _.remove(this.tags, tag);
-    _.remove(this.tagsByName[tag.tagDef.name], tag);
+    _.remove(this.tagsByName.get(tag.tagDef.name), tag);
   },
 
   /**
@@ -57,7 +58,7 @@ TagCollection.prototype = {
    * @return {Array}
    */
   getTags: function(name) {
-    return this.tagsByName[name] || [];
+    return this.tagsByName.get(name) || [];
   }
 
 };
