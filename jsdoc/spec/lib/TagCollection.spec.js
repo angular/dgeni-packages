@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var TagCollection = require('../../lib/TagCollection');
 var Tag = require('../../lib/Tag');
 

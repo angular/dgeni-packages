@@ -1,6 +1,5 @@
 var path = require('canonical-path');
 var Q = require('q');
-var gfs = require('graceful-fs');
 var qfs = require('q-io/fs');
 var _ = require('lodash');
 var glob = require('glob');

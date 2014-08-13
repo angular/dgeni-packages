@@ -36,7 +36,6 @@
     "dgeni": "^0.4.0",
     "esprima": "^1.0.4",
     "glob": "~3.2.8",
-    "graceful-fs": "~2.0.1",
     "lodash": "~2.4.1",
     "marked": "~0.2.10",
     "minimatch": "^0.3.0",

@@ -1,7 +1,5 @@
-var Q = require('q');
 var path = require('canonical-path');
 var readFilesFactory = require('../../processors/read-files');
-var _ = require('lodash');
 var mockLog = require('dgeni/lib/mocks/log')(/* true */);
 
 function tidyUp(promise, done) {

@@ -1,7 +1,6 @@
 var parseExamplesProcessorFactory = require('../../processors/examples-parse');
 var mockLog = require('dgeni/lib/mocks/log')(false);
 var createDocMessageFactory = require('../../../base/services/createDocMessage');
-var _ = require('lodash');
 var StringMap = require('stringmap');
 
 describe("parseExamplesProcessor", function() {
