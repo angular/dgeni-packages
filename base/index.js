@@ -1,5 +1,4 @@
 var Package = require('dgeni').Package;
-var path = require('canonical-path');
 
 // Define the `base` package
 module.exports = new Package('base')

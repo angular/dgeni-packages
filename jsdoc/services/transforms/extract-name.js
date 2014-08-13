@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 // Matches:
 // name, [name], [name=default], name text, [name] text, [name=default] text, name - text, [name] - text or [name=default] - text
 var NAME_AND_DESCRIPTION = /^\s*(\[([^\]=]+)(?:=([^\]]+))?\]|\S+)((?:[ \t]*\-\s*|\s+)(\S[\s\S]*))?\s*$/;
