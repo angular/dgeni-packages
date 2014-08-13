@@ -8,7 +8,7 @@ var path = require('canonical-path');
  * @description
  * Generate a protractor test files from the e2e tests in the examples
  */
-module.exports = function generateProtractorTestsProcessor(examples) {
+module.exports = function generateProtractorTestsProcessor(exampleMap) {
   return {
     deployments: [],
     $validate: {
@@ -20,7 +20,7 @@ module.exports = function generateProtractorTestsProcessor(examples) {
 
       var deployments = this.deployments;
 
-      _.forEach(examples, function(example) {
+      exampleMap.forEach(function(example) {
         _.forEach(example.files, function(file) {
 
           // Check if it's a Protractor test.

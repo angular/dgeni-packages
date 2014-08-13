@@ -8,7 +8,7 @@ var path = require('canonical-path');
  * This includes the files that will be run in an iframe, the code that will be injected
  * into the HTML pages and the protractor test files.
  */
-module.exports = function generateExamplesProcessor(log, examples) {
+module.exports = function generateExamplesProcessor(log, exampleMap) {
 
   return {
     $runAfter: ['adding-extra-docs'],
@@ -17,7 +17,8 @@ module.exports = function generateExamplesProcessor(log, examples) {
       deployments: { presence: true }
     },
     $process: function(docs) {
-      _.forEach(examples, function(example) {
+      var that = this;
+      exampleMap.forEach(function(example) {
 
         var stylesheets = [];
         var scripts = [];
@@ -29,7 +30,7 @@ module.exports = function generateExamplesProcessor(log, examples) {
         _.forEach(example.files, function(file, fileName) {
           if ( fileName === 'index.html' ) return;
 
-          var fileDoc = this.createFileDoc(example, file);
+          var fileDoc = that.createFileDoc(example, file);
           docs.push(fileDoc);
 
           // Store a reference to the fileDoc for attaching to the exampleDocs
@@ -38,24 +39,24 @@ module.exports = function generateExamplesProcessor(log, examples) {
           } else if ( file.type == 'js' ) {
             scripts.push(fileDoc);
           }
-        }, this);
+        });
 
         // Create an index.html document for the example (one for each deployment type)
-        _.forEach(this.deployments, function(deployment) {
-          var exampleDoc = this.createExampleDoc(example, deployment, stylesheets, scripts);
+        _.forEach(that.deployments, function(deployment) {
+          var exampleDoc = that.createExampleDoc(example, deployment, stylesheets, scripts);
           docs.push(exampleDoc);
           example.deployments[deployment.name] = exampleDoc;
-        }, this);
+        });
 
         // Create the doc that will be injected into the website as a runnable example
-        var runnableExampleDoc = this.createRunnableExampleDoc(example);
+        var runnableExampleDoc = that.createRunnableExampleDoc(example);
         docs.push(runnableExampleDoc);
         example.runnableExampleDoc = runnableExampleDoc;
 
         // Create the manifest that will be sent to Plunker
-        docs.push(this.createManifestDoc(example));
+        docs.push(that.createManifestDoc(example));
 
-      }, this);
+      });
     },
 
     createExampleDoc: function(example, deployment, stylesheets, scripts) {

@@ -11,7 +11,7 @@ var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
  * @description
  * Search the documentation for examples that need to be extracted
  */
-module.exports = function parseExamplesProcessor(log, examples, trimIndentation, createDocMessage) {
+module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentation, createDocMessage) {
   return {
     $runAfter: ['files-read'],
     $runBefore: ['parsing-tags'],
@@ -22,7 +22,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
           doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
 
             var example = extractAttributes(attributeText);
-            var id = uniqueName(examples, 'example-' + (example.name || 'example'));
+            var id = uniqueName(exampleMap, 'example-' + (example.name || 'example'));
             _.assign(example, {
               attributes: _.omit(example, ['files', 'doc']),
               files: extractFiles(exampleText),
@@ -33,7 +33,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
 
             // store the example information for later
             log.debug('Storing example', id);
-            examples[id] = example;
+            exampleMap.set(id, example);
 
             return '{@runnableExample ' + id + '}';
           });
@@ -46,7 +46,7 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
   };
 
   function extractAttributes(attributeText) {
-    var attributes = Object.create(null);
+    var attributes = {};
     attributeText.replace(ATTRIBUTE_REGEX, function(match, prop, val1, val2){
       attributes[prop] = val1 || val2;
     });
@@ -73,10 +73,10 @@ module.exports = function parseExamplesProcessor(log, examples, trimIndentation,
     return files;
   }
 
-  function uniqueName(container, name) {
-    if ( container[name] ) {
+  function uniqueName(containerMap, name) {
+    if ( containerMap.has(name) ) {
       var index = 1;
-      while(container[name + index]) {
+      while(containerMap.has(name + index)) {
         index += 1;
       }
       name = name + index;

@@ -1,15 +1,16 @@
 var generateExamplesProcessorFactory = require('../../processors/examples-generate');
 var mockLog = require('dgeni/lib/mocks/log');
 var _ = require('lodash');
+var StringMap = require('stringmap');
 
 describe("examples-generate processor", function() {
-  var templateFolder, deployments, docs, examples;
+  var templateFolder, deployments, docs, exampleMap;
 
   beforeEach(function() {
 
     docs = [{ file: 'a.b.js' }];
 
-    examples = {};
+    exampleMap = new StringMap();
 
     files = {};
 
@@ -18,16 +19,16 @@ describe("examples-generate processor", function() {
     files['app.css'] = { type: 'css', name: 'app.css', fileContents: 'app.css content' };
     files['app.spec.js'] = { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' };
 
-    examples['a.b.c'] = {
+    exampleMap.set('a.b.c', {
       id: 'a.b.c',
       doc: docs[0],
       outputFolder: 'examples',
       deps: 'dep1.js;dep2.js',
       files: files,
       deployments: {}
-    };
+    });
 
-    processor = generateExamplesProcessorFactory(mockLog, examples);
+    processor = generateExamplesProcessorFactory(mockLog, exampleMap);
     processor.templateFolder = 'examples';
     processor.deployments = [
       {
@@ -95,6 +96,6 @@ describe("examples-generate processor", function() {
     var manifestDoc = _.filter(docs, { docType: 'example-file', template: 'manifest.template.json' })[0];
     expect(manifestDoc.id).toEqual('a.b.c/manifest.json');
     expect(manifestDoc.docType).toEqual('example-file');
-    expect(manifestDoc.example).toEqual(examples['a.b.c']);
+    expect(manifestDoc.example).toEqual(exampleMap.get('a.b.c'));
   });
 });

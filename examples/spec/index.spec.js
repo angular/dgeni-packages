@@ -74,6 +74,7 @@ describe('examples package', function() {
 
   it("should compute the path of examples from their attributes", function(done) {
     processExample().then(function(docs) {
+
       expect(docs.length).toEqual(4);
 
       expect(docs[0].id).toEqual('example-testExample/app.js');

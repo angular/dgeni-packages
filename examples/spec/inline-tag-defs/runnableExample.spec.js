@@ -1,18 +1,19 @@
 var tagDefinitionFactory = require('../../inline-tag-defs/runnableExample');
 var createDocMessageFactory = require('../../../base/services/createDocMessage');
+var StringMap = require('stringmap');
 
 describe("runnableExampleInlineTagDef", function() {
 
-  var examples, tagDef;
+  var exampleMap, tagDef;
 
   beforeEach(function() {
-    examples = {};
-    examples['some-example'] = {
+    exampleMap = new StringMap();
+    exampleMap.set('some-example', {
       runnableExampleDoc: {
         renderedContent: 'The rendered content of the some-example example'
       }
-    };
-    tagDef = tagDefinitionFactory(examples, createDocMessageFactory());
+    });
+    tagDef = tagDefinitionFactory(exampleMap, createDocMessageFactory());
   });
 
   it("should have the correct name", function() {

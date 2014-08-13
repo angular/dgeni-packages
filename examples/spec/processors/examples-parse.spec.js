@@ -2,15 +2,16 @@ var parseExamplesProcessorFactory = require('../../processors/examples-parse');
 var mockLog = require('dgeni/lib/mocks/log')(false);
 var createDocMessageFactory = require('../../../base/services/createDocMessage');
 var _ = require('lodash');
+var StringMap = require('stringmap');
 
-describe("examples-parse doc processor", function() {
+describe("parseExamplesProcessor", function() {
 
-  var processor, examples, mockTrimIndentation;
+  var processor, exampleMap, mockTrimIndentation;
 
   beforeEach(function() {
-    examples = {};
+    exampleMap = new StringMap();
     mockTrimIndentation = jasmine.createSpy('trimIndentation').and.callFake(function(value) { return value; });
-    processor = parseExamplesProcessorFactory(mockLog, examples, mockTrimIndentation, createDocMessageFactory());
+    processor = parseExamplesProcessorFactory(mockLog, exampleMap, mockTrimIndentation, createDocMessageFactory());
   });
 
   it("should extract example tags from the doc content", function() {
@@ -27,12 +28,12 @@ describe("examples-parse doc processor", function() {
       }
     ];
     processor.$process(docs);
-    expect(examples['example-bar']).toEqual(jasmine.objectContaining({ name:'bar', moo1:'nar1', id: 'example-bar'}));
-    expect(examples['example-bar1']).toEqual(jasmine.objectContaining({ name:'bar', moo2:'nar2', id: 'example-bar1'}));
-    expect(examples['example-value']).toEqual(jasmine.objectContaining({ name:'value', id: 'example-value'}));
-    expect(examples['example-with-files']).toEqual(jasmine.objectContaining({ name: 'with-files', id: 'example-with-files'}));
+    expect(exampleMap.get('example-bar')).toEqual(jasmine.objectContaining({ name:'bar', moo1:'nar1', id: 'example-bar'}));
+    expect(exampleMap.get('example-bar1')).toEqual(jasmine.objectContaining({ name:'bar', moo2:'nar2', id: 'example-bar1'}));
+    expect(exampleMap.get('example-value')).toEqual(jasmine.objectContaining({ name:'value', id: 'example-value'}));
+    expect(exampleMap.get('example-with-files')).toEqual(jasmine.objectContaining({ name: 'with-files', id: 'example-with-files'}));
 
-    var files = examples['example-with-files'].files;
+    var files = exampleMap.get('example-with-files').files;
     var file = files['app.js'];
     expect(file.name).toEqual('app.js');
     expect(file.type).toEqual('js');
@@ -53,8 +54,8 @@ describe("examples-parse doc processor", function() {
                     '<example name="bar">some example content 2</example>'
     }];
     processor.$process(docs);
-    expect(examples['example-bar'].id).toEqual('example-bar');
-    expect(examples['example-bar1'].id).toEqual('example-bar1');
+    expect(exampleMap.get('example-bar').id).toEqual('example-bar');
+    expect(exampleMap.get('example-bar1').id).toEqual('example-bar1');
   });
 
   it("should inject a new set of elements in place of the example into the original markup to be used by the template", function() {
