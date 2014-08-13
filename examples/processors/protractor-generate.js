@@ -1,7 +1,6 @@
 "use strict";
 
 var _ = require('lodash');
-var path = require('canonical-path');
 
 /**
  * dgProcessor generateProtractorTestsProcessor

@@ -1,5 +1,3 @@
-var path = require('canonical-path');
-var packagePath = __dirname;
 var Package = require('dgeni').Package;
 
 module.exports = new Package('dgeni', ['jsdoc'])

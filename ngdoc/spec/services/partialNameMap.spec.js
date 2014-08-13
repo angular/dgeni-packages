@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var getPartialNamesFactory = require('../../services/getPartialNames');
 var parseCodeNameFactory = require('../../services/parseCodeName');
 var partialNameMapFactory = require('../../services/partialNameMap');

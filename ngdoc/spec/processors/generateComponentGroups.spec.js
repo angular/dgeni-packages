@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var processorFactory = require('../../processors/generateComponentGroups');
 
 describe("generateComponentGroupsProcessor", function() {
