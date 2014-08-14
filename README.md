@@ -1,6 +1,6 @@
 # Dgeni Packages
 
-This repository contains a collection of dgeni packages that can be used by the dgeni documentation
+This repository contains a collection of Dgeni packages that can be used by the Dgeni documentation
 generator to create documentation from source code.
 
 
@@ -14,6 +14,7 @@ Out of the box there are the following packages:
 * ngdoc - The angular.js specific tag-defs, processors and templates.  This loads the jsdoc and
   nunjucks packages for you.
 * examples - Processors to support the runnable examples feature in the angular.js docs site.
+* dgeni - Support for documenting Dgeni packages
 
 ## `base` Package
 
@@ -22,11 +23,13 @@ Out of the box there are the following packages:
 * `debugDumpProcessor` - dump the current state of the docs array to a file (disabled by default)
 * `readFilesProcessor` - used to load up documents from files.  This processor can be configured to use a
 set of **file readers**. There are file readers in the `jsdoc` and `ngdoc` packages.
+* `computePathsProcessor` - Computes the `path` and `outputPath` for documents using templates or helper
+functions, on a per docType basis.
 * `renderDocsProcessor` - render the documents into a property (`doc.renderedContent`) using a
 `templateEngine`, which must be provided separately - see `nunjucks` package.
 * `unescapeCommentsProcessor` - unescape comment markers that would break the jsdoc comment style,
 e.g. `*/`
-* `writeFilesProcessor` - write the docs to disk
+* `writeFilesProcessor` - write the docs that have an `outputPath` to disk
 
 ### Services
 
@@ -79,8 +82,6 @@ to render the documents into text, such as HTML or JS, based on templates.
 
 * `codeNameProcessor` - infer the name of the document from the code following the document in the source
 file.
-* `computePathProcessor` - infer the path to the document, used for writing the file and for navigation
-to the document in a web app.
 * `parseTagsProcessor` - use a `tagParser` to parses the jsdoc tags in the document content.
 * `extractTagsProcessor` - use a `tagExtractor` to extract information from the parsed tags.
 * `inlineTagsProcessor` - Search the docs for inline tags that need to have content injected
@@ -92,10 +93,10 @@ The `jsdoc` package contains definitions for a number of standard jsdoc tags inc
 `animations`, `constructor`, `class`, `classdesc`, `global`, `namespace`, `method`, `type` and
 `kind`.
 
-### Services
+### Services (Tag Transformations)
 
-This package provides a number of tagTransform services that are used in tag Definitions to transform
-the value of the tag from the string in the comment to something more meaningful in the doc.
+This package provides a number of **Transform** services that are used in **Tag Definitions** to transform
+the value of the tag from the string in the tag description to something more meaningful in the doc.
 
 * `extractNameTransform` - extract a name from a tag
 * `extractTypeTransform` - extract a type from a tag
@@ -107,6 +108,11 @@ the value of the tag from the string in the comment to something more meaningful
 
 **This package does not provide any templates nor a `templateEngine` to render templates (use the
 `nunjucks` package to add this).**
+
+### Tag Definitions
+
+This package provides a minimal implementation of tags from the JSDoc project. They extract the name
+and type from the tag description accordingly but do not fully implement all the JSDoc tag functionality.
 
 ## `ngdoc` Package
 
@@ -144,25 +150,34 @@ Generate documents for each group of components (by type) within a module
 * `computeIdProcessor` -
 Compute the id property of the doc based on the tags and other meta-data
 
-* `computePathProcessor` -
-Compute the path and outputPath for docs that do not already have them
-
 * `filterNgdocsProcessor` -
 For AngularJS we are only interested in documents that contain the @ngdoc tag.  This processor
 removes docs that do not contain this tag.
 
 * `collectPartialNames` -
-Add all the docs to the partialNameMap
+Add all the docs to the `partialNameMap`
+
+
+### Tag Definitions
+
+This package modifies and adds new tag definitions on top of those provided by the `jsdoc` package.
+
+
+### Inline Tag Definitions
+
+* `link` - Process inline link tags (of the form {@link some/uri Some Title}), replacing them with
+HTML anchors
 
 
 ### Services
 
-* `getLinkInfo()`
-* `getPartialNames()`
-* `gettypeClass()`
-* `moduleMap`
-* `parseCodeName()`
-* `patialNameMap`
+* `getLinkInfo()` - Get link information to a document that matches the given url
+* `getPartialNames()` - Get a list of all the partial code names that can be made from the provided
+set of parts
+* `getTypeClass()` - Get a CSS class string for the given type string
+* `moduleMap` - A collection of modules keyed on the module name
+* `parseCodeName()` - Parse the code name into parts
+* `partialNameMap` - A map of partial names to docs
 
 
 ### Templates
@@ -181,9 +196,38 @@ templateEngine.config.tags = {
 };
 ```
 
+### Rendering Filters
+
+* `code` - Render a span of text as code
+* `link` - Render a HTML anchor link
+* `typeClass` - Render a CSS class for a given type
+
+### Rendering Tags
+
+* `code` - Render a block of code
+
+
 ## `examples` Package
 
 This package is a mix-in that provides functionality for working with examples in the docs.
+
+Inside your docs you can markup inline-examples such as:
+
+```
+Some text before the example
+
+<example name="example-name">
+  <file name="index.html">
+    <div>The main HTML for the example</div>
+  </file>
+  <file name="app.js">
+    // Some JavaScript code to be included in the example
+  </file>
+</example>
+
+Some text after the example
+```
+
 
 ### Processors
 
@@ -193,8 +237,15 @@ Parse the `<example>` tags from the content and add them to the `examples` servi
 Add new docs to the docs collection for each example in the `examples` service that will be rendered
 as files that can be run in the browser, for example as live in-place demos of the examples or for
 e2e testing.
+* `generateProtractorTests` - Generate a protractor test files from the e2e tests in the examples
+
+### Inline Tag Definitions
+
+* `runnableExample` - Inject the specified runnable example into the doc
+
 
 ### Services
 
-* examples - a hash map holding each example by name
+* `exampleMap` - a hash map holding each example by id, which is a unique id generated from the name
+of the example
 
