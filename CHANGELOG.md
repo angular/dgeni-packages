@@ -1,3 +1,31 @@
+## v0.10.0-beta.3 15th August 2014
+
+The major change in this release was the removal of dependency on the ES6-shim and the use of ES6 `Map` for
+storing maps of information. The shimmed Map was not playing nicely with Jasmine, Nunjucks and `console.log`.
+Instead these mappings are now using [`StringMap`](https://github.com/olov/stringmap), which is cleaner than
+using bare objects (made from `Object.create(null)`).
+
+Thanks as always to Stéphane for his translations and removal of unused code.
+
+* refact(*) : remove unused dependencies     5c893d85
+* refact(examples/exampleMap): rename and convert to a StringMap      bdbb7c26
+* fix(ngdoc/templates): fix github links      2f01d163
+* fix(examples): use computePathsProcessor for example file paths     c4b02945
+* fix(examples/generateExamplesProcessor): ensure correct files are in manifest     dc60336e
+* fix(ngdoc/templates): ensure github links are to valid paths      7676f187
+* feat(base/readFilesProcessor): add projectRelativePath to fileInfo      7931f230
+* fix(examples): ensure example index files have correct path     e5e62554
+* refact(jsdoc/moduleMap): use a StringMap to store the modules     0c37674a
+* refact(TagColletion) use StringMap for tagsByName property      d6655cf0
+* refact(jsdoc/parseTagsProcessor): use StringMap     b61e3e20
+* refact(jsdoc/inlineTagProcessor): use StringMap     33f6e5fc
+* refact(computePathsProcessor): use stringmap and no longer allow default template     93fc95cf
+* refact(base/readFilesProcessor): use stringmap for fileReaderMap      be33702c
+* fix(ngdoc/macro.html): default param values are in `doc.    e3899b67
+* fix(partialNameMap): use pure object to prevent property collisions     3750c928
+* refact(*): remove dependency on 'es6-shim' and `Map`      15751dfb
+
+
 ## v0.10.0-beta.2 7th August 2014
 
 Bug fixes and refactoring.  The big change in this revision is the introduction of the `computePathsProcessor`.
