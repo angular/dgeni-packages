@@ -10,29 +10,27 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
   var pathTemplateMap, outputPathTemplateMap;
 
   var initializeMaps = function(pathTemplates) {
-    if ( !pathTemplateMap || !outputPathTemplateMap ) {
-      pathTemplateMap = new StringMap();
-      outputPathTemplateMap = new StringMap();
+    pathTemplateMap = new StringMap();
+    outputPathTemplateMap = new StringMap();
 
-      pathTemplates.forEach(function(template) {
-        if ( template.docTypes ) {
-          template.docTypes.forEach(function(docType) {
+    pathTemplates.forEach(function(template) {
+      if ( template.docTypes ) {
+        template.docTypes.forEach(function(docType) {
 
-            if ( template.getPath ) {
-              pathTemplateMap[docType] = template.getPath;
-            } else if ( template.pathTemplate ) {
-               pathTemplateMap[docType] = _.template(template.pathTemplate);
-            }
+          if ( template.getPath ) {
+            pathTemplateMap[docType] = template.getPath;
+          } else if ( template.pathTemplate ) {
+             pathTemplateMap[docType] = _.template(template.pathTemplate);
+          }
 
-            if ( template.getOutputPath ) {
-              outputPathTemplateMap[docType] = template.getOutputPath;
-            } else if ( template.outputPathTemplate ) {
-               outputPathTemplateMap[docType] = _.template(template.outputPathTemplate);
-            }
-          });
-        }
-      });
-    }
+          if ( template.getOutputPath ) {
+            outputPathTemplateMap[docType] = template.getOutputPath;
+          } else if ( template.outputPathTemplate ) {
+             outputPathTemplateMap[docType] = _.template(template.outputPathTemplate);
+          }
+        });
+      }
+    });
   };
 
   return {
