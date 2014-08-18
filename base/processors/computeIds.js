@@ -6,7 +6,7 @@ var StringMap = require('stringmap');
  * @description
  * Compute the id property of each doc based on the tags and other meta-data from a set of templates
  */
-module.exports = function computeIdsProcessor(log, partialIdMap, createDocMessage) {
+module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
 
   var getIdMap, getPartialIdsMap;
 
@@ -65,7 +65,7 @@ module.exports = function computeIdsProcessor(log, partialIdMap, createDocMessag
             }
           }
 
-          partialIdMap.addDoc(doc);
+          aliasMap.addDoc(doc);
 
         } catch(err) {
           throw new Error(createDocMessage('Failed to compute ids/partialIds for doc', doc, err));

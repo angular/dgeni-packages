@@ -1,13 +1,13 @@
 var factory = require('../../processors/computeIds');
 var mockLog = require('dgeni/lib/mocks/log')(false);
-var partialIdMap = require('../../services/partialIdMap');
+var aliasMap = require('../../services/aliasMap');
 var createDocMessage = require('../../services/createDocMessage');
 
 describe("computeIdsProcessor", function() {
   var processor;
 
   beforeEach(function() {
-    processor = factory(mockLog, partialIdMap(), createDocMessage());
+    processor = factory(mockLog, aliasMap(), createDocMessage());
   });
 
   it("should do nothing but log a debug message if there is no id template for the given docType", function() {
