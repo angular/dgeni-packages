@@ -10,7 +10,7 @@ var path = require('canonical-path');
  * @param  {String} title An optional title to return in the link information
  * @return {Object}       The link information
  */
-module.exports = function getLinkInfo(partialNameMap, encodeCodeBlock) {
+module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
 
   return function getLinkInfoImpl(url, title, currentDoc) {
     var linkInfo = {
@@ -24,15 +24,7 @@ module.exports = function getLinkInfo(partialNameMap, encodeCodeBlock) {
       throw new Error('Invalid url');
     }
 
-    var docs = partialNameMap.getDocs(url);
-
-    if ( docs.length > 1 && currentDoc ) {
-      // If there is more than one item with this name then first
-      // try to filter them by the currentDoc's area
-      docs = _.filter(docs, function(doc) {
-        return doc.area === currentDoc.area;
-      });
-    }
+    var docs = getDocFromAlias(url, currentDoc);
 
     if ( docs.length > 1 ) {
 
