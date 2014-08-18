@@ -33,5 +33,5 @@ module.exports = new Package('base')
 .factory(require('./services/templateFinder'))
 .factory(require('./services/encodeCodeBlock'))
 .factory(require('./services/trimIndentation'))
-.factory(require('./services/partialIdMap'))
+.factory(require('./services/aliasMap'))
 .factory(require('./services/createDocMessage'));
