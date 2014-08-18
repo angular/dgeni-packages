@@ -1,17 +1,17 @@
-var getPartialNamesFactory = require('../../services/getPartialNames');
+var getAliasesFactory = require('../../services/getAliases');
 
-describe("getPartialNames", function() {
+describe("getAliases", function() {
 
   it("should extract all the parts from a code name", function() {
 
-    var getPartialNames = getPartialNamesFactory();
+    var getAliases = getAliasesFactory();
 
     var parts = [
       { modifier: 'module', name: 'ng' },
       { modifier: 'service', name: '$http#get' }
     ];
 
-    expect(getPartialNames(parts)).toEqual([
+    expect(getAliases(parts)).toEqual([
       '$http#get',
       'service:$http#get',
       'ng.$http#get',
