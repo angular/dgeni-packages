@@ -22,9 +22,10 @@ describe('jsdoc package', function() {
           };
         })
 
-        .config(function(readFilesProcessor, writeFilesProcessor, renderDocsProcessor, unescapeCommentsProcessor) {
+        .config(function(readFilesProcessor, writeFilesProcessor, computeIdsProcessor, renderDocsProcessor, unescapeCommentsProcessor) {
           readFilesProcessor.$enabled = false;
           writeFilesProcessor.$enabled = false;
+          computeIdsProcessor.$enabled = false;
           renderDocsProcessor.$enabled = false;
           unescapeCommentsProcessor.$enabled = false;
         });
