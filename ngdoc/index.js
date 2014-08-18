@@ -16,7 +16,6 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 .processor(require('./processors/generateComponentGroups'))
 .processor(require('./processors/computeId'))
 .processor(require('./processors/filterNgdocs'))
-.processor(require('./processors/collectPartialNames'))
 
 
 .config(function(readFilesProcessor, ngdocFileReader) {
@@ -64,6 +63,26 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 
 })
 
+
+.config(function(computeIdsProcessor, createDocMessage) {
+
+  computeIdsProcessor.idTemplates.push({
+    docTypes: ['module' ],
+    idTemplate: 'module:${name}',
+  });
+
+  computeIdsProcessor.idTemplates.push({
+    docTypes: ['method', 'property', 'event'],
+    idTemplate: '${name}'
+  });
+
+  computeIdsProcessor.idTemplates.push({
+    docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type' ],
+    idTemplate: 'module:${module}.${docType}:${name}',
+  });
+
+})
+
 .config(function(computePathsProcessor, createDocMessage) {
   computePathsProcessor.pathTemplates.push({
     docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type' ],
@@ -80,12 +99,4 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
     pathTemplate: '${area}/${moduleName}/${groupType}',
     outputPathTemplate: 'partials/${area}/${moduleName}/${groupType}/index.html'
   });
-  computePathsProcessor.pathTemplates.push({
-      getPath: function(doc) {
-        throw new Error(createDocMessage('No path template defined'));
-      },
-      getOutputPath: function(doc) {
-        throw new Error(createDocMessage('No outPath template defined'));
-      }
-    });
 });
