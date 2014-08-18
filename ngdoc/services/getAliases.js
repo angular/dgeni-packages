@@ -1,12 +1,39 @@
+
+function parseCodeName(codeName) {
+  var parts = [];
+  var currentPart;
+
+  codeName.split('.').forEach(function(part) {
+    var subParts = part.split(':');
+
+    var name = subParts.pop();
+    var modifier = subParts.pop();
+
+    if ( !modifier && currentPart  ) {
+      currentPart.name += '.' + name;
+    } else {
+      currentPart = {
+        name: name,
+        modifier: modifier
+      };
+      parts.push(currentPart);
+    }
+  });
+  return parts;
+}
+
 /**
  * @dgService getAliases
  * @description
- * Get a list of all the aliases that can be made from the provided set of parts
- * @param  {Array} codeNameParts A collection of parts for a code name
- * @return {Array}               A collection of aliases
+ * Get a list of all the aliases that can be made from the doc
+ * @param  {Object} doc A doc from which to extract aliases
+ * @return {Array}      A collection of aliases
  */
 module.exports = function getAliases() {
-  return function(codeNameParts) {
+
+  return function(doc) {
+
+    var codeNameParts = parseCodeName(doc.id);
 
     var methodName;
     var aliases = [];

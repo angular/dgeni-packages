@@ -6,12 +6,7 @@ describe("getAliases", function() {
 
     var getAliases = getAliasesFactory();
 
-    var parts = [
-      { modifier: 'module', name: 'ng' },
-      { modifier: 'service', name: '$http#get' }
-    ];
-
-    expect(getAliases(parts)).toEqual([
+    expect(getAliases({ id: 'module:ng.service:$http#get'})).toEqual([
       '$http#get',
       'service:$http#get',
       'ng.$http#get',
