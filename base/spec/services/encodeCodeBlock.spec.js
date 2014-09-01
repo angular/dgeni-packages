@@ -1,10 +1,13 @@
-var encodeCodeBlockFactory = require('../../services/encodeCodeBlock');
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("code utility", function() {
   var encodeCodeBlock;
 
   beforeEach(function() {
-    encodeCodeBlock = encodeCodeBlockFactory();
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    encodeCodeBlock = injector.get('encodeCodeBlock');
   });
 
   it("should wrap the string in code and pre tags", function() {
