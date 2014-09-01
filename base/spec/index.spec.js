@@ -1,14 +1,12 @@
-var basePackage = require('../index');
-var path = require('canonical-path');
+var basePackage = require('dgeni-packages/base');
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
 var Dgeni = require('dgeni');
-var mockLog = require('dgeni/lib/mocks/log');
+var path = require('canonical-path');
 
 describe('base package', function() {
 
   function runDgeni(docs) {
-    var testPackage = new Dgeni.Package('testPackage', [basePackage])
-      .factory('templateEngine', function() {})
-      .factory('log', function() { return mockLog(false); })
+    var testPackage = new Dgeni.Package('testPackage', [mockPackage()])
       .processor('provideTestDocs', function() {
         return {
           $runBefore: ['computeIdsProcessor'],
