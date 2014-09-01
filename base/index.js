@@ -34,4 +34,5 @@ module.exports = new Package('base')
 .factory(require('./services/encodeCodeBlock'))
 .factory(require('./services/trimIndentation'))
 .factory(require('./services/aliasMap'))
-.factory(require('./services/createDocMessage'));
+.factory(require('./services/createDocMessage'))
+.factory(require('./services/writeFile'));
