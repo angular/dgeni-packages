@@ -1,9 +1,12 @@
-var trimIndentationFactory = require('../../services/trimIndentation');
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("trimIndentation", function() {
   var trimIndentation;
   beforeEach(function() {
-    trimIndentation = trimIndentationFactory();
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    trimIndentation = injector.get('trimIndentation');
   });
   it("should trim simple leading white-space from a single line of text", function() {
     expect(trimIndentation('   abc  ')).toEqual('abc  ');
