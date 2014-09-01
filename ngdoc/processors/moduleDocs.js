@@ -5,14 +5,12 @@ var _ = require('lodash');
  * @description
  * Compute the various fields for modules
  */
-module.exports = function moduleDocsProcessor(log, partialIdMap, moduleMap, createDocMessage) {
+module.exports = function moduleDocsProcessor(log, getDocFromAlias, moduleMap, createDocMessage) {
   return {
     $runAfter: ['ids-computed'],
     $runBefore: ['computing-paths'],
     $process: function(docs) {
       var parts;
-
-      var apiDocsPath = this.apiDocsPath;
 
       // Compute some extra fields for docs in the API area
       _.forEach(docs, function(doc) {
@@ -41,7 +39,7 @@ module.exports = function moduleDocsProcessor(log, partialIdMap, moduleMap, crea
       // Attach each doc to its module
       _.forEach(docs, function(doc) {
         if ( doc.docType !== 'module' && doc.module ) {
-          var matchingModules = partialIdMap.getDocs(doc.module);
+          var matchingModules = getDocFromAlias(doc.module, doc);
           if ( matchingModules.length === 1 ) {
             var module = matchingModules[0];
             module.components.push(doc);
