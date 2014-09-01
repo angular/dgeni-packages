@@ -1,19 +1,21 @@
-var Q = require('q');
 var path = require('canonical-path');
-var rewire = require('rewire');
-var writeFilesFactory = rewire('../../processors/write-files');
+var Q = require('q');
 
-var writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Q());
-writeFilesFactory.__set__('writeFile', writeFileSpy);
-
-var mockLog = require('dgeni/lib/mocks/log')(/* true */);
-var mockReadFilesProcessor = {
-  basePath: path.resolve('some/path')
-};
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("writeFilesProcessor", function() {
   it("should write each document to a file", function() {
-    var processor = writeFilesFactory(mockLog, mockReadFilesProcessor);
+    var writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Q());
+    var testPackage = mockPackage().factory('writeFile', function() { return writeFileSpy; });
+
+    var dgeni = new Dgeni([testPackage]);
+    var injector = dgeni.configureInjector();
+
+    var readFilesProcessor = injector.get('readFilesProcessor');
+    readFilesProcessor.basePath = path.resolve('some/path');
+
+    var processor = injector.get('writeFilesProcessor');
     processor.outputFolder = 'build';
     processor.$process([{ renderedContent: 'SOME RENDERED CONTENT', outputPath: 'doc/path.html' }]);
     expect(writeFileSpy).toHaveBeenCalledWith(path.resolve('some/path/build/doc/path.html'), 'SOME RENDERED CONTENT');

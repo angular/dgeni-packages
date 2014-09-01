@@ -9,7 +9,7 @@ var Q = require('q');
  * @description Write the value of `doc.renderedContent` to a file a  `doc.outputPath`.
  * @property {String} outputFolder The base path to the folder where files are outputted
  */
-module.exports = function writeFilesProcessor(log, readFilesProcessor) {
+module.exports = function writeFilesProcessor(log, readFilesProcessor, writeFile) {
   return {
     outputFolder: null,
     $validate: {
@@ -40,9 +40,3 @@ module.exports = function writeFilesProcessor(log, readFilesProcessor) {
     }
   };
 };
-
-function writeFile(file, content) {
-  return fs.makeTree(fs.directory(file)).then(function() {
-    return fs.write(file, content, 'wb');
-  });
-}
