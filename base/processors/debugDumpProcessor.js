@@ -1,5 +1,4 @@
 var path = require('canonical-path');
-var fs = require('q-io/fs');
 var util = require("util");
 
 /**
@@ -7,7 +6,7 @@ var util = require("util");
  * @description
  * This processor dumps docs that match a filter to a file
  */
-module.exports = function debugDumpProcessor(log, readFilesProcessor) {
+module.exports = function debugDumpProcessor(log, readFilesProcessor, writeFile) {
   return {
     filterFn: function(docs) { return docs; },
     outputPath: 'debug-dump.txt',
@@ -35,9 +34,3 @@ module.exports = function debugDumpProcessor(log, readFilesProcessor) {
   };
 
 };
-
-function writeFile(file, content) {
-  return fs.makeTree(fs.directory(file)).then(function() {
-    return fs.write(file, content, 'wb');
-  });
-}
