@@ -1,13 +1,14 @@
-var factory = require('../../processors/computeIds');
-var mockLog = require('dgeni/lib/mocks/log')(false);
-var aliasMap = require('../../services/aliasMap');
-var createDocMessage = require('../../services/createDocMessage');
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("computeIdsProcessor", function() {
-  var processor;
+  var processor, mockLog;
 
   beforeEach(function() {
-    processor = factory(mockLog, aliasMap(), createDocMessage());
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    processor = injector.get('computeIdsProcessor');
+    mockLog = injector.get('log');
   });
 
   it("should do nothing but log a debug message if there is no id template for the given docType", function() {
