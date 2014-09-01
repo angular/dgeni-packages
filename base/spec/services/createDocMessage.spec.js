@@ -1,21 +1,13 @@
-var createDocMessageFactory = require('../../services/createDocMessage');
-
-
-describe("createDocMessageFactory", function() {
-
-  it("should have the name createDocMessage", function() {
-    expect(createDocMessageFactory.name).toEqual('createDocMessage');
-  });
-
-});
-
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("createDocMessage", function() {
   var createDocMessage;
 
-
   beforeEach(function() {
-    createDocMessage = createDocMessageFactory();
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    createDocMessage = injector.get('createDocMessage');
   });
 
 
