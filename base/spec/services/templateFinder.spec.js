@@ -1,13 +1,16 @@
 var rewire = require('rewire');
-var templateFinderFactory = rewire('../../services/templateFinder');
-var mockLog = require('dgeni/lib/mocks/log')(false);
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var Dgeni = require('dgeni');
+var templateFinderFactory = rewire('dgeni-packages/base/services/templateFinder');
 
 describe("templateFinder", function() {
 
   var templateFinder;
 
   beforeEach(function() {
-    templateFinder = templateFinderFactory(mockLog);
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    templateFinder = injector.get('templateFinder');
   });
 
 
