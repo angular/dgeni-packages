@@ -5,7 +5,7 @@ var _ = require('lodash');
  * @description
  * Merge the member docs into their container doc, and remove them from the main docs collection
  */
-module.exports = function memberDocsProcessor(log, partialIdMap, createDocMessage) {
+module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMessage) {
 
   var mergeableTypes = {
     method: 'methods',
@@ -30,7 +30,7 @@ module.exports = function memberDocsProcessor(log, partialIdMap, createDocMessag
 
           log.debug('child doc found', doc.id, doc.memberof);
 
-          var containerDocs = partialIdMap.getDocs(doc.memberof);
+          var containerDocs = getDocFromAlias(doc.memberof, doc);
 
           if ( containerDocs.length === 0 ) {
             log.warn(createDocMessage('Missing container document'+ doc.memberof, doc));
@@ -39,7 +39,7 @@ module.exports = function memberDocsProcessor(log, partialIdMap, createDocMessag
 
           if ( containerDocs.length > 0 ) {
             // The memberof field was ambiguous, try prepending the module name too
-            containerDocs = partialIdMap.getDocs(_.template('${module}.${memberof}', doc));
+            containerDocs = getDocFromAlias(_.template('${module}.${memberof}', doc), doc);
             if ( containerDocs.length !== 1 ) {
               log.warn(createDocMessage('Ambiguous container document reference: '+ doc.memberof));
               return;
