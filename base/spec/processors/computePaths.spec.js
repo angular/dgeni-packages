@@ -2,12 +2,13 @@ var mockPackage = require('dgeni-packages/base/spec/mockPackage');
 var Dgeni = require('dgeni');
 
 describe("computePathsProcessor", function() {
-  var processor;
+  var processor, mockLog;
 
   beforeEach(function() {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('computePathsProcessor');
+    mockLog = injector.get('log');
   });
 
 
