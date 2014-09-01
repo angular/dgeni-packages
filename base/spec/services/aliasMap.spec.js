@@ -1,10 +1,13 @@
-var aliasMapFactory = require('../../services/aliasMap');
-
-var aliasMap;
+var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("aliasMap", function() {
+  var aliasMap;
+
   beforeEach(function() {
-    aliasMap = aliasMapFactory();
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    aliasMap = injector.get('aliasMap');
   });
 
   describe("addDoc", function() {
