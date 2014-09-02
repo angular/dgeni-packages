@@ -8,7 +8,7 @@ module.exports = function codeNameProcessor(log) {
     $runBefore: ['processing-docs'],
     $process: function(docs) {
       docs.forEach(function(doc) {
-        doc.codeName = doc.codeNode && findCodeName(doc.codeNode.node);
+        doc.codeName = doc.codeName || (doc.codeNode && findCodeName(doc.codeNode.node));
         if ( doc.codeName ) {
           log.silly('found codeName: ', doc.codeName);
         }
