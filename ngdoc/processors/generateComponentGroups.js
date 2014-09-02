@@ -7,8 +7,8 @@ var _ = require('lodash');
  */
 module.exports = function generateComponentGroupsProcessor(moduleMap) {
   return {
-    $runAfter: ['adding-extra-docs', 'apiDocsProcessor'],
-    $runBefore: ['extra-docs-added'],
+    $runAfter: ['moduleDocsProcessor'],
+    $runBefore: ['computing-paths'],
     $process: function(docs) {
 
       moduleMap.forEach(function(module) {
