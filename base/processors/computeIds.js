@@ -44,13 +44,11 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
       initializeMaps(this.idTemplates);
 
       docs.forEach(function(doc) {
-
         try {
-
           if ( !doc.id ) {
             var getId = getIdMap.get(doc.docType);
             if ( !getId ) {
-              log.debug(createDocMessage('No id template provided', doc));
+              log.debug(createDocMessage('No idTemplate or getId(doc) method provided', doc));
             } else {
               doc.id = getId(doc);
             }
@@ -59,7 +57,7 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
           if ( !doc.partialIds ) {
             var getPartialIds = getPartialIdsMap.get(doc.docType);
             if ( !getPartialIds ) {
-              log.debug(createDocMessage('No partial id template provided', doc));
+              log.debug(createDocMessage('No getPartialId(doc) method provided', doc));
             } else {
               doc.partialIds = getPartialIds(doc);
             }
