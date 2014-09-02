@@ -38,19 +38,26 @@ module.exports = new Package('jsdoc', [require('../base')])
   extractTagsProcessor.defaultTagTransforms = [trimWhitespaceTransform];
 })
 
-// Configure the processors
+.config(function(computeIdsProcessor) {
+  computeIdsProcessor.idTemplates.push({
+    docTypes: ['js'],
+    getId: function(doc) {
+      var docPath = doc.name || doc.codeName;
+      if ( !docPath ) {
+        docPath = path.dirname(doc.fileInfo.relativePath);
+        if ( doc.fileInfo.baseName !== 'index' ) {
+          docPath = path.join(docPath, doc.fileInfo.baseName);
+        }
+      }
+      return docPath;
+    }
+  });
+})
+
 .config(function(computePathsProcessor) {
   computePathsProcessor.pathTemplates.push({
     docTypes: ['js'],
-    getPath: function(doc) {
-      var docPath = path.dirname(doc.fileInfo.relativePath);
-      if ( doc.fileInfo.baseName !== 'index' ) {
-        docPath = path.join(docPath, doc.fileInfo.baseName);
-      }
-      return doc.name || doc.codeName || docPath;
-    },
-    getOutputPath: function(doc) {
-      return doc.path + '.html';
-    }
+    pathTemplate: '${id}',
+    outputPathTemplate: '${path}.html'
   });
 });
