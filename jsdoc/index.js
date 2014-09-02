@@ -1,7 +1,7 @@
 var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
-module.exports = new Package('jsdoc', [require('../base')])
+module.exports = new Package('jsdoc', [require('dgeni-packages/base')])
 
 // Add in extra pseudo marker processors
 .processor({ name: 'parsing-tags', $runAfter: ['files-read'], $runBefore: ['processing-docs'] })
@@ -50,6 +50,9 @@ module.exports = new Package('jsdoc', [require('../base')])
         }
       }
       return docPath;
+    },
+    getPartialIds: function(doc) {
+      return [doc.id];
     }
   });
 })
