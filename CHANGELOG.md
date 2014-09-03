@@ -1,3 +1,8 @@
+## v0.9.8 3rd September 2014
+
+* fix(generateComponentGroup processor): ensure doc has a name     076634d0
+
+
 ## v0.9.7 10th August 2014
 
 * fix(ngdoc/macro.html): default param values are in `doc.defaultValue` property    f709d9da
