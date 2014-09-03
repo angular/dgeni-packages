@@ -25,6 +25,7 @@ describe("generateComponentGroupsProcessor", function() {
 
     expect(docs.length).toEqual(2);
 
+    expect(docs[0].name).toEqual('a components in mod1');
     expect(docs[0].moduleName).toEqual('mod1');
     expect(docs[0].moduleDoc).toEqual(jasmine.objectContaining({ id: 'mod1' }));
   });
