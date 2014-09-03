@@ -1,5 +1,5 @@
-var processorFactory = require('../../processors/filterNgdocs');
-var mockLog = require('dgeni/lib/mocks/log')(false);
+var mockPackage = require('dgeni-packages/ngdoc/spec/mockPackage');
+var Dgeni = require('dgeni');
 
 function createMockTagCollection(tags) {
   return {
@@ -11,6 +11,14 @@ function createMockTagCollection(tags) {
 
 
 describe("filter-ngdocs doc-processor plugin", function() {
+  var processor;
+
+  beforeEach(function() {
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    processor = injector.get('filterNgDocsProcessor');
+  });
+
   it("should only return docs that have the ngdoc tag", function() {
 
     var doc1 = { tags: createMockTagCollection({ngdoc: 'a'}) };
@@ -23,7 +31,6 @@ describe("filter-ngdocs doc-processor plugin", function() {
 
     var docs = [ doc1, doc2, doc3, doc4 ];
 
-    var processor = processorFactory(mockLog);
     var filteredDocs = processor.$process(docs);
 
     expect(filteredDocs).toEqual([doc1, doc3]);
