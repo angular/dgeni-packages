@@ -30,6 +30,7 @@ module.exports = {
           return {
             id: module.id + '.' + docType,
             docType: 'componentGroup',
+            name: docType + ' components in '  + module.id,
             groupType: docType,
             module: module.name,
             moduleDoc: module,

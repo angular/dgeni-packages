@@ -23,6 +23,8 @@ describe("component-groups processor", function() {
     processor.process(docs, config, modules);
 
     expect(docs.length).toEqual(2);
+    expect(docs[0].name).toEqual('a components in mod1');
+    expect(docs[1].name).toEqual('b components in mod1');
   });
 
 
