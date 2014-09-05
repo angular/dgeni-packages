@@ -1,13 +1,14 @@
-var getDocFromAliasFactory = require('../../services/getDocFromAlias');
-var aliasMapFactory = require('../../../base/services/aliasMap');
-var mockLogFactory = require('dgeni/lib/mocks/log');
-var getDocFromAlias, aliasMap, mockLog;
+var mockPackage = require('dgeni-packages/ngdoc/spec/mockPackage');
+var Dgeni = require('dgeni');
+
+var getDocFromAlias, aliasMap;
 
 describe("getDocFromAlias", function() {
   beforeEach(function() {
-    aliasMap = aliasMapFactory();
-    mockLog = mockLogFactory();
-    getDocFromAlias = getDocFromAliasFactory(aliasMap, mockLog);
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    aliasMap = injector.get('aliasMap');
+    getDocFromAlias = injector.get('getDocFromAlias');
   });
 
   it("should return an array of docs that match the alias", function() {
