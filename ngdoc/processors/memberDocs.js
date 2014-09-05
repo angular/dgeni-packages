@@ -22,7 +22,7 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
       docs = _.filter(docs, function(doc) {
 
         // Is this doc a member of another doc?
-        if ( doc.name.indexOf('#' ) !== -1 ) {
+        if ( doc.id.indexOf('#' ) !== -1 ) {
           doc.isMember = true;
           parts = doc.id.split('#');
           doc.memberof = parts[0];
@@ -33,23 +33,23 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
           var containerDocs = getDocFromAlias(doc.memberof, doc);
 
           if ( containerDocs.length === 0 ) {
-            log.warn(createDocMessage('Missing container document'+ doc.memberof, doc));
+            log.warn(createDocMessage('Missing container document: "'+ doc.memberof + '"', doc));
             return;
           }
 
-          if ( containerDocs.length > 0 ) {
+          if ( containerDocs.length > 1 ) {
             // The memberof field was ambiguous, try prepending the module name too
             containerDocs = getDocFromAlias(_.template('${module}.${memberof}', doc), doc);
             if ( containerDocs.length !== 1 ) {
               log.warn(createDocMessage('Ambiguous container document reference: '+ doc.memberof));
               return;
-            } else {
-              doc.memberof = _.template('${module}.${memberof}', doc);
             }
           }
 
-          // Add this member doc to the container doc
           var containerDoc = containerDocs[0];
+          doc.memberof = containerDoc.id;
+
+          // Add this member doc to the container doc
           var containerProperty = mergeableTypes[doc.docType];
           var container = containerDoc[containerProperty] = containerDoc[containerProperty] || [];
           container.push(doc);
