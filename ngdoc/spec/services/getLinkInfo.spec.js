@@ -1,17 +1,16 @@
-var aliasMapFactory = require('../../../base/services/aliasMap');
-var getAliasesFactory = require('../../services/getAliases');
-var getDocFromAliasFactory = require('../../services/getDocFromAlias');
-var getLinkInfoFactory = require('../../services/getLinkInfo');
+var mockPackage = require('dgeni-packages/ngdoc/spec/mockPackage');
+var Dgeni = require('dgeni');
 
-var getLinkInfo, aliasMap, getDocFromAlias, mockCode, getAliases;
+var getLinkInfo, aliasMap, getAliases;
 
 describe("getLinkInfo", function() {
   beforeEach(function() {
-    aliasMap = aliasMapFactory();
-    getAliases = getAliasesFactory();
-    getDocFromAlias = getDocFromAliasFactory(aliasMap);
-    mockCode = jasmine.createSpy('code').and.callFake(function(value) { return '<code>' + value + '</code>'; });
-    getLinkInfo = getLinkInfoFactory(getDocFromAlias, mockCode);
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    aliasMap = injector.get('aliasMap');
+    getAliases = injector.get('getAliases');
+    getLinkInfo = injector.get('getLinkInfo');
   });
 
   it("should lookup urls against the docs", function() {
