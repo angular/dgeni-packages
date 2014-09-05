@@ -5,8 +5,8 @@
   "scripts": {
     "test": "jasmine-node */spec",
     "cover": "istanbul cover jasmine-node -- */spec",
-    "preinstall": "rm node_modules/dgeni-packages",
-    "postinstall": "ln -s .. node_modules/dgeni-packages"
+    "preinstall": "rm node_modules/dgeni-packages || true",
+    "postinstall": "ln -s .. node_modules/dgeni-packages || true"
   },
   "repository": {
     "type": "git",
