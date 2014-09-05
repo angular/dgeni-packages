@@ -5,17 +5,16 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 
 .factory(require('./file-readers/ngdoc'))
 .factory(require('./inline-tag-defs/link'))
+.factory(require('./services/getAliases'))
+.factory(require('./services/getDocFromAlias'))
 .factory(require('./services/getLinkInfo'))
 .factory(require('./services/getTypeClass'))
-.factory(require('./services/getPartialNames'))
-.factory(require('./services/parseCodeName'))
-.factory(require('./services/partialNameMap'))
 .factory(require('./services/moduleMap'))
 
-.processor(require('./processors/apiDocs'))
-.processor(require('./processors/generateComponentGroups'))
-.processor(require('./processors/computeId'))
 .processor(require('./processors/filterNgdocs'))
+.processor(require('./processors/generateComponentGroups'))
+.processor(require('./processors/memberDocs'))
+.processor(require('./processors/moduleDocs'))
 
 
 .config(function(readFilesProcessor, ngdocFileReader) {
