@@ -20,7 +20,7 @@ module.exports = new Package('examples', ['jsdoc'])
   inlineTagProcessor.inlineTagDefinitions.push(runnableExampleInlineTagDef);
 })
 
-.config(function(computePathsProcessor) {
+.config(function(computePathsProcessor, computeIdsProcessor) {
   computePathsProcessor.pathTemplates.push({
     docTypes: ['example'],
     pathTemplate: 'examples/${example.id}',
@@ -33,5 +33,10 @@ module.exports = new Package('examples', ['jsdoc'])
   computePathsProcessor.pathTemplates.push({
     docTypes: ['runnableExample' ],
     pathTemplate: 'examples/${example.id}'
+  });
+
+  computeIdsProcessor.idTemplates.push({
+    docTypes: ['example', 'example-file', 'runnableExample'],
+    getAliases: function(doc) { return [doc.id]; }
   });
 });
