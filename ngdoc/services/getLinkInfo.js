@@ -30,7 +30,7 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
 
       linkInfo.valid = false;
       linkInfo.error = 'Ambiguous link: "' + url + '".\n' +
-        docs.reduce(function(msg, doc) { return msg + '\n  "' + doc.id + '"'; }, 'Matching docs: ');
+        docs.reduce(function(msg, doc) { return msg + '\n  "' + doc.id + '" ('+ doc.docType + ') : (' + doc.area + ')'; }, 'Matching docs: ');
 
     } else if ( docs.length === 1 ) {
 
@@ -40,7 +40,7 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
 
     } else if ( url.indexOf('#') > 0 ) {
       var pathAndHash = url.split('#');
-      linkInfo = getLinkInfoImpl(pathAndHash[0], title);
+      linkInfo = getLinkInfoImpl(pathAndHash[0], title, currentDoc);
       linkInfo.url = linkInfo.url + '#' + pathAndHash[1];
       return linkInfo;
 
