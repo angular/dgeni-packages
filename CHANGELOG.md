@@ -1,3 +1,105 @@
+## v0.10.0-beta.4 6th September 2014
+
+
+### Refactorings
+
+#### ComputeIdsProcessor
+
+The major refactoring in this release was to move computation of ids (and aliases, which used to be called
+partialIds) into a generic computeIdsProcessor in the base package.  This is then configured (similar to
+computePathsProcessor) for each docType that a package introduces.
+
+
+* fix(ngdoc): fix idTemplate for member docTypes    dbad1945
+* fix(examples): add idTemplates for examples docTypes    16086476
+* fix(ngdoc/getDocFromAlias): start from scratch if filtering by area fails     f742f5a3
+* fix(ngdoc/getLinkInfo): pass through currentDoc when searching for member     039deedf
+* refact(computeIdsProcessor): rename partialIds to aliases     00607193
+* refact(base/aliasMap): remove unused reference to lodash      3321da6b
+* refact(ngdoc): use computeIdProcessor and aliasMap      569312c9
+* refact(getPartialNames): rename to getAliases     ee83af87
+* feat(ngdoc/getDocFromAlias): add service to find relative docs from alias     bef71895
+* refact(base/computeIdProcessor): rename partialIdMap to aliasMap      e336bbc3
+* refact(partialIdMap): rename to aliasMap      46075fb3
+* feat(base/computeIdsProcessor): add new processor to compute ids based on configuration templates     aeec7e1e
+* feat(base/partialIdMap): add new service for storing partial ids      1c3f82ab
+* refact(base/computePathsProcessor): always regenerate the maps on $process      4caa96c7
+* refact(ngdoc/getAliases): combine getPartialNames and parseCodeName into getAliases     2d3071f0
+* refact(ngdoc/getLinkInfo): use getDocFromAlias      0cc9f490
+* refact(ngdoc/computeIdProcessor): remove and use base/computeIdsProcessor     e17d808c
+* test(jsdoc): disable computeIdsProcessor for test     e303f3c7
+* refact(ngdoc/partialNameMap): remove and use aliasMap from base instead    925c01a1
+* docs(ngdoc/getDocFromAlias): document the service   167a982b
+* fix(base/computeIdsProcessor): improve error messages   88ea6e10
+* fix(jsdoc): provide basic getPartialIds function    54dc8118
+* refact(jsdoc): update to use computeIdsProcessor    2938a4c5
+
+
+#### apiDocsProcessor
+
+Also the apiDocsProcessor was broken up. Part of it is now handled by the `computeIdsProcessor` but the rest
+was refactored into `membersDocsProcessor` and `moduleDocsProcessor`.
+
+* refact(ngdoc/generateComponentGroupsProcessor): apiDocs is going away      1fbed695
+* refact(ngdoc/apiDocsProcessor): remove old processor       c1a2fee0
+* refact(ngdoc/moduleDocsProcessor): use getDocFromAlias       fa0408ca
+* refact(ngdoc/memberDocsProcessor): use getDocFromAlias       74063d3f
+* fix(ngdoc/memberDocsProcessor): test and ensure doc.memberof is a full id      f6b063dd
+* fix(ngdoc/moduleDocsProcessor): run after memberDocsProcessor      c3fd9398
+* fix(ngdoc/moduleDocsProcessor): better resolve ambiguous module references       b27d8ff7
+* test(ngdoc/moduleDocsProcessor): test the processor      3e42370c
+* refact(ngdoc): reorganization of processors and services       c7397fa1
+* feat(ngdoc/moduleDocsProcessor): extract functionality from apiDocsProcessor     8cd51dc4
+* feat(ngdoc/memberDocsProcessor): extract functionality from apiDocsProcessor     c7302275
+
+
+#### `dgeni.configureInjector` and tests
+
+The a new version of dgeni allowed us access to the injector without having to run `dgeni.generate()`.
+This meant that we could have much cleaner tests, where we can let the injector create our services rather than
+having to wire them up manually - which was a pain and error prone.
+
+* test(ngdoc/getLinkInfo): use mockPackage for testing      896cad63
+* test(ngdoc/getDocFromAlias): test with mockPackage      b819e338
+* test(ngdoc/mockPackage): add mock Package for testing     659e8d09
+* test(ngdoc/filterNgDocsProcessor): use mockPackage and injector     2eea5026
+* test(ngdoc/generateComponentGroups): use mockPackage and injector     13da2040
+* test(jsdoc): use mockPackage      9d08564b
+* test(base/computePathsProcessor): get mockLog from injector     b154d5a2
+* test(base/computeIdsProcessor): use configureInjector and mockPackage     7ef665dc
+* test(base/aliasMap): use configureInjector and mockPackage      e641efd3
+* test(base/computePathsProcessor): use configureInjector and mockPackage     2528b445
+* test(base/createDocMessage): use configureInjector and mockPackage      5d45118f
+* test(base/debugDumpProcessor): use configureInjector and mockPackage      4b4eeb9e
+* test(base/encodeCodeBlock): use configureInjector and mockPackage     54d6d19a
+* test(base): use mockPackage     e6366e83
+* test(base/templateFinder): use configureInjector and mockPackage      1b8559e3
+* test(base/trimIndentation): use configureInjector and mockPackage     176d6241
+* test(mockPackage): add a mock package to be used in testing     293563c3
+
+
+#### link `node_modules/dgeni-package` -> `..`
+
+To make it easier to reference modules within dgeni-packages, preinstall and postinstall
+hooks are now in place to create a soft link to the root of the projet from within node_modules:
+
+* chore(package.json): add link to this module in node_modules     68a08ec3
+* chore(package.json): make node_module linking more tolerant     bfbe201b
+
+
+#### writeFile Service
+
+* feat(base/writeFile): add simple service to write a file to disk       1c9681e9
+* feat(base/writeFile): add simple service to write a file to disk       f035c854
+* refact(base/writeFilesProcessor): user writeFile service       aa3be581
+* refact(base/debugDumpProcessor): use writeFile service     adc64c7c
+
+### Bug Fixes
+
+* fix(generateComponentGroup processor): ensure doc has a name     27469bec
+* fix(jsdoc/codeNameProcessor): don't override codeName if already provided    942a72f6
+
+
 ## v0.10.0-beta.3 15th August 2014
 
 The major change in this release was the removal of dependency on the ES6-shim and the use of ES6 `Map` for
