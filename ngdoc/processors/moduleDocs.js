@@ -5,7 +5,7 @@ var _ = require('lodash');
  * @description
  * Compute the various fields for modules
  */
-module.exports = function moduleDocsProcessor(log, getDocFromAlias, moduleMap, createDocMessage) {
+module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDocMessage) {
   return {
     $runAfter: ['ids-computed'],
     $runBefore: ['computing-paths'],
@@ -39,13 +39,23 @@ module.exports = function moduleDocsProcessor(log, getDocFromAlias, moduleMap, c
       // Attach each doc to its module
       _.forEach(docs, function(doc) {
         if ( doc.docType !== 'module' && doc.module ) {
-          var matchingModules = getDocFromAlias(doc.module, doc);
+          var matchingModules = aliasMap.getDocs(doc.module);
+
+          if ( matchingModules.length > 1 ) {
+            // try matching with the 'module:' specifier
+            matchingModules = aliasMap.getDocs('module:' + doc.module);
+          }
+
           if ( matchingModules.length === 1 ) {
             var module = matchingModules[0];
             module.components.push(doc);
             doc.moduleDoc = module;
           } else if ( matchingModules.length > 1 ) {
-            throw new Error(createDocMessage('Ambiguous module reference:' + doc.module, doc));
+            console.log(matchingModules.length);
+            _.forEach(matchingModules, function(mod) {
+              console.log(mod.id);
+            });
+            throw new Error(createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc));
           }
         }
       });

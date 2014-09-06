@@ -44,4 +44,16 @@ describe("moduleDocsProcessor", function() {
 
   });
 
+  it("should try using the module specifier if the module reference is ambiguous", function() {
+    var doc1 = { docType: 'module', id: 'module:ngMessages', aliases: ['ngMessages', 'module:ngMessages'] };
+    var doc2 = { docType: 'directive', module:'ngMessages', id: 'module:ngMessages.directive:ngMessages', aliases: ['ngMessages.ngMessages', 'module:ngMessages.ngMessages', 'ngMessages.directive:ngMessages', 'module:ngMessages.directive:ngMessages', 'directive:ngMessages', 'ngMessages'] };
+
+    aliasMap.addDoc(doc1);
+    aliasMap.addDoc(doc2);
+    processor.$process([doc1, doc2]);
+
+    expect(doc2.moduleDoc).toBe(doc1);
+
+  });
+
 });
