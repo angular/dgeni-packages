@@ -73,7 +73,12 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 
   computeIdsProcessor.idTemplates.push({
     docTypes: ['method', 'property', 'event'],
-    idTemplate: '${name}',
+    getId: function(doc) {
+      var parts = doc.name.split('#');
+      var name = parts.pop();
+      parts.push(doc.docType + ':' + name);
+      return parts.join('#');
+    },
     getAliases: getAliases
   });
 
