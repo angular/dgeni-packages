@@ -7,7 +7,7 @@ var _ = require('lodash');
  */
 module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDocMessage) {
   return {
-    $runAfter: ['ids-computed'],
+    $runAfter: ['ids-computed', 'memberDocsProcessor'],
     $runBefore: ['computing-paths'],
     $process: function(docs) {
       var parts;
