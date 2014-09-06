@@ -8,11 +8,11 @@ var StringMap = require('stringmap');
  */
 module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
 
-  var getIdMap, getPartialIdsMap;
+  var getIdMap, getAliasesMap;
 
   var initializeMaps = function(idTemplates) {
     getIdMap = new StringMap();
-    getPartialIdsMap = new StringMap();
+    getAliasesMap = new StringMap();
 
     idTemplates.forEach(function(template) {
       if ( template.docTypes ) {
@@ -24,8 +24,8 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
              getIdMap.set(docType, _.template(template.idTemplate));
           }
 
-          if ( template.getPartialIds ) {
-            getPartialIdsMap.set(docType, template.getPartialIds);
+          if ( template.getAliases ) {
+            getAliasesMap.set(docType, template.getAliases);
           }
 
         });
@@ -48,25 +48,25 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
           if ( !doc.id ) {
             var getId = getIdMap.get(doc.docType);
             if ( !getId ) {
-              log.debug(createDocMessage('No idTemplate or getId(doc) method provided', doc));
+              log.warn(createDocMessage('No idTemplate or getId(doc) method provided', doc));
             } else {
               doc.id = getId(doc);
             }
           }
 
-          if ( !doc.partialIds ) {
-            var getPartialIds = getPartialIdsMap.get(doc.docType);
-            if ( !getPartialIds ) {
-              log.debug(createDocMessage('No getPartialId(doc) method provided', doc));
+          if ( !doc.aliases ) {
+            var getAliases = getAliasesMap.get(doc.docType);
+            if ( !getAliases ) {
+              log.warn(createDocMessage('No getAlias(doc) method provided', doc));
             } else {
-              doc.partialIds = getPartialIds(doc);
+              doc.aliases = getAliases(doc);
             }
           }
 
           aliasMap.addDoc(doc);
 
         } catch(err) {
-          throw new Error(createDocMessage('Failed to compute ids/partialIds for doc', doc, err));
+          throw new Error(createDocMessage('Failed to compute ids/aliases for doc', doc, err));
         }
 
         log.debug('computed id for:', '"' + doc.id + '" (' + doc.docType + ')');

@@ -51,7 +51,7 @@ module.exports = new Package('jsdoc', [require('dgeni-packages/base')])
       }
       return docPath;
     },
-    getPartialIds: function(doc) {
+    getAliases: function(doc) {
       return [doc.id];
     }
   });

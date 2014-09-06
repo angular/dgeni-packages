@@ -30,7 +30,7 @@ describe("aliasMap", function() {
 
   describe("getDocs", function() {
     it("should return an empty array if no doc matches the alias", function() {
-      var doc = { aliass: ['a', 'b', 'c'] };
+      var doc = { aliases: ['a', 'b', 'c'] };
       expect(aliasMap.getDocs('d')).toEqual([]);
     });
   });

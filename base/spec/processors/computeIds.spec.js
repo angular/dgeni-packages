@@ -16,7 +16,7 @@ describe("computeIdsProcessor", function() {
       {
         docTypes: ['a'],
         getId: jasmine.createSpy('getId').and.returnValue('index'),
-        getPartialIds: jasmine.createSpy('getPartialIds').and.returnValue(['a','b']),
+        getAliases: jasmine.createSpy('getAliases').and.returnValue(['a','b']),
         idTemplate: '${ docType }'
       }
     ];
@@ -24,30 +24,30 @@ describe("computeIdsProcessor", function() {
     var doc = { docType: 'b' };
     processor.$process([doc]);
     expect(processor.idTemplates[0].getId).not.toHaveBeenCalled();
-    expect(processor.idTemplates[0].getPartialIds).not.toHaveBeenCalled();
+    expect(processor.idTemplates[0].getAliases).not.toHaveBeenCalled();
     expect(doc).toEqual({ docType: 'b' });
     expect(mockLog.debug).toHaveBeenCalled();
   });
 
 
-  it("should compute id and partial ids using the getId and getPartialIds functions", function() {
+  it("should compute id and partial ids using the getId and getAliases functions", function() {
     processor.idTemplates = [
       {
         docTypes: ['a'],
         getId: jasmine.createSpy('getId').and.returnValue('index'),
-        getPartialIds: jasmine.createSpy('getPartialIds').and.returnValue(['a','b']),
+        getAliases: jasmine.createSpy('getAliases').and.returnValue(['a','b']),
         idTemplate: '${ docType }'
       }
     ];
     var doc = { docType: 'a' };
     processor.$process([doc]);
     expect(processor.idTemplates[0].getId).toHaveBeenCalled();
-    expect(processor.idTemplates[0].getPartialIds).toHaveBeenCalled();
-    expect(doc).toEqual({ docType: 'a', id: 'index', partialIds: ['a','b'] });
+    expect(processor.idTemplates[0].getAliases).toHaveBeenCalled();
+    expect(doc).toEqual({ docType: 'a', id: 'index', aliases: ['a','b'] });
   });
 
 
-  it("should compute the id using the template strings if no getId/getPartialIds functions are specified", function() {
+  it("should compute the id using the template strings if no getId/getAliases functions are specified", function() {
     processor.idTemplates = [
       {
         docTypes: ['a'],
@@ -87,14 +87,14 @@ describe("computeIdsProcessor", function() {
       {
         docTypes: ['a'],
         getId: jasmine.createSpy('getId').and.returnValue('index'),
-        getPartialIds: jasmine.createSpy('getPartialIds').and.returnValue(['a','b']),
+        getAliases: jasmine.createSpy('getAliases').and.returnValue(['a','b']),
         idTemplate: '${ docType }'
       }
     ];
-    var doc = { docType: 'a', id: 'already/here', partialIds: ['x','y','z'] };
+    var doc = { docType: 'a', id: 'already/here', aliases: ['x','y','z'] };
     processor.$process([doc]);
     expect(processor.idTemplates[0].getId).not.toHaveBeenCalled();
-    expect(processor.idTemplates[0].getPartialIds).not.toHaveBeenCalled();
-    expect(doc).toEqual({ docType: 'a', id: 'already/here', partialIds: ['x','y','z'] });
+    expect(processor.idTemplates[0].getAliases).not.toHaveBeenCalled();
+    expect(doc).toEqual({ docType: 'a', id: 'already/here', aliases: ['x','y','z'] });
   });
 });

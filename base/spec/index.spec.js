@@ -29,7 +29,7 @@ describe('base package', function() {
           getId: function(doc) {
             return doc.docType + ':' + doc.fileInfo.baseName;
           },
-          getPartialIds: function(doc) {
+          getAliases: function(doc) {
             return [doc.fileInfo.baseName, doc.fileInfo.relativePath];
           }
         });
@@ -72,9 +72,9 @@ describe('base package', function() {
 
       runDgeni([doc1,doc2]).then(function(docs) {
         expect(doc1.id).toEqual('service:d');
-        expect(doc1.partialIds).toEqual(['d', 'a/b/c/d.js']);
+        expect(doc1.aliases).toEqual(['d', 'a/b/c/d.js']);
         expect(doc2.id).toEqual('guide:index');
-        expect(doc2.partialIds).toEqual(['index', 'x/y/z/index']);
+        expect(doc2.aliases).toEqual(['index', 'x/y/z/index']);
         done();
       }, function(err) {
         console.log('Failed: ', err);
