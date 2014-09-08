@@ -1,6 +1,6 @@
 var path = require('canonical-path');
-var readFilesFactory = require('../../processors/read-files');
-var mockLog = require('dgeni/lib/mocks/log')(/* true */);
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
 
 function tidyUp(promise, done) {
   return promise.then(function() {
@@ -12,7 +12,11 @@ function tidyUp(promise, done) {
 }
 
 function createReadFilesProcessor(fileReaders, sourceFiles, basePath) {
-  var processor = readFilesFactory(mockLog);
+
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+  var processor = injector.get('readFilesProcessor');
   processor.fileReaders = fileReaders;
   processor.sourceFiles = sourceFiles;
   processor.basePath = path.resolve(__dirname, basePath);

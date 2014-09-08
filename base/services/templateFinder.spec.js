@@ -1,7 +1,7 @@
 var rewire = require('rewire');
-var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
-var templateFinderFactory = rewire('dgeni-packages/base/services/templateFinder');
+var templateFinderFactory = rewire('./templateFinder');
 
 describe("templateFinder", function() {
 

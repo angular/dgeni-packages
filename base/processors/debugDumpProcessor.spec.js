@@ -1,7 +1,7 @@
 var path = require('canonical-path');
 var Q = require('q');
 
-var mockPackage = require('dgeni-packages/base/spec/mockPackage');
+var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
 
