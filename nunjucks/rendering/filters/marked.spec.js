@@ -1,5 +1,5 @@
 var rewire = require('rewire');
-var filter = rewire('../../../rendering/filters/marked');
+var filter = rewire('./marked');
 
 describe("marked custom filter", function() {
   var markedMock;

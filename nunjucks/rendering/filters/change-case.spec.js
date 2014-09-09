@@ -1,4 +1,4 @@
-var filters = require('../../../rendering/filters/change-case');
+var filters = require('./change-case');
 var _ = require('lodash');
 
 var dashCase = _.find(filters, function(filter) { return filter.name === 'dashCase'; });

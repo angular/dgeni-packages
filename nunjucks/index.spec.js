@@ -1,4 +1,4 @@
-var package = require('../index');
+var package = require('./');
 
 describe('nunjucks package', function() {
 

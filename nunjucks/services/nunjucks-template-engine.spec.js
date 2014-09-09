@@ -1,5 +1,5 @@
 var rewire = require('rewire');
-var engineFactory = rewire('../../services/nunjucks-template-engine');
+var engineFactory = rewire('./nunjucks-template-engine');
 
 describe("nunjucksTemplateEngine service", function() {
   var nunjucks, addFilterSpy, addExtensionSpy, engine, mockTemplateFinder;

@@ -1,5 +1,5 @@
 var rewire = require('rewire');
-var extensionFactory = rewire('../../../rendering/tags/marked');
+var extensionFactory = rewire('./marked');
 
 describe("marked custom tag extension", function() {
   var extension, markedMock, trimSpy;
