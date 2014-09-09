@@ -1,4 +1,4 @@
-var getAliasesFactory = require('../../services/getAliases');
+var getAliasesFactory = require('./getAliases');
 
 describe("getAliases", function() {
 

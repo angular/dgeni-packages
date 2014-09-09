@@ -1,4 +1,4 @@
-var ngdocPackage = require('../index');
+var ngdocPackage = require('./');
 var Dgeni = require('dgeni');
 var mockLog = require('dgeni/lib/mocks/log');
 

@@ -1,4 +1,4 @@
-var codeFilterFactory = require('../../../rendering/filters/code');
+var codeFilterFactory = require('./code');
 
 describe("code custom filter", function() {
 

@@ -1,11 +1,15 @@
-var tagDefFactory = require('../../tag-defs/name');
-var createDocMessageFactory = require('../../../base/services/createDocMessage');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
+
+var tagDefFactory = require('./name');
 
 describe("name tag-def", function() {
   var tagDef;
 
   beforeEach(function() {
-    tagDef = tagDefFactory(createDocMessageFactory());
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    tagDef = injector.invoke(tagDefFactory);
   });
 
   it("should update the inputType if docType is input", function() {

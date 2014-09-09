@@ -1,4 +1,4 @@
-var ngdocFileReaderFactory = require('../../file-readers/ngdoc');
+var ngdocFileReaderFactory = require('./ngdoc');
 var path = require('canonical-path');
 
 describe("ngdocFileReader", function() {

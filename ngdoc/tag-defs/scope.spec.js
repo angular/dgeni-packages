@@ -1,4 +1,4 @@
-var tagDefFactory = require('../../tag-defs/scope');
+var tagDefFactory = require('./scope');
 
 describe("scope tag-def", function() {
   it("should transform the value to true", function() {

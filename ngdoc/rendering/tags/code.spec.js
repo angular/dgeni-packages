@@ -1,4 +1,4 @@
-var codeTagFactory = require('../../../rendering/tags/code');
+var codeTagFactory = require('./code');
 var nunjucks = require('nunjucks');
 
 describe("code custom tag", function() {

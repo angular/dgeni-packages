@@ -1,4 +1,4 @@
-var tagDefFactory = require('../../tag-defs/restrict');
+var tagDefFactory = require('./restrict');
 
 describe("restrict tag-def", function() {
   var tagDef;

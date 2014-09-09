@@ -1,5 +1,5 @@
 var path = require('canonical-path');
-var tagDefFactory = require('../../tag-defs/module');
+var tagDefFactory = require('./module');
 
 describe("module tag-def", function() {
   it("should calculate the module from the second segment of the file path", function() {

@@ -1,4 +1,4 @@
-var filterFactory = require('../../../rendering/filters/type-class');
+var filterFactory = require('./type-class');
 
 describe("type-class filter", function() {
   it("should call getTypeClass", function() {

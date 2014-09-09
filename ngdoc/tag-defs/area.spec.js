@@ -1,4 +1,4 @@
-var tagDefFactory = require('../../tag-defs/area');
+var tagDefFactory = require('./area');
 
 describe("area tag-def", function() {
   it("should set default based on fileType", function() {

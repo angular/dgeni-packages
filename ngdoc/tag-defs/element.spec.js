@@ -1,4 +1,4 @@
-var tagDefFactory = require('../../tag-defs/element');
+var tagDefFactory = require('./element');
 
 describe("element tag-def", function() {
   it("should set default based on docType", function() {

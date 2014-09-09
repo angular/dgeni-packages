@@ -1,12 +1,24 @@
-var tagDefFactory = require('../../inline-tag-defs/link');
-var createDocMessageFactory = require('../../../base/services/createDocMessage');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
+
+
+var tagDefFactory = require('./link');
 
 describe("links inline tag handler", function() {
   var tagDef, getLinkInfoSpy, doc, links;
 
   beforeEach(function() {
+
     getLinkInfoSpy = jasmine.createSpy('getLinkInfo');
-    tagDef = tagDefFactory(getLinkInfoSpy, createDocMessageFactory());
+
+    var testPackage = mockPackage()
+      .factory('getLinkInfo', function() {
+        return getLinkInfoSpy;
+      });
+
+    var dgeni = new Dgeni([testPackage]);
+    var injector = dgeni.configureInjector();
+    tagDef = injector.get('linkInlineTagDef');
 
     doc = {
       id: 'module:ng.directive:ngInclude',

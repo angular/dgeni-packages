@@ -1,4 +1,4 @@
-var filterFactory = require('../../../rendering/filters/link');
+var filterFactory = require('./link');
 
 describe("link filter", function() {
   var filter;

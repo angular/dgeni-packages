@@ -1,4 +1,4 @@
-var getTypeClassFactory = require('../../services/getTypeClass');
+var getTypeClassFactory = require('./getTypeClass');
 
 describe("getTypeClass", function() {
   it("should convert the type name to a css string", function() {

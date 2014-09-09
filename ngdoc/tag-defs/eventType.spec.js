@@ -1,4 +1,4 @@
-var tagDefFactory = require('../../tag-defs/eventType');
+var tagDefFactory = require('./eventType');
 
 describe("eventType tag-def", function() {
   it("should split into eventType and eventTarget", function() {
