@@ -1,16 +1,16 @@
-var parseExamplesProcessorFactory = require('../../processors/examples-parse');
-var mockLog = require('dgeni/lib/mocks/log')(false);
-var createDocMessageFactory = require('../../../base/services/createDocMessage');
-var StringMap = require('stringmap');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("parseExamplesProcessor", function() {
 
   var processor, exampleMap, mockTrimIndentation;
 
   beforeEach(function() {
-    exampleMap = new StringMap();
-    mockTrimIndentation = jasmine.createSpy('trimIndentation').and.callFake(function(value) { return value; });
-    processor = parseExamplesProcessorFactory(mockLog, exampleMap, mockTrimIndentation, createDocMessageFactory());
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    processor = injector.get('parseExamplesProcessor');
+    exampleMap = injector.get('exampleMap');
   });
 
   it("should extract example tags from the doc content", function() {

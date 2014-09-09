@@ -1,16 +1,16 @@
-var generateExamplesProcessorFactory = require('../../processors/examples-generate');
-var mockLog = require('dgeni/lib/mocks/log');
 var _ = require('lodash');
-var StringMap = require('stringmap');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("examples-generate processor", function() {
   var templateFolder, deployments, docs, exampleMap;
 
   beforeEach(function() {
 
-    docs = [{ file: 'a.b.js' }];
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
 
-    exampleMap = new StringMap();
+    docs = [{ file: 'a.b.js' }];
 
     files = {};
 
@@ -19,6 +19,7 @@ describe("examples-generate processor", function() {
     files['app.css'] = { type: 'css', name: 'app.css', fileContents: 'app.css content' };
     files['app.spec.js'] = { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' };
 
+    exampleMap = injector.get('exampleMap');
     exampleMap.set('a.b.c', {
       id: 'a.b.c',
       doc: docs[0],
@@ -28,7 +29,7 @@ describe("examples-generate processor", function() {
       deployments: {}
     });
 
-    processor = generateExamplesProcessorFactory(mockLog, exampleMap);
+    processor = injector.get('generateExamplesProcessor');
     processor.templateFolder = 'examples';
     processor.deployments = [
       {

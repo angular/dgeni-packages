@@ -1,19 +1,21 @@
-var tagDefinitionFactory = require('../../inline-tag-defs/runnableExample');
-var createDocMessageFactory = require('../../../base/services/createDocMessage');
-var StringMap = require('stringmap');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("runnableExampleInlineTagDef", function() {
 
   var exampleMap, tagDef;
 
   beforeEach(function() {
-    exampleMap = new StringMap();
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    exampleMap = injector.get('exampleMap');
     exampleMap.set('some-example', {
       runnableExampleDoc: {
         renderedContent: 'The rendered content of the some-example example'
       }
     });
-    tagDef = tagDefinitionFactory(exampleMap, createDocMessageFactory());
+    tagDef = injector.get('runnableExampleInlineTagDef');
   });
 
   it("should have the correct name", function() {

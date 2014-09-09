@@ -1,33 +1,16 @@
-var generateProtractorTestsProcessorFactory = require('../../processors/protractor-generate');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
+
 var _ = require('lodash');
-var StringMap = require('stringmap');
 
 describe("generateExamplesProcessor", function() {
-  var templateFolder, deployments, docs, exampleMap;
 
-  beforeEach(function() {
+  it("should add a protractor doc for each deployment in the example", function() {
 
-    docs = [{ file: 'a.b.js' }];
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
 
-    exampleMap = new StringMap();
-
-    files = {};
-
-    files['index.html'] = { type: 'html', name: 'index.html', fileContents: 'index.html content' };
-    files['app.js'] = { type: 'js', name: 'app.js', fileContents: 'app.js content' };
-    files['app.css'] = { type: 'css', name: 'app.css', fileContents: 'app.css content' };
-    files['app.scenario.js'] = { type: 'protractor', name: 'app.scenario.js', fileContents: 'app.scenario.js content' };
-
-    exampleMap.set('a.b.c', {
-      id: 'a.b.c',
-      doc: docs[0],
-      outputFolder: 'examples',
-      deps: 'dep1.js;dep2.js',
-      files: files,
-      deployments: {}
-    });
-
-    processor = generateProtractorTestsProcessorFactory(exampleMap);
+    var processor = injector.get('generateProtractorTestsProcessor');
     processor.templateFolder = 'examples';
     processor.deployments = [
       {
@@ -40,12 +23,29 @@ describe("generateExamplesProcessor", function() {
       }
     ];
 
+
+    docs = [{ file: 'a.b.js' }];
+
+    files = {};
+
+    files['index.html'] = { type: 'html', name: 'index.html', fileContents: 'index.html content' };
+    files['app.js'] = { type: 'js', name: 'app.js', fileContents: 'app.js content' };
+    files['app.css'] = { type: 'css', name: 'app.css', fileContents: 'app.css content' };
+    files['app.scenario.js'] = { type: 'protractor', name: 'app.scenario.js', fileContents: 'app.scenario.js content' };
+
+    var exampleMap = injector.get('exampleMap');
+    exampleMap.set('a.b.c', {
+      id: 'a.b.c',
+      doc: docs[0],
+      outputFolder: 'examples',
+      deps: 'dep1.js;dep2.js',
+      files: files,
+      deployments: {}
+    });
+
+
     processor.$process(docs);
 
-  });
-
-
-  it("should add a protractor doc for each deployment in the example", function() {
     expect(_.filter(docs, { docType: 'e2e-test' })).toEqual([
       jasmine.objectContaining({
         docType: 'e2e-test',
