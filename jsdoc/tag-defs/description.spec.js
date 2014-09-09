@@ -1,4 +1,4 @@
-var tagDefFactory = require('../../tag-defs/description');
+var tagDefFactory = require('./description');
 
 describe("description tag-def", function() {
   var tagDef;

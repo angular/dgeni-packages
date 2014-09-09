@@ -1,11 +1,14 @@
-var tagDefFactory = require('../../tag-defs/memberof');
-var createDocMessageFactory = require('../../../base/services/createDocMessage');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
+var tagDefFactory = require('./memberof');
 
 describe("memberof tag-def", function() {
   var tagDef;
 
   beforeEach(function() {
-    tagDef = tagDefFactory(createDocMessageFactory());
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    tagDef = injector.invoke(tagDefFactory);
   });
 
   describe('transforms', function() {

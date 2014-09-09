@@ -1,5 +1,5 @@
-var TagCollection = require('../../lib/TagCollection');
-var Tag = require('../../lib/Tag');
+var TagCollection = require('./TagCollection');
+var Tag = require('./Tag');
 
 describe("TagCollection", function() {
   var tags;

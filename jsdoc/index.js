@@ -1,7 +1,7 @@
 var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
-module.exports = new Package('jsdoc', [require('dgeni-packages/base')])
+module.exports = new Package('jsdoc', [require('../base')])
 
 // Add in extra pseudo marker processors
 .processor({ name: 'parsing-tags', $runAfter: ['files-read'], $runBefore: ['processing-docs'] })

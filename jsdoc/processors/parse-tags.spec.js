@@ -1,6 +1,5 @@
-var factory = require('../../processors/parse-tags');
-var mockLog = require('dgeni/lib/mocks/log')();
-var createDocMessageSpy;
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
 
 describe("parse-tags processor", function() {
   var processor;
@@ -12,13 +11,12 @@ describe("parse-tags processor", function() {
   ];
 
   beforeEach(function() {
-    createDocMessageSpy = jasmine.createSpy().and.callFake(function(message) { return message; });
-    processor = factory(mockLog, createDocMessageSpy);
-    processor.tagDefinitions = tagDefinitions;
-  });
 
-  it("should have name the correct name", function() {
-    expect(factory.name).toEqual('parseTagsProcessor');
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    processor = injector.get('parseTagsProcessor');
+    processor.tagDefinitions = tagDefinitions;
   });
 
   it("should be run in the correct place", function() {

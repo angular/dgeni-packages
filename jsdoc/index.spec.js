@@ -1,9 +1,9 @@
-var mockPackage = require('dgeni-packages/jsdoc/spec/mockPackage');
+var mockPackage = require('./mocks/mockPackage');
 var Dgeni = require('dgeni');
 
 describe('jsdoc package', function() {
   it("should be instance of Package", function() {
-      expect(require('dgeni-packages/jsdoc') instanceof Dgeni.Package).toBeTruthy();
+      expect(require('./') instanceof Dgeni.Package).toBeTruthy();
   });
 
   describe("computePathsProcessor", function() {

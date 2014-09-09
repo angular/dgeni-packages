@@ -1,4 +1,4 @@
-var tagDefFactories = require('../../tag-defs');
+var tagDefFactories = require('./');
 
 describe("jsdoc tagdefs", function() {
   it("should contain an array of tagDef factory functions", function() {

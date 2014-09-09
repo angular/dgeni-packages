@@ -1,4 +1,4 @@
-var Tag = require('../../lib/Tag');
+var Tag = require('./Tag');
 
 describe("Tag", function() {
   it("should put constructor parameters into member properties", function() {

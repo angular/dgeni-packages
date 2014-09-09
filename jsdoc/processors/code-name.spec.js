@@ -1,4 +1,4 @@
-var codeNameProcessorFactory = require('../../processors/code-name');
+var codeNameProcessorFactory = require('./code-name');
 var jsParser = require('esprima');
 
 var mockLog = jasmine.createSpyObj('log', ['error', 'warn', 'info', 'debug', 'silly']);

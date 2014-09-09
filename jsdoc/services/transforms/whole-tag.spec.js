@@ -1,4 +1,4 @@
-var transformFactory = require('../../../services/transforms/whole-tag');
+var transformFactory = require('./whole-tag');
 
 describe("whole-tag transform", function() {
   it("should return the whole tag", function() {

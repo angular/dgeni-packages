@@ -1,14 +1,9 @@
-var factory = require('../../processors/extract-tags');
-var mockLog = require('dgeni/lib/mocks/log')( /* true */ );
-var Tag = require('../../lib/Tag');
-var TagCollection = require('../../lib/TagCollection');
-var createDocMessageFactory = require('../../../base/services/createDocMessage');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
 
-function createTagDefContainer(tagDefs) {
-  return {
-    tagDefinitions: tagDefs
-  };
-}
+var Tag = require('../lib/Tag');
+var TagCollection = require('../lib/TagCollection');
+
 
 function createDoc(tags) {
   return {
@@ -25,14 +20,20 @@ function createProcessor(tagDefs) {
 
 describe("extractTagsProcessor", function() {
 
-  it("should have name the correct name", function() {
-    expect(factory.name).toEqual('extractTagsProcessor');
+  var parseTagsProcessor, processor;
+
+  beforeEach(function() {
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    parseTagsProcessor = injector.get('parseTagsProcessor');
+    processor = injector.get('extractTagsProcessor');
   });
 
   describe('default tag-def', function() {
     it("should the extract the description property to a property with the name of the tagDef", function() {
       var tagDef = { name: 'a' };
-      var processor = createProcessor([tagDef]);
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
       var tag = new Tag(tagDef, 'a', 'some content', 123);
       var doc = createDoc([tag]);
 
@@ -44,7 +45,7 @@ describe("extractTagsProcessor", function() {
   describe("tag-defs with docProperty", function() {
     it("should assign the extracted value to the docProperty", function() {
       var tagDef = { name: 'a', docProperty: 'b' };
-      var processor = createProcessor([tagDef]);
+      parseTagsProcessor.tagDefinitions = [tagDef];
 
       var tag = new Tag(tagDef, 'a', 'some content', 123);
       var doc = createDoc([tag]);
@@ -59,7 +60,7 @@ describe("extractTagsProcessor", function() {
   describe("tag-defs with multi", function() {
     it("should assign the extracted value(s) to an array on the doc", function() {
       var tagDef = { name: 'a', multi: true };
-      var processor = createProcessor([tagDef]);
+      parseTagsProcessor.tagDefinitions = [tagDef];
 
       var tag1 = new Tag(tagDef, 'a', 'some content', 123);
       var tag2 = new Tag(tagDef, 'a', 'some other content', 256);
@@ -77,7 +78,8 @@ describe("extractTagsProcessor", function() {
   describe("tag-defs with required", function() {
     it("should throw an error if the tag is missing", function() {
       var tagDef = { name: 'a', required: true };
-      var processor = createProcessor([tagDef]);
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
       var doc = createDoc([]);
       expect(function() {
         processor.$process([doc]);
@@ -89,7 +91,7 @@ describe("extractTagsProcessor", function() {
     it("should assign the specified tag property to the document", function() {
 
       var tagDef = { name: 'a', tagProperty: 'b' };
-      var processor = createProcessor([tagDef]);
+      parseTagsProcessor.tagDefinitions = [tagDef];
 
       var tag = new Tag(tagDef, 'a', 'some content', 123);
       tag.b = 'special value';
@@ -106,7 +108,8 @@ describe("extractTagsProcessor", function() {
     it("should run the defaultFn if the tag is missing", function() {
       var defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
       var tagDef = { name: 'a', defaultFn: defaultFn };
-      var processor = createProcessor([tagDef]);
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
       var doc = createDoc([]);
 
       processor.$process([doc]);
@@ -119,7 +122,8 @@ describe("extractTagsProcessor", function() {
       it("should run the defaultFn if the tag is missing", function() {
         var defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
         var tagDef = { name: 'a', defaultFn: defaultFn, multi: true };
-        var processor = createProcessor([tagDef]);
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
         var doc = createDoc([]);
 
         processor.$process([doc]);
@@ -138,7 +142,8 @@ describe("extractTagsProcessor", function() {
       it("should apply the transform to the extracted value", function() {
         function addA(doc, tag, value) { return value + '*A*'; }
         var tagDef = { name: 'a', transforms: addA };
-        var processor = createProcessor([tagDef]);
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
         var doc = createDoc([tag]);
@@ -151,7 +156,8 @@ describe("extractTagsProcessor", function() {
       it("should allow changes to tag and doc", function() {
         function transform(doc, tag, value) { doc.x = 'x'; tag.y = 'y'; return value; }
         var tagDef = { name: 'a', transforms: transform };
-        var processor = createProcessor([tagDef]);
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
         var doc = createDoc([tag]);
@@ -169,7 +175,8 @@ describe("extractTagsProcessor", function() {
         function addA(doc, tag, value) { return value + '*A*'; }
         function addB(doc, tag, value) { return value + '*B*'; }
         var tagDef = { name: 'a', transforms: [ addA, addB ] };
-        var processor = createProcessor([tagDef]);
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
         var doc = createDoc([tag]);
@@ -183,7 +190,8 @@ describe("extractTagsProcessor", function() {
         function transform1(doc, tag, value) { doc.x = 'x'; return value; }
         function transform2(doc, tag, value) { tag.y = 'y'; return value; }
         var tagDef = { name: 'a', transforms: [transform1, transform2] };
-        var processor = createProcessor([tagDef]);
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
 
         var tag = new Tag(tagDef, 'a', 'some content', 123);
         var doc = createDoc([tag]);
@@ -202,7 +210,8 @@ describe("extractTagsProcessor", function() {
       var tagDef1 = { name: 'a' };
       var tagDef2 = { name: 'b' };
       function addA(doc, tag, value) { return value + '*A*'; }
-      var processor = createProcessor([tagDef1, tagDef2]);
+
+      parseTagsProcessor.tagDefinitions = [tagDef1, tagDef2];
       processor.defaultTagTransforms = [addA];
 
       var tag1 = new Tag(tagDef1, 'a', 'some content', 123);
@@ -220,7 +229,8 @@ describe("extractTagsProcessor", function() {
       function addA(doc, tag, value) { return value + '*A*'; }
       function addB(doc, tag, value) { return value + '*B*'; }
       var tagDef1 = { name: 'a', transforms: addA };
-      var processor = createProcessor([tagDef1]);
+
+      parseTagsProcessor.tagDefinitions = [tagDef1];
       processor.defaultTagTransforms = [addB];
 
       var tag = new Tag(tagDef1, 'a', 'some content', 123);

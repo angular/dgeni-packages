@@ -1,20 +1,20 @@
-var factory = require('../../processors/inline-tags');
-var mockLog = require('dgeni/lib/mocks/log')();
-var createDocMessageFactory = require('../../../base/services/createDocMessage');
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
 
-function createProcessor() {
-  return factory(mockLog, createDocMessageFactory());
-}
+describe("inlineTagsProcessor", function() {
 
-describe("inline-tags processor", function() {
+  var processor, mockLog;
 
-  it("should have the correct name", function() {
-    expect(factory.name).toEqual('inlineTagProcessor');
+  beforeEach(function() {
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    processor = injector.get('inlineTagProcessor');
+    mockLog = injector.get('log');
   });
 
 
   it("should run after docs are rendered and before writing files", function() {
-    var processor = createProcessor();
     expect(processor.$runAfter).toEqual(['docs-rendered']);
     expect(processor.$runBefore).toEqual(['writing-files']);
   });
@@ -46,7 +46,6 @@ describe("inline-tags processor", function() {
         }
       };
 
-      var processor = createProcessor();
       processor.inlineTagDefinitions = [mockInlineTagDefinition];
 
       // Run the processor

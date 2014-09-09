@@ -1,4 +1,4 @@
-var transformFactory = require('../../../services/transforms/trim-whitespace');
+var transformFactory = require('./trim-whitespace');
 
 describe("trim-whitespace", function() {
 

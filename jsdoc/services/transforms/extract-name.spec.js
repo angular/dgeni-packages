@@ -1,4 +1,4 @@
-var transformFactory = require('../../../services/transforms/extract-name');
+var transformFactory = require('./extract-name');
 
 describe("extract-name transform", function() {
   var doc, tag, value, transform;

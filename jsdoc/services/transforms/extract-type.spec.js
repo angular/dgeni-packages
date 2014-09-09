@@ -1,4 +1,4 @@
-var transformFactory = require('../../../services/transforms/extract-type');
+var transformFactory = require('./extract-type');
 
 describe("extract-type transform", function() {
 

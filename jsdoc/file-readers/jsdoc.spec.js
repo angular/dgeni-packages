@@ -1,5 +1,5 @@
 var path = require('canonical-path');
-var fileReaderFactory = require('../../file-readers/jsdoc');
+var fileReaderFactory = require('./jsdoc');
 
 var srcJsContent = require('./_test-data/srcJsFile.js');
 var docsFromJsContent = require('./_test-data/docsFromJsFile');

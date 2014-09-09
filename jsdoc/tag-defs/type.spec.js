@@ -1,4 +1,4 @@
-var tagDefFactory = require('../../tag-defs/type');
+var tagDefFactory = require('./type');
 
 describe("type tagDef", function() {
   it("should add the injected transforms to the transforms property", function() {
