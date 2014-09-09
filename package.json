@@ -4,9 +4,7 @@
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node */spec",
-    "cover": "istanbul cover jasmine-node -- */spec",
-    "preinstall": "rm node_modules/dgeni-packages || true",
-    "postinstall": "ln -s .. node_modules/dgeni-packages || true"
+    "cover": "istanbul cover jasmine-node -- */spec"
   },
   "repository": {
     "type": "git",
