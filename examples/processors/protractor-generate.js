@@ -43,6 +43,7 @@ function createProtractorDoc(example, deployment, file) {
     example: example,
     deployment: deployment,
     template: 'protractorTests.template.js',
-    innerTest: file.fileContents
+    innerTest: file.fileContents,
+    'ng-app-included': example['ng-app-included']
   };
 }

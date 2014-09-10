@@ -5,12 +5,14 @@ var _ = require('lodash');
 
 describe("generateExamplesProcessor", function() {
 
-  it("should add a protractor doc for each deployment in the example", function() {
+  var processor, exampleMap;
+
+  beforeEach(function() {
 
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
 
-    var processor = injector.get('generateProtractorTestsProcessor');
+    processor = injector.get('generateProtractorTestsProcessor');
     processor.templateFolder = 'examples';
     processor.deployments = [
       {
@@ -23,26 +25,41 @@ describe("generateExamplesProcessor", function() {
       }
     ];
 
+    exampleMap = injector.get('exampleMap');
+  });
 
-    docs = [{ file: 'a.b.js' }];
 
-    files = {};
+  it("should add a protractor doc for each example-deployment pair in the example", function() {
 
-    files['index.html'] = { type: 'html', name: 'index.html', fileContents: 'index.html content' };
-    files['app.js'] = { type: 'js', name: 'app.js', fileContents: 'app.js content' };
-    files['app.css'] = { type: 'css', name: 'app.css', fileContents: 'app.css content' };
-    files['app.scenario.js'] = { type: 'protractor', name: 'app.scenario.js', fileContents: 'app.scenario.js content' };
+    docs = [
+      { file: 'a.b.c.js' },
+      { file: 'x.y.z.js' }
+    ];
 
-    var exampleMap = injector.get('exampleMap');
     exampleMap.set('a.b.c', {
       id: 'a.b.c',
       doc: docs[0],
-      outputFolder: 'examples',
-      deps: 'dep1.js;dep2.js',
-      files: files,
+//      outputFolder: 'examples',
+//      deps: 'dep1.js;dep2.js',
+      files: {
+        'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
+        'app.scenario.js': { type: 'protractor', name: 'app.scenario.js', fileContents: 'app.scenario.js content' }
+      },
       deployments: {}
     });
 
+    exampleMap.set('x.y.z', {
+      id: 'x.y.z',
+      doc: docs[1],
+      // outputFolder: 'examples',
+      // deps: 'dep1.js;dep2.js',
+      files: {
+        'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
+        'app.scenario.js': { type: 'protractor', name: 'app.scenario.js', fileContents: 'app.scenario.js content' }
+      },
+      deployments: {},
+      'ng-app-included': true
+    });
 
     processor.$process(docs);
 
@@ -63,7 +80,24 @@ describe("generateExamplesProcessor", function() {
         template: 'protractorTests.template.js',
         innerTest: 'app.scenario.js content'
       }),
+      jasmine.objectContaining({
+        docType: 'e2e-test',
+        id: 'protractorTest-x.y.z-' + processor.deployments[0].name,
+        example: exampleMap.get('x.y.z'),
+        deployment: processor.deployments[0],
+        template: 'protractorTests.template.js',
+        innerTest: 'app.scenario.js content',
+        'ng-app-included': true
+      }),
+      jasmine.objectContaining({
+        docType: 'e2e-test',
+        id: 'protractorTest-x.y.z-' + processor.deployments[1].name,
+        example: exampleMap.get('x.y.z'),
+        deployment: processor.deployments[1],
+        template: 'protractorTests.template.js',
+        innerTest: 'app.scenario.js content',
+        'ng-app-included': true
+      })
     ]);
   });
-
 });
