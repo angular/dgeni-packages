@@ -1,5 +1,13 @@
 # Changelog
 
+
+## v0.10.0-rc.2 10th September 2014
+
+Bug fix
+
+* fix(examples/generateProtractorTestsProcessor): enable testing 'ng-app-included' examples    46a0c516
+
+
 ## v0.10.0-rc.1 10th September 2014
 
 Minor refactoring
