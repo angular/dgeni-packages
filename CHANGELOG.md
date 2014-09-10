@@ -1,3 +1,18 @@
+# Changelog
+
+## v0.10.0-rc.1 10th September 2014
+
+Minor refactoring
+
+* chore(package.json): fix path to tests in npm scripts     2924a3ac
+* chore(package.json): remove pre and post install hooks      6dd05b21
+* chore(examples): move tests into source folder      f128fede
+* chore(ngdoc): move tests into source folder     b5df9a16
+* chore(nunjucks): move tests into source folder      cce54a00
+* chore(jsdoc): move tests into source folder     9b337073
+* chore(base): move tests into source folder      43b64bbf
+
+
 ## v0.10.0-beta.4 6th September 2014
 
 
