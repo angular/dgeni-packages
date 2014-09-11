@@ -1,6 +1,6 @@
 # Dgeni Packages
 
-This repository contains a collection of Dgeni packages that can be used by the Dgeni documentation
+This repository contains a collection of Dgeni **Packages** that can be used by the Dgeni documentation
 generator to create documentation from source code.
 
 
@@ -14,17 +14,19 @@ Out of the box there are the following packages:
 * ngdoc - The angular.js specific tag-defs, processors and templates.  This loads the jsdoc and
   nunjucks packages for you.
 * examples - Processors to support the runnable examples feature in the angular.js docs site.
-* dgeni - Support for documenting Dgeni packages
+* dgeni - Support for documenting Dgeni packages (**incomplete**)
 
 ## `base` Package
 
 ### Processors
 
+* `computeIdsProcessor` - Computes the `id` and `aliases` for documents using templates or helper
+functions, on a per docType basis.
+* `computePathsProcessor` - Computes the `path` and `outputPath` for documents using templates or helper
+functions, on a per docType basis.
 * `debugDumpProcessor` - dump the current state of the docs array to a file (disabled by default)
 * `readFilesProcessor` - used to load up documents from files.  This processor can be configured to use a
 set of **file readers**. There are file readers in the `jsdoc` and `ngdoc` packages.
-* `computePathsProcessor` - Computes the `path` and `outputPath` for documents using templates or helper
-functions, on a per docType basis.
 * `renderDocsProcessor` - render the documents into a property (`doc.renderedContent`) using a
 `templateEngine`, which must be provided separately - see `nunjucks` package.
 * `unescapeCommentsProcessor` - unescape comment markers that would break the jsdoc comment style,
@@ -33,15 +35,20 @@ e.g. `*/`
 
 ### Services
 
+* `aliasMap` - A map of ids/aliases to docs.  This is used for matching references to documents in
+links and relations such as modules and object members.
 * `createDocMessage` - a helper for creating nice messages about documents (useful in logging and
 errors)
 * `encodeDocBlock` - convert a block of code into HTML
 * `templateFinder` - search folders using patterns to find a template that matches a given document.
 * `trimIndentation` - "intelligently" trim whitespace indentation from the start of each line of a block
 of text.
+* `writeFile` - Write some contents to a file, ensuring the path to the file exists.
 
 
-The template used to render the doc is computed by the `templateFinder`, which uses the first match
+#### Template Finding
+
+The template used to render a doc is computed by the `templateFinder`, which uses the first match
 from a set of patterns in a set of folders, provided in the configuration. This allows a lot of control to provide
 generic templates for most situations and specific templates for exceptional cases.
 
@@ -82,9 +89,9 @@ to render the documents into text, such as HTML or JS, based on templates.
 
 * `codeNameProcessor` - infer the name of the document from the code following the document in the source
 file.
-* `parseTagsProcessor` - use a `tagParser` to parses the jsdoc tags in the document content.
 * `extractTagsProcessor` - use a `tagExtractor` to extract information from the parsed tags.
 * `inlineTagsProcessor` - Search the docs for inline tags that need to have content injected
+* `parseTagsProcessor` - use a `tagParser` to parses the jsdoc tags in the document content.
 
 ### Tag Definitions
 
@@ -116,7 +123,9 @@ and type from the tag description accordingly but do not fully implement all the
 
 ## `ngdoc` Package
 
-The `ngdoc` Package depends upon the `jsdoc` and `nunjucks` packages.
+The `ngdoc` Package depends upon the `jsdoc` and `nunjucks` packages. It provides additional support for
+non-API documents written in files with `.ngdoc` extension; it also computes additional properties specific
+to Angular related code.
 
 ## File Readers
 
@@ -124,43 +133,29 @@ The `ngdoc` Package depends upon the `jsdoc` and `nunjucks` packages.
 
 ### Processors
 
-* `apiDocsProcessor` -
-
-This processor runs computations that are specifically related to docs for API components. It does the following:
-
-  - Computes the package name for the module (eg angular or angular-sanitize)
-  - Collects up all documents that belong to the module
-  - Attaches them to the module doc in the `components` property
-  - Computes the URL path to the document in the docs app and the outputPath to the final output file
-  - It relates documents about angular services to their corresponding provider document.
-
-apiDocsProcessor has the following configuration options available (listed with the default values set):
-
-  ```js
-  apiDocsProcessor.apiDocsPath = undefined; // This is a required property that you must set
-  apiDocsProcessor.outputPathTemplate = '${area}/${module}/${docType}/${name}.html';
-  apiDocsProcessor.apiPathTemplate = '${area}/${module}/${docType}/${name}';
-  apiDocsProcessor.moduleOutputPathTemplate = '${area}/${name}/index.html';
-  apiDocsProcessor.modulePathTemplate = '${area}/${name}';
-  ```
-
-* `generateComponentGroupsProcessor` -
-Generate documents for each group of components (by type) within a module
-
-* `computeIdProcessor` -
-Compute the id property of the doc based on the tags and other meta-data
-
 * `filterNgdocsProcessor` -
 For AngularJS we are only interested in documents that contain the @ngdoc tag.  This processor
 removes docs that do not contain this tag.
 
-* `collectPartialNames` -
-Add all the docs to the `partialNameMap`
+* `generateComponentGroupsProcessor` -
+Generate documents for each group of components (by type) within a module
+
+* `memberDocsProcessor` - This processor connects docs that are members (properties, methods and events) to
+their container docs, removing them from the main docs collection.
+
+* `moduleDocsProcessor` - This processor computes properties for module docs such as `packageName` and
+`packageFileName`; it adds modules to the `moduleMap` service and connects all the docs that are in a module
+to the module doc in the `components` property
+
+* `providerDocsProcessor` - This processor relates documents about angular services to their corresponding
+provider document.
 
 
 ### Tag Definitions
 
-This package modifies and adds new tag definitions on top of those provided by the `jsdoc` package.
+This package modifies and adds new tag definitions on top of those provided by the `jsdoc` package:
+`area`, `element`, `eventType`, `example`, `fullName`, `id`, `module`, `name`, `ngdoc`, packageName`,
+`parent`, `priority`, `restrict`, `scope` and `title`.
 
 
 ### Inline Tag Definitions
@@ -171,13 +166,11 @@ HTML anchors
 
 ### Services
 
+* `getAliases()` - Get a list of all the aliases that can be made from the provided doc
+* `getDocFromAliases()` - Find a document from the `aliasMap` that matches the given alias
 * `getLinkInfo()` - Get link information to a document that matches the given url
-* `getPartialNames()` - Get a list of all the partial code names that can be made from the provided
-set of parts
 * `getTypeClass()` - Get a CSS class string for the given type string
-* `moduleMap` - A collection of modules keyed on the module name
-* `parseCodeName()` - Parse the code name into parts
-* `partialNameMap` - A map of partial names to docs
+* `moduleMap` - A collection of modules keyed on the module id
 
 
 ### Templates
@@ -231,13 +224,12 @@ Some text after the example
 
 ### Processors
 
-* `parseExamplesProcessor` -
-Parse the `<example>` tags from the content and add them to the `examples` service
-* `generateExamplesProcessor` -
-Add new docs to the docs collection for each example in the `examples` service that will be rendered
-as files that can be run in the browser, for example as live in-place demos of the examples or for
-e2e testing.
+* `generateExamplesProcessor` - Add new docs to the docs collection for each example in the `examples` service
+that will be rendered as files that can be run in the browser, for example as live in-place demos of the
+examples or for e2e testing.
+* `parseExamplesProcessor` - Parse the `<example>` tags from the content and add them to the `examples` service
 * `generateProtractorTests` - Generate a protractor test files from the e2e tests in the examples
+
 
 ### Inline Tag Definitions
 
