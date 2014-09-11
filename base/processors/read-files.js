@@ -141,7 +141,7 @@ function normalizeSourceInfo(basePath, sourceInfo) {
 
   if ( _.isString(sourceInfo) ) {
     sourceInfo = { include: sourceInfo };
-  } else if ( !_.isObject(sourceInfo) ) {
+  } else if ( !_.isObject(sourceInfo) || !sourceInfo.include) {
 
     throw new Error('Invalid sourceFiles parameter. ' +
       'You must pass an array of items, each of which is either a string or an object of the form ' +

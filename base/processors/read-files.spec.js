@@ -13,8 +13,8 @@ function tidyUp(promise, done) {
 
 function createReadFilesProcessor(fileReaders, sourceFiles, basePath) {
 
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+  var dgeni = new Dgeni([mockPackage()]);
+  var injector = dgeni.configureInjector();
 
   var processor = injector.get('readFilesProcessor');
   processor.fileReaders = fileReaders;
@@ -77,6 +77,40 @@ describe('read-files doc processor', function() {
 
     tidyUp(promise, done);
   });
+
+
+  it("should complain if there is no matching file-reader", function(done) {
+      var mockFileReader = {
+        name: 'mockFileReader',
+        defaultPattern: /\.js$/,
+        getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+      };
+
+      processor = createReadFilesProcessor([mockFileReader], ['docs/*'], '../fixtures');
+      processor.$process().then(function(docs) {
+        console.log('expected createReadFileProcessor to fail');
+        expect(docs).toBeUndefined();
+      }, function(err) {
+        expect(err).toMatch('No file reader found for .+b\\.ngdoc');
+        done();
+      });
+  });
+
+
+  it("should complain if the sourceFiles property is not valid", function() {
+    expect(function() {
+      var mockFileReader = {
+        name: 'mockFileReader',
+        defaultPattern: /\.js$/,
+        getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+      };
+      var processor = createReadFilesProcessor([ mockFileReader ], [ { wrong: 'docs/*'} ], '../fixtures');
+      processor.$process();
+    }).toThrowError('Invalid sourceFiles parameter. ' +
+      'You must pass an array of items, each of which is either a string or an object of the form ' +
+      '{ include: "...", basePath: "...", exclude: "...", fileReader: "..." }');
+  });
+
 
   describe('fileReaders', function() {
 
