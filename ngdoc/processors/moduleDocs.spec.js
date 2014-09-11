@@ -2,7 +2,7 @@ var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
 describe("moduleDocsProcessor", function() {
-  var processor, aliasMap;
+  var processor, aliasMap, moduleMap;
 
   beforeEach(function() {
     var dgeni = new Dgeni([mockPackage()]);
@@ -62,7 +62,7 @@ describe("moduleDocsProcessor", function() {
 
   });
 
-  it("should complain if their are more than one matching modules", function() {
+  it("should complain if their is more than one matching modules", function() {
     var doc1 = { docType: 'module', id: 'module:app.mod1', aliases: ['app', 'app.mod1', 'mod1', 'module:app', 'module:app.mod1', 'module:mod1'] };
     var doc2 = { docType: 'module', id: 'module:app.mod2', aliases: ['app', 'app.mod2', 'mod2', 'module:app', 'module:app.mod2', 'module:mod2'] };
     var doc3 = { docType: 'service', module: 'app', id: 'app.service' };
