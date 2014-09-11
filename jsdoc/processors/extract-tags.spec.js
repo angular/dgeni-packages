@@ -20,13 +20,34 @@ function createProcessor(tagDefs) {
 
 describe("extractTagsProcessor", function() {
 
-  var parseTagsProcessor, processor;
+  var parseTagsProcessor, processor, mockLog;
 
   beforeEach(function() {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     parseTagsProcessor = injector.get('parseTagsProcessor');
     processor = injector.get('extractTagsProcessor');
+    mockLog = injector.get('log');
+  });
+
+  it("should log a warning if the doc contains bad tags", function() {
+
+      var doc = createDoc([]);
+      doc.tags.badTags = [ {
+        name: 'bad1',
+        description: 'bad tag 1',
+        typeExpression: 'string',
+        errors: [
+          'first bad thing',
+          'second bad thing'
+        ]
+      }];
+
+      processor.$process([doc]);
+      expect(mockLog.warn).toHaveBeenCalledWith('Invalid tags found - doc\n' +
+        'Line: undefined: @undefined {string} bad1 bad tag 1...\n' +
+        '    * first bad thing\n' +
+        '    * second bad thing\n\n');
   });
 
   describe('default tag-def', function() {
