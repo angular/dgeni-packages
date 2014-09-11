@@ -15,6 +15,7 @@ module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks
 .processor(require('./processors/generateComponentGroups'))
 .processor(require('./processors/memberDocs'))
 .processor(require('./processors/moduleDocs'))
+.processor(require('./processors/providerDocs'))
 
 
 .config(function(readFilesProcessor, ngdocFileReader) {
