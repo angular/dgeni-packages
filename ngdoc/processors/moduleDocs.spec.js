@@ -12,12 +12,30 @@ describe("moduleDocsProcessor", function() {
     aliasMap = injector.get('aliasMap');
   });
 
+  it("should compute the package name and filename for the module", function() {
+    var doc1 = { docType: 'module', name: 'ng', id: 'module:ng' };
+    var doc2 = { docType: 'module', name: 'ngRoute', id: 'module:ngRoute' };
+    var doc3 = { docType: 'module', name: 'ngMock', id: 'module:ngMock', packageName: 'angular-mocks' };
+
+    processor.$process([doc1, doc2, doc3]);
+
+    expect(doc1.packageName).toEqual('angular');
+    expect(doc1.packageFile).toEqual('angular.js');
+
+    expect(doc2.packageName).toEqual('angular-route');
+    expect(doc2.packageFile).toEqual('angular-route.js');
+
+    expect(doc3.packageName).toEqual('angular-mocks');
+    expect(doc3.packageFile).toEqual('angular-mocks.js');
+
+  });
+
   it("should add module docs to the moduleMap", function() {
     var doc1 = { docType: 'module', id: 'ng' };
     var doc2 = { docType: 'module', id: 'ngMock' };
     var doc3 = { docType: 'service', module: 'ng', id: 'ng.$http' };
 
-    processor.$process([doc1, doc2]);
+    processor.$process([doc1, doc2, doc3]);
 
     expect(moduleMap.values().length).toEqual(2);
     expect(moduleMap.get('ng')).toBe(doc1);
@@ -41,6 +59,23 @@ describe("moduleDocsProcessor", function() {
     expect(doc3.moduleDoc).toBe(doc1);
     expect(doc4.moduleDoc).toBe(doc1);
     expect(doc5.moduleDoc).toBe(doc2);
+
+  });
+
+  it("should complain if their are more than one matching modules", function() {
+    var doc1 = { docType: 'module', id: 'module:app.mod1', aliases: ['app', 'app.mod1', 'mod1', 'module:app', 'module:app.mod1', 'module:mod1'] };
+    var doc2 = { docType: 'module', id: 'module:app.mod2', aliases: ['app', 'app.mod2', 'mod2', 'module:app', 'module:app.mod2', 'module:mod2'] };
+    var doc3 = { docType: 'service', module: 'app', id: 'app.service' };
+
+    aliasMap.addDoc(doc1);
+    aliasMap.addDoc(doc2);
+
+    expect(function() {
+      processor.$process([doc1, doc2, doc3]);
+    }).toThrowError('Ambiguous module reference: "app" - doc "app.service" (service) \n'+
+                    'Matching modules:\n'+
+                    '- module:app.mod1\n'+
+                    '- module:app.mod2\n');
 
   });
 

@@ -51,11 +51,12 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
             module.components.push(doc);
             doc.moduleDoc = module;
           } else if ( matchingModules.length > 1 ) {
-            console.log(matchingModules.length);
+            var error = createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc);
+            error += '\nMatching modules:\n';
             _.forEach(matchingModules, function(mod) {
-              console.log(mod.id);
+              error += '- ' + mod.id + '\n';
             });
-            throw new Error(createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc));
+            throw new Error(error);
           }
         }
       });
