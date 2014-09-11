@@ -53,6 +53,17 @@ describe("getLinkInfo", function() {
     expect(getLinkInfo('ngClick').error).toMatch(/Ambiguous link:/);
   });
 
+  it("should error if no docs match the link", function() {
+    expect(getLinkInfo('ngClick').error).toEqual('Invalid link (does not match any doc): "ngClick"');
+  });
+
+  it("should not error if the link is a URL or starts with a hash", function() {
+    expect(getLinkInfo('some/path').error).toBeUndefined();
+    expect(getLinkInfo('some/path').title).toEqual('path');
+    expect(getLinkInfo('#fragment').error).toBeUndefined();
+    expect(getLinkInfo('#fragment').title).toEqual('fragment');
+  });
+
   it("should filter ambiguous documents by area before failing", function() {
     var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick', area: 'api' };
     doc1.aliases = getAliases(doc1);
