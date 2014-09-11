@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.10.0-rc.3 11th September 2014
+
+Fixes:
+
+* feat(ngdoc/providerDocsProcessor): add missing processor     2ea87c15
+* fix(ngdoc/moduleDocsProcessor): add missing var declaration    196c1758
+
+Testing Improvements
+
+* test(ngdoc/getLinkInfo): test missing and URL based links    4170e83f
+* refact(ngdoc/moduleDocsProcessor): improve and test error messages     d749563f
+* test(base/writeFilesProcessor): test corner cases     fef7a919
+* test(nunjucks/filters): add missing tests     13dc8a77
+* test(jsdoc/extractTagsProcessor): test corner cases     b8157723
+* test(base/readFilesProcessor): add corner case tests      17765d52
+
 ## v0.10.0-rc.2 10th September 2014
 
 Bug fix

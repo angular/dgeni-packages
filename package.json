@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.10.0-rc.2",
+  "version": "0.10.0-rc.3",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node .",
@@ -28,6 +28,9 @@
   ],
   "bugs": {
     "url": "https://github.com/angular/dgeni-packages/issues"
+  },
+  "peerDependencies": {
+    "dgeni": "^0.4.0"
   },
   "dependencies": {
     "canonical-path": "0.0.2",
