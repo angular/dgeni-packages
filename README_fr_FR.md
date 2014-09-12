@@ -1,6 +1,6 @@
 # Dgeni Packages
 
-Ce dépôt contient une collection de packages de Dgeni qui peuvent être utilisés par Dgeni, le générateur
+Ce dépôt contient une collection de **Packages** de Dgeni qui peuvent être utilisés par Dgeni, le générateur
 de documentation, pour créer une documentation à partir du code source.
 
 
@@ -14,17 +14,19 @@ Actuellement, il y a les packages suivants :
 * ngdoc - La partie spécifique d'angular.js, avec la définition des balises, des processeurs et des templates.
   Celui-ci charge les packages de jsdoc et nunjucks pour vous.
 * examples - Processeurs pour supporter les exemples exécutables qui figurent sur les docs du site d'angular.js.
-* dgeni - support pour la documentation des packages de Dgeni
+* dgeni - support pour la documentation des packages de Dgeni (**incomplet**)
 
 ## Le package `base`
 
 ### Processeurs
 
+* `computeIdsProcessor` - Détermine le `id` et le `aliases` pour les documents en utilisant des templates ou des fonctions
+d'aide, sur la base du `docType`.
+* `computePathsProcessor` - Détermine le `path` et le `outputPath` des documents en utilisant des templates ou des fonctions
+d'aide, sur la base du `docType`.
 * `debugDumpProcessor` - extrait l'état courant du tableau docs dans un fichier (désactivé par défaut)
 * `readFilesProcessor` - utilisé pour charger les documents depuis les fichiers. Ce processeur peut-être configuré pour utiliser
 un ensemble de **lecteur de fichier**. Il y a des lecteurs de fichiers (file-readers) dans les packages `jsdoc` et `ngdoc`.
-* `computePathsProcessor` - Détermine le `path` et le `outputPath` des documents en utilisant des templates ou des fonctions
-d'aide, sur la base du `docType`.
 * `renderDocsProcessor` - rendre les documents dans une propriété (`doc.renderedContent`) en utilisant
 un `templateEngine` (moteur de template), qui doit être fourni séparément - voir le package `nunjucks`.
 * `unescapeCommentsProcessor` - reformatte les marqueurs de commentaires pour ne pas casser le style des commentaires de jsdoc,
@@ -33,15 +35,20 @@ par exemple `*/`
 
 ### Services
 
+* `aliasMap` - Un map de ids/aliases pour les docs. C'est utilisé pour faire correspondre les références aux documents dans
+des liens et des relations tels que les modules et les membres de l'objet.
 * `createDocMessage` - une aide pour créer de beaux messages à prpopos des documents (utile pour les logs et
 les erreurs)
 * `encodeDocBlock` - convertir un bloc de code en HTML
 * `templateFinder` - recherche dans les répertoires à l'aide de modèle (pattern) pour trouver un template qui correspond au document donné.
 * `trimIndentation` - coupe "intelligemment" l'indentation dès le début de chaque ligne d'un bloc
 de texte.
+* `writeFile` - Ecrit du contenu dans un fichier, en s'assurant que le chemin du fichier existe.
 
 
-Le template utilisé pour rendre le doc est déterminer par `templateFinder`, celui-ci utilise le premier qui correspond
+#### Recherche du Template
+
+Le template utilisé pour rendre un doc est déterminer par `templateFinder`, celui-ci utilise le premier qui correspond
 à un ensemble de patterns dans un ensemble de dossiers, fourni dans la configuration. Cela permet pas mal de contrôle pour fournir
 des templates génériques pour la plupart des situations et des templates spécifiques pour des cas exceptionnels.
 
@@ -82,9 +89,9 @@ pour rendre les documents en texte, tel que le HTML ou le JS, basé sur des temp
 
 * `codeNameProcessor` - détermine le nom du document selon le code qui suit dans le document
 dans le fichier source.
-* `parseTagsProcessor` - utilise un `tagParser` pour analyser les balises de jsdoc dans le contenu du document.
 * `extractTagsProcessor` - utilise un `tagExtractor` pour extraire l'information depuis les balises analysées.
 * `inlineTagsProcessor` - recherche les docs pour les balises [`inline`](http://usejsdoc.org/about-inline-tags.html) qui ont besoin d'avoir de l'injection de contenu
+* `parseTagsProcessor` - utilise un `tagParser` pour analyser les balises de jsdoc dans le contenu du document.
 
 ### Définitions des balises
 
@@ -116,7 +123,9 @@ le type depuis la description de la balise trouvée, mais elles n'implémentent 
 
 ## Le package `ngdoc`
 
-Le package `ngdoc` dépend des packages `jsdoc` et `nunjucks`.
+Le package `ngdoc` dépend des packages `jsdoc` et `nunjucks`. Il offre un support complémentaire pour
+les documents non-API écrits dans les fichiers avec l'extension `.ngdoc`. Il détermine également des propriétés
+supplémentaires spécifiques au code correspondant à Angular.
 
 ### Les lecteurs de fichier
 
@@ -124,43 +133,29 @@ Le package `ngdoc` dépend des packages `jsdoc` et `nunjucks`.
 
 ### Processeurs
 
-* `apiDocsProcessor` -
-
-Ce processeur exécute des processus qui sont spécifiquement liées à la documentation pour les composants de l'API. Il fait ce qui suit :
-
-  - Détermine le nom du package pour le module (par exemple angular ou angular-sanitize)
-  - Collecte tous les documents qui appartiennent au module
-  - Les attache à la doc du module dans la propriété `components`
-  - Détermine le chemin de l'URL vers le document dans l'application docs et le chemin de destination (OutputPath) du fichier final
-  - Il relie les documents des services d'angular avec les documents des provider correspondant.
-
-apiDocsProcessor a les options de configuration suivantes de disponibles (énumérés avec les valeurs par défaut) :
-
-  ```js
-  apiDocsProcessor.apiDocsPath = undefined; // C'est une propriété obligatoire qui doit être définie
-  apiDocsProcessor.outputPathTemplate = '${area}/${module}/${docType}/${name}.html', // Le chemin pour écrire la page d'un document de l'api.
-  apiDocsProcessor.apiPathTemplate = '${area}/${module}/${docType}/${name}', // L'url pour la page du document.
-  apiDocsProcessor.moduleOutputPathTemplate = '${area}/${name}/index.html', // Le chemin pour écrire la page d'un module de l'api.
-  apiDocsProcessor.modulePathTemplate = '${area}/${name}' // L'url pour la page du module.
-  ```
-
-* `generateComponentGroupsProcessor` -
-Génère des documents pour chaque groupe de composants (par type) dans un module
-
-* `computeIdProcessor` -
-Détermine la propriété id du doc sur la base des balises et d'autres méta-données
-
 * `filterNgdocsProcessor` -
 Pour AngularJS, nous sommes seulement intéressés aux documents qui contiennent les balises @ngdoc. Ce processeur
 supprime les docs qui ne contiennent pas cette balise.
 
-* `collectPartialNames` -
-Ajoute tous les docs à `partialNameMap`
+* `generateComponentGroupsProcessor` -
+Génère des documents pour chaque groupe de composants (par type) dans un module
+
+* `memberDocsProcessor` - Ce processeur relie les docs qui sont membres (propriétés, méthodes et événements) à
+leurs docs contenants, et les retire de la collection des docs principaux.
+
+* `moduleDocsProcessor` - Ce processeur détermine les propriétés pour les docs des modules tels que `packageName` et
+`packageFileName`. Il ajoute les modules au service `moduleMap` et relie tous les docs qui sont dans un module
+au doc du moduledans la propriété `components`
+
+* `providerDocsProcessor` - Ce processeur lie les documents sur les services angular au document de leur
+provider correspondant.
 
 
 ### Définitions des balises
 
-Ce package modifie et ajoute de nouvelles définitions de balises en plus de celles fournies par le package `jsdoc`.
+Ce package modifie et ajoute de nouvelles définitions de balises en plus de celles fournies par le package `jsdoc` :
+`area`, `element`, `eventType`, `example`, `fullName`, `id`, `module`, `name`, `ngdoc`, packageName`,
+`parent`, `priority`, `restrict`, `scope` et `title`.
 
 
 ### Définitions des balises Inline
@@ -171,13 +166,11 @@ des ancres HTML
 
 ### Services
 
+* `getAliases()` - Récupère une liste de tous les alias qui peuvent être faits à partir de la doc fournie
+* `getDocFromAliases()` - Trouve un document depuis `aliasMap` qui correspond à l'alias donné
 * `getLinkInfo()` - Récupère les informations du lien depuis un document qui correspond à l'url donné
-* `getPartialNames()` - Récupère une liste de tous les noms de code de partiel qui peuvent être utilisés à partir d'un ensemble
-donné
 * `gettypeClass()` - Récupère un string de classe CSS pour un string de type donné
-* `moduleMap` - Une collection de modules correspondant au nom du module
-* `parseCodeName()` - Découpe le nom de code en plusieurs morceaux
-* `patialNameMap` - Une map de nom de partiel pour les docs
+* `moduleMap` - Une collection de modules correspondant à l'id du module
 
 
 ### Templates
@@ -231,13 +224,12 @@ Du texte après l'exemple
 
 ### Processeurs
 
-* `parseExamplesProcessor` -
-Analyse les balises `<example>` depuis le contenu et les ajoute au service `examples`
-* `generateExamplesProcessor` -
-Ajoute les nouveaux docs à la collection de docs pour chaque exemple dans le service `examples` qui sera rendue
-comme des fichiers qui peuvent être exécutés dans le navigateur, par exemple en direct des démos ou pour
+* `generateExamplesProcessor` - Ajoute les nouveaux docs à la collection de docs pour chaque exemple dans le service `examples` qui sera rendue
+comme des fichiers qui peuvent être exécutés dans le navigateur, par exemple des démos en direct ou pour
 des tests de e2e.
+* `parseExamplesProcessor` - Analyse les balises `<example>` depuis le contenu et les ajoute au service `examples`
 * `generateProtractorTests` - Génère les fichiers de test de protractor depuis les tests e2e dans les exemples
+
 
 ### Définitions des balises Inline
 
