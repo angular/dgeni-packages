@@ -133,8 +133,11 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
     createManifestDoc: function(example) {
 
       var files = _(example.files)
-        .keys()
-        .omit('index.html');
+        .omit('index.html')
+        .map(function(file) {
+          return file.name;
+        })
+        .value();
 
       var manifestDoc = {
         id: example.id + '/manifest.json',

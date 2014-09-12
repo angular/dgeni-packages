@@ -98,5 +98,6 @@ describe("examples-generate processor", function() {
     expect(manifestDoc.id).toEqual('a.b.c/manifest.json');
     expect(manifestDoc.docType).toEqual('example-file');
     expect(manifestDoc.example).toEqual(exampleMap.get('a.b.c'));
+    expect(manifestDoc.files).toEqual(['app.js', 'app.css', 'app.spec.js']);
   });
 });
