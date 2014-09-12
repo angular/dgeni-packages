@@ -26,7 +26,8 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
           doc.isMember = true;
           parts = doc.id.split('#');
           doc.memberof = parts[0];
-          doc.name = parts[1];
+          // remove the 'method:', 'property:', etc specifier from the id part
+          doc.name = parts[1].replace(/^.*:/, '');
 
           log.debug('child doc found', doc.id, doc.memberof);
 

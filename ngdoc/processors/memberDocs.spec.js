@@ -38,6 +38,7 @@ describe("memberDocsProcessor", function() {
     aliasMap.addDoc(doc2);
     docs = processor.$process(docs);
 
+    expect(doc3.name).toEqual('warn');
     expect(doc3.memberof).toEqual('module:ng.service:$log');
     expect(doc1.methods).toEqual([doc3]);
     expect(doc2.methods).not.toEqual([doc3]);
