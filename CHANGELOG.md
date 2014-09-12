@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.10.0-rc.4 12th September 2014
+
+Bug Fixes:
+
+* fix(examples/generateExamplesProcessor): manifest files should be an array of strings    caf321ec
+* fix(ngdoc/memberDocs): strip modifier from member name     b0b53ec5
+
 
 ## v0.10.0-rc.3 11th September 2014
 
