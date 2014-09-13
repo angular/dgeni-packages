@@ -26,13 +26,13 @@ module.exports = function jsdocFileReader() {
     defaultPattern: /\.js$/,
     getDocs: function(fileInfo) {
 
-      var ast = jsParser.parse(fileInfo.content, {
+      fileInfo.ast = jsParser.parse(fileInfo.content, {
         loc: true,
         range: true,
         comment: true
       });
 
-      return _(ast.comments)
+      return _(fileInfo.ast.comments)
 
         .filter(function(comment) {
           // To test for a jsdoc comment (i.e. starting with /** ), we need to check for a leading
@@ -49,7 +49,7 @@ module.exports = function jsdocFileReader() {
           text = text.trim();
 
           // Extract the information about the code directly after this comment
-          var codeNode = findNodeAfter(ast, comment.range[1]);
+          var codeNode = findNodeAfter(fileInfo.ast, comment.range[1]);
 
           // Create a doc from this comment
           return {

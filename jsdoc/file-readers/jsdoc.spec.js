@@ -76,6 +76,14 @@ describe("jsdoc fileReader", function() {
       expect(docs[2].codeNode.type).toEqual('ReturnStatement');
     });
 
+    it("should attach the AST to the fileInfo", function() {
+      var fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
+      var docs = fileReader.getDocs(fileInfo);
+      expect(fileInfo.ast).toEqual(jasmine.objectContaining({
+        type: 'Program',
+        range: [ 0, 3135 ]
+      }));
+    });
 
     it("should not break if the comment has no code", function() {
       var fileInfo = createFileInfo('some/file.js', 'function main() { } /** @some jsdoc comment */', '.');
