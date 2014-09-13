@@ -38,6 +38,7 @@
     "change-case": "^2.1.0",
     "dgeni": "^0.4.0",
     "esprima": "^1.0.4",
+    "estraverse": "^1.5.1",
     "glob": "~3.2.8",
     "lodash": "~2.4.1",
     "marked": "~0.2.10",

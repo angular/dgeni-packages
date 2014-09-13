@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var jsParser = require('esprima');
-var walk = require('../lib/walk');
+var traverse = require('estraverse').traverse;
 var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
 /**
@@ -49,16 +49,15 @@ module.exports = function jsdocFileReader() {
           text = text.trim();
 
           // Extract the information about the code directly after this comment
-          var codeNode = walk.findNodeAfter(ast, comment.range[1]);
-          var codeAncestors = codeNode && walk.ancestor(ast, codeNode.node);
+          var codeNode = findNodeAfter(ast, comment.range[1]);
 
           // Create a doc from this comment
           return {
             startingLine: comment.loc.start.line,
             endingLine: comment.loc.end.line,
             content: text,
-            codeNode: codeNode,
-            codeAncestors: codeAncestors,
+            codeNode: codeNode.node,
+            codeAncestors: codeNode.path,
             docType: 'js'
           };
 
@@ -68,3 +67,19 @@ module.exports = function jsdocFileReader() {
     }
   };
 };
+
+function findNodeAfter(ast, pos) {
+  var found, path;
+  traverse(ast, {
+    enter: function(node) {
+      if ( node.range[1] > pos && node.range[0] >= pos ) {
+        if ( !found || found.range[0] >= node.range[0] ) {
+          found = node;
+          path = this.parents();
+          this.skip();
+        }
+      }
+    }
+  });
+  return { node: found, path: path };
+}

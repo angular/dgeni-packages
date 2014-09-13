@@ -7,7 +7,7 @@ describe('code-name doc processor', function() {
   it("should understand CallExpressions", function() {
     var processor = codeNameProcessorFactory(mockLog);
     var ast = jsParser.parse('(function foo() { })()');
-    var doc = { codeNode: { node: ast } };
+    var doc = { codeNode: ast };
     processor.$process([doc]);
     expect(doc.codeName).toEqual('foo');
   });
@@ -15,7 +15,7 @@ describe('code-name doc processor', function() {
   it("should understand ArrayExpressions", function() {
     var processor = codeNameProcessorFactory(mockLog);
     var ast = jsParser.parse("$CompileProvider.$inject = ['$provide', '$$sanitizeUriProvider'];");
-    var doc = { codeNode: { node: ast } };
+    var doc = { codeNode: ast };
     processor.$process([doc]);
     expect(doc.codeName).toEqual('$inject');
   });

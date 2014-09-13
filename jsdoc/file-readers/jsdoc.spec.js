@@ -71,9 +71,9 @@ describe("jsdoc fileReader", function() {
       var fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
       var docs = fileReader.getDocs(fileInfo);
       expect(docs.length).toEqual(3);
-      expect(docs[0].codeNode.node.type).toEqual('FunctionDeclaration');
-      expect(docs[1].codeNode.node.type).toEqual('ExpressionStatement');
-      expect(docs[2].codeNode.node.type).toEqual('ReturnStatement');
+      expect(docs[0].codeNode.type).toEqual('FunctionDeclaration');
+      expect(docs[1].codeNode.type).toEqual('ExpressionStatement');
+      expect(docs[2].codeNode.type).toEqual('ReturnStatement');
     });
 
 
