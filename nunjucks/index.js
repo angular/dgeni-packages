@@ -6,6 +6,7 @@ var Package = require('dgeni').Package;
  */
 module.exports = new Package('nunjucks', ['base'])
 
+.factory(require('./services/renderMarkdown'))
 .factory(require('./services/nunjucks-template-engine'))
 .factory(require('./rendering/tags/marked'))
 
