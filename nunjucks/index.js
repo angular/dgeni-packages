@@ -9,8 +9,9 @@ module.exports = new Package('nunjucks', ['base'])
 .factory(require('./services/renderMarkdown'))
 .factory(require('./services/nunjucks-template-engine'))
 .factory(require('./rendering/tags/marked'))
+.factory(require('./rendering/filters/marked'))
 
-.config(function(templateEngine, markedNunjucksTag) {
+.config(function(templateEngine, markedNunjucksTag, markedNunjucksFilter) {
   templateEngine.tags.push(markedNunjucksTag);
   templateEngine.filters = templateEngine.filters
     .concat(require('./rendering/filters/change-case'))
@@ -18,6 +19,6 @@ module.exports = new Package('nunjucks', ['base'])
       require('./rendering/filters/first-line'),
       require('./rendering/filters/first-paragraph'),
       require('./rendering/filters/json'),
-      require('./rendering/filters/marked')
+      markedNunjucksFilter
     ]);
 });
