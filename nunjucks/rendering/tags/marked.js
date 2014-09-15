@@ -1,10 +1,8 @@
-var marked = require('marked');
-
 /**
  * @dgRenderTag marked
  * @description Convert a block of template text from markdown to HTML
  */
-module.exports = function markedNunjucksTag(trimIndentation) {
+module.exports = function markedNunjucksTag(trimIndentation, renderMarkdown) {
   return {
     tags: ['marked'],
 
@@ -22,7 +20,7 @@ module.exports = function markedNunjucksTag(trimIndentation) {
       var contentString = content();
       var indent = trimIndentation.calcIndent(contentString);
       var trimmedString = trimIndentation.trimIndent(contentString, indent);
-      var markedString = marked(trimmedString);
+      var markedString = renderMarkdown(trimmedString);
       var reindentedString = trimIndentation.reindent(markedString, indent);
       return reindentedString;
     }

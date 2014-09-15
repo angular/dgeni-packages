@@ -1,14 +1,14 @@
-var rewire = require('rewire');
-var extensionFactory = rewire('./marked');
+var Dgeni = require('dgeni');
+var mockPackage = require('../../mocks/mockPackage');
 
 describe("marked custom tag extension", function() {
-  var extension, markedMock, trimSpy;
+  var extension;
 
   beforeEach(function() {
-    markedMock = jasmine.createSpy('marked').and.callFake(function(str) {return str;});
-    extensionFactory.__set__('marked', markedMock);
-    trimSpy = jasmine.createSpyObj('trimSpy', ['calcIndent', 'trimIndent', 'reindent']);
-    extension = extensionFactory(trimSpy);
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    extension = injector.get('markedNunjucksTag');
   });
 
   it("should specify the tags to match", function() {
@@ -17,18 +17,22 @@ describe("marked custom tag extension", function() {
 
   describe("process", function() {
 
-    it("should call the mock marked function when processing", function() {
-      trimSpy.trimIndent.and.callFake(function(value) { return value; });
-      extension.process(null, function() { return 'some content'; });
-      expect(markedMock).toHaveBeenCalledWith('some content');
+    it("should render the markdown and reindent", function() {
+      var result = extension.process(null, function() {
+        return '  ## heading 2\n\n' +
+               '  some paragraph\n\n' +
+               '    * a bullet point';
+      });
+      expect(result).toEqual(
+        '  <h2 id="heading-2">heading 2</h2>\n' +
+        '  <p>some paragraph</p>\n' +
+        '  <ul>\n' +
+        '  <li>a bullet point</li>\n' +
+        '  </ul>\n' +
+        '  '
+      );
     });
 
-    it("should trim indentation from content", function() {
-      extension.process(null, function() { return 'some content'; });
-      expect(trimSpy.calcIndent).toHaveBeenCalled();
-      expect(trimSpy.trimIndent).toHaveBeenCalled();
-      expect(trimSpy.reindent).toHaveBeenCalled();
-    });
   });
 
   describe("parse", function() {
