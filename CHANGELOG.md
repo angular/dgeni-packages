@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.10.0-rc.5 15th September 2014
+
+### Bug fixes - Nunjucks
+
+fix(nunjucks/marked filter): use renderMarkdown service      c82e6a26
+fix(nunjucks/marked custom tag): use renderMarkdown service      1ec39d19
+feat(nunjucks/renderMarkdown): add new service to allow custom markdown rendering    47ee5ec1
+
+### New features - JSDoc File Reader
+
+* feat(jsdoc/jsdocFileReader): add AST to the fileInfo      998738a7
+* refact(jsdoc/jsdocFileReader): use estraverse rather than hacked walk.js      6f8279ce
+
+
 ## v0.10.0-rc.4 12th September 2014
 
 Bug Fixes:
