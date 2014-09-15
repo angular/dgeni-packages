@@ -41,7 +41,7 @@
     "estraverse": "^1.5.1",
     "glob": "~3.2.8",
     "lodash": "~2.4.1",
-    "marked": "~0.2.10",
+    "marked": "^0.3.2",
     "minimatch": "^0.3.0",
     "node-html-encoder": "0.0.2",
     "nunjucks": "~1.0.1",
