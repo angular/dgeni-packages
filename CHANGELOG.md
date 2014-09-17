@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.0-rc.6 17th September 2014
+
+* feat(examples/index.template.html): add `ng-csp` conditionally     4e173614
+
+
 ## v0.10.0-rc.5 15th September 2014
 
 ### Bug fixes - Nunjucks
