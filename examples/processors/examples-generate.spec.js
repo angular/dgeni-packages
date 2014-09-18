@@ -24,7 +24,7 @@ describe("examples-generate processor", function() {
       id: 'a.b.c',
       doc: docs[0],
       outputFolder: 'examples',
-      deps: 'dep1.js;dep2.js',
+      deps: 'dep1.js;dep2.js;dep3.css',
       files: files,
       deployments: {}
     });
@@ -38,7 +38,7 @@ describe("examples-generate processor", function() {
       },
       {
         name: 'other',
-        examples: { commonFiles: { scripts: [ 'someFile.js', 'someOtherFile.js' ], }, dependencyPath: '..' }
+        examples: { commonFiles: { scripts: [ 'someFile.js', 'someOtherFile.js' ], stylesheets: ['someStyle.css', 'otherStyle.css']}, dependencyPath: '..' }
       }
     ];
 
@@ -85,6 +85,20 @@ describe("examples-generate processor", function() {
       { path : '../dep1.js' },
       { path : '../dep2.js' },
       jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.js' })
+    ]);
+  });
+
+  it("should add the dependencies to the exampleDoc stylesheets", function() {
+    expect(_.find(docs, { id: 'a.b.c' }).stylesheets).toEqual([
+      { path : 'dep3.css' },
+      jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.css' })
+    ]);
+
+    expect(_.find(docs, { id: 'a.b.c-other' }).stylesheets).toEqual([
+      { path: 'someStyle.css' },
+      { path: 'otherStyle.css' },
+      { path : '../dep3.css' },
+      jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.css' })
     ]);
   });
 
