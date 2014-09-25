@@ -21,7 +21,7 @@ var StringMap = require('stringmap');
  *        to this path. This path is relative to `readFileProcessor.basePath`.  Defaults to `.`.
  *      * `include` {string} glob pattern of files to include (relative to `readFileProcessor.basePath`)
  *      * `exclude` {string} glob pattern of files to exclude (relative to `readFileProcessor.basePath`)
- *      * `reader` {string} name of a file reader to use for these files
+ *      * `fileReader` {string} name of a file reader to use for these files
  *
  * @property {Array.<Function>} fileReaders A collection of file readers. A file reader is an object
  *                                          that has the following properties/methods:
