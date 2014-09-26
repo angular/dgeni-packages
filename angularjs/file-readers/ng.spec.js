@@ -1,6 +1,21 @@
+var mockPackage = require('../mocks/mockPackage');
+var Dgeni = require('dgeni');
+
 var ngFileReader = require('./ng');
 
 describe("ngFileReader", function() {
+
+  var fileReader, codeDB;
+
+  beforeEach(function() {
+
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    fileReader = injector.get('ngFileReader');
+    codeDB = injector.get('codeDB');
+  });
+
   it("should collect up all module definitions", function() {
     var fileInfo = {
       content:
@@ -29,29 +44,26 @@ describe("ngFileReader", function() {
     };
 
 
-    var mockCodeDb = {
-      moduleRefs: ['modX']
-    };
+    codeDB.moduleRefs = ['modX'];
 
-
-    ngFileReader(mockCodeDb).getDocs(fileInfo);
-    expect(mockCodeDb.moduleDefs).toEqual([
-      {
+    fileReader.getDocs(fileInfo);
+    expect(codeDB.moduleDefs).toEqual({
+      app: {
         name: 'app',
         dependencies: ['mod1', 'mod2'],
         content: 'app docs'
       },
-      {
+      mod1: {
         name: 'mod1',
         dependencies: ['ext'],
         content: 'mod1 docs'
       },
-      {
+      mod2: {
         name: 'mod2',
         dependencies: [],
         content: 'mod2 docs'
       }
-    ]);
-    expect(mockCodeDb.moduleRefs).toEqual(['modX', 'app', 'mod1', 'mod2', 'ext']);
+    });
+    expect(codeDB.moduleRefs).toEqual(['modX', 'app', 'mod1', 'mod2', 'ext']);
   });
 });

@@ -1,5 +1,6 @@
 module.exports = function codeDB() {
   return {
-    moduleRefs: []
+    moduleRefs: [],
+    moduleDefs: {}
   };
 };
