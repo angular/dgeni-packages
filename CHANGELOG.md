@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.0-rc.7 26th September 2014
+
+* fix(ngdoc/templates): fix the github URLs     ce548496
+* feat(examples/generateExamplesProcessor): allow css-dependencies in examples      10b8278f
+
+
 ## v0.10.0-rc.6 17th September 2014
 
 * feat(examples/index.template.html): add `ng-csp` conditionally     4e173614
