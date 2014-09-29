@@ -6,5 +6,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 
 .factory(require('./file-readers/ng'))
 .factory(require('./services/moduleDefs'))
-.factory(require('./services/moduleExtractor'));
+.factory(require('./services/moduleExtractor'))
+
+.processor(require('./processors/generateModuleDocs'));
 
