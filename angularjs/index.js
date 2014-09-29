@@ -5,5 +5,6 @@ var Package = require('dgeni').Package;
 module.exports = new Package('angularjs', ['jsdoc'])
 
 .factory(require('./file-readers/ng'))
-.factory(require('./services/codeDB'));
+.factory(require('./services/codeDB'))
+.factory(require('./services/moduleExtractor'));
 

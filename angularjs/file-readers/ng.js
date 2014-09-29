@@ -27,15 +27,9 @@ module.exports = function ngFileReader(codeDB, log) {
 
       var ast = SpahQL.db(fileInfo.ast);
 
-      var mergeModuleInfo = function(moduleDef, moduleRef) {
-        if ( moduleRef.content ) {
-          moduleDef.content += '\n' + moduleRef.content;
-        }
-      };
-
       var getModuleInfo = function() {
         var comment = '';
-        var topLevelExpressionMatch = this.path().match(/\/body\/\d+\//);
+        var topLevelExpressionMatch = ast.path().match(/\/body\/\d+\//);
         if ( topLevelExpressionMatch ) {
           // We have to do a bit of hacking to get the path to the comment node since the module might
           // have a number of chained method calls on it we need to look at the first expession statement
