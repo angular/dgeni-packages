@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var SpahQL = require('spahql');
 
 var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
@@ -63,7 +64,6 @@ module.exports = function moduleExtractor() {
 
     var getComponents = function(moduleQuery, componentType) {
       var componentQuery = moduleQuery.select('//callee/property[/name=="' + componentType + '"]');
-      // console.log(componentQuery);
       var components = [];
 
       // The call chain in the AST is such that the components come out backwards.
@@ -78,7 +78,6 @@ module.exports = function moduleExtractor() {
         components.unshift(componentInfo);
       });
 
-      console.log(components);
       return components;
     };
 
@@ -147,7 +146,8 @@ module.exports = function moduleExtractor() {
     'provider',
     'factory',
     'value',
-    'service'
+    'service',
+    'constant'
   ];
 
   return moduleExtractorImpl;

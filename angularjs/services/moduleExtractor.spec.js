@@ -110,6 +110,23 @@ describe("moduleExtractor", function() {
         endingLine: 16
       }
     ]);
+
+    expect(appModule.components.directive).toEqual([
+      {
+        type: 'directive',
+        name: 'directiveOne',
+        content: 'directiveOne docs',
+        startingLine: 10,
+        endingLine: 12
+      }
+    ]);
+
+    expect(appModule.components.filter).toEqual([]);
+    expect(appModule.components.service).toEqual([]);
+    expect(appModule.components.factory).toEqual([]);
+    expect(appModule.components.provider).toEqual([]);
+    expect(appModule.components.value).toEqual([]);
+    expect(appModule.components.constant).toEqual([]);
   });
 });
 

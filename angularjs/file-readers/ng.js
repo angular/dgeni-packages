@@ -1,9 +1,5 @@
 var _ = require('lodash');
 var jsParser = require('esprima');
-var spahql = require('spahql');
-
-var traverse = require('estraverse').traverse;
-var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
 /**
  * @dgService ngFileReader
@@ -12,7 +8,7 @@ var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
  * in each file pulling in documentation from jsdoc comments if
  * available
  */
-module.exports = function ngFileReader(codeDB, log) {
+module.exports = function ngFileReader(moduleExtractor, moduleDefs) {
   return {
     name: 'ngFileReader',
     defaultPattern: /\.js$/,
@@ -20,57 +16,29 @@ module.exports = function ngFileReader(codeDB, log) {
 
       fileInfo.ast = jsParser.parse(fileInfo.content, {
         loc: true,
-        range: true,
-        comment: true,
         attachComment: true
       });
 
-      var ast = SpahQL.db(fileInfo.ast);
+      var moduleInfo = moduleExtractor(fileInfo.ast);
+      moduleInfo.fileInfo = fileInfo;
 
-      var getModuleInfo = function() {
-        var comment = '';
-        var topLevelExpressionMatch = ast.path().match(/\/body\/\d+\//);
-        if ( topLevelExpressionMatch ) {
-          // We have to do a bit of hacking to get the path to the comment node since the module might
-          // have a number of chained method calls on it we need to look at the first expession statement
-          comment = ast.select(topLevelExpressionMatch[0] + "leadingComments//value").value();
-
-          // We are only interested if the comment is jsdoc style: i.e. starts with "/**""
-          if ( comment.charAt(0) == '*' ) {
-            // Strip off any leading stars and
-            // Trim off leading and trailing whitespace
-            comment = comment.replace(LEADING_STAR, '').trim();
-          } else {
-            comment = '';
-          }
-        }
-        return {
-          name: this.select('/arguments/0/value').value(),
-          dependencies: this.select('/arguments/1/elements//value').values(),
-          content: comment
-        };
-      };
-
-      var moduleCallsQuery = ast.select("//*[/type=='CallExpression'][/callee/object/name=='angular'][/callee/property/name='module']");
-      codeDB.moduleRefs = _.union(codeDB.moduleRefs, moduleCallsQuery.select('/arguments/0/value').values());
-
-      var moduleDefsQuery = moduleCallsQuery.select('/[/arguments/.size>1]');
-      var moduleDefs = moduleDefsQuery.map(getModuleInfo);
-      _.forEach(moduleDefs, function(moduleDef) {
-        // Store (or overwrite) the named module
-        codeDB.moduleDefs[moduleDef.name] = moduleDef;
-      });
-
-      var moduleRefsQuery = moduleCallsQuery.select('/[/arguments/.size==1]');
-      var moduleRefs = moduleDefsQuery.map(getModuleInfo);
-      _.forEach(moduleRefs, function(moduleRef) {
-        var moduleDef = _.indexOf(codeDB.meduleRefs, { name: moduleRef.name });
-        if ( moduleDef ) {
-          mergeModuleInfo(moduleDef, moduleRef);
+      _.forEach(moduleInfo, function(module) {
+        if ( module.dependencies ) {
+          // we have defined a new module
+          moduleDefs[module.name] = module;
         } else {
-          log.warn(_.template('Module "${name}" referenced but not yet defined', moduleRef));
-          moduleRef.dependencies = [];
-          codeDB.moduleDefs[moduleRef.name] = moduleRef;
+          // we have reopened a module - find the definition
+          var moduleDef = moduleDefs[module.name];
+          if ( !moduleDef ) {
+            throw new Error('Module definition missing');
+          }
+          // Add the new components to this module definition
+          _.forEach(module.components, function(components, componentType) {
+            _.forEach(components, function(component) {
+              component.fileInfo = fileInfo;
+              moduleDef.components[componentType].push(component);
+            });
+          });
         }
       });
     }
