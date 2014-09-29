@@ -35,12 +35,36 @@ module.exports = function ngFileReader(moduleExtractor, moduleDefs) {
           // Add the new components to this module definition
           _.forEach(module.components, function(components, componentType) {
             _.forEach(components, function(component) {
-              component.fileInfo = fileInfo;
               moduleDef.components[componentType].push(component);
             });
           });
         }
       });
+
+      var docs = [];
+
+      _.forEach(moduleDefs, function(moduleDef) {
+
+        // Add a doc for each module
+        docs.push(moduleDef);
+
+        _.forEach(moduleDef.components, function(component) {
+
+          component.fileInfo = component.fileInfo || moduleDef.fileInfo;
+          component.module = moduleDef;
+
+            if ( componentTypeInfo.unique ) {
+              container[componentDef.injectableName] = componentDef;
+            } else {
+              var items = container[componentDef.injectableName] || [];
+              items.push(componentDef);
+              container[componentDef.injectableName] = items;
+            }
+          });
+      });
+
+
+      return docs;
     }
   };
 };
