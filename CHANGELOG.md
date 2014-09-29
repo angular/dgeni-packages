@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.10.0 29th September 2014
+
+Finally, only 4 betas and 7 release candidates and here is 0.10.0. This version is current being
+used in production by the angular.js project.
+
+* feat(ngdoc/templates/base.template): prefill 'Improve this Doc' commit msg   eafb1d2f
+
+
 ## v0.10.0-rc.7 26th September 2014
 
 * fix(ngdoc/templates): fix the github URLs     ce548496
