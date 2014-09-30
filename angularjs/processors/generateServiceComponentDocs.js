@@ -14,11 +14,15 @@ module.exports = function generateServiceComponentDocsProcessor(moduleDefs) {
       .forEach(function(ngModule) {
         _.forEach(SERVICE_TYPES, function(serviceType) {
           _.forEach(ngModule.components[serviceType], function(component) {
+
             component.docType = 'ngService';
             component.serviceType = serviceType;
             component.module = ngModule;
             component.id = _.template('${module.id}.service:${name}')(component);
             component.parent = _.template('${module.id}.group:${serviceType}')(component);
+
+            // TODO: If the component has an injectable factory then extract the dependencies
+
             docs.push(component);
           });
         });
