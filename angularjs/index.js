@@ -9,6 +9,8 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./services/moduleExtractor'))
 
 .processor(require('./processors/generateModuleDocs'))
+.processor(require('./processors/generateControllerDocs'))
+.processor(require('./processors/generateServiceComponentDocs'))
 
 .config(function() {
 
