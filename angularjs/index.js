@@ -8,5 +8,8 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./services/moduleDefs'))
 .factory(require('./services/moduleExtractor'))
 
-.processor(require('./processors/generateModuleDocs'));
+.processor(require('./processors/generateModuleDocs'))
 
+.config(function() {
+
+});
