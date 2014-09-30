@@ -226,10 +226,55 @@ Du texte après l'exemple
 
 * `generateExamplesProcessor` - Ajoute les nouveaux docs à la collection de docs pour chaque exemple dans le service `examples` qui sera rendue
 comme des fichiers qui peuvent être exécutés dans le navigateur, par exemple des démos en direct ou pour
-des tests de e2e.
+des tests de e2e. Ce processeur doit être configuré avec une collection des différents déploiements qui lui indiquera
+la version à générer pour chaque exemple . Voir la section de **Configuration de déploiement** ci-dessous.
 * `parseExamplesProcessor` - Analyse les balises `<example>` depuis le contenu et les ajoute au service `examples`
-* `generateProtractorTests` - Génère les fichiers de test de protractor depuis les tests e2e dans les exemples
+* `generateProtractorTestsProcessor` - Génère les fichiers de test de protractor depuis les tests e2e dans les exemples. Ce processeur
+doit être configuré avec une collection des différents déploiements qui lui indiquera la version des tests de protaractor à générer. Voir la
+section de **Configuration de déploiement** ci-dessous.
 
+#### Configuration de déploiement
+
+Les processeurs `generateExamplesProcessor` et `generateProtractorTestsProcessor` ont une propriété *obligatoire* appelée `deployments`.
+Cette propriété doit être un tableau d'objets d'information de déploiement indiquant au processeur quels sont les fichiers à générer.
+
+Par exemple, vous pourriez avoir un déploiement "debug" qui charge angular.js dans l'exemple et un déploiement "default" qui
+charge angular.min.js dans l'exemple. De même, vous pourriez avoir des déploiements qui utilisent JQuery et certains qui utilisent
+uniquement jqLite de Angular.
+
+Vous pouvez configurer cela dans votre package comme ceci :
+
+```js
+.config(function(generateExamplesProcessor, generateProtractorTestsProcessor) {
+  var deployments = [
+    { name: 'debug', ... },
+    { name: 'default', ... }
+  ];
+
+  generateExamplesProcessor.deployments = deployments;
+  generateProtractorTestsProcessor.deployments = deployments;
+});
+```
+
+Un déploiement doit avoir une propriété `name` et peut également inclure une propriété `examples` qui contient
+des informations à propos du chemin et des fichiers supplémentaires à injecter dans des exemples.
+De plus, un test de protractor est généré pour chaque déploiement et il utilise le nom du déploiement pour trouver le
+chemin de l'exemple associé à ce déploiement.
+
+```js
+{
+  name: 'default',
+  examples: {
+    commonFiles: {
+      scripts: [ '../../../angular.js' ]
+    },
+    dependencyPath: '../../../'
+  }
+}
+```
+
+Ici nous avons un déploiement `default` qui injecte le fichier `angular.js` dans tous les exemples,
+ainsi que les dépendances référencées dans l'exemple qui sont placées par rapport à la donnée `dependencyPath`.
 
 ### Définitions des balises Inline
 
