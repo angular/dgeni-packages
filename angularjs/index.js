@@ -13,6 +13,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .processor(require('./processors/generateFilterDocs'))
 .processor(require('./processors/generateDirectiveDocs'))
 .processor(require('./processors/generateServiceComponentDocs'))
+.processor(require('./processors/generateProviderDocs'))
 
 .config(function() {
 

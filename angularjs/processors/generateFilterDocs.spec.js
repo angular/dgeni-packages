@@ -16,12 +16,12 @@ describe("generateFilterDocsProcessor", function() {
     var docs = [
       { docType: 'ngModule', id: 'module:app', name: 'app', dependencies: [ 'mod1', 'mod2' ], components:
         {
-          filter: [ { name: 'Filter1' } ]
+          filter: [ { name: 'uppercase' } ]
         }
       },
       { docType: 'ngModule', id: 'module:mod1', name: 'mod1', dependencies: [], components:
         {
-          filter: [ { name: 'Filter2' } ]
+          filter: [ { name: 'title' } ]
         }
       }
     ];
@@ -30,8 +30,8 @@ describe("generateFilterDocsProcessor", function() {
 
     var filterDocs = _.filter(docs, { docType: 'ngFilter' });
     expect(filterDocs).toEqual([
-      jasmine.objectContaining({ docType: 'ngFilter', id: 'module:app.filter:Filter1', name: 'Filter1', parent: 'module:app.group:filter' }),
-      jasmine.objectContaining({ docType: 'ngFilter', id: 'module:mod1.filter:Filter2', name: 'Filter2', parent: 'module:mod1.group:filter' }),
+      jasmine.objectContaining({ docType: 'ngFilter', id: 'module:app.filter:uppercase', name: 'uppercase', parent: 'module:app.group:filter' }),
+      jasmine.objectContaining({ docType: 'ngFilter', id: 'module:mod1.filter:title', name: 'title', parent: 'module:mod1.group:filter' }),
     ]);
   });
 
