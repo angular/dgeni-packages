@@ -89,4 +89,11 @@ describe("parse-tags processor", function() {
       expect(doc.tags.getTags('b').length).toEqual(1);
       expect(doc.tags.getTag('b').description).toEqual('is a tag');
     });
+
+
+    it("should ignore doc if it has no content", function() {
+      expect(function() {
+        processor.$process([{}]);
+      }).not.toThrow();
+    });
 });

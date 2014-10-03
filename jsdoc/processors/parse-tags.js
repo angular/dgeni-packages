@@ -21,7 +21,7 @@ module.exports = function parseTagsProcessor(log, createDocMessage) {
 
       docs.forEach(function(doc) {
         try {
-          doc.tags = tagParser(doc.content, doc.startingLine);
+          doc.tags = tagParser(doc.content || '', doc.startingLine);
         } catch(e) {
           var message = createDocMessage('Error parsing tags', doc, e);
           log.error(message);
