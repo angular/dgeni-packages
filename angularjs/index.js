@@ -8,6 +8,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./services/moduleExtractor'))
 .factory(require('../ngdoc/services/getAliases'))
 
+.processor(require('./processors/extractAngularModules'))
 .processor(require('./processors/generateModuleDocs'))
 .processor(require('./processors/generateControllerDocs'))
 .processor(require('./processors/generateFilterDocs'))
