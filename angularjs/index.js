@@ -4,7 +4,6 @@ var Package = require('dgeni').Package;
 
 module.exports = new Package('angularjs', ['jsdoc'])
 
-.factory(require('./file-readers/ng'))
 .factory(require('./services/moduleDefs'))
 .factory(require('./services/moduleExtractor'))
 .factory(require('../ngdoc/services/getAliases'))
@@ -15,11 +14,6 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .processor(require('./processors/generateDirectiveDocs'))
 .processor(require('./processors/generateServiceComponentDocs'))
 .processor(require('./processors/generateProviderDocs'))
-
-.config(function(readFilesProcessor, ngFileReader) {
-  console.log(ngFileReader);
-  readFilesProcessor.fileReaders = [ngFileReader];
-})
 
 .config(function(computeIdsProcessor, getAliases) {
   computeIdsProcessor.idTemplates.push({

@@ -33,16 +33,13 @@ describe("generateServiceComponentDocsProcessor", function() {
     var valueDocs = _.filter(docs, { docType: 'ngService' });
 
     expect(valueDocs[0]).toEqual(
-      jasmine.objectContaining({ docType: 'ngService', serviceType: 'factory', id: 'module:app.service:Service1', name: 'Service1', parent: 'module:app.group:factory' })
+      jasmine.objectContaining({ docType: 'ngService', serviceType: 'factory', id: 'module:app.service:Service1', name: 'Service1', parent: 'module:app.group:service' })
     );
     expect(valueDocs[1]).toEqual(
-      jasmine.objectContaining({ docType: 'ngService', serviceType: 'value', id: 'module:app.service:Value1', name: 'Value1', parent: 'module:app.group:value' })
+      jasmine.objectContaining({ docType: 'ngService', serviceType: 'value', id: 'module:app.service:Value1', name: 'Value1', parent: 'module:app.group:service' })
     );
     expect(valueDocs[2]).toEqual(
       jasmine.objectContaining({ docType: 'ngService', serviceType: 'service', id: 'module:mod1.service:Service2', name: 'Service2', parent: 'module:mod1.group:service' })
-    );
-    expect(valueDocs[3]).toEqual(
-      jasmine.objectContaining({ docType: 'ngService', serviceType: 'constant', id: 'module:mod1.service:Constant1', name: 'Constant1', parent: 'module:mod1.group:constant' })
     );
   });
 

@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-module.exports = function generateControllerDocsProcessor(moduleDefs) {
+module.exports = function generateConstantDocsProcessor(moduleDefs) {
   return {
     $runAfter: ['generateModuleDocsProcessor'],
     $runBefore: ['parsing-tags'],
@@ -10,16 +10,16 @@ module.exports = function generateControllerDocsProcessor(moduleDefs) {
       _(docs)
       .filter({docType: 'ngModule'})
       .forEach(function(ngModule) {
-        _.forEach(ngModule.components.controller, function(controllerDef) {
+        _.forEach(ngModule.components.constant, function(constantDef) {
 
-          controllerDef.docType = 'ngController';
-          controllerDef.module = ngModule;
-          controllerDef.id = _.template('${module.id}.controller:${name}')(controllerDef);
-          controllerDef.parent = _.template('${module.id}.group:controller')(controllerDef);
+          constantDef.docType = 'ngConstant';
+          constantDef.module = ngModule;
+          constantDef.id = _.template('${module.id}.constant:${name}')(constantDef);
+          constantDef.parent = _.template('${module.id}.group:constant')(constantDef);
 
           // TODO: extract the dependencies from the factory call
 
-          docs.push(controllerDef);
+          docs.push(constantDef);
         });
       });
 
