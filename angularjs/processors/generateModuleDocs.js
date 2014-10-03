@@ -3,7 +3,7 @@ var _ = require('lodash');
 module.exports = function generateModuleDocsProcessor(moduleDefs) {
   return {
     $runAfter: ['files-read'],
-    $runBefore: ['processing-docs'],
+    $runBefore: ['parsing-tags'],
 
     $process: function(docs) {
 

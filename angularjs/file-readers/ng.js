@@ -51,6 +51,8 @@ module.exports = function ngFileReader(moduleExtractor, moduleDefs) {
         }
       });
 
+      return [];
+
     }
   };
 };

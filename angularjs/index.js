@@ -7,6 +7,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./file-readers/ng'))
 .factory(require('./services/moduleDefs'))
 .factory(require('./services/moduleExtractor'))
+.factory(require('../ngdoc/services/getAliases'))
 
 .processor(require('./processors/generateModuleDocs'))
 .processor(require('./processors/generateControllerDocs'))
@@ -15,6 +16,23 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .processor(require('./processors/generateServiceComponentDocs'))
 .processor(require('./processors/generateProviderDocs'))
 
-.config(function() {
+.config(function(readFilesProcessor, ngFileReader) {
+  console.log(ngFileReader);
+  readFilesProcessor.fileReaders = [ngFileReader];
+})
 
+.config(function(computeIdsProcessor, getAliases) {
+  computeIdsProcessor.idTemplates.push({
+    docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective'],
+    //idTemplate: 'module:${module}.${docType}:${name}',
+    getAliases: getAliases
+  });
+})
+
+.config(function(computePathsProcessor) {
+  computePathsProcessor.pathTemplates.push({
+    docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective'],
+    pathTemplate: '${id}',
+    outputPathTemplate: '${path}.html'
+  });
 });

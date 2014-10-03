@@ -3,7 +3,7 @@ var _ = require('lodash');
 module.exports = function generateFilterDocsProcessor(moduleDefs) {
   return {
     $runAfter: ['generateModuleDocsProcessor'],
-    $runBefore: ['processing-docs'],
+    $runBefore: ['parsing-tags'],
 
     $process: function(docs) {
 

@@ -5,7 +5,7 @@ var SERVICE_TYPES = ['factory', 'value', 'service'];
 module.exports = function generateServiceComponentDocsProcessor(moduleDefs) {
   return {
     $runAfter: ['generateModuleDocsProcessor'],
-    $runBefore: ['processing-docs'],
+    $runBefore: ['parsing-tags'],
 
     $process: function(docs) {
 
