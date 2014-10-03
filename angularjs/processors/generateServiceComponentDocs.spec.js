@@ -14,13 +14,13 @@ describe("generateServiceComponentDocsProcessor", function() {
 
   it("should create docs for each service component in each module", function() {
     var docs = [
-      { docType: 'ngModule', id: 'module:app', name: 'app', dependencies: [ 'mod1', 'mod2' ], components:
+      { docType: 'ngModule', id: 'module:app', name: 'app', dependencies: [ 'mod1', 'mod2' ], registrations:
         {
           value: [ { name: 'Value1' } ],
           factory: [ { name: 'Service1' } ]
         }
       },
-      { docType: 'ngModule', id: 'module:mod1', name: 'mod1', dependencies: [], components:
+      { docType: 'ngModule', id: 'module:mod1', name: 'mod1', dependencies: [], registrations:
         {
           service: [ { name: 'Service2' } ],
           constant: [ { name: 'Constant1'} ]

@@ -91,10 +91,10 @@ describe("moduleExtractor", function() {
 
   });
 
-  it("should extract the calls to register components on each module", function() {
+  it("should extract the calls to registrations on each module", function() {
     var appModule = moduleInfo[0];
     expect(appModule.name).toEqual('app');
-    expect(appModule.components.controller).toEqual([
+    expect(appModule.registrations.controller).toEqual([
       {
         type: 'controller',
         name: 'ControllerOne',
@@ -111,7 +111,7 @@ describe("moduleExtractor", function() {
       }
     ]);
 
-    expect(appModule.components.directive).toEqual([
+    expect(appModule.registrations.directive).toEqual([
       {
         type: 'directive',
         name: 'directiveOne',
@@ -121,12 +121,12 @@ describe("moduleExtractor", function() {
       }
     ]);
 
-    expect(appModule.components.filter).toEqual([]);
-    expect(appModule.components.service).toEqual([]);
-    expect(appModule.components.factory).toEqual([]);
-    expect(appModule.components.provider).toEqual([]);
-    expect(appModule.components.value).toEqual([]);
-    expect(appModule.components.constant).toEqual([]);
+    expect(appModule.registrations.filter).toEqual([]);
+    expect(appModule.registrations.service).toEqual([]);
+    expect(appModule.registrations.factory).toEqual([]);
+    expect(appModule.registrations.provider).toEqual([]);
+    expect(appModule.registrations.value).toEqual([]);
+    expect(appModule.registrations.constant).toEqual([]);
   });
 });
 

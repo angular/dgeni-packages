@@ -33,8 +33,8 @@ describe("generateModuleDocsProcessor", function() {
 
   it("should add component group docs for each type of component in each module", function() {
 
-    moduleDefs.app = { name: 'app', dependencies: [ 'mod1', 'mod2' ], components: { controller: [ {}, {} ], factory: [ {}, {} ] } };
-    moduleDefs.mod1 = { name: 'mod1', dependencies: [], components: { directive: [ {} ], filter: [] } };
+    moduleDefs.app = { name: 'app', dependencies: [ 'mod1', 'mod2' ], registrations: { controller: [ {}, {} ], factory: [ {}, {} ] } };
+    moduleDefs.mod1 = { name: 'mod1', dependencies: [], registrations: { directive: [ {} ], filter: [] } };
 
     var docs = [];
 

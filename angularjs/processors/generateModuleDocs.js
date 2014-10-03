@@ -14,8 +14,8 @@ module.exports = function generateModuleDocsProcessor(moduleDefs) {
         docs.push(moduleDef);
 
         // Also create a doc for holding each type of component in the module
-        _.forEach(moduleDef.components, function(components, componentType) {
-          if ( components.length > 0 ) {
+        _.forEach(moduleDef.registrations, function(registrations, componentType) {
+          if ( registrations.length > 0 ) {
             var componentGroup = {
               docType: 'componentGroup',
               name: componentType,

@@ -37,12 +37,21 @@ module.exports = function moduleExtractor() {
         // We are only interested if the comment is jsdoc style: i.e. starts with "/**""
         // If so, then strip off any leading stars and trim off leading and trailing whitespace
         if ( comment.type === 'Block' && comment.value.charAt(0) == '*') {
+
+          // Remove the comment from the comments block so that the
+          // extractJSDocCommentsProcessor doesn't pick it up
+          var commentRef = rootQuery.select(
+            '/comments/*[/range/0 ==' + comment.range[0] + ']'+
+            '[/range/1 == ' + comment.range[1] + ']');
+          commentRef.destroy();
+
           return {
             content: comment.value.replace(LEADING_STAR, '').trim(),
             startingLine: comment.loc.start.line,
             endingLine: comment.loc.end.line
           };
         }
+
       }
     };
 
@@ -62,23 +71,23 @@ module.exports = function moduleExtractor() {
       }
     };
 
-    var getComponents = function(moduleQuery, componentType) {
-      var componentQuery = moduleQuery.select('//callee/property[/name=="' + componentType + '"]');
-      var components = [];
+    var getRegistrations = function(moduleQuery, registrationType) {
+      var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType + '"]');
+      var registrations = [];
 
-      // The call chain in the AST is such that the components come out backwards.
+      // The call chain in the AST is such that the registrations come out backwards.
 
-      componentQuery.each(function() {
-        var componentName = this.parent().parent().select('/arguments/0/value').value();
-        var componentInfo = {
-          type: componentType,
-          name: componentName
+      registrationQuery.each(function() {
+        var registrationName = this.parent().parent().select('/arguments/0/value').value();
+        var registrationInfo = {
+          type: registrationType,
+          name: registrationName
         };
-        _.assign(componentInfo, getJsDocComment(this));
-        components.unshift(componentInfo);
+        _.assign(registrationInfo, getJsDocComment(this));
+        registrations.unshift(registrationInfo);
       });
 
-      return components;
+      return registrations;
     };
 
 
@@ -126,10 +135,10 @@ module.exports = function moduleExtractor() {
         moduleInfo.dependencies = dependencies;
       }
 
-      // Get info about components registered on the module
-      moduleInfo.components = {};
-      _.forEach(moduleExtractorImpl.componentsToExtract, function(componentType) {
-        moduleInfo.components[componentType] = getComponents(moduleInfo.moduleQuery, componentType) || [];
+      // Get info about registrations registered on the module
+      moduleInfo.registrations = {};
+      _.forEach(moduleExtractorImpl.registrationsToExtract, function(registrationType) {
+        moduleInfo.registrations[registrationType] = getRegistrations(moduleInfo.moduleQuery, registrationType) || [];
       });
 
 
@@ -139,7 +148,7 @@ module.exports = function moduleExtractor() {
     return angularModuleCallsQuery.map(getModuleInfo);
   }
 
-  moduleExtractorImpl.componentsToExtract = [
+  moduleExtractorImpl.registrationsToExtract = [
     'controller',
     'filter',
     'directive',
@@ -147,7 +156,9 @@ module.exports = function moduleExtractor() {
     'factory',
     'value',
     'service',
-    'constant'
+    'constant',
+    'config',
+    'run'
   ];
 
   return moduleExtractorImpl;

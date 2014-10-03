@@ -10,7 +10,7 @@ module.exports = function generateFilterDocsProcessor(moduleDefs) {
       _(docs)
       .filter({docType: 'ngModule'})
       .forEach(function(ngModule) {
-        _.forEach(ngModule.components.filter, function(filterDef) {
+        _.forEach(ngModule.registrations.filter, function(filterDef) {
 
           filterDef.docType = 'ngFilter';
           filterDef.module = ngModule;

@@ -15,12 +15,12 @@ describe("generateControllerDocsProcessor", function() {
   it("should create docs for each controller in each module definition", function() {
 
     var docs = [
-      { docType: 'ngModule', id: 'module:app', name: 'app', dependencies: [ 'mod1', 'mod2' ], components:
+      { docType: 'ngModule', id: 'module:app', name: 'app', dependencies: [ 'mod1', 'mod2' ], registrations:
         {
           controller: [ { name: 'Controller1' } ]
         }
       },
-      { docType: 'ngModule', id: 'module:mod1', name: 'mod1', dependencies: [], components:
+      { docType: 'ngModule', id: 'module:mod1', name: 'mod1', dependencies: [], registrations:
         {
           controller: [ { name: 'Controller2' } ]
         }

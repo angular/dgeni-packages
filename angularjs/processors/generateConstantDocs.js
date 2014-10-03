@@ -10,7 +10,7 @@ module.exports = function generateConstantDocsProcessor(moduleDefs) {
       _(docs)
       .filter({docType: 'ngModule'})
       .forEach(function(ngModule) {
-        _.forEach(ngModule.components.constant, function(constantDef) {
+        _.forEach(ngModule.registrations.constant, function(constantDef) {
 
           constantDef.docType = 'ngConstant';
           constantDef.module = ngModule;

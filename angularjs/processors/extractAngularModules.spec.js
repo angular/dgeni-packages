@@ -42,7 +42,7 @@ describe("extractAngularModulesProcessor", function() {
       dependencies: ['mod1', 'mod2']
     }));
 
-    expect(moduleDefs.app.components.controller).toEqual([jasmine.objectContaining({
+    expect(moduleDefs.app.registrations.controller).toEqual([jasmine.objectContaining({
       name: 'ControllerOne', content: 'ControllerOne docs'
     })]);
 
@@ -58,17 +58,17 @@ describe("extractAngularModulesProcessor", function() {
       dependencies: ['mod1']
     }));
 
-    expect(moduleDefs.app.components.controller).toEqual([jasmine.objectContaining({
+    expect(moduleDefs.app.registrations.controller).toEqual([jasmine.objectContaining({
       name: 'ControllerTwo', content: 'ControllerTwo docs'
     })]);
 
-    expect(moduleDefs.app.components.filter).toEqual([jasmine.objectContaining({
+    expect(moduleDefs.app.registrations.filter).toEqual([jasmine.objectContaining({
       name: 'filterA', content: 'filter A docs'
     })]);
 
   });
 
-  it("should merge in the components of a reopened module", function() {
+  it("should merge in the registrations of a reopened module", function() {
     var docs = processor.$process([createDoc(DOCS1), createDoc(DOCS3)]);
 
     expect(moduleDefs.app).toEqual(jasmine.objectContaining(
@@ -78,7 +78,7 @@ describe("extractAngularModulesProcessor", function() {
       dependencies: ['mod1', 'mod2']
     }));
 
-    expect(moduleDefs.app.components.controller).toEqual([
+    expect(moduleDefs.app.registrations.controller).toEqual([
       jasmine.objectContaining({
         name: 'ControllerOne', content: 'ControllerOne docs'
       }),

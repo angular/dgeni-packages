@@ -13,7 +13,7 @@ module.exports = function generateServiceComponentDocsProcessor(moduleDefs) {
       .filter({docType: 'ngModule'})
       .forEach(function(ngModule) {
         _.forEach(SERVICE_TYPES, function(serviceType) {
-          _.forEach(ngModule.components[serviceType], function(component) {
+          _.forEach(ngModule.registrations[serviceType], function(component) {
 
             component.docType = 'ngService';
             component.serviceType = serviceType;

@@ -33,11 +33,11 @@ module.exports = function extractAngularModulesProcessor(moduleExtractor, module
                 throw new Error('Module definition missing');
               }
 
-              // Add the new components to this module definition
-              _.forEach(module.components, function(components, componentType) {
-                _.forEach(components, function(component) {
-                  component.fileInfo = doc.fileInfo;
-                  moduleDef.components[componentType].push(component);
+              // Add the new registrations to this module definition
+              _.forEach(module.registrations, function(registrations, registrationType) {
+                _.forEach(registrations, function(registration) {
+                  registration.fileInfo = doc.fileInfo;
+                  moduleDef.registrations[registrationType].push(registration);
                 });
               });
             }

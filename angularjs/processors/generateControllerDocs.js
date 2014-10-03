@@ -10,7 +10,7 @@ module.exports = function generateControllerDocsProcessor(moduleDefs) {
       _(docs)
       .filter({docType: 'ngModule'})
       .forEach(function(ngModule) {
-        _.forEach(ngModule.components.controller, function(controllerDef) {
+        _.forEach(ngModule.registrations.controller, function(controllerDef) {
 
           controllerDef.docType = 'ngController';
           controllerDef.module = ngModule;

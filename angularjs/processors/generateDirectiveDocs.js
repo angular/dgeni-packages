@@ -10,7 +10,7 @@ module.exports = function generateDirectiveDocsProcessor(moduleDefs) {
       _(docs)
       .filter({docType: 'ngModule'})
       .forEach(function(ngModule) {
-        _.forEach(ngModule.components.directive, function(directiveDef) {
+        _.forEach(ngModule.registrations.directive, function(directiveDef) {
 
           directiveDef.docType = 'ngDirective';
           directiveDef.module = ngModule;
