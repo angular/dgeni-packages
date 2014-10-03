@@ -1,24 +1,11 @@
 var _ = require('lodash');
-var jsParser = require('esprima');
-var traverse = require('estraverse').traverse;
-var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
+var esprima = require('esprima');
 
 /**
  * @dgService jsdocFileReader
  * @description
- * This file reader will pull a doc for each jsdoc style comment in the source file
- * (by default .js)
- *
- * The doc will initially have the form:
- * ```
- * {
- *   content: 'the content of the comment',
- *   startingLine: xxx,
- *   endingLine: xxx,
- *   codeNode: someASTNode
- *   codeAncestors: arrayOfASTNodes
- * }
- * ```
+ * This file reader will create a simple doc for each js
+ * file including a code AST of the JavaScript in the file.
  */
 module.exports = function jsdocFileReader() {
   return {
@@ -26,60 +13,14 @@ module.exports = function jsdocFileReader() {
     defaultPattern: /\.js$/,
     getDocs: function(fileInfo) {
 
-      fileInfo.ast = jsParser.parse(fileInfo.content, {
+      fileInfo.ast = esprima.parse(fileInfo.content, {
         loc: true,
-        range: true,
-        comment: true
+        attachComment: true
       });
 
-      return _(fileInfo.ast.comments)
-
-        .filter(function(comment) {
-          // To test for a jsdoc comment (i.e. starting with /** ), we need to check for a leading
-          // star since the parser strips off the first "/*"
-          return comment.type === 'Block' && comment.value.charAt(0) === '*';
-        })
-
-        .map(function(comment) {
-
-          // Strip off any leading stars
-          text = comment.value.replace(LEADING_STAR, '');
-
-          // Trim off leading and trailing whitespace
-          text = text.trim();
-
-          // Extract the information about the code directly after this comment
-          var codeNode = findNodeAfter(fileInfo.ast, comment.range[1]);
-
-          // Create a doc from this comment
-          return {
-            startingLine: comment.loc.start.line,
-            endingLine: comment.loc.end.line,
-            content: text,
-            codeNode: codeNode.node,
-            codeAncestors: codeNode.path,
-            docType: 'js'
-          };
-
-        })
-
-        .value();
+      return [{
+        docType: 'jsFile'
+      }];
     }
   };
 };
-
-function findNodeAfter(ast, pos) {
-  var found, path;
-  traverse(ast, {
-    enter: function(node) {
-      if ( node.range[1] > pos && node.range[0] >= pos ) {
-        if ( !found || found.range[0] >= node.range[0] ) {
-          found = node;
-          path = this.parents();
-          this.skip();
-        }
-      }
-    }
-  });
-  return { node: found, path: path };
-}
