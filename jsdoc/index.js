@@ -10,6 +10,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 .processor({ name: 'tags-extracted', $runAfter: ['extracting-tags'], $runBefore: ['processing-docs'] })
 
 // Add in the real processors for this package
+.processor(require('./processors/extractJSDocComments'))
 .processor(require('./processors/code-name'))
 .processor(require('./processors/parse-tags'))
 .processor(require('./processors/extract-tags'))
