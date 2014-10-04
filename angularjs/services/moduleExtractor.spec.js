@@ -100,14 +100,16 @@ describe("moduleExtractor", function() {
         name: 'ControllerOne',
         content: 'ControllerOne docs',
         startingLine: 5,
-        endingLine: 7
+        endingLine: 7,
+        range: [62, 95]
       },
       {
         type: 'controller',
         name: 'ControllerOne',
         content: 'ControllerOne docs (overridden)',
         startingLine: 14,
-        endingLine: 16
+        endingLine: 16,
+        range: [217, 263]
       }
     ]);
 
@@ -117,7 +119,8 @@ describe("moduleExtractor", function() {
         name: 'directiveOne',
         content: 'directiveOne docs',
         startingLine: 10,
-        endingLine: 12
+        endingLine: 12,
+        range: [153, 185]
       }
     ]);
 
