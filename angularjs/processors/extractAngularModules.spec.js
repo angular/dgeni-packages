@@ -86,7 +86,16 @@ describe("extractAngularModulesProcessor", function() {
         name: 'ControllerOne', content: 'ControllerOne docs (overridden)'
       })
     ]);
+  });
 
+  it("should cope if there are no comments on an element", function() {
+    var docs = processor.$process([createDoc(DOCS4)]);
+    expect(moduleDefs.app).toEqual(jasmine.objectContaining(
+    {
+      name: 'app',
+      content: '',
+      dependencies: []
+    }));
   });
 
 });
@@ -138,3 +147,7 @@ DOCS3 =
     '   * ControllerOne docs (overridden)\n' +
     '   */\n' +
     '  .controller("ControllerOne", function($scope) {});\n';
+
+DOCS4 =
+    'angular.module("app", [])\n' +
+    '  .factroy("serviceA", function() {});';
