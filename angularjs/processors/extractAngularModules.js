@@ -17,7 +17,6 @@ module.exports = function extractAngularModulesProcessor(moduleExtractor, module
           log.debug('reading jsfile', doc.fileInfo.projectRelativePath);
 
           var moduleInfo = moduleExtractor(doc.fileInfo.ast);
-          moduleInfo.fileInfo = doc.fileInfo;
 
           _.forEach(moduleInfo, function(module) {
 
@@ -26,8 +25,8 @@ module.exports = function extractAngularModulesProcessor(moduleExtractor, module
             if ( module.dependencies ) {
 
               // we have defined a new module
+              module.fileInfo = doc.fileInfo;
               moduleDefs[module.name] = module;
-              removeASTComment(doc.fileInfo.ast, module);
 
             } else {
 
@@ -43,7 +42,6 @@ module.exports = function extractAngularModulesProcessor(moduleExtractor, module
                 _.forEach(registrations, function(registration) {
                   registration.fileInfo = doc.fileInfo;
                   moduleDef.registrations[registrationType].push(registration);
-                  removeASTComment(doc.fileInfo.ast, registration);
                 });
               });
             }
@@ -55,11 +53,4 @@ module.exports = function extractAngularModulesProcessor(moduleExtractor, module
 
     }
   };
-
-  function removeASTComment(ast, doc) {
-    // Remove the comment from the comments block so that the
-    // extractJSDocCommentsProcessor doesn't pick it up
-    _.remove(ast.comments, { range: doc.range });
-
-  }
 };

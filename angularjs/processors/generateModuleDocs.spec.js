@@ -14,9 +14,11 @@ describe("generateModuleDocsProcessor", function() {
   });
 
   it("should create docs for each module definition", function() {
-    moduleDefs.app = { name: 'app', dependencies: [ 'mod1', 'mod2' ] };
-    moduleDefs.mod1 = { name: 'mod1', dependencies: [] };
-    moduleDefs.mod2 = { name: 'mod2', dependencies: [] };
+    var fileInfo = { ast: { comments: [] } };
+
+    moduleDefs.app = { name: 'app', dependencies: [ 'mod1', 'mod2' ], fileInfo: fileInfo };
+    moduleDefs.mod1 = { name: 'mod1', dependencies: [], fileInfo: fileInfo  };
+    moduleDefs.mod2 = { name: 'mod2', dependencies: [], fileInfo: fileInfo  };
 
     var docs = [];
     processor.$process(docs);
@@ -33,18 +35,43 @@ describe("generateModuleDocsProcessor", function() {
 
   it("should add component group docs for each type of component in each module", function() {
 
-    moduleDefs.app = { name: 'app', dependencies: [ 'mod1', 'mod2' ], registrations: { controller: [ {}, {} ], factory: [ {}, {} ] } };
-    moduleDefs.mod1 = { name: 'mod1', dependencies: [], registrations: { directive: [ {} ], filter: [] } };
+    var fileInfo = { ast: { comments: [] } };
+
+    moduleDefs.app = {
+      name: 'app',
+      dependencies: [ 'mod1', 'mod2' ],
+      registrations: {
+        controller: [ { name: 'ControllerA' } ],
+        factory: [ { name: 'service1' } ]
+      },
+      fileInfo: fileInfo
+    };
+    moduleDefs.mod1 = {
+      name: 'mod1',
+      dependencies: [],
+      registrations: {
+        directive: [ { name: 'directiveX'} ],
+        filter: []
+      },
+      fileInfo: fileInfo
+    };
 
     var docs = [];
 
     processor.$process(docs);
 
-    expect(_.filter(docs, { docType: 'componentGroup' })).toEqual([
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'controller', id: 'module:app.group:controller', parent: 'module:app' }),
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'factory', id: 'module:app.group:factory', parent: 'module:app' }),
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'directive', id: 'module:mod1.group:directive', parent: 'module:mod1' })
-    ]);
+    var groups = _.filter(docs, { docType: 'componentGroup' });
+
+    expect(groups.length).toEqual(3);
+    expect(groups[0]).toEqual(
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'controllers', id: 'module:app.group:controllers' })
+    );
+    expect(groups[1]).toEqual(
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'services', id: 'module:app.group:services' })
+    );
+    expect(groups[2]).toEqual(
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'directives', id: 'module:mod1.group:directives' })
+    );
 
   });
 
