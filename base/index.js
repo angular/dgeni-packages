@@ -28,8 +28,11 @@ module.exports = new Package('base')
 .processor(require('./processors/debugDumpProcessor'))
 .processor(require('./processors/computeIds'))
 .processor(require('./processors/computePaths'))
+.processor(require('./processors/checkAnchorLinks'))
 
 // Helper services
+.factory(require('./services/urlExtractor'))
+.factory(require('./services/linkExtractor'))
 .factory(require('./services/templateFinder'))
 .factory(require('./services/encodeCodeBlock'))
 .factory(require('./services/trimIndentation'))
