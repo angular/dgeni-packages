@@ -32,7 +32,7 @@ module.exports = new Package('base')
 
 // Helper services
 .factory(require('./services/resolveUrl'))
-.factory(require('./services/linkExtractor'))
+.factory(require('./services/extractLinks'))
 .factory(require('./services/templateFinder'))
 .factory(require('./services/encodeCodeBlock'))
 .factory(require('./services/trimIndentation'))
