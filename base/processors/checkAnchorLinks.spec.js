@@ -7,6 +7,12 @@ var Dgeni = require('dgeni');
 describe("checkAnchorLinks", function() {
   var processor, mockLog;
 
+  function checkWarning(link, doc) {
+    expect(mockLog.warn).toHaveBeenCalled();
+    expect(mockLog.warn.calls.first().args[0]).toContain(doc);
+    expect(mockLog.warn.calls.first().args[0]).toContain(link);
+  }
+
 
   beforeEach(function() {
     var testPackage = mockPackage();
@@ -17,64 +23,76 @@ describe("checkAnchorLinks", function() {
     mockLog = injector.get('log');
   });
 
-  it("should warning when there is a dangling link", function() {
-    processor.$process([{ renderedContent: '<a href="foo"></a>', outputPath: 'doc/path.html' }]);
-    expect(mockLog.warn).toHaveBeenCalledWith('Link found at', 'doc/path.html', 'pointing to dangling reference', 'foo');
+  it("should warn when there is a dangling link", function() {
+    processor.$process([{ renderedContent: '<a href="foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' }]);
+    checkWarning('foo', 'doc/path.html');
   });
 
-  it("should not create a warning when there is a page that point to the path", function() {
+  it("should not warn when there is a page for a link", function() {
     processor.$process([
-      { renderedContent: '<a href="/foo"></a>', outputPath: 'doc/path.html' },
-      { renderedContent: 'CONTENT OF FOO', outputPath: 'foo.html' }
+      { renderedContent: '<a href="/foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
+      { renderedContent: 'CONTENT OF FOO', outputPath: 'foo.html', path: 'foo' }
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
-  it("should skip files that are not .html", function() {
+  it("should skip files that are not in the `filesToCheck` property", function() {
     processor.$process([
-      { renderedContent: '<a href="/foo"></a>', outputPath: 'x.js' }
+      { renderedContent: '<a href="/foo"></a>', outputPath: 'x.js', path: 'x' }
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
-  it("should skip external and mailto links", function() {
+  it("should skip links that match the `ignoredLinks` property", function() {
     processor.$process([
-      { renderedContent: '<a>foo</a>', outputPath: 'x.html' },
-      { renderedContent: '<a href="http://www.google.com">foo</a>', outputPath: 'a.html' },
-      { renderedContent: '<a href="mailto:foo@foo.com">foo</a>', outputPath: 'c.html' }
+      { renderedContent: '<a>foo</a>', outputPath: 'x.html', path: 'x' },
+      { renderedContent: '<a href="http://www.google.com">foo</a>', outputPath: 'a.html', path: 'a' },
+      { renderedContent: '<a href="mailto:foo@foo.com">foo</a>', outputPath: 'c.html', path: 'c' }
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
-  it("should be able to resolve internal links", function() {
+  it("should not warn for links to named anchors", function() {
     processor.$process([
-      { renderedContent: '<a name="foo">foo</a><a href="#foo">to foo</a>', outputPath: 'x.html' },
-      { renderedContent: '<a href="x#foo">foo</a>', outputPath: 'a.html' },
-      { renderedContent: '<a href="x.html#foo">foo</a>', outputPath: 'b.html' },
-      { renderedContent: '<a href="x#">foo</a>', outputPath: 'c.html' },
-      { renderedContent: '<a href="x.html#">foo</a>', outputPath: 'd.html' }
+      { renderedContent: '<a name="foo">foo</a><a href="#foo">to foo</a>', outputPath: 'x.html', path: 'x' },
+      { renderedContent: '<a href="x#foo">foo</a>', outputPath: 'a.html', path: 'a'},
+      { renderedContent: '<a href="x.html#foo">foo</a>', outputPath: 'b.html', path: 'b'},
+      { renderedContent: '<a href="x#">foo</a>', outputPath: 'c.html', path: 'c'},
+      { renderedContent: '<a href="x.html#">foo</a>', outputPath: 'd.html', path: 'd'}
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
-  it("should report internal, same page, dangling links", function() {
+  it("should not warn for links to elements defined by id", function() {
     processor.$process([
-      { renderedContent: '<a href="#foo">to foo</a>', outputPath: 'x.html' }
+      { renderedContent: '<div id="foo">foo</div><a href="#foo">to foo</a>', outputPath: 'x.html', path: 'x' },
+      { renderedContent: '<a href="x#foo">foo</a>', outputPath: 'a.html', path: 'a'},
+      { renderedContent: '<a href="x.html#foo">foo</a>', outputPath: 'b.html', path: 'b'},
+      { renderedContent: '<a href="x#">foo</a>', outputPath: 'c.html', path: 'c'},
+      { renderedContent: '<a href="x.html#">foo</a>', outputPath: 'd.html', path: 'd'}
     ]);
-    expect(mockLog.warn).toHaveBeenCalledWith('Link found at', 'x.html', 'pointing to dangling reference', '#foo');
+    expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
-  it("should report internal, cross pages, dangling links", function() {
+
+  it("should warn for internal, same page, dangling links", function() {
     processor.$process([
-      { renderedContent: '<a name="foo">foo</a>', outputPath: 'x.html' },
-      { renderedContent: '<a href="x#bar">to bar</a>', outputPath: 'y.html' }
+      { renderedContent: '<a href="#foo">to foo</a>', outputPath: 'x.html', path: 'x' }
     ]);
-    expect(mockLog.warn).toHaveBeenCalledWith('Link found at', 'y.html', 'pointing to dangling reference', 'x#bar');
+    checkWarning('#foo', 'x.html');
+  });
+
+  it("should warn for internal, cross page, dangling links", function() {
+    processor.$process([
+      { renderedContent: '<a name="foo">foo</a>', outputPath: 'x.html', path: 'x' },
+      { renderedContent: '<a href="x#bar">to bar</a>', outputPath: 'y.html', path: 'y' }
+    ]);
+    checkWarning('x#bar', 'y.html');
   });
 
   it("should skip non-anchor elements", function() {
     processor.$process([
-      { renderedContent: '<div href="foo"></div>', outputPath: 'c.html' }
+      { renderedContent: '<div href="foo"></div>', outputPath: 'c.html', path: 'c' }
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
