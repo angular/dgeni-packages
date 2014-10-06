@@ -69,7 +69,7 @@ function getComponentGroup(registrationType, moduleDef) {
       parent: moduleDef,
       children: []
     };
-    group.id = _.template('${module.id}.group:${name}')(group);
+    group.id = _.template('${module.id}.${name}')(group);
     moduleDef.groups[registrationType.group] = group;
   }
   return group;

@@ -64,13 +64,13 @@ describe("generateModuleDocsProcessor", function() {
 
     expect(groups.length).toEqual(3);
     expect(groups[0]).toEqual(
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'controllers', id: 'module:app.group:controllers' })
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'controllers', id: 'module:app.controllers' })
     );
     expect(groups[1]).toEqual(
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'services', id: 'module:app.group:services' })
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'services', id: 'module:app.services' })
     );
     expect(groups[2]).toEqual(
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'directives', id: 'module:mod1.group:directives' })
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'directives', id: 'module:mod1.directives' })
     );
 
   });
