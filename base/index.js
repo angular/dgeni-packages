@@ -31,7 +31,7 @@ module.exports = new Package('base')
 .processor(require('./processors/checkAnchorLinks'))
 
 // Helper services
-.factory(require('./services/urlExtractor'))
+.factory(require('./services/resolveUrl'))
 .factory(require('./services/linkExtractor'))
 .factory(require('./services/templateFinder'))
 .factory(require('./services/encodeCodeBlock'))
