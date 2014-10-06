@@ -28,11 +28,13 @@ module.exports = new Package('examples', ['jsdoc'])
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['example-file'],
+    getPath: function() {},
     outputPathTemplate: 'examples/${id}'
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['runnableExample' ],
-    pathTemplate: 'examples/${example.id}'
+    pathTemplate: 'examples/${example.id}',
+    getOutputPath: function() {},
   });
 
   computeIdsProcessor.idTemplates.push({

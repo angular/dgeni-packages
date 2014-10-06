@@ -51,7 +51,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
           if ( !doc.path ) {
             var getPath = pathTemplateMap[doc.docType];
             if ( !getPath ) {
-              log.debug(createDocMessage('No path template provided', doc));
+              log.warn(createDocMessage('No path template provided', doc));
             } else {
               doc.path = getPath(doc);
             }
@@ -60,7 +60,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
           if ( !doc.outputPath ) {
             var getOutputPath = outputPathTemplateMap[doc.docType];
             if ( !getOutputPath ) {
-              log.debug(createDocMessage('No output path template provided', doc));
+              log.warn(createDocMessage('No output path template provided', doc));
             } else {
               doc.outputPath = getOutputPath(doc);
             }
@@ -70,7 +70,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
           throw new Error(createDocMessage('Failed to compute paths for doc', doc, err));
         }
 
-        log.debug('computed path for:', '"' + doc.id + '" (' + doc.docType + ') - "' + doc.path + '"', 'and outputPath:', '"' + doc.outputPath + '"');
+        log.debug(createDocMessage('path: ' + doc.path + '; outputPath: ' + doc.outputPath, doc));
       });
     }
   };
