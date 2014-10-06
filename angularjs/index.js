@@ -7,6 +7,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./services/moduleDefs'))
 .factory(require('./services/moduleExtractor'))
 .factory(require('./services/removeASTComment'))
+.factory(require('./services/getPathFromId'))
 .factory(require('../ngdoc/services/getAliases'))
 
 .processor(require('./processors/extractAngularModules'))
@@ -21,10 +22,10 @@ module.exports = new Package('angularjs', ['jsdoc'])
   });
 })
 
-.config(function(computePathsProcessor) {
+.config(function(computePathsProcessor, getPathFromId) {
   computePathsProcessor.pathTemplates.push({
     docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective', 'ngService', 'ngConstant'],
-    pathTemplate: '${id}',
-    outputPathTemplate: '${path}.html'
+    getPath: getPathFromId,
+    outputPathTemplate: '${path}/index.html'
   });
 });

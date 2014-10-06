@@ -46,6 +46,7 @@
     "minimatch": "^0.3.0",
     "node-html-encoder": "0.0.2",
     "nunjucks": "~1.0.1",
+    "pluralize": "^1.0.2",
     "q": "~1.0.0",
     "q-io": "~1.10.9",
     "spahql": "^0.7.6",
