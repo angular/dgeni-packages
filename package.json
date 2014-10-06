@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node .",
@@ -71,6 +71,7 @@
     "Konstantinos Rousis <rousisk@gmail.com>",
     "Tobias Bosch <tbosch1009@gmail.com>",
     "Thor Jacobsen <freak.tm@gmail.com>",
-    "<thorn.mailbox@gmail.com>"
+    "<thorn.mailbox@gmail.com>",
+    "Lucas Galfaso <lgalfaso@gmail.com>"
   ]
 }

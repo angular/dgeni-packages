@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.10.1 6th October
+
+Mostly minor refactoring and the new `checkAnchorLinksProcessor`
+
+Thanks to Lucas, Thor and Stéphane.
+
+* refact(base/checkAnchorLinksProcessor): cleaned up the processor     537f6228
+* refact(base/extractLinks): rename and also extract id attributes     3ef7b3af
+* refact(base/resolveUrl): simplify the code       f393d4ac
+* feat(anchors): detect dangling anchors     b9b3ef8c
+* refact(base/computePathsProcessor): warn if no path or outputPath template/getter is found       a5b9f536
+* refact(jsdoc/jsdocfileReader): move processing into extractJSDocCommentsProcessor     cbcbac23
+* feat(jsdoc/extractJSDocComments): add new processor      b1362834
+* fix(jsdoc/parseTagsProcessor): don't error if doc has no content      b3da03c3
+* feat(ngdoc/templates/base.template): make 'Improve this Doc' lead to appropriate line      55f5f002
+
+
 ## v0.10.0 29th September 2014
 
 Finally, only 4 betas and 7 release candidates and here is 0.10.0. This version is current being
