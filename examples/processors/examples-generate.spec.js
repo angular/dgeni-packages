@@ -24,7 +24,7 @@ describe("examples-generate processor", function() {
       id: 'a.b.c',
       doc: docs[0],
       outputFolder: 'examples',
-      deps: 'dep1.js;dep2.js;dep3.css',
+      deps: 'dep1.js;dep2.js;http://example.com/dep3.js;https://example.com/dep4.js;dep5.css;http://example.com/dep6.css;https://example.com/dep7.css',
       files: files,
       deployments: {}
     });
@@ -76,6 +76,8 @@ describe("examples-generate processor", function() {
     expect(_.find(docs, { id: 'a.b.c' }).scripts).toEqual([
       { path : 'dep1.js' },
       { path : 'dep2.js' },
+      { path : 'http://example.com/dep3.js' },
+      { path : 'https://example.com/dep4.js' },
       jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.js' })
     ]);
 
@@ -84,20 +86,26 @@ describe("examples-generate processor", function() {
       { path: 'someOtherFile.js' },
       { path : '../dep1.js' },
       { path : '../dep2.js' },
+      { path : 'http://example.com/dep3.js' },
+      { path : 'https://example.com/dep4.js' },
       jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.js' })
     ]);
   });
 
   it("should add the dependencies to the exampleDoc stylesheets", function() {
     expect(_.find(docs, { id: 'a.b.c' }).stylesheets).toEqual([
-      { path : 'dep3.css' },
+      { path : 'dep5.css' },
+      { path : 'http://example.com/dep6.css' },
+      { path : 'https://example.com/dep7.css' },
       jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.css' })
     ]);
 
     expect(_.find(docs, { id: 'a.b.c-other' }).stylesheets).toEqual([
       { path: 'someStyle.css' },
       { path: 'otherStyle.css' },
-      { path : '../dep3.css' },
+      { path : '../dep5.css' },
+      { path : 'http://example.com/dep6.css' },
+      { path : 'https://example.com/dep7.css' },
       jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.css' })
     ]);
   });

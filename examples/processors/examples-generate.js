@@ -83,9 +83,11 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       // Copy in any dependencies for this example
       if ( example.deps ) {
         _.forEach(example.deps.split(';'), function(dependency) {
-          var filePath = /(https?:)?\/\//.test(dependencyPath) ?
-            dependencyPath + dependency :
-            path.join(dependencyPath, dependency);
+          var filePath = /(https?:)?\/\//.test(dependency) ?
+            dependency :
+            /(https?:)?\/\//.test(dependencyPath) ?
+              dependencyPath + dependency :
+              path.join(dependencyPath, dependency);
           if ( filePath.match(/\.js$/) ) {
             exampleDoc.scripts.push({ path: filePath });
           } else if ( filePath.match(/\.css$/) ) {
