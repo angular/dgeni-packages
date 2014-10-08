@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.10.1 6th October
+## v0.10.2 8th October 2014
+
+* feat(examples): allow external example dependencies      ae900e77
+
+## v0.10.1 6th October 2014
 
 Mostly minor refactoring and the new `checkAnchorLinksProcessor`
 
