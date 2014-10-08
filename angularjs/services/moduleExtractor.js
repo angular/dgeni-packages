@@ -2,7 +2,7 @@ var _ = require('lodash');
 var SpahQL = require('spahql');
 var esrefactor = require('esrefactor');
 
-module.exports = function moduleExtractor(getJsDocComment) {
+module.exports = function moduleExtractor(getJsDocComment, log) {
 
   function moduleExtractorImpl(ast) {
 
@@ -73,7 +73,7 @@ module.exports = function moduleExtractor(getJsDocComment) {
         moduleInfo.moduleRefs.each(function() {
            registrations = registrations.concat(getRegistrations(this, registrationType));
         });
-        moduleInfo.registrations[registrationType] = registrations;
+        moduleInfo.registrations[registrationType.name] = registrations;
       });
 
 
@@ -84,41 +84,74 @@ module.exports = function moduleExtractor(getJsDocComment) {
   }
 
   moduleExtractorImpl.registrationsToExtract = [
-    'controller',
-    'filter',
-    'directive',
-    'provider',
-    'factory',
-    'value',
-    'service',
-    'constant',
-    'config',
-    'run'
+    { name: 'controller', requiresName: true, hasFactory: true },
+    { name: 'filter', requiresName: true, hasFactory: true },
+    { name: 'directive', requiresName: true, hasFactory: true },
+    { name: 'provider', requiresName: true, hasFactory: true },
+    { name: 'factory', requiresName: true, hasFactory: true },
+    { name: 'value', requiresName: true, hasFactory: false },
+    { name: 'service', requiresName: true, hasFactory: true },
+    { name: 'constant', requiresName: true, hasFactory: false },
+    { name: 'config', requiresName: false, hasFactory: true },
+    { name: 'run', requiresName: false, hasFactory: true }
   ];
 
   return moduleExtractorImpl;
 
   function getRegistrations(moduleQuery, registrationType) {
-    var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType + '"]');
+    var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType.name + '"]');
     var registrations = [];
 
     // The call chain in the AST is such that the registrations come out backwards.
 
     registrationQuery.each(function() {
-      var registrationName = this.parent().parent().select('/arguments/0/value').value();
+
+      var query = this.parent().parent();
+      var args = query.select('/arguments').value();
+
       var registrationInfo = {
         type: registrationType,
-        name: registrationName
+        astQuery: query
       };
 
       _.assign(registrationInfo, getJsDocComment(this.value()));
+
+      if ( registrationType.requiresName ) {
+        registrationInfo.name = args.shift().value;
+      }
+
+      if ( registrationInfo.type.hasFactory ) {
+        // TODO: handle config and run blocks with multiple factory fns
+        registrationInfo.dependencies = findDependencies(args.shift());
+      }
+
       registrations.unshift(registrationInfo);
     });
 
     return registrations;
   }
 
+  function findDependencies(factoryFn) {
+    if ( factoryFn ) {
+      // TODO: handle $inject property annotations
+      switch ( factoryFn.type ) {
+        case 'FunctionExpression':
+          // The registration is a straight factory function
+          return _.map(factoryFn.params, function(param) {
+            return param.name;
+          });
+        case 'ArrayExpression':
+          // The registration is an array annotated function
+          return _(factoryFn.elements)
+            .initial()
+            .map(function(element) { return element.value; })
+            .value();
+      }
+    }
+  }
+
 };
+
 
 function findStatement(node) {
   var type;

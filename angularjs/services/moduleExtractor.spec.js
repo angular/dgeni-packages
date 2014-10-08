@@ -39,7 +39,7 @@ describe("moduleExtractor", function() {
         '  /**\n' +
         '   * ControllerOne docs (overridden)\n' +
         '   */\n' +
-        '  .controller("ControllerOne", function($scope) {});\n' +
+        '  .controller("ControllerOne", [\'$scope\', \'$http\', function(s, h) {}]);\n' +
         '  \n' +
         '/**\n' +
         ' * mod1 docs\n' +
@@ -55,7 +55,9 @@ describe("moduleExtractor", function() {
         '/**\n' +
         ' * docs for ControllerTwo (registered via a module variable)\n' +
         ' */\n' +
-        'mod1Var.controller("ControllerTwo", function($scope) {});\n'
+        'mod1Var.controller("ControllerTwo", function($scope) {});\n' +
+        'mod1Var.config(function($locationProvider) {});\n' +
+        'mod1Var.run(function($rootScope) {});\n'
     );
 
     moduleInfo = moduleExtractor(ast);
@@ -101,33 +103,33 @@ describe("moduleExtractor", function() {
     var appModule = moduleInfo[0];
     expect(appModule.name).toEqual('app');
     expect(appModule.registrations.controller).toEqual([
-      {
-        type: 'controller',
+      jasmine.objectContaining({
+        type: { name: 'controller', requiresName: true, hasFactory: true },
         name: 'ControllerOne',
         content: 'ControllerOne docs',
         startingLine: 5,
         endingLine: 7,
         range: [62, 95]
-      },
-      {
-        type: 'controller',
+      }),
+      jasmine.objectContaining({
+        type: { name: 'controller', requiresName: true, hasFactory: true },
         name: 'ControllerOne',
         content: 'ControllerOne docs (overridden)',
         startingLine: 14,
         endingLine: 16,
         range: [217, 263]
-      }
+      })
     ]);
 
     expect(appModule.registrations.directive).toEqual([
-      {
-        type: 'directive',
+      jasmine.objectContaining({
+        type: { name: 'directive', requiresName: true, hasFactory: true },
         name: 'directiveOne',
         content: 'directiveOne docs',
         startingLine: 10,
         endingLine: 12,
         range: [153, 185]
-      }
+      })
     ]);
 
     expect(appModule.registrations.filter).toEqual([]);
@@ -142,7 +144,10 @@ describe("moduleExtractor", function() {
     var mod2 = moduleInfo[2];
     expect(mod2.name).toEqual('mod2');
     expect(mod2.registrations.controller).toEqual([]);
-    expect(mod2.registrations.filter).toEqual([{ type : 'filter', name : 'mod2Filter' }]);
+    expect(mod2.registrations.filter).toEqual([jasmine.objectContaining({
+      type : { name: 'filter', requiresName: true, hasFactory: true },
+      name : 'mod2Filter'
+    })]);
     expect(mod2.registrations.service).toEqual([]);
     expect(mod2.registrations.factory).toEqual([]);
     expect(mod2.registrations.provider).toEqual([]);
@@ -153,13 +158,30 @@ describe("moduleExtractor", function() {
   it("should extract registrations on module variable references as well module defitions", function() {
     var mod1 = moduleInfo[1];
     expect(mod1.name).toEqual('mod1');
-    expect(mod1.registrations.controller).toEqual([{ type: 'controller', name: 'ControllerTwo' }]);
+    expect(mod1.registrations.controller).toEqual([jasmine.objectContaining({
+      type: { name: 'controller', requiresName: true, hasFactory: true },
+      name: 'ControllerTwo'
+    })]);
     expect(mod1.registrations.filter).toEqual([]);
     expect(mod1.registrations.service).toEqual([]);
     expect(mod1.registrations.factory).toEqual([]);
     expect(mod1.registrations.provider).toEqual([]);
     expect(mod1.registrations.value).toEqual([]);
     expect(mod1.registrations.constant).toEqual([]);
+  });
+
+  it("should extract dependencies from factory functions", function() {
+    var app = moduleInfo[0];
+    var mod1 = moduleInfo[1];
+    var mod2 = moduleInfo[2];
+
+    expect(app.registrations.controller[0].dependencies).toEqual(['$scope']);
+    expect(app.registrations.controller[1].dependencies).toEqual(['$scope', '$http']);
+    expect(mod1.registrations.controller[0].dependencies).toEqual(['$scope']);
+    expect(mod2.registrations.filter[0].dependencies).toEqual([]);
+
+    expect(mod1.registrations.config[0].dependencies).toEqual(['$locationProvider']);
+    expect(mod1.registrations.run[0].dependencies).toEqual(['$rootScope']);
   });
 });
 
