@@ -48,8 +48,14 @@ describe("moduleExtractor", function() {
         '   /**\n' +
         '    * mod2 docs\n' +
         '    */\n' +
-        '   mod2Var = angular.module("mod2", []);\n' +
-        'angular.module("ext");\n'
+        '   mod2Var = angular.module("mod2", [])\n' +
+        '     .filter("mod2Filter", function() {});\n' +
+        'angular.module("ext");\n' +
+        '\n' +
+        '/**\n' +
+        ' * docs for ControllerTwo (registered via a module variable)\n' +
+        ' */\n' +
+        'mod1Var.controller("ControllerTwo", function($scope) {});\n'
     );
 
     moduleInfo = moduleExtractor(ast);
@@ -85,7 +91,7 @@ describe("moduleExtractor", function() {
       jasmine.objectContaining({
         name: 'ext',
         content: '',
-        startingLine: 27
+        startingLine: 28
       })
     ]);
 
@@ -130,6 +136,30 @@ describe("moduleExtractor", function() {
     expect(appModule.registrations.provider).toEqual([]);
     expect(appModule.registrations.value).toEqual([]);
     expect(appModule.registrations.constant).toEqual([]);
+  });
+
+  it("should extract registrations from modules defined in a variable declaration", function() {
+    var mod2 = moduleInfo[2];
+    expect(mod2.name).toEqual('mod2');
+    expect(mod2.registrations.controller).toEqual([]);
+    expect(mod2.registrations.filter).toEqual([{ type : 'filter', name : 'mod2Filter' }]);
+    expect(mod2.registrations.service).toEqual([]);
+    expect(mod2.registrations.factory).toEqual([]);
+    expect(mod2.registrations.provider).toEqual([]);
+    expect(mod2.registrations.value).toEqual([]);
+    expect(mod2.registrations.constant).toEqual([]);
+  });
+
+  it("should extract registrations on module variable references as well module defitions", function() {
+    var mod1 = moduleInfo[1];
+    expect(mod1.name).toEqual('mod1');
+    expect(mod1.registrations.controller).toEqual([{ type: 'controller', name: 'ControllerTwo' }]);
+    expect(mod1.registrations.filter).toEqual([]);
+    expect(mod1.registrations.service).toEqual([]);
+    expect(mod1.registrations.factory).toEqual([]);
+    expect(mod1.registrations.provider).toEqual([]);
+    expect(mod1.registrations.value).toEqual([]);
+    expect(mod1.registrations.constant).toEqual([]);
   });
 });
 

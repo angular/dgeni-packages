@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var SpahQL = require('spahql');
+var esrefactor = require('esrefactor');
 
 var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
@@ -8,30 +9,11 @@ module.exports = function moduleExtractor() {
   function moduleExtractorImpl(ast) {
 
     var rootQuery = SpahQL.db(ast);
+    var variables = new esrefactor.Context(ast);
 
     // We are looking for call expressions, where the callee is the `module` property on an object called `angular`
     var angularModuleCallsQuery = rootQuery
       .select("//*[/type=='CallExpression'][/callee/object/name=='angular'][/callee/property/name='module']");
-
-
-    var getRegistrations = function(moduleQuery, registrationType) {
-      var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType + '"]');
-      var registrations = [];
-
-      // The call chain in the AST is such that the registrations come out backwards.
-
-      registrationQuery.each(function() {
-        var registrationName = this.parent().parent().select('/arguments/0/value').value();
-        var registrationInfo = {
-          type: registrationType,
-          name: registrationName
-        };
-        _.assign(registrationInfo, getJsDocComment(this));
-        registrations.unshift(registrationInfo);
-      });
-
-      return registrations;
-    };
 
 
     var getModuleInfo = function() {
@@ -43,6 +25,7 @@ module.exports = function moduleExtractor() {
 
       moduleInfo = {
         moduleQuery: statementQuery,
+        moduleRefs: statementQuery.clone(),
         name: getModuleName(this),
         content: '',
         startingLine: statement.loc.start.line
@@ -61,7 +44,14 @@ module.exports = function moduleExtractor() {
             comment = getJsDocComment(statementQuery.parent().parent());
           }
 
-          // Now search for all usages of this variable
+          // Now get all usages of this module variable
+          var variableRefs = variables.identify(statement.range[0]).references;
+          _.forEach(variableRefs, function(variableRef) {
+            if ( variableRef.range[0] !== statement.range[0] ) {
+              var query = _.template('//*[/callee/object/type == "Identifier"][/callee/object/range/0 == ${range[0]}]', variableRef);
+              moduleInfo.moduleRefs = moduleInfo.moduleRefs.concat(rootQuery.select(query));
+            }
+          });
 
           break;
 
@@ -81,7 +71,11 @@ module.exports = function moduleExtractor() {
       // Get info about registrations registered on the module
       moduleInfo.registrations = {};
       _.forEach(moduleExtractorImpl.registrationsToExtract, function(registrationType) {
-        moduleInfo.registrations[registrationType] = getRegistrations(moduleInfo.moduleQuery, registrationType) || [];
+        var registrations = [];
+        moduleInfo.moduleRefs.each(function() {
+           registrations = registrations.concat(getRegistrations(this, registrationType));
+        });
+        moduleInfo.registrations[registrationType] = registrations;
       });
 
 
@@ -107,6 +101,25 @@ module.exports = function moduleExtractor() {
   return moduleExtractorImpl;
 };
 
+function getRegistrations(moduleQuery, registrationType) {
+  var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType + '"]');
+  var registrations = [];
+
+  // The call chain in the AST is such that the registrations come out backwards.
+
+  registrationQuery.each(function() {
+    var registrationName = this.parent().parent().select('/arguments/0/value').value();
+    var registrationInfo = {
+      type: registrationType,
+      name: registrationName
+    };
+
+    _.assign(registrationInfo, getJsDocComment(this));
+    registrations.unshift(registrationInfo);
+  });
+
+  return registrations;
+}
 
 function findStatement(node) {
   var type;
