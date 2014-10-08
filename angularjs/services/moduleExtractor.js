@@ -2,9 +2,7 @@ var _ = require('lodash');
 var SpahQL = require('spahql');
 var esrefactor = require('esrefactor');
 
-var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
-
-module.exports = function moduleExtractor() {
+module.exports = function moduleExtractor(getJsDocComment) {
 
   function moduleExtractorImpl(ast) {
 
@@ -38,10 +36,10 @@ module.exports = function moduleExtractor() {
           moduleInfo.variable = statement.id.name;
 
           // variables can have comments before the identifier ...
-          comment = getJsDocComment(statementQuery);
+          comment = getJsDocComment(statement);
           // ... or before the `var` if it is the first item (i.e. index zero)
           if ( !comment && /0$/.test(statementQuery.path()) ) {
-            comment = getJsDocComment(statementQuery.parent().parent());
+            comment = getJsDocComment(statementQuery.parent().parent().value());
           }
 
           // Now get all usages of this module variable
@@ -56,7 +54,7 @@ module.exports = function moduleExtractor() {
           break;
 
         case 'ExpressionStatement':
-          comment = getJsDocComment(statementQuery);
+          comment = getJsDocComment(statement);
           break;
       }
 
@@ -99,27 +97,28 @@ module.exports = function moduleExtractor() {
   ];
 
   return moduleExtractorImpl;
+
+  function getRegistrations(moduleQuery, registrationType) {
+    var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType + '"]');
+    var registrations = [];
+
+    // The call chain in the AST is such that the registrations come out backwards.
+
+    registrationQuery.each(function() {
+      var registrationName = this.parent().parent().select('/arguments/0/value').value();
+      var registrationInfo = {
+        type: registrationType,
+        name: registrationName
+      };
+
+      _.assign(registrationInfo, getJsDocComment(this.value()));
+      registrations.unshift(registrationInfo);
+    });
+
+    return registrations;
+  }
+
 };
-
-function getRegistrations(moduleQuery, registrationType) {
-  var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType + '"]');
-  var registrations = [];
-
-  // The call chain in the AST is such that the registrations come out backwards.
-
-  registrationQuery.each(function() {
-    var registrationName = this.parent().parent().select('/arguments/0/value').value();
-    var registrationInfo = {
-      type: registrationType,
-      name: registrationName
-    };
-
-    _.assign(registrationInfo, getJsDocComment(this));
-    registrations.unshift(registrationInfo);
-  });
-
-  return registrations;
-}
 
 function findStatement(node) {
   var type;
@@ -131,29 +130,6 @@ function findStatement(node) {
     node = node.parent();
   }
   return node;
-}
-
-
-function getJsDocComment(node) {
-
-  var comments = node.value().leadingComments;
-
-  if ( comments && comments.length > 0 ) {
-    var comment = comments[comments.length-1];
-
-    // We are only interested if the comment is jsdoc style: i.e. starts with "/**""
-    // If so, then strip off any leading stars and trim off leading and trailing whitespace
-    if ( comment.type === 'Block' && comment.value.charAt(0) == '*') {
-
-      return {
-        content: comment.value.replace(LEADING_STAR, '').trim(),
-        startingLine: comment.loc.start.line,
-        endingLine: comment.loc.end.line,
-        range: comment.range
-      };
-    }
-
-  }
 }
 
 
