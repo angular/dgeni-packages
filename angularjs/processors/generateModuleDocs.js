@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-module.exports = function generateModuleDocsProcessor(moduleDefs, removeASTComment) {
+module.exports = function generateModuleDocsProcessor(moduleDefs) {
   return {
     $runAfter: ['extractAngularModulesProcessor'],
     $runBefore: ['extractJSDocCommentsProcessor'],
@@ -12,7 +12,6 @@ module.exports = function generateModuleDocsProcessor(moduleDefs, removeASTComme
         moduleDef.docType = 'ngModule';
         moduleDef.id = _.template('module:${name}')(moduleDef);
         moduleDef.groups = {};
-        removeASTComment(moduleDef.fileInfo.ast, moduleDef);
         docs.push(moduleDef);
 
         // Also create a doc for holding each type of component in the module
@@ -29,7 +28,6 @@ module.exports = function generateModuleDocsProcessor(moduleDefs, removeASTComme
               }
 
               var doc = getRegistrationDoc(registrationType, registration, componentGroup);
-              removeASTComment(moduleDef.fileInfo.ast, doc);
               docs.push(doc);
             });
           }
