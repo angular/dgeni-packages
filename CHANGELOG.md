@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.3 9th October 2014
+
+* fix(ngdoc/directive.template): add `id` to the `Animations` heading    6e9253d6
+
+
 ## v0.10.2 8th October 2014
 
 * feat(examples): allow external example dependencies      ae900e77
