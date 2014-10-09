@@ -5,6 +5,7 @@ var Package = require('dgeni').Package;
 module.exports = new Package('angularjs', ['jsdoc'])
 
 .factory(require('./services/moduleDefs'))
+.factory(require('./services/moduleRegistrationTypes'))
 .factory(require('./services/getJsDocComment'))
 .factory(require('./services/moduleExtractor'))
 .factory(require('./services/removeASTComment'))

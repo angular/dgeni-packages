@@ -2,101 +2,94 @@ var _ = require('lodash');
 var SpahQL = require('spahql');
 var esrefactor = require('esrefactor');
 
-module.exports = function moduleExtractor(getJsDocComment, log) {
+module.exports = function moduleExtractor(moduleRegistrationTypes, getJsDocComment, log) {
 
-  function moduleExtractorImpl(ast) {
+  return function moduleExtractorImpl(ast) {
 
-    var rootQuery = SpahQL.db(ast);
-    var variables = new esrefactor.Context(ast);
+    var rootQuery, variableLookup;
+
+    rootQuery = SpahQL.db(ast);
+    variableLookup = new esrefactor.Context(ast);
 
     // We are looking for call expressions, where the callee is the `module` property on an object called `angular`
     var angularModuleCallsQuery = rootQuery
       .select("//*[/type=='CallExpression'][/callee/object/name=='angular'][/callee/property/name='module']");
 
-
-    var getModuleInfo = function() {
-
-      var moduleInfo, statementQuery, statement, comment;
-
-      statementQuery = findStatement(this);
-      statement = statementQuery.value();
-
-      moduleInfo = {
-        moduleQuery: statementQuery,
-        moduleRefs: statementQuery.clone(),
-        name: getModuleName(this),
-        content: '',
-        startingLine: statement.loc.start.line
-      };
-
-      switch ( statement.type ) {
-        case 'VariableDeclarator':
-
-          // This call to angular is being added to a variable
-          moduleInfo.variable = statement.id.name;
-
-          // variables can have comments before the identifier ...
-          comment = getJsDocComment(statement);
-          // ... or before the `var` if it is the first item (i.e. index zero)
-          if ( !comment && /0$/.test(statementQuery.path()) ) {
-            comment = getJsDocComment(statementQuery.parent().parent().value());
-          }
-
-          // Now get all usages of this module variable
-          var variableRefs = variables.identify(statement.range[0]).references;
-          _.forEach(variableRefs, function(variableRef) {
-            if ( variableRef.range[0] !== statement.range[0] ) {
-              var query = _.template('//*[/callee/object/type == "Identifier"][/callee/object/range/0 == ${range[0]}]', variableRef);
-              moduleInfo.moduleRefs = moduleInfo.moduleRefs.concat(rootQuery.select(query));
-            }
-          });
-
-          break;
-
-        case 'ExpressionStatement':
-          comment = getJsDocComment(statement);
-          break;
-      }
-
-      _.assign(moduleInfo, comment);
+    return angularModuleCallsQuery.map(function() {
+      var moduleInfo = getModuleInfo(this, rootQuery, variableLookup);
 
       // Add dependencies if any were defined
-      var dependencies = getModuleDependencies(this);
+      var dependencies = getModuleDependencies(moduleInfo.moduleQuery);
       if ( dependencies ) {
         moduleInfo.dependencies = dependencies;
       }
 
       // Get info about registrations registered on the module
       moduleInfo.registrations = {};
-      _.forEach(moduleExtractorImpl.registrationsToExtract, function(registrationType) {
+      _.forEach(moduleRegistrationTypes, function(registrationType) {
         var registrations = [];
-        moduleInfo.moduleRefs.each(function() {
+        moduleInfo.moduleRefsQuery.each(function() {
            registrations = registrations.concat(getRegistrations(this, registrationType));
         });
         moduleInfo.registrations[registrationType.name] = registrations;
       });
 
-
       return moduleInfo;
+
+    });
+  };
+
+
+
+  function getModuleInfo(moduleQuery, rootQuery, variableLookup) {
+
+    var moduleInfo, statementQuery, statement, comment;
+
+    statementQuery = findStatement(moduleQuery);
+    statement = statementQuery.value();
+
+    moduleInfo = {
+      moduleQuery: moduleQuery,
+      moduleRefsQuery: statementQuery.clone(),
+      name: getModuleName(moduleQuery),
+      content: '',
+      startingLine: statement.loc.start.line
     };
 
-    return angularModuleCallsQuery.map(getModuleInfo);
+    if ( statement.type === 'VariableDeclarator' ) {
+      moduleInfo.variable = statement.id.name;
+    }
+
+    comment = getJsDocComment(statement);
+
+    if ( moduleInfo.variable ) {
+
+      if ( !comment && /0$/.test(statementQuery.path()) ) {
+        // variables can have comments before the identifier ...
+        // ... or before the `var` if it is the first item (i.e. index zero)
+        comment = getJsDocComment(statementQuery.parent().parent().value());
+      }
+
+      // get all usages of this module variable
+      var variableRefs = variableLookup.identify(statement.range[0]).references;
+
+      _.forEach(variableRefs, function(variableRef) {
+
+        // Exclude the original declaration
+        if ( variableRef.range[0] !== statement.range[0] ) {
+          // Create a new query for each use of the module variable
+          var query = _.template('//*[/callee/object/type == "Identifier"][/callee/object/range/0 == ${range[0]}]', variableRef);
+          // and add it to the moduleRefsQuery query for later
+          moduleInfo.moduleRefsQuery = moduleInfo.moduleRefsQuery.concat(rootQuery.select(query));
+        }
+      });
+    }
+
+    _.assign(moduleInfo, comment);
+
+    return moduleInfo;
   }
 
-  moduleExtractorImpl.registrationsToExtract = [
-    { name: 'controller', requiresName: true, hasFactory: true },
-    { name: 'filter', requiresName: true, hasFactory: true },
-    { name: 'directive', requiresName: true, hasFactory: true },
-    { name: 'provider', requiresName: true, hasFactory: true },
-    { name: 'factory', requiresName: true, hasFactory: true },
-    { name: 'value', requiresName: true, hasFactory: false },
-    { name: 'service', requiresName: true, hasFactory: true },
-    { name: 'constant', requiresName: true, hasFactory: false },
-    { name: 'config', requiresName: false, hasFactory: true },
-    { name: 'run', requiresName: false, hasFactory: true }
-  ];
-
-  return moduleExtractorImpl;
 
   function getRegistrations(moduleQuery, registrationType) {
     var registrationQuery = moduleQuery.select('//callee/property[/name=="' + registrationType.name + '"]');
@@ -150,33 +143,32 @@ module.exports = function moduleExtractor(getJsDocComment, log) {
     }
   }
 
-};
-
-
-function findStatement(node) {
-  var type;
-  while(node) {
-    type = node.value().type;
-    if ( type === 'ExpressionStatement' ||  type === 'VariableDeclarator' ) {
-      break;
+  function findStatement(node) {
+    var type;
+    while(node) {
+      type = node.value().type;
+      if ( type === 'ExpressionStatement' ||  type === 'VariableDeclarator' ) {
+        break;
+      }
+      node = node.parent();
     }
-    node = node.parent();
+    return node;
   }
-  return node;
-}
 
 
-function getModuleName(node) {
-  // The name is the first parameter to `angular.module(name, deps)`
-  return node.select('/arguments/0/value').value();
-}
-
-
-function getModuleDependencies(node) {
-  // The dependencies are the second parameter to `angular.module(name, deps)`
-  // If it doesn't exist then not only are there no dependencies but also the
-  // call is not defining a new module
-  if (node.assert('/arguments/1') ) {
-    return node.select('/arguments/1/elements//value').values();
+  function getModuleName(node) {
+    // The name is the first parameter to `angular.module(name, deps)`
+    return node.select('/arguments/0/value').value();
   }
-}
+
+
+  function getModuleDependencies(node) {
+    // The dependencies are the second parameter to `angular.module(name, deps)`
+    // If it doesn't exist then not only are there no dependencies but also the
+    // call is not defining a new module
+    if (node.assert('/arguments/1') ) {
+      return node.select('/arguments/1/elements//value').values();
+    }
+  }
+
+};

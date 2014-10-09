@@ -1,6 +1,7 @@
 var mockPackage = require('../mocks/mockPackage');
 var esprima = require('esprima');
 var Dgeni = require('dgeni');
+var _ = require('lodash');
 
 describe("moduleExtractor", function() {
 
@@ -13,7 +14,7 @@ describe("moduleExtractor", function() {
     });
   }
 
-  var moduleExtractor, moduleInfo;
+  var moduleExtractor, moduleInfo, registrationTypes;
 
   beforeEach(function() {
 
@@ -21,6 +22,7 @@ describe("moduleExtractor", function() {
     var injector = dgeni.configureInjector();
 
     moduleExtractor = injector.get('moduleExtractor');
+    registrationTypes = injector.get('moduleRegistrationTypes');
 
     var ast = getAST(
         '/**\n' +
@@ -104,7 +106,7 @@ describe("moduleExtractor", function() {
     expect(appModule.name).toEqual('app');
     expect(appModule.registrations.controller).toEqual([
       jasmine.objectContaining({
-        type: { name: 'controller', requiresName: true, hasFactory: true },
+        type: _.find(registrationTypes, { name: 'controller' }),
         name: 'ControllerOne',
         content: 'ControllerOne docs',
         startingLine: 5,
@@ -112,7 +114,7 @@ describe("moduleExtractor", function() {
         range: [62, 95]
       }),
       jasmine.objectContaining({
-        type: { name: 'controller', requiresName: true, hasFactory: true },
+        type: _.find(registrationTypes, { name: 'controller' }),
         name: 'ControllerOne',
         content: 'ControllerOne docs (overridden)',
         startingLine: 14,
@@ -123,7 +125,7 @@ describe("moduleExtractor", function() {
 
     expect(appModule.registrations.directive).toEqual([
       jasmine.objectContaining({
-        type: { name: 'directive', requiresName: true, hasFactory: true },
+        type: _.find(registrationTypes, { name: 'directive' }),
         name: 'directiveOne',
         content: 'directiveOne docs',
         startingLine: 10,
@@ -145,7 +147,7 @@ describe("moduleExtractor", function() {
     expect(mod2.name).toEqual('mod2');
     expect(mod2.registrations.controller).toEqual([]);
     expect(mod2.registrations.filter).toEqual([jasmine.objectContaining({
-      type : { name: 'filter', requiresName: true, hasFactory: true },
+      type: _.find(registrationTypes, { name: 'filter' }),
       name : 'mod2Filter'
     })]);
     expect(mod2.registrations.service).toEqual([]);
@@ -159,7 +161,7 @@ describe("moduleExtractor", function() {
     var mod1 = moduleInfo[1];
     expect(mod1.name).toEqual('mod1');
     expect(mod1.registrations.controller).toEqual([jasmine.objectContaining({
-      type: { name: 'controller', requiresName: true, hasFactory: true },
+      type: _.find(registrationTypes, { name: 'controller' }),
       name: 'ControllerTwo'
     })]);
     expect(mod1.registrations.filter).toEqual([]);

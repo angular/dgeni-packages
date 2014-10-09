@@ -4,13 +4,14 @@ var Dgeni = require('dgeni');
 
 describe("generateModuleDocsProcessor", function() {
 
-  var processor, moduleDefs;
+  var processor, moduleDefs, moduleRegistrationTypes;
 
   beforeEach(function() {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('generateModuleDocsProcessor');
     moduleDefs = injector.get('moduleDefs');
+    moduleRegistrationTypes = injector.get('moduleRegistrationTypes');
   });
 
   it("should create docs for each module definition", function() {
@@ -41,8 +42,8 @@ describe("generateModuleDocsProcessor", function() {
       name: 'app',
       dependencies: [ 'mod1', 'mod2' ],
       registrations: {
-        controller: [ { name: 'ControllerA' } ],
-        factory: [ { name: 'service1' } ]
+        controller: [ { name: 'ControllerA', type: _.find(moduleRegistrationTypes, { name: 'controller' }) } ],
+        factory: [ { name: 'service1', type: _.find(moduleRegistrationTypes, { name: 'factory' }) } ]
       },
       fileInfo: fileInfo
     };
@@ -50,7 +51,7 @@ describe("generateModuleDocsProcessor", function() {
       name: 'mod1',
       dependencies: [],
       registrations: {
-        directive: [ { name: 'directiveX'} ],
+        directive: [ { name: 'directiveX', type: _.find(moduleRegistrationTypes, { name: 'directive' }) }  ],
         filter: []
       },
       fileInfo: fileInfo
@@ -61,16 +62,16 @@ describe("generateModuleDocsProcessor", function() {
     processor.$process(docs);
 
     var groups = _.filter(docs, { docType: 'componentGroup' });
-
     expect(groups.length).toEqual(3);
-    expect(groups[0]).toEqual(
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'controllers', id: 'module:app.controllers' })
+
+    expect(_.find(groups, { id: 'module:app.controllers'})).toEqual(
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'controllers' })
     );
-    expect(groups[1]).toEqual(
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'services', id: 'module:app.services' })
+    expect(_.find(groups, { id: 'module:app.services'})).toEqual(
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'services' })
     );
-    expect(groups[2]).toEqual(
-      jasmine.objectContaining({ docType: 'componentGroup', name: 'directives', id: 'module:mod1.directives' })
+    expect(_.find(groups, { id: 'module:mod1.directives'})).toEqual(
+      jasmine.objectContaining({ docType: 'componentGroup', name: 'directives' })
     );
 
   });
