@@ -61,7 +61,7 @@
   {% endblock -%}
 
   {%- if doc.animations %}
-  <h2>Animations</h2>
+  <h2 id="animations">Animations</h2>
   {$ doc.animations | marked $}
   {$ 'module:ngAnimate.$animate' | link('Click here', doc) $} to learn more about the steps involved in the animation.
   {%- endif -%}
