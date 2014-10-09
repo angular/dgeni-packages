@@ -41,7 +41,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
         if ( checkDoc(doc) ) {
 
           // Make the path to the doc relative to the webRoot
-          var docPath = path.join(webRoot, doc.path);
+          var docPath = path.join(webRoot, doc.path || doc.outputPath);
 
           // Parse out all link hrefs, names and ids
           linkInfo = extractLinks(doc.renderedContent);
