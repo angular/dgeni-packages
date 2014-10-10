@@ -36,9 +36,10 @@ describe("checkAnchorLinks", function() {
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
-  it("should skip files that are not in the `filesToCheck` property", function() {
+  it("should skip files that do not pass the `checkDoc` method", function() {
     processor.$process([
-      { renderedContent: '<a href="/foo"></a>', outputPath: 'x.js', path: 'x' }
+      { renderedContent: '<a href="/foo"></a>', outputPath: 'x.js', path: 'x' },
+      { renderedContent: '<a href="/foo"></a>', outputPath: 'x.html' }
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
