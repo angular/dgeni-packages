@@ -12,22 +12,31 @@ module.exports = function generateModuleDocsProcessor(moduleDefs) {
         moduleDef.docType = 'ngModule';
         moduleDef.id = _.template('module:${name}')(moduleDef);
         moduleDef.groups = {};
+
+        moduleDef.dependencies = _.map(moduleDef.dependencies, function(dep) {
+          console.log(dep);
+          if ( _.isString(dep) ) {
+            return moduleDefs[dep];
+          } else {
+            return dep;
+          }
+        });
         docs.push(moduleDef);
 
         // Also create a doc for holding each type of component in the module
-        _.forEach(moduleDef.registrations, function(registrations, registrationType) {
+        _.forEach(moduleDef.registrations, function(registrations) {
 
           if ( registrations.length > 0 ) {
 
             _.forEach(registrations, function(registration) {
 
-              var componentGroup = moduleDef.groups[registrationType.group];
+              var componentGroup = moduleDef.groups[registration.type.group];
               if ( !componentGroup ) {
                 componentGroup = createComponentGroup(registration.type, moduleDef);
                 docs.push(componentGroup);
               }
 
-              var doc = getRegistrationDoc(registrationType, registration, componentGroup);
+              var doc = getRegistrationDoc(registration.type, registration, componentGroup);
               docs.push(doc);
             });
           }
