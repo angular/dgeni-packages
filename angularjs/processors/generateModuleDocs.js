@@ -14,7 +14,6 @@ module.exports = function generateModuleDocsProcessor(moduleDefs) {
         moduleDef.groups = {};
 
         moduleDef.dependencies = _.map(moduleDef.dependencies, function(dep) {
-          console.log(dep);
           if ( _.isString(dep) ) {
             return moduleDefs[dep];
           } else {
