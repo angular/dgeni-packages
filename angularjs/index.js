@@ -28,7 +28,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
   computePathsProcessor.pathTemplates.push({
     docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective', 'ngService', 'ngConstant'],
     getPath: getPathFromId,
-    outputPathTemplate: '${path}/index.html'
+    outputPathTemplate: '${path}index.html'
   });
 })
 
