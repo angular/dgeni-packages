@@ -36,6 +36,14 @@ describe("checkAnchorLinks", function() {
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
+  it("should not warn if the link matches a path after it has been modified with a path variant", function() {
+    processor.$process([
+      { renderedContent: '<a href="/foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
+      { renderedContent: 'CONTENT OF FOO', outputPath: 'foo.html', path: 'foo/' }
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
+
   it("should skip files that do not pass the `checkDoc` method", function() {
     processor.$process([
       { renderedContent: '<a href="/foo"></a>', outputPath: 'x.js', path: 'x' },
