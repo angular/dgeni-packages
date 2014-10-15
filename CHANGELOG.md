@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.4 15th October 2014
+
+* fix(base/checkAnchorLinks): match links using pathVariants       ff903657
+* fix(jsdoc/jsdocFileReader): provide file information in JS parse error     69680361
+
+
 ## v0.10.3 9th October 2014
 
 * fix(ngdoc/directive.template): add `id` to the `Animations` heading    6e9253d6
