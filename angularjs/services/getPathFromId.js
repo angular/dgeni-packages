@@ -10,6 +10,6 @@ module.exports = function getPathFromId() {
       if ( subParts[0] ) { segments.push(pluralize(subParts[0])); }
       if ( subParts[1] ) { segments.push(subParts[1]); }
     });
-    return segments.join('/');
+    return segments.join('/') + '/';
   };
 };

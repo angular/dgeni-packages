@@ -14,6 +14,6 @@ describe("getPathFromId", function() {
 
   it("should strip off the qualifiers and join the parts into path segments", function() {
 
-    expect(getPathFromId({ id: 'module:app.service:$http.method:get' })).toEqual('modules/app/services/$http/methods/get');
+    expect(getPathFromId({ id: 'module:app.service:$http.method:get' })).toEqual('modules/app/services/$http/methods/get/');
   });
 });
