@@ -8,5 +8,9 @@ module.exports = function mockPackage() {
   .factory('log', function() { return require('dgeni/lib/mocks/log')(false); })
 
   // provide a mock template engine for the tests
-  .factory('templateEngine', function dummyTemplateEngine() {});
+  .factory('templateEngine', function dummyTemplateEngine() {
+    return {
+      filters: []
+    }
+  });
 };

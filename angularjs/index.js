@@ -30,4 +30,10 @@ module.exports = new Package('angularjs', ['jsdoc'])
     getPath: getPathFromId,
     outputPathTemplate: '${path}/index.html'
   });
+})
+
+.config(function(templateEngine, getInjectables) {
+  templateEngine.filters = templateEngine.filters.concat(getInjectables([
+    require('./rendering/relativeLink'),
+  ]));
 });
