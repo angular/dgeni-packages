@@ -82,4 +82,26 @@ describe("getLinkInfo", function() {
       title: 'ngClick (ngTouch)'
     });
   });
+
+
+  it("should make the urls relative to the currentDoc if the relativeLinks property is true", function() {
+    var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick'};
+    var doc2 = { id: 'module:ng.directive:ngRepeat', name: 'ngRepeat', path: 'api/ng/directive/ngRepeat'};
+    var doc3 = { id: 'module:ng', name: 'ng', path: 'api/ng'};
+
+    doc1.aliases = getAliases(doc1);
+    aliasMap.addDoc(doc1);
+
+
+    getLinkInfo.relativeLinks = false;
+    expect(getLinkInfo('ngClick', 'ngClick', doc1).url).toEqual('api/ng/directive/ngClick');
+    expect(getLinkInfo('ngClick', 'ngClick', doc2).url).toEqual('api/ng/directive/ngClick');
+    expect(getLinkInfo('ngClick', 'ngClick', doc3).url).toEqual('api/ng/directive/ngClick');
+
+    getLinkInfo.relativeLinks = true;
+    expect(getLinkInfo('ngClick', 'ngClick', doc1).url).toEqual('');
+    expect(getLinkInfo('ngClick', 'ngClick', doc2).url).toEqual('../ngClick');
+    expect(getLinkInfo('ngClick', 'ngClick', doc3).url).toEqual('directive/ngClick');
+
+  });
 });
