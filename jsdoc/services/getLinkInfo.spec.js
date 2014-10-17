@@ -64,20 +64,22 @@ describe("getLinkInfo", function() {
     expect(getLinkInfo('#fragment').title).toEqual('fragment');
   });
 
-  it("should filter ambiguous documents by area before failing", function() {
-    var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick', area: 'api' };
+  it("should filter ambiguous documents by module before failing", function() {
+    var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick', module: 'ng' };
     doc1.aliases = getAliases(doc1);
     aliasMap.addDoc(doc1);
 
-    var doc2 = { id: 'ngClick', name: 'ngClick', path: 'guide/ngClick', area: 'guide' };
+    var doc2 = { id: 'module:ngTouch.directive:ngClick', name: 'ngClick', path: 'api/ngTouch/directive/ngClick', module: 'ngTouch' };
     doc2.aliases = getAliases(doc2);
     aliasMap.addDoc(doc2);
 
-    expect(getLinkInfo('ngClick', 'ngClick Guide', doc2)).toEqual({
+    var doc3 = { id: 'module:ngTouch', name: 'ngTouch', path: 'api/ngTouch', module: 'ngTouch' };
+
+    expect(getLinkInfo('ngClick', 'ngClick (ngTouch)', doc3)).toEqual({
       type: 'doc',
       valid: true,
-      url: 'guide/ngClick',
-      title: 'ngClick Guide'
+      url: 'api/ngTouch/directive/ngClick',
+      title: 'ngClick (ngTouch)'
     });
   });
 });

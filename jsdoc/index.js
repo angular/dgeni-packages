@@ -22,6 +22,11 @@ module.exports = new Package('jsdoc', [require('../base')])
 .factory(require('./services/transforms/unknown-tag'))
 .factory(require('./services/transforms/whole-tag'))
 .factory(require('./services/transforms/trim-whitespace'))
+.factory(require('./services/getAliases'))
+.factory(require('./services/getLinkInfo'))
+.factory(require('./services/getDocFromAlias'))
+
+.factory(require('./inline-tag-defs/link'))
 
 .factory(require('./file-readers/jsdoc'))
 
@@ -64,4 +69,8 @@ module.exports = new Package('jsdoc', [require('../base')])
     pathTemplate: '${id}',
     outputPathTemplate: '${path}.html'
   });
+})
+
+.config(function(inlineTagProcessor, linkInlineTagDef) {
+  inlineTagProcessor.inlineTagDefinitions.push(linkInlineTagDef);
 });

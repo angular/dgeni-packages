@@ -10,7 +10,6 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./services/moduleExtractor'))
 .factory(require('./services/removeASTComment'))
 .factory(require('./services/getPathFromId'))
-.factory(require('../ngdoc/services/getAliases'))
 
 .processor(require('./processors/extractAngularModules'))
 .processor(require('./processors/generateModuleDocs'))
