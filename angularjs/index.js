@@ -35,4 +35,9 @@ module.exports = new Package('angularjs', ['jsdoc'])
   templateEngine.filters = templateEngine.filters.concat(getInjectables([
     require('./rendering/relativeLink'),
   ]));
-});
+})
+
+
+.config(function(getLinkInfo) {
+  getLinkInfo.relativeLinks = true;
+})
