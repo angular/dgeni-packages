@@ -34,7 +34,7 @@ module.exports = function extractAngularModulesProcessor(moduleExtractor, module
               var moduleDef = moduleDefs[module.name];
 
               if ( !moduleDef && errorOnMissingModuleDefinition ) {
-                throw new Error('Module definition missing');
+                throw new Error('Module definition missing for "' + module.name + '" in "' + doc.fileInfo.filePath);
               }
 
               // Add the new registrations to this module definition
