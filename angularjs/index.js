@@ -17,7 +17,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 
 .config(function(computeIdsProcessor, getAliases) {
   computeIdsProcessor.idTemplates.push({
-    docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective', 'ngService', 'ngConstant'],
+    docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective', 'ngService', 'ngConstant', 'ngProvider'],
     idTemplate: 'module:${module}.${docType}:${name}',
     getAliases: getAliases
   });
@@ -25,7 +25,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 
 .config(function(computePathsProcessor, getPathFromId) {
   computePathsProcessor.pathTemplates.push({
-    docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective', 'ngService', 'ngConstant'],
+    docTypes: ['ngModule', 'componentGroup', 'ngController', 'ngDirective', 'ngService', 'ngConstant', 'ngProvider'],
     getPath: getPathFromId,
     outputPathTemplate: '${path}index.html'
   });
