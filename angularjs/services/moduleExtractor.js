@@ -12,8 +12,11 @@ module.exports = function moduleExtractor(moduleRegistrationTypes, getJsDocComme
     variableLookup = new esrefactor.Context(ast);
 
     // We are looking for call expressions, where the callee is the `module` property on an object called `angular`
-    var angularModuleCallsQuery = rootQuery
-      .select("//*[/type=='CallExpression'][/callee/object/name=='angular'][/callee/property/name='module']");
+    var angularModuleCallsQuery =
+        rootQuery.select("//*" +
+                            "[/type=='CallExpression']"+
+                            "[/callee/property/name=='module']"+
+                            "[/callee/object/name=='angular']");
 
     return angularModuleCallsQuery.map(function() {
       var moduleInfo = getModuleInfo(this);

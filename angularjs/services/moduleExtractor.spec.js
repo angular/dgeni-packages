@@ -59,7 +59,9 @@ describe("moduleExtractor", function() {
         ' */\n' +
         'mod1Var.controller("ControllerTwo", function($scope) {});\n' +
         'mod1Var.config(function($locationProvider) {});\n' +
-        'mod1Var.run(function($rootScope) {});\n'
+        'mod1Var.run(function($rootScope) {\n' +
+        '  angular.element("<div></div>");' +
+        '});\n'
     );
 
     moduleInfo = moduleExtractor(ast);
@@ -68,14 +70,23 @@ describe("moduleExtractor", function() {
 
   it("should collect up all calls to angular.module", function() {
 
-    expect(moduleInfo).toEqual([
+    expect(moduleInfo.length).toEqual(4);
+    expect(moduleInfo[0].name).toEqual('app');
+    expect(moduleInfo[1].name).toEqual('mod1');
+    expect(moduleInfo[2].name).toEqual('mod2');
+    expect(moduleInfo[3].name).toEqual('ext');
+
+    expect(moduleInfo[0].dependencies).toEqual(['mod1', 'mod2']);
+
+    expect(moduleInfo[0]).toEqual(
       jasmine.objectContaining({
         name: 'app',
         dependencies: ['mod1', 'mod2'],
         content: 'app docs',
         startingLine: 1,
         endingLine: 3
-      }),
+      }));
+    expect(moduleInfo[1]).toEqual(
       jasmine.objectContaining({
         name: 'mod1',
         variable: 'mod1Var',
@@ -83,7 +94,8 @@ describe("moduleExtractor", function() {
         content: 'mod1 docs',
         startingLine: 19,
         endingLine: 21
-      }),
+      }));
+    expect(moduleInfo[2]).toEqual(
       jasmine.objectContaining({
         name: 'mod2',
         variable: 'mod2Var',
@@ -91,13 +103,13 @@ describe("moduleExtractor", function() {
         content: 'mod2 docs',
         startingLine: 23,
         endingLine: 25
-      }),
+      }));
+    expect(moduleInfo[3]).toEqual(
       jasmine.objectContaining({
         name: 'ext',
         content: '',
         startingLine: 28
-      })
-    ]);
+      }));
 
   });
 
@@ -181,9 +193,6 @@ describe("moduleExtractor", function() {
     expect(app.registrations.controller[1].dependencies).toEqual(['$scope', '$http']);
     expect(mod1.registrations.controller[0].dependencies).toEqual(['$scope']);
     expect(mod2.registrations.filter[0].dependencies).toEqual([]);
-
-    expect(mod1.registrations.config[0].dependencies).toEqual(['$locationProvider']);
-    expect(mod1.registrations.run[0].dependencies).toEqual(['$rootScope']);
   });
 });
 
