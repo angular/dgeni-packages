@@ -2,6 +2,11 @@
 
 ## v0.10.4 15th October 2014
 
+* feat(examples/generateProtractorTestsProcessor): allow basePath of test to be specified     2bfb6666
+
+
+## v0.10.4 15th October 2014
+
 * fix(base/checkAnchorLinks): match links using pathVariants       ff903657
 * fix(jsdoc/jsdocFileReader): provide file information in JS parse error     69680361
 
