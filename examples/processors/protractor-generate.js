@@ -10,6 +10,7 @@ var _ = require('lodash');
 module.exports = function generateProtractorTestsProcessor(exampleMap) {
   return {
     deployments: [],
+    basePath: '',
     $validate: {
       deployments: { presence: true },
     },
@@ -18,6 +19,7 @@ module.exports = function generateProtractorTestsProcessor(exampleMap) {
     $process: function(docs) {
 
       var deployments = this.deployments;
+      var basePath = this.basePath;
 
       exampleMap.forEach(function(example) {
         _.forEach(example.files, function(file) {
@@ -26,7 +28,7 @@ module.exports = function generateProtractorTestsProcessor(exampleMap) {
           if (file.type === 'protractor') {
 
             _.forEach(deployments, function(deployment) {
-              docs.push(createProtractorDoc(example, deployment, file));
+              docs.push(createProtractorDoc(example, deployment, file, basePath));
             });
           }
 
@@ -36,7 +38,7 @@ module.exports = function generateProtractorTestsProcessor(exampleMap) {
   };
 };
 
-function createProtractorDoc(example, deployment, file) {
+function createProtractorDoc(example, deployment, file, basePath) {
   return {
     docType: 'e2e-test',
     id: 'protractorTest' + '-' + example.id + '-' + deployment.name,
@@ -44,6 +46,7 @@ function createProtractorDoc(example, deployment, file) {
     deployment: deployment,
     template: 'protractorTests.template.js',
     innerTest: file.fileContents,
-    'ng-app-included': example['ng-app-included']
+    'ng-app-included': example['ng-app-included'],
+    basePath: basePath
   };
 }

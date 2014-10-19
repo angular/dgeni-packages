@@ -29,6 +29,30 @@ describe("generateExamplesProcessor", function() {
   });
 
 
+  it("should add the configured basePath to each doc", function() {
+
+    exampleMap.set('x', {
+      id: 'x',
+      doc: {},
+      files: {
+        'app.scenario.js': { type: 'protractor', name: 'app.scenario.js', contents: '...' }
+      },
+      deployments: {}
+    });
+    var docs = [];
+    processor.$process(docs);
+    expect(docs[0].basePath).toEqual('');
+    expect(docs[1].basePath).toEqual('');
+
+    processor.basePath = 'a/b/';
+    processor.$process(docs);
+
+    expect(docs[2].basePath).toEqual('a/b/');
+    expect(docs[3].basePath).toEqual('a/b/');
+
+  });
+
+
   it("should add a protractor doc for each example-deployment pair in the example", function() {
 
     docs = [
