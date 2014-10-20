@@ -64,20 +64,44 @@ describe("getLinkInfo", function() {
     expect(getLinkInfo('#fragment').title).toEqual('fragment');
   });
 
-  it("should filter ambiguous documents by area before failing", function() {
-    var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick', area: 'api' };
+  it("should filter ambiguous documents by module before failing", function() {
+    var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick', module: 'ng' };
     doc1.aliases = getAliases(doc1);
     aliasMap.addDoc(doc1);
 
-    var doc2 = { id: 'ngClick', name: 'ngClick', path: 'guide/ngClick', area: 'guide' };
+    var doc2 = { id: 'module:ngTouch.directive:ngClick', name: 'ngClick', path: 'api/ngTouch/directive/ngClick', module: 'ngTouch' };
     doc2.aliases = getAliases(doc2);
     aliasMap.addDoc(doc2);
 
-    expect(getLinkInfo('ngClick', 'ngClick Guide', doc2)).toEqual({
+    var doc3 = { id: 'module:ngTouch', name: 'ngTouch', path: 'api/ngTouch', module: 'ngTouch' };
+
+    expect(getLinkInfo('ngClick', 'ngClick (ngTouch)', doc3)).toEqual({
       type: 'doc',
       valid: true,
-      url: 'guide/ngClick',
-      title: 'ngClick Guide'
+      url: 'api/ngTouch/directive/ngClick',
+      title: 'ngClick (ngTouch)'
     });
+  });
+
+
+  it("should make the urls relative to the currentDoc if the relativeLinks property is true", function() {
+    var doc1 = { id: 'module:ng.directive:ngClick', name: 'ngClick', path: 'api/ng/directive/ngClick'};
+    var doc2 = { id: 'module:ng.directive:ngRepeat', name: 'ngRepeat', path: 'api/ng/directive/ngRepeat'};
+    var doc3 = { id: 'module:ng', name: 'ng', path: 'api/ng'};
+
+    doc1.aliases = getAliases(doc1);
+    aliasMap.addDoc(doc1);
+
+
+    getLinkInfo.relativeLinks = false;
+    expect(getLinkInfo('ngClick', 'ngClick', doc1).url).toEqual('api/ng/directive/ngClick');
+    expect(getLinkInfo('ngClick', 'ngClick', doc2).url).toEqual('api/ng/directive/ngClick');
+    expect(getLinkInfo('ngClick', 'ngClick', doc3).url).toEqual('api/ng/directive/ngClick');
+
+    getLinkInfo.relativeLinks = true;
+    expect(getLinkInfo('ngClick', 'ngClick', doc1).url).toEqual('');
+    expect(getLinkInfo('ngClick', 'ngClick', doc2).url).toEqual('../ngClick');
+    expect(getLinkInfo('ngClick', 'ngClick', doc3).url).toEqual('directive/ngClick');
+
   });
 });

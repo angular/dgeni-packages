@@ -38,6 +38,7 @@
     "change-case": "^2.1.0",
     "dgeni": "^0.4.0",
     "esprima": "^1.0.4",
+    "esrefactor": "^0.1.0",
     "estraverse": "^1.5.1",
     "glob": "~3.2.8",
     "htmlparser2": "^3.7.3",
@@ -46,8 +47,10 @@
     "minimatch": "^0.3.0",
     "node-html-encoder": "0.0.2",
     "nunjucks": "~1.0.1",
+    "pluralize": "^1.0.2",
     "q": "~1.0.0",
     "q-io": "~1.10.9",
+    "spahql": "^0.7.6",
     "stringmap": "^0.2.2",
     "winston": "~0.7.2"
   },
