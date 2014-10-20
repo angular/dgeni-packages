@@ -1,4 +1,3 @@
-var mockPackage = require('./mocks/mockPackage');
 var Dgeni = require('dgeni');
 
 describe('angularjs package', function() {
