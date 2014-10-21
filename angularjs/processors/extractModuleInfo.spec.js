@@ -3,7 +3,7 @@ var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 var DOCS1, DOCS2, DOCS3;
 
-describe("extractAngularModulesProcessor", function() {
+describe("extractModuleInfoProcessor", function() {
 
   function createDoc(content) {
     return {
@@ -21,7 +21,7 @@ describe("extractAngularModulesProcessor", function() {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
 
-    processor = injector.get('extractAngularModulesProcessor');
+    processor = injector.get('extractModuleInfoProcessor');
     moduleDefs = injector.get('moduleDefs');
   });
 

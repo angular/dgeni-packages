@@ -3,7 +3,7 @@ var esprima = require('esprima');
 var Dgeni = require('dgeni');
 var _ = require('lodash');
 
-describe("moduleExtractor", function() {
+describe("getModuleInfo", function() {
 
   function getAST(content) {
     return esprima.parse(content, {
@@ -14,14 +14,14 @@ describe("moduleExtractor", function() {
     });
   }
 
-  var moduleExtractor, moduleInfo, registrationTypes;
+  var getModuleInfo, moduleInfo, registrationTypes;
 
   beforeEach(function() {
 
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
 
-    moduleExtractor = injector.get('moduleExtractor');
+    getModuleInfo = injector.get('getModuleInfo');
     registrationTypes = injector.get('moduleRegistrationTypes');
 
     var ast = getAST(
@@ -64,7 +64,7 @@ describe("moduleExtractor", function() {
         '});\n'
     );
 
-    moduleInfo = moduleExtractor(ast);
+    moduleInfo = getModuleInfo(ast);
 
   });
 

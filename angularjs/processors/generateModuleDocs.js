@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 module.exports = function generateModuleDocsProcessor(moduleDefs) {
   return {
-    $runAfter: ['extractAngularModulesProcessor'],
+    $runAfter: ['extractModuleInfoProcessor'],
     $runBefore: ['extractJSDocCommentsProcessor'],
 
     $process: function(docs) {

@@ -2,9 +2,9 @@ var _ = require('lodash');
 var SpahQL = require('spahql');
 var esrefactor = require('esrefactor');
 
-module.exports = function moduleExtractor(moduleRegistrationTypes, getJsDocComment, log) {
+module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment, log) {
 
-  return function moduleExtractorImpl(ast) {
+  return function getModuleInfoImpl(ast) {
 
     var rootQuery, variableLookup;
 
@@ -21,13 +21,13 @@ module.exports = function moduleExtractor(moduleRegistrationTypes, getJsDocComme
     return angularModuleCallsQuery.map(function() {
       var moduleInfo = getModuleInfo(this);
 
-      // Add dependencies if any were defined
+      // Add module dependencies if any were defined
       var dependencies = getModuleDependencies(moduleInfo.moduleQuery);
       if ( dependencies ) {
         moduleInfo.dependencies = dependencies;
       }
 
-      // Get info about registrations registered on the module
+      // Get info about registrations on the module
       moduleInfo.registrations = {};
       _.forEach(moduleRegistrationTypes, function(registrationType) {
         var registrations = [];

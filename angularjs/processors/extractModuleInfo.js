@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-module.exports = function extractAngularModulesProcessor(moduleExtractor, moduleDefs, log) {
+module.exports = function extractModuleInfoProcessor(getModuleInfo, moduleDefs, log) {
   return {
     $runAfter: ['files-read'],
     $runBefore: ['extractJSDocCommentsProcessor'],
@@ -16,7 +16,7 @@ module.exports = function extractAngularModulesProcessor(moduleExtractor, module
 
           log.debug('reading jsfile', doc.fileInfo.projectRelativePath);
 
-          var moduleInfo = moduleExtractor(doc.fileInfo.ast);
+          var moduleInfo = getModuleInfo(doc.fileInfo.ast);
 
           _.forEach(moduleInfo, function(module) {
 
