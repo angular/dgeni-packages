@@ -41,5 +41,5 @@ module.exports = new Package('angularjs', ['jsdoc'])
     getPath: getPathFromId,
     outputPathTemplate: '${path}index.html'
   });
-})
+});
 
