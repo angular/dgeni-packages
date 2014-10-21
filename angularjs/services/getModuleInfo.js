@@ -12,14 +12,10 @@ module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment
     variableLookup = new esrefactor.Context(ast);
 
     // We are looking for call expressions, where the callee is the `module` property on an object called `angular`
-    var angularModuleCallsQuery =
-        rootQuery.select("//*" +
-                            "[/type=='CallExpression']"+
-                            "[/callee/property/name=='module']"+
-                            "[/callee/object/name=='angular']");
+    var angularModuleCallsQuery = getCallsTo('angular', 'module');
 
     return angularModuleCallsQuery.map(function() {
-      var moduleInfo = getModuleInfo(this);
+      var moduleInfo = parseModuleCall(this);
 
       // Add module dependencies if any were defined
       var dependencies = getModuleDependencies(moduleInfo.moduleQuery);
@@ -41,7 +37,7 @@ module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment
 
     });
 
-    function getModuleInfo(moduleQuery) {
+    function parseModuleCall(moduleQuery) {
 
       var moduleInfo, statementQuery, statement, comment;
 
@@ -51,7 +47,7 @@ module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment
       moduleInfo = {
         moduleQuery: moduleQuery,
         moduleRefsQuery: statementQuery.clone(),
-        name: getModuleName(moduleQuery),
+        name: getParameter(moduleQuery, 0),
         content: '',
         startingLine: statement.loc.start.line
       };
@@ -71,20 +67,13 @@ module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment
         }
 
         // get all usages of this module variable
-        var variableRefs = variableLookup.identify(statement.range[0]).references;
-
-        _.forEach(variableRefs, function(variableRef) {
-
-          // Exclude the original declaration
-          if ( variableRef.range[0] !== statement.range[0] ) {
-            // Create a new query for each use of the module variable
-            var query = _.template('//*[/callee/object/type == "Identifier"][/callee/object/range/0 == ${range[0]}]', variableRef);
-            // and add it to the moduleRefsQuery query for later
-            moduleInfo.moduleRefsQuery = moduleInfo.moduleRefsQuery.concat(rootQuery.select(query));
-          }
+        _.forEach(getReferences(statement), function(reference) {
+          moduleInfo.moduleRefsQuery = moduleInfo.moduleRefsQuery.concat(reference);
         });
+
       }
 
+      // Attach the comment properties to the moduleInfo
       _.assign(moduleInfo, comment);
 
       return moduleInfo;
@@ -123,6 +112,55 @@ module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment
 
       return registrations;
     }
+
+
+    function getCallsTo(object, method) {
+      var objectName = _.isString(object) ? object : null;
+      var baseQuery = _.isObject(object) ? object : rootQuery;
+
+      var queryString = "//*[/type=='CallExpression']";
+      var query = baseQuery.select(queryString);
+
+      if ( method ) {
+        query = query.filter("/callee/property/name=='" + method + "'");
+      }
+
+      if ( objectName ) {
+        query = query.filter("/callee/object/name=='"+objectName+"'");
+      }
+
+      return query;
+    }
+
+
+    function getDeclaration(variableRef) {
+      // We have found a variable rather than a declaration of a node
+      // so let's look for the declaration too.
+      var declaration = variableLookup.identify(variableRef.range[0]).declaration;
+      return getNodeAt(declaration.range);
+    }
+
+    function getReferences(variableDeclaration) {
+      var variableRefNodes = [];
+
+      // get all usages of this module variable
+      var variableRefs = variableLookup.identify(variableDeclaration.range[0]).references;
+
+      _.forEach(variableRefs, function(variableRef) {
+
+        // Exclude the original declaration
+        if ( variableRef.range[0] !== variableDeclaration.range[0] ) {
+          variableRefNodes.push(getNodeAt(variableRef.range));
+        }
+      });
+
+      return variableRefNodes;
+    }
+
+    function getNodeAt(range) {
+      var query = _.template('//*[/callee/object/type == "Identifier"][/callee/object/range/0 == ${range[0]}]', {range : range});
+      return rootQuery.select(query);
+    }
   };
 
   function findDependencies(factoryFn) {
@@ -157,9 +195,9 @@ module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment
   }
 
 
-  function getModuleName(node) {
+  function getParameter(node, index) {
     // The name is the first parameter to `angular.module(name, deps)`
-    return node.select('/arguments/0/value').value();
+    return node.select('/arguments/'+index+'/value').value();
   }
 
 
@@ -171,5 +209,6 @@ module.exports = function getModuleInfo(moduleRegistrationTypes, getJsDocComment
       return node.select('/arguments/1/elements//value').values();
     }
   }
+
 
 };
