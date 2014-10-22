@@ -11,6 +11,6 @@ module.exports = function mockPackage() {
   .factory('templateEngine', function dummyTemplateEngine() {
     return {
       filters: []
-    }
+    };
   });
 };
