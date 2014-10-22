@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-module.exports = function extractModuleInfoProcessor(getModuleInfo, moduleDefs, log) {
+module.exports = function parseModulesProcessor(getModuleInfo, moduleDefs, log) {
   return {
     $runAfter: ['files-read'],
     $runBefore: ['extractJSDocCommentsProcessor'],

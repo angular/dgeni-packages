@@ -11,7 +11,7 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./rendering/relativeLink'))
 
 
-.processor(require('./processors/extractModuleInfo'))
+.processor(require('./processors/parseModules'))
 .processor(require('./processors/generateModuleDocs'))
 
 
