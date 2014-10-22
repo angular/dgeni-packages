@@ -11,4 +11,4 @@ module.exports = function moduleRegistrationTypes() {
     // { name: 'config', requiresName: false, hasFactory: true, group: 'config-block', title: 'Config Blocks', plural: 'config-blocks', docType: 'ngConfig' },
     // { name: 'run', requiresName: false, hasFactory: true, group: 'run-block', title: 'Run Blocks', plural: 'run-blocks', docType: 'ngRun' }
   ];
-}
+};

@@ -93,7 +93,7 @@ describe("getJsDocComment", function() {
 
     var AST = {
       comments: [ comment1, comment2 ]
-    }
+    };
 
     getJsDocComment({
       leadingComments: [comment1]
