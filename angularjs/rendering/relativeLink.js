@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var path = require('canonical-path');
 
-module.exports = function() {
+module.exports = function relativeLinkInlineTag() {
   return {
     name: 'relativeLink',
     process: function(doc, originatingDoc, title) {

@@ -8,23 +8,11 @@ module.exports = new Package('angularjs', ['jsdoc'])
 .factory(require('./services/getModuleInfo'))
 .factory(require('./services/removeASTComment'))
 .factory(require('./services/getPathFromId'))
+.factory(require('./rendering/relativeLink'))
 
 
 .processor(require('./processors/extractModuleInfo'))
 .processor(require('./processors/generateModuleDocs'))
-
-
-.config(function(templateEngine, getInjectables) {
-  templateEngine.filters = templateEngine.filters.concat(getInjectables([
-    require('./rendering/relativeLink'),
-  ]));
-})
-
-
-.config(function(getLinkInfo) {
-  getLinkInfo.relativeLinks = true;
-})
-
 
 
 .config(function(computeIdsProcessor, getAliases) {
@@ -41,5 +29,9 @@ module.exports = new Package('angularjs', ['jsdoc'])
     getPath: getPathFromId,
     outputPathTemplate: '${path}index.html'
   });
+})
+
+.config(function(templateEngine, relativeLinkInlineTag) {
+  templateEngine.filters.push(relativeLinkInlineTag);
 });
 
