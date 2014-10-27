@@ -21,7 +21,7 @@ module.exports = function resolveUrl() {
     if ( base && newPath.charAt(0) !== '/' ) {
       // Resolve against the base url if there is a base and the new path is not absolute
       newPath = path.resolve(base, newPath)
-      newPath = newPath.substr(newPath.indexOf(base) + 1);
+      newPath = newPath.substr(newPath.indexOf(base) + base.length);
     } else {
       // Otherwise resolve against the current path
       newPath = url.resolve(currentPath || '', newPath);
