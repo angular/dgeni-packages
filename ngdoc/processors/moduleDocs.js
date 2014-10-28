@@ -48,7 +48,11 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
 
           if ( matchingModules.length === 1 ) {
             var module = matchingModules[0];
-            module.components.push(doc);
+            if (module.components) {
+              module.components.push(doc);
+            } else {
+              throw new Error("Module '"+module.name+"' is not documented.");
+            }
             doc.moduleDoc = module;
           } else if ( matchingModules.length > 1 ) {
             var error = createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc);
