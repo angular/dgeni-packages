@@ -32,7 +32,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
    *           A single transformation function (or collection of transformation functions) to apply
    *           to every tag that is extracted.
    */
-  function createTagExtractor(tagDefinitions, defaultTagTransforms, createDocMessage) {
+  function createTagExtractor(tagDefinitions, defaultTagTransforms) {
 
     // Compute a default transformation function
     var defaultTransformFn = getTransformationFn(defaultTagTransforms);
