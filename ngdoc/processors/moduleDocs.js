@@ -48,7 +48,11 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
 
           if ( matchingModules.length === 1 ) {
             var module = matchingModules[0];
-            module.components.push(doc);
+            if (module.docType === 'module') {
+              module.components.push(doc);
+            } else {
+              throw new Error('Entity "'+module.name+'" must be documented as "module", not as "'+module.docType+'".');
+            }
             doc.moduleDoc = module;
           } else if ( matchingModules.length > 1 ) {
             var error = createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc);

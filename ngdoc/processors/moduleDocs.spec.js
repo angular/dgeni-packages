@@ -91,4 +91,17 @@ describe("moduleDocsProcessor", function() {
 
   });
 
+  it("should throw an error if a module is documented as another type of entity", function() {
+    var doc1 = { docType: 'module', name: 'mod1', id: 'module:mod1', aliases: ['mod1', 'module:mod1'] };
+    var doc1 = { docType: 'object', name: 'mod2', id: 'object:mod2', aliases: ['mod2', 'object:mod2'] };
+    var doc2 = { docType: 'service', name: 'service1', module: 'mod1', id: 'mod1.service1' };
+    var doc3 = { docType: 'service', name: 'service2', module: 'mod2', id: 'mod2.service2' };
+
+    aliasMap.addDoc(doc1);
+
+    expect(function() {
+      processor.$process([doc1, doc2, doc3]);
+    }).toThrowError('Entity "mod2" must be documented as "module", not as "object".');
+  });
+
 });
