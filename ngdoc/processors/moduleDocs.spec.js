@@ -101,7 +101,8 @@ describe("moduleDocsProcessor", function() {
 
     expect(function() {
       processor.$process([doc1, doc2, doc3]);
-    }).toThrowError('Entity "mod2" must be documented as "module", not as "object".');
+    }).toThrowError('"mod2" is not a module. It is documented as "object". Either the module is incorrectly typed or the module reference is invalid - doc "mod2.service2" (service) ');
+
   });
 
 });

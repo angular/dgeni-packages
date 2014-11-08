@@ -51,7 +51,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
             if (module.docType === 'module') {
               module.components.push(doc);
             } else {
-              throw new Error('Entity "'+module.name+'" must be documented as "module", not as "'+module.docType+'".');
+              throw new Error(createDocMessage('"' + module.name + '" is not a module. It is documented as "' + module.docType + '". Either the module is incorrectly typed or the module reference is invalid', doc));
             }
             doc.moduleDoc = module;
           } else if ( matchingModules.length > 1 ) {
