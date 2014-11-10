@@ -1,6 +1,12 @@
 # Changelog
 
-## v0.10.4 15th October 2014
+## v0.10.6 10th November 2014
+
+* fix(base/resolveUrl) : Handle the path c:\ under Windows       ef23d430
+* fix(jsdoc/extractTagsProcessor): remove parameter that was hiding the real variable      ba34f921
+
+
+## v0.10.5 15th October 2014
 
 * feat(examples/generateProtractorTestsProcessor): allow basePath of test to be specified     2bfb6666
 
