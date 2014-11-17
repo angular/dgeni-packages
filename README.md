@@ -154,7 +154,7 @@ provider document.
 ### Tag Definitions
 
 This package modifies and adds new tag definitions on top of those provided by the `jsdoc` package:
-`area`, `element`, `eventType`, `example`, `fullName`, `id`, `module`, `name`, `ngdoc`, packageName`,
+`area`, `element`, `eventType`, `example`, `fullName`, `id`, `module`, `name`, `ngdoc`, `packageName`,
 `parent`, `priority`, `restrict`, `scope` and `title`.
 
 
