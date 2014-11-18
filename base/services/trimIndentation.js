@@ -6,23 +6,25 @@ function calcIndent(text) {
   var MAX_INDENT = 9999;
   var lines = text.split('\n');
   var minIndent = MAX_INDENT;
+  var emptyLinesRemoved = false;
+
+  // ignore leading empty lines
+  while(isEmpty(lines[0])) {
+    lines.shift();
+    emptyLinesRemoved = true;
+  }
 
   // ignore first line if it has no indentation and there is more than one line
   // this is because sometimes our text starts in the middle of a line of other
   // text that is indented and so doesn't appear to have an indent when it really does.
   var ignoreLine = (lines[0][0] != ' '  && lines.length > 1);
-  if ( ignoreLine ) {
-    lines.shift();
-  }
-  // ignore leading empty lines
-  while(isEmpty(lines[0])) {
+  if ( ignoreLine && !emptyLinesRemoved ) {
     lines.shift();
   }
 
   lines.forEach(function(line){
-    var indent = line.match(/^\s*/)[0].length;
-    // If indent is 0 then we assume that it is just an overflow and not part of the indentation
-    if (indent > 0 || minIndent == MAX_INDENT) {
+    if ( !isEmpty(line) ) {
+      var indent = line.match(/^\s*/)[0].length;
       minIndent = Math.min(minIndent, indent);
     }
   });

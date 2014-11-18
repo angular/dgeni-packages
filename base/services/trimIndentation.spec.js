@@ -24,6 +24,24 @@ describe("trimIndentation", function() {
     expect(trimIndentation('abc\n\n\n')).toEqual('abc');
   });
 
+  it("should not trim indentation if more than the first line is not indented", function() {
+    expect(trimIndentation(
+      '.ng-hide {\n' +
+      '  /&#42; this is just another form of hiding an element &#42;/\n' +
+      '  display:block!important;\n' +
+      '  position:absolute;\n' +
+      '  top:-9999px;\n' +
+      '  left:-9999px;\n' +
+      '}')).toEqual(
+      '.ng-hide {\n' +
+      '  /&#42; this is just another form of hiding an element &#42;/\n' +
+      '  display:block!important;\n' +
+      '  position:absolute;\n' +
+      '  top:-9999px;\n' +
+      '  left:-9999px;\n' +
+      '}');
+  });
+
   describe("calcIndent", function() {
     it("should calculate simple leading white-space from a single line of text", function() {
       expect(trimIndentation.calcIndent('   abc  ')).toEqual(3);
