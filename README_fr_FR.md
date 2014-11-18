@@ -154,7 +154,7 @@ provider correspondant.
 ### Définitions des balises
 
 Ce package modifie et ajoute de nouvelles définitions de balises en plus de celles fournies par le package `jsdoc` :
-`area`, `element`, `eventType`, `example`, `fullName`, `id`, `module`, `name`, `ngdoc`, packageName`,
+`area`, `element`, `eventType`, `example`, `fullName`, `id`, `module`, `name`, `ngdoc`, `packageName`,
 `parent`, `priority`, `restrict`, `scope` et `title`.
 
 
