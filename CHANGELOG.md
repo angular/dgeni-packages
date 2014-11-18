@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.10.7 18th November 2014
+
+* fix(base/trimIndentation): ensure that lines that start at index zero kill the indentation      434a9b4a
+* fix(example/template.js): add functional form of 'use strict'    f909b9c7
+* feat(base/readFilesProcessor): accept arrays of include and exclude patterns      696c4c68
+* fix(example/template.js): add 'use strict'    a0ceb1e
+* fix(ngdoc/$moduleDocs): throw an error if a module is improperly tagged    d6edbffd
+
+
 ## v0.10.6 10th November 2014
 
 * fix(base/resolveUrl) : Handle the path c:\ under Windows       ef23d430
