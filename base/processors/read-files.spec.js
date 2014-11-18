@@ -79,6 +79,44 @@ describe('read-files doc processor', function() {
   });
 
 
+  it("should accept an array of include patterns", function(done) {
+    var mockFileReader = {
+      name: 'mockFileReader',
+      getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+    };
+
+    processor = createReadFilesProcessor([mockFileReader], [ { include: ['docs/*'] } ], '../fixtures');
+
+    var promise = processor.$process().then(function(docs) {
+      expect(docs.length).toEqual(2);
+      expect(docs[0].fileInfo).toEqual({
+        fileReader: 'mockFileReader',
+        filePath: path.resolve(processor.basePath, 'docs/a.js'),
+        baseName: 'a',
+        extension: 'js',
+        basePath: processor.basePath,
+        relativePath: 'docs/a.js',
+        projectRelativePath: 'docs/a.js',
+        content: '// Mock code file'
+      });
+      expect(docs[0].fileInfo2).toBe(docs[0].fileInfo);
+      expect(docs[1].fileInfo).toEqual({
+        fileReader: 'mockFileReader',
+        filePath: path.resolve(processor.basePath, 'docs/b.ngdoc'),
+        baseName: 'b',
+        extension: 'ngdoc',
+        basePath: processor.basePath,
+        relativePath: 'docs/b.ngdoc',
+        projectRelativePath: 'docs/b.ngdoc',
+        content: 'mock documentation file'
+      });
+      expect(docs[1].fileInfo2).toBe(docs[1].fileInfo);
+    });
+
+    tidyUp(promise, done);
+  });
+
+
   it("should complain if there is no matching file-reader", function(done) {
       var mockFileReader = {
         name: 'mockFileReader',
@@ -163,6 +201,21 @@ describe('read-files doc processor', function() {
       };
 
       processor = createReadFilesProcessor([mockFileReader], [{ include: 'docs/*', exclude:'**/*.ngdoc' }], '../fixtures');
+
+      var promise = processor.$process().then(function(docs) {
+        expect(docs.length).toEqual(1);
+        expect(docs[0].fileInfo.extension).toEqual('js');
+      });
+      tidyUp(promise, done);
+    });
+
+    it("should accept an array of exclusion patterns", function(done) {
+      var mockFileReader = {
+        name: 'mockFileReader',
+        getDocs: function(fileInfo) { return [{ }]; }
+      };
+
+      processor = createReadFilesProcessor([mockFileReader], [{ include: 'docs/*', exclude:['**/*.ngdoc'] }], '../fixtures');
 
       var promise = processor.$process().then(function(docs) {
         expect(docs.length).toEqual(1);

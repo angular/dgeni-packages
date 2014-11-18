@@ -19,8 +19,8 @@ var StringMap = require('stringmap');
  *
  *      * `basePath` {string} the `relativeFile` property of the generated docs will be relative
  *        to this path. This path is relative to `readFileProcessor.basePath`.  Defaults to `.`.
- *      * `include` {string} glob pattern of files to include (relative to `readFileProcessor.basePath`)
- *      * `exclude` {string} glob pattern of files to exclude (relative to `readFileProcessor.basePath`)
+ *      * `include` {string|Array<string>} glob pattern(s) of files to include (relative to `readFileProcessor.basePath`)
+ *      * `exclude` {string|Array<string>} glob pattern(s) of files to exclude (relative to `readFileProcessor.basePath`)
  *      * `fileReader` {string} name of a file reader to use for these files
  *
  * @property {Array.<Function>} fileReaders A collection of file readers. A file reader is an object
@@ -140,7 +140,7 @@ function matchFileReader(fileReaders, file) {
 function normalizeSourceInfo(basePath, sourceInfo) {
 
   if ( _.isString(sourceInfo) ) {
-    sourceInfo = { include: sourceInfo };
+    sourceInfo = { include: [sourceInfo] };
   } else if ( !_.isObject(sourceInfo) || !sourceInfo.include) {
 
     throw new Error('Invalid sourceFiles parameter. ' +
@@ -148,9 +148,21 @@ function normalizeSourceInfo(basePath, sourceInfo) {
       '{ include: "...", basePath: "...", exclude: "...", fileReader: "..." }');
   }
 
+  if ( !_.isArray(sourceInfo.include) ) {
+    sourceInfo.include = [sourceInfo.include];
+  }
+  sourceInfo.exclude = sourceInfo.exclude || [];
+  if ( !_.isArray(sourceInfo.exclude) ) {
+    sourceInfo.exclude = [sourceInfo.exclude];
+  }
+
   sourceInfo.basePath = path.resolve(basePath, sourceInfo.basePath || '.');
-  sourceInfo.include = path.resolve(basePath, sourceInfo.include);
-  sourceInfo.exclude = sourceInfo.exclude && path.resolve(basePath, sourceInfo.exclude);
+  sourceInfo.include = _.map(sourceInfo.include, function(include) {
+    return path.resolve(basePath, include);
+  });
+  sourceInfo.exclude = _.map(sourceInfo.exclude, function(exclude) {
+    return path.resolve(basePath, exclude);
+  });
 
   return sourceInfo;
 }
@@ -158,16 +170,28 @@ function normalizeSourceInfo(basePath, sourceInfo) {
 
 function getSourceFiles(sourceInfo) {
 
-  var excludeMatcher = sourceInfo.exclude && new Minimatch(sourceInfo.exclude);
+  // Compute matchers for each of the exclusion patterns
+  var excludeMatchers = _.map(sourceInfo.exclude, function(exclude) {
+    return new Minimatch(exclude);
+  });
 
-  var filesPromise = Q.nfcall(glob, sourceInfo.include);
+  // Get a list of files to include
+  var filesPromises = _.map(sourceInfo.include, function(include) {
+    // Each call to glob will produce a array of file paths
+    return Q.nfcall(glob, include);
+  });
 
-  return filesPromise.then(function(files) {
+  return Q.all(filesPromises).then(function(filesCollections) {
+
+    // Once we have all the file path arrays, flatten them into a single array
+    return _.flatten(filesCollections);
+
+  }).then(function(files) {
 
     // Filter the files on whether they match the `exclude` property and whether they are files
     var filteredFilePromises = files.map(function(file) {
 
-      if ( excludeMatcher && excludeMatcher.match(file) ) {
+      if ( _.any(excludeMatchers, function(excludeMatcher) { return excludeMatcher.match(file); }) ) {
         // Return a promise for `null` if the path is excluded
         // Doing this first - it is synchronous - saves us even making the isFile call if not needed
         return Q(null);
