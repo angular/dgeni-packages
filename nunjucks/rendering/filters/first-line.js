@@ -7,8 +7,6 @@ module.exports = {
   process: function(str) {
     if (!str) return str;
 
-    str = str
-      .split("\n")[0];
-    return str;
+    return str.match(/([^$]*\{@[^}]+\})|.*$/m)[0];
   }
 };
