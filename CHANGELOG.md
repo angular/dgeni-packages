@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.8 15th December 2014
+
+* fix(base/checkAnchorLinksProcessor): ignore "chrome://..." links    3d5dca46
+* fix(nunjucks/firstLine): don't break inline tags when extracting first line    19a642f1
+
+
 ## v0.10.7 18th November 2014
 
 * fix(base/trimIndentation): ensure that lines that start at index zero kill the indentation      434a9b4a
