@@ -56,7 +56,8 @@ describe("checkAnchorLinks", function() {
     processor.$process([
       { renderedContent: '<a>foo</a>', outputPath: 'x.html', path: 'x' },
       { renderedContent: '<a href="http://www.google.com">foo</a>', outputPath: 'a.html', path: 'a' },
-      { renderedContent: '<a href="mailto:foo@foo.com">foo</a>', outputPath: 'c.html', path: 'c' }
+      { renderedContent: '<a href="mailto:foo@foo.com">foo</a>', outputPath: 'c.html', path: 'c' },
+      { renderedContent: '<a href="chrome://accessibility">Accessibility</a>', outputPath: 'c.html', path: 'c' }
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });

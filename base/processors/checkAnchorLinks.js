@@ -8,7 +8,7 @@ var path = require('canonical-path');
  */
 module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLinks) {
   return {
-    ignoredLinks: [/^http(?:s)?:\/\//, /^mailto:/],
+    ignoredLinks: [/^http(?:s)?:\/\//, /^mailto:/, /^chrome:/],
     pathVariants: ['', '/', '.html', '/index.html'],
     checkDoc: function(doc) { return doc.path && path.extname(doc.outputPath) === '.html'; },
     base: null,
