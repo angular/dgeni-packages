@@ -106,4 +106,36 @@ describe("checkAnchorLinks", function() {
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
+
+  it("should skip links with `chrome` scheme", function() {
+    processor.$process([
+      { renderedContent: '<a href="chrome:accessibility">accessibility</a>' },
+      { renderedContent: '<a href="chrome://accessibility">accessibility</a>' },
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
+
+  it("should skip links with `about` scheme", function() {
+    processor.$process([
+      { renderedContent: '<a href="about:blank">blank</a>' },
+      { renderedContent: '<a href="about://config">config</a>' },
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
+
+  it("should skip links with `http/https` scheme", function() {
+    processor.$process([
+      { renderedContent: '<a href="http://www.google.com">goog</a>' },
+      { renderedContent: '<a href="https://www.facebook.com">fcbk</a>' },
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
+
+  it("should skip links with `ftp/ftps` scheme", function() {
+    processor.$process([
+      { renderedContent: '<a href="ftp://my.house.com/readme.txt">public</a>' },
+      { renderedContent: '<a href="ftps://my.secure.house.com/secrets.txt">SCRT</a>' },
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
 });

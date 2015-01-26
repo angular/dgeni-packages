@@ -84,6 +84,9 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
           })
 
           .forEach(function(link) {
+            // Ignore absolute links with specific schemes...
+            if (/^((https?)|(ftps?):\/\/)|((chrome)|(about):(\/\/)?)/.test(link)) return;
+
             var normalizedLink = path.join(webRoot, resolveUrl(linkInfo.path, link, base));
             if ( !_.any(pathVariants, function(pathVariant) {
               return allValidReferences[normalizedLink + pathVariant];
