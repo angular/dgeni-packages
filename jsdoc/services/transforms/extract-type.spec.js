@@ -24,4 +24,10 @@ describe("extract-type transform", function() {
     value = transform(doc, tag, value);
     expect(value).toEqual('paramName - Some description  \n Some more description');
   });
+
+  it("should handle record types", function() {
+    value = '{{x:number, y:number}} paramName - Some description';
+    value = transform(doc, tag, value);
+    expect(tag.typeList).toEqual(['{x:number, y:number}']);
+  });
 });

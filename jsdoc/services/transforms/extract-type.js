@@ -83,7 +83,7 @@ module.exports =  function extractTypeTransform() {
         types.push('null');
         break;
       case TYPES.RecordType:
-        types.push('Object');
+        types.push(catharsis.stringify(parsedType));
         break;
       case TYPES.TypeApplication:
         types.push( catharsis.stringify(parsedType) );
