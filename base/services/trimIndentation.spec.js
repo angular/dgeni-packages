@@ -42,6 +42,10 @@ describe("trimIndentation", function() {
       '}');
   });
 
+  it("should cope with an empty code block", function() {
+    expect(trimIndentation('\n\n')).toEqual('');
+  });
+
   describe("calcIndent", function() {
     it("should calculate simple leading white-space from a single line of text", function() {
       expect(trimIndentation.calcIndent('   abc  ')).toEqual(3);
@@ -50,6 +54,9 @@ describe("trimIndentation", function() {
       expect(trimIndentation.calcIndent('abc\n     xyz\n     123\n\n')).toEqual(5);
       expect(trimIndentation.calcIndent('  abc\n     xyz\n     123\n\n')).toEqual(2);
       expect(trimIndentation.calcIndent(' abc\n  xyz\n   123\n\n')).toEqual(1);
+    });
+    it("should cope with an empty code block", function() {
+      expect(trimIndentation.calcIndent('\n\n')).toEqual(9999);
     });
   });
 

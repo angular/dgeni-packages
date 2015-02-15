@@ -14,20 +14,24 @@ function calcIndent(text) {
     emptyLinesRemoved = true;
   }
 
-  // ignore first line if it has no indentation and there is more than one line
-  // this is because sometimes our text starts in the middle of a line of other
-  // text that is indented and so doesn't appear to have an indent when it really does.
-  var ignoreLine = (lines[0][0] != ' '  && lines.length > 1);
-  if ( ignoreLine && !emptyLinesRemoved ) {
-    lines.shift();
-  }
+  if(lines.length) {
 
-  lines.forEach(function(line){
-    if ( !isEmpty(line) ) {
-      var indent = line.match(/^\s*/)[0].length;
-      minIndent = Math.min(minIndent, indent);
+    // ignore first line if it has no indentation and there is more than one line
+    // this is because sometimes our text starts in the middle of a line of other
+    // text that is indented and so doesn't appear to have an indent when it really does.
+    var ignoreLine = (lines[0][0] != ' '  && lines.length > 1);
+    if ( ignoreLine && !emptyLinesRemoved ) {
+      lines.shift();
     }
-  });
+
+    lines.forEach(function(line){
+      if ( !isEmpty(line) ) {
+        var indent = line.match(/^\s*/)[0].length;
+        minIndent = Math.min(minIndent, indent);
+      }
+    });
+
+  }
 
   return minIndent;
 }
