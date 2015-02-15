@@ -1,8 +1,14 @@
 # Changelog
 
+## v0.10.10 15th February 2015
+
+* fix(jsdoc/parseTagsProcessor): cope with single line back-ticked code blocks  0d5892d0
+
+
 ## v0.10.9 15th Februrary 2015
 
 * fix(base/trimIndentation): cope with empty text blocks  8cb1bcb8
+
 
 ## v0.10.8 15th December 2014
 
