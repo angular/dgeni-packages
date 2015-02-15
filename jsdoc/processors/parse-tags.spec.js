@@ -91,6 +91,33 @@ describe("parse-tags processor", function() {
     });
 
 
+    it("should cope with single line back-ticked code blocks", function() {
+      processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
+      var content =
+      '@a some text\n\n' +
+        '```some single line of code @b not a tag```\n\n' +
+        'some text outside a code block\n' +
+        '```\n' +
+        '  some code\n' +
+        '  @b not a tag\n' +
+        '```\n';
+
+      var doc = { content: content };
+      processor.$process([doc]);
+
+      expect(doc.tags.getTag('a').description).toEqual('some text\n\n' +
+        '```some single line of code @b not a tag```\n\n' +
+        'some text outside a code block\n' +
+        '```\n' +
+        '  some code\n' +
+        '  @b not a tag\n' +
+        '```\n'
+      );
+
+      expect(doc.tags.getTags('b').length).toEqual(0);
+    });
+
+
     it("should ignore doc if it has no content", function() {
       expect(function() {
         processor.$process([{}]);

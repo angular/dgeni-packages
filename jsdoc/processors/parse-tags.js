@@ -59,7 +59,7 @@ function createTagParser(tagDefinitions) {
 
   var END_OF_LINE = /\r?\n/;
   var TAG_MARKER = /^\s*@(\S+)\s*(.*)$/;
-  var CODE_FENCE = /^\s*```/;
+  var CODE_FENCE = /^\s*```(?!.*```)/;
   var tagDefMap = createTagDefMap(tagDefinitions);
 
   /**
