@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.10.9 15th Februrary 2015
+
+* fix(base/trimIndentation): cope with empty text blocks  8cb1bcb8
+
 ## v0.10.8 15th December 2014
 
 * fix(base/checkAnchorLinksProcessor): ignore "chrome://..." links    3d5dca46
