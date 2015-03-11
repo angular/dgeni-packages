@@ -13,5 +13,6 @@ module.exports = [
   require('./title'),
   require('./parent'),
   require('./packageName'),
-  require('./scope')
+  require('./scope'),
+  require('./multiElement')
 ];

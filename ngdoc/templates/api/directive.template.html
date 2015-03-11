@@ -6,6 +6,7 @@
   <ul>
     {% if doc.scope %}<li>This directive creates new scope.</li>{% endif %}
     <li>This directive executes at priority level {$ doc.priority $}.</li>
+    {% if doc.multiElement %}<li>This directive can be used as {@link $compile#-multielement- multiElement}</li>{% endif %}
   </ul>
 
   {% block usage %}
@@ -55,7 +56,7 @@
         {% endcode %}
       </li>
     {% endif -%}
-    
+
   {%- endif %}
   </div>
   {% endblock -%}
