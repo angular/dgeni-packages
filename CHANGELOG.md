@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.11 13th March 2015
+
+* fix(jsdoc/extract-type): improve error message e56ea300
+
+
 ## v0.10.10 15th February 2015
 
 * fix(jsdoc/parseTagsProcessor): cope with single line back-ticked code blocks  0d5892d0
