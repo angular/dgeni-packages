@@ -45,12 +45,17 @@ module.exports =  function extractTypeTransform() {
 
       tag.typeExpression = value.slice(start+1, position).trim().replace('\\}', '}').replace('\\{', '{');
 
-      tag.type = catharsis.parse(tag.typeExpression, {jsdoc: true});
-      tag.typeList = getTypeStrings(tag.type);
-      if ( tag.type.optional ) {
-        tag.optional = true;
+      try {
+        tag.type = catharsis.parse(tag.typeExpression, {jsdoc: true});
+        tag.typeList = getTypeStrings(tag.type);
+        if ( tag.type.optional ) {
+          tag.optional = true;
+        }
+        tag.description = (value.substring(0, start) + value.substring(position+1)).trim();
+      } catch(x) {
+        throw new Error('Error parsing the jsdoc type expression "{' + tag.typeExpression + '}"', x);
       }
-      tag.description = (value.substring(0, start) + value.substring(position+1)).trim();
+
       return tag.description;
     } else {
       return value;
