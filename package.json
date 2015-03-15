@@ -45,7 +45,7 @@
     "marked": "^0.3.2",
     "minimatch": "^0.3.0",
     "node-html-encoder": "0.0.2",
-    "nunjucks": "~1.0.1",
+    "nunjucks": "^1.2.0",
     "q": "~1.0.0",
     "q-io": "~1.10.9",
     "stringmap": "^0.2.2",
