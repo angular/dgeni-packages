@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.12 13th March 2015
+
+* chore(packages): update nunjucks to 1.2.0
+
+
 ## v0.10.11 13th March 2015
 
 * fix(jsdoc/extract-type): improve error message e56ea300
