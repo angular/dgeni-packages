@@ -17,7 +17,7 @@
       <td>
         {$ param.name $}
         {% if param.alias %}| {$ param.alias $}{% endif %}
-        {% if param.type.optional %}<div><em>(optional)</em></div>{% endif %}
+        {% if param.optional %}<div><em>(optional)</em></div>{% endif %}
       </td>
       <td>
         {$ typeList(param.typeList) $}
