@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.13 2rd April 2015
+
+* fix(ngdoc/macros.html): use optional property from param rather than type
+
+
 ## v0.10.12 13th March 2015
 
 * chore(packages): update nunjucks to 1.2.0
