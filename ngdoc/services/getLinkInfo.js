@@ -9,6 +9,8 @@ var path = require('canonical-path');
  * @param  {String} url   The url to match
  * @param  {String} title An optional title to return in the link information
  * @return {Object}       The link information
+ *
+ * @property {boolean} relativeLinks Whether we expect the links to be relative to the originating doc
  */
 module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
 
@@ -37,6 +39,10 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
       linkInfo.url = docs[0].path;
       linkInfo.title = title || encodeCodeBlock(docs[0].name, true);
       linkInfo.type = 'doc';
+
+      if ( getLinkInfoImpl.relativeLinks && currentDoc && currentDoc.path ) {
+        linkInfo.url = path.relative(path.join('/', currentDoc.path), path.join('/', linkInfo.url));
+      }
 
     } else if ( url.indexOf('#') > 0 ) {
       var pathAndHash = url.split('#');
