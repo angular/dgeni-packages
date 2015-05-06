@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var esprima = require('esprima');
+var parser = require('espree');
 
 /**
  * @dgService jsdocFileReader
@@ -14,9 +14,32 @@ module.exports = function jsdocFileReader(log) {
     getDocs: function(fileInfo) {
 
       try {
-        fileInfo.ast = esprima.parse(fileInfo.content, {
+        fileInfo.ast = parser.parse(fileInfo.content, {
           loc: true,
-          attachComment: true
+          attachComment: true,
+          ecmaFeatures: {
+            arrowFunctions: true,
+            blockBindings: true,
+            destructuring: true,
+            regexYFlag: true,
+            regexUFlag: true,
+            templateStrings: true,
+            binaryLiterals: true,
+            octalLiterals: true,
+            unicodeCodePointEscapes: true,
+            defaultParams: true,
+            restParams: true,
+            forOf: true,
+            objectLiteralComputedProperties: true,
+            objectLiteralShorthandMethods: true,
+            objectLiteralShorthandProperties: true,
+            objectLiteralDuplicateProperties: true,
+            generators: true,
+            spread: true,
+            classes: true,
+            modules: true,
+            globalReturn: true
+          }
         });
       } catch(ex) {
        ex.file = fileInfo.filePath;

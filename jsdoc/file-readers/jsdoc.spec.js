@@ -78,5 +78,20 @@ describe("jsdoc fileReader", function() {
       }).toThrowError('JavaScript error in file "some/file.js"" [line 13, column 3]: "Unexpected identifier"')
     });
 
+    it("should cope with ES6 constructs", function() {
+      var fileInfo = createFileInfo(
+        'some/file.js',
+        'export function times(x, y) { return x*y; }\n' +
+        'import X from "some/module"\n' +
+        'class MyClass {\n' +
+        '  constructor(a) {\n' +
+        '    a.fn();\n' +
+        '  }\n' +
+        '}\n',
+        '.');
+      var docs = fileReader.getDocs(fileInfo);
+
+    });
+
   });
 });
