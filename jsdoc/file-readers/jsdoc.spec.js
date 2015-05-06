@@ -1,6 +1,6 @@
 var path = require('canonical-path');
-var fileReaderFactory = require('./jsdoc');
-var mockLog = require('dgeni/lib/mocks/log')();
+var Dgeni = require('dgeni');
+var mockPackage = require('../mocks/mockPackage');
 
 var srcJsContent = require('../mocks/_test-data/srcJsFile.js');
 var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
@@ -23,7 +23,9 @@ describe("jsdoc fileReader", function() {
   };
 
   beforeEach(function() {
-    fileReader = fileReaderFactory(mockLog);
+    dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    fileReader = injector.get('jsdocFileReader');
   });
 
   describe("defaultPattern", function() {

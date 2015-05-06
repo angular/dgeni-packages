@@ -1,11 +1,18 @@
-var codeNameProcessorFactory = require('./code-name');
-var jsParser = require('espree');
-
-var mockLog = jasmine.createSpyObj('log', ['error', 'warn', 'info', 'debug', 'silly']);
+var Dgeni = require('dgeni');
+var mockPackage = require('../mocks/mockPackage');
 
 describe('code-name doc processor', function() {
+  var processor, jsParser;
+
+  beforeEach(function() {
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+
+    processor = injector.get('codeNameProcessor');
+    jsParser = injector.get('jsParser');
+  });
+
   it("should understand CallExpressions", function() {
-    var processor = codeNameProcessorFactory(mockLog);
     var ast = jsParser.parse('(function foo() { })()');
     var doc = { codeNode: ast };
     processor.$process([doc]);
@@ -13,7 +20,6 @@ describe('code-name doc processor', function() {
   });
 
   it("should understand ArrayExpressions", function() {
-    var processor = codeNameProcessorFactory(mockLog);
     var ast = jsParser.parse("$CompileProvider.$inject = ['$provide', '$$sanitizeUriProvider'];");
     var doc = { codeNode: ast };
     processor.$process([doc]);

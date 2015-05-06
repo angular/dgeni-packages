@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var parser = require('espree');
 
 /**
  * @dgService jsdocFileReader
@@ -7,40 +6,14 @@ var parser = require('espree');
  * This file reader will create a simple doc for each js
  * file including a code AST of the JavaScript in the file.
  */
-module.exports = function jsdocFileReader(log) {
+module.exports = function jsdocFileReader(log, jsParser) {
   return {
     name: 'jsdocFileReader',
     defaultPattern: /\.js$/,
     getDocs: function(fileInfo) {
 
       try {
-        fileInfo.ast = parser.parse(fileInfo.content, {
-          loc: true,
-          attachComment: true,
-          ecmaFeatures: {
-            arrowFunctions: true,
-            blockBindings: true,
-            destructuring: true,
-            regexYFlag: true,
-            regexUFlag: true,
-            templateStrings: true,
-            binaryLiterals: true,
-            octalLiterals: true,
-            unicodeCodePointEscapes: true,
-            defaultParams: true,
-            restParams: true,
-            forOf: true,
-            objectLiteralComputedProperties: true,
-            objectLiteralShorthandMethods: true,
-            objectLiteralShorthandProperties: true,
-            objectLiteralDuplicateProperties: true,
-            generators: true,
-            spread: true,
-            classes: true,
-            modules: true,
-            globalReturn: true
-          }
-        });
+        fileInfo.ast = jsParser.parse(fileInfo.content);
       } catch(ex) {
        ex.file = fileInfo.filePath;
         throw new Error(
