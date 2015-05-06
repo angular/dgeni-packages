@@ -18,10 +18,7 @@ describe("extractJSDocCommentsProcessor", function() {
       basePath: basePath,
       relativePath: path.relative(basePath, file),
       content: content,
-      ast: jsParser.parse(content, {
-        loc: true,
-        attachComment: true
-      }),
+      ast: jsParser.parse(content),
     };
   };
 

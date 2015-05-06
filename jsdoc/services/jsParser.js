@@ -1,5 +1,4 @@
 var parser = require('espree');
-var _ = require('lodash');
 
 /**
  * @dgService jsParser
