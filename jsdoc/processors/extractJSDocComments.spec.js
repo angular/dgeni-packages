@@ -1,10 +1,42 @@
 var path = require('canonical-path');
-var esprima = require('esprima');
+var espree = require('espree');
 var Dgeni = require('dgeni');
 var mockPackage = require('../mocks/mockPackage');
 
 var srcJsContent = require('../mocks/_test-data/srcJsFile.js');
 var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
+// exported so we can use them in tests
+var parserOptions = exports.parserOptions = {
+    comment: true,
+    loc: true,
+    range: true,
+    tokens: true,
+    ecmaFeatures: {
+        arrowFunctions: true,
+        binaryLiterals: true,
+        blockBindings: true,
+        classes: true,
+        defaultParams: true,
+        destructuring: true,
+        forOf: true,
+        generators: true,
+        globalReturn: true,
+        jsx: false,
+        modules: true,
+        objectLiteralComputedProperties: true,
+        objectLiteralDuplicateProperties: true,
+        objectLiteralShorthandMethods: true,
+        objectLiteralShorthandProperties: true,
+        octalLiterals: true,
+        regexUFlag: true,
+        regexYFlag: true,
+        restParams: true,
+        spread: true,
+        superInFunctions: true,
+        templateStrings: true,
+        unicodeCodePointEscapes: true
+    }
+};
 
 
 describe("extractJSDocCommentsProcessor", function() {
@@ -19,10 +51,7 @@ describe("extractJSDocCommentsProcessor", function() {
       basePath: basePath,
       relativePath: path.relative(basePath, file),
       content: content,
-      ast: esprima.parse(content, {
-        loc: true,
-        attachComment: true
-      }),
+      ast: espree.parse(content, parserOptions),
     };
   };
 
