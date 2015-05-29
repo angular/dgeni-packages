@@ -6,8 +6,18 @@ var shell = require('shelljs');
 var semver = require('semver');
 var _ = require('lodash');
 
-var currentPackage, previousVersions, cdnVersion, gitRepoInfo;
+var currentVersion, currentPackage, previousVersions, gitRepoInfo;
 
+
+var satisfiesVersion = function(version) {
+  if (currentPackage.branchVersion !== undefined) {
+    return semver.satisfies(version, currentPackage.branchVersion);
+  } else if (currentPackage.version !== undefined) {
+    return semver.satisfies(version, '^' + currentPackage.version);
+  } else {
+    return true;
+  }
+};
 
 /**
  * Load information about this project from the package.json
@@ -58,6 +68,13 @@ var getCodeName = function(tagName) {
   return codeName;
 };
 
+/**
+ * Get the current commit SHA
+ * @return {String} The commit SHA
+ */
+function getCommitSHA() {
+  return shell.exec('git rev-parse HEAD', {silent: true}).output.replace('\n', '');
+}
 
 /**
  * Compute a build segment for the version, from the Jenkins build number and current commit SHA
@@ -80,10 +97,13 @@ var getTaggedVersion = function() {
     var tag = gitTagResult.output.trim();
     var version = semver.parse(tag);
 
-    if (version && semver.satisfies(version, currentPackage.branchVersion)) {
+    if (version && satisfiesVersion(version)) {
       version.codeName = getCodeName(tag);
       version.full = version.version;
-      version.branch = 'v' + currentPackage.branchPattern.replace('*', 'x');
+
+      if (currentPackage.branchPattern !== undefined) {
+        version.branch = 'v' + currentPackage.branchPattern.replace('*', 'x');
+      }
       return version;
     }
   }
@@ -130,30 +150,6 @@ var getPreviousVersions =  function() {
   }
 };
 
-var getCdnVersion = function() {
-  return _(previousVersions)
-    .filter(function(tag) {
-      return semver.satisfies(tag, currentPackage.branchVersion);
-    })
-    .reverse()
-    .reduce(function(cdnVersion, version) {
-      if (!cdnVersion) {
-        // Note: need to use shell.exec and curl here
-        // as version-infos returns its result synchronously...
-        var cdnResult = shell.exec('curl http://ajax.googleapis.com/ajax/libs/angularjs/' + version + '/angular.min.js ' +
-                  '--head --write-out "%{http_code}" -o /dev/null -silent',
-                                    {silent: true});
-        if (cdnResult.code === 0) {
-          var statusCode = cdnResult.output.trim();
-          if (statusCode === '200') {
-            cdnVersion = version;
-          }
-        }
-      }
-      return cdnVersion;
-    }, null);
-};
-
 /**
  * Get the unstable snapshot version
  * @return {SemVer} The snapshot version
@@ -161,13 +157,20 @@ var getCdnVersion = function() {
 var getSnapshotVersion = function() {
   var version = _(previousVersions)
     .filter(function(tag) {
-      return semver.satisfies(tag, currentPackage.branchVersion);
+      return satisfiesVersion(tag);
     })
     .last();
 
   if (!version) {
     // a snapshot version before the first tag on the branch
-    version = semver(currentPackage.branchPattern.replace('*','0-beta.1'));
+    if (currentPackage.version !== undefined) {
+      version = semver(currentPackage.version);
+    } else if (currentPackage.branchPattern !== undefined)  {
+      version = semver(currentPackage.branchPattern.replace('*','0-beta.1'));
+    } else {
+      version = semver('0.1.0-beta.1');
+    }
+
   }
 
   // We need to clone to ensure that we are not modifying another version
@@ -199,8 +202,17 @@ var getSnapshotVersion = function() {
 };
 
 
-exports.currentPackage = currentPackage = getPackage();
-exports.gitRepoInfo = gitRepoInfo = getGitRepoInfo();
-exports.previousVersions = previousVersions = getPreviousVersions();
-exports.cdnVersion = cdnVersion = getCdnVersion();
-exports.currentVersion = getTaggedVersion() || getSnapshotVersion();
+module.exports = function versionInfo() {
+  currentPackage = getPackage();
+  gitRepoInfo = getGitRepoInfo();
+  previousVersions = getPreviousVersions();
+  currentVersion = getTaggedVersion() || getSnapshotVersion();
+  currentVersion.commitSHA = getCommitSHA();
+
+  return {
+    currentPackage: currentPackage,
+    gitRepoInfo: gitRepoInfo,
+    previousVersions: previousVersions,
+    currentVersion: currentVersion
+  };
+};
