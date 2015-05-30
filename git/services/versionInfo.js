@@ -8,7 +8,10 @@ var _ = require('lodash');
 
 var currentVersion, currentPackage, previousVersions, gitRepoInfo;
 
-
+/**
+* Check the version is satisfactory.
+* @return {Boolean} Return true if the version is satisfactory.
+*/
 var satisfiesVersion = function(version) {
   if (currentPackage.branchVersion !== undefined) {
     return semver.satisfies(version, currentPackage.branchVersion);
