@@ -34,6 +34,7 @@ var getPackage = function() {
     if (parent === packageFolder) { break; }
     packageFolder = parent;
   }
+
   return JSON.parse(fs.readFileSync(path.join(packageFolder,'package.json'), 'UTF-8'));
 };
 
@@ -116,9 +117,10 @@ var getTaggedVersion = function() {
 
 /**
  * Get a collection of all the previous versions sorted by semantic version
+ * @param {Function} setCustomVersionProperties A function to set the docsUrl on the inputted SemVer
  * @return {Array.<SemVer>} The collection of previous versions
  */
-var getPreviousVersions =  function() {
+var getPreviousVersions =  function(setCustomVersionProperties) {
   // always use the remote tags as the local clone might
   // not contain all commits when cloned with git clone --depth=...
   // Needed e.g. for Travis
@@ -133,17 +135,8 @@ var getPreviousVersions =  function() {
       })
       .filter()
       .map(function(version) {
-        // angular.js didn't follow semantic version until 1.20rc1
-        if ((version.major === 1 && version.minor === 0 && version.prerelease.length > 0) || (version.major === 1 && version.minor === 2 && version.prerelease[0] === 'rc1')) {
-          version.version = [version.major, version.minor, version.patch].join('.') + version.prerelease.join('');
-          version.raw = 'v' + version.version;
-        }
-        version.docsUrl = 'http://code.angularjs.org/' + version.version + '/docs';
-        // Versions before 1.0.2 had a different docs folder name
-        if (version.major < 1 || (version.major === 1 && version.minor === 0 && version.patch < 2)) {
-          version.docsUrl += '-' + version.version;
-          version.isOldDocsUrl = true;
-        }
+
+        setCustomVersionProperties(version);
         return version;
       })
       .sort(semver.compare)
@@ -205,10 +198,10 @@ var getSnapshotVersion = function() {
 };
 
 
-module.exports = function versionInfo() {
+module.exports = function versionInfo(setCustomVersionProperties) {
   currentPackage = getPackage();
   gitRepoInfo = getGitRepoInfo();
-  previousVersions = getPreviousVersions();
+  previousVersions = getPreviousVersions(setCustomVersionProperties);
   currentVersion = getTaggedVersion() || getSnapshotVersion();
   currentVersion.commitSHA = getCommitSHA();
 

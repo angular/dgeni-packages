@@ -12,6 +12,7 @@ module.exports = new Package('git', [])
 
 
 .factory(require('./services/gitData'))
+.factory(require('./services/setCustomVersionProperties'))
 .factory(require('./services/versionInfo'))
 
 .config(function(renderDocsProcessor, gitData) {
