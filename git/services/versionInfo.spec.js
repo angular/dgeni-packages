@@ -1,35 +1,42 @@
 var rewire = require('rewire');
-var mockPackageJson = require('../mocks/mockPackageJson.js');
+var mocks = require('../mocks/mocks.js');
 var versionInfoFactory = rewire('./versionInfo.js');
+var semver = require('semver');
 
 describe("versionInfo", function() {
-  var versionInfo, mockSetDocsUrl, shell;
+  var versionInfo, mockSetDocsUrl, shell, fs, shellMocks;
 
   beforeEach(function() {
-    var fs = versionInfoFactory.__get__('fs');
+    fs = versionInfoFactory.__get__('fs');
+
     fs.existsSync = function() {
       return true;
     };
 
     fs.readFileSync = function() {
-      return JSON.stringify(mockPackageJson().packageWithVersion);
+      return JSON.stringify(mocks.packageWithVersion);
     };
 
     shell = versionInfoFactory.__get__('shell');
+
+    shellMocks = {
+      ls: mocks.mockGitLsRemoteTags,
+      rev: mocks.mockGitRevParse,
+      describe: mocks.mockShellDefault,
+      cat: mocks.mockShellDefault
+    };
+
     shell.exec = function (input) {
       if (input.indexOf('git ls-remote --tags ') == 0) {
-        return {
-          code: 0,
-          output: '85ae09c2119bf9b20cd45fc4e9dab77c5940d627	refs/tags/v0.10.11-rc2\n' + 
-                  '373c3bf61785139a65e76c023e798b49b7437c37	refs/tags/v0.10.13\n' +
-                  '573c3bf61795139a65e76c023e798b49b7437c37	refs/tags/v1.3.invalid' 
-
-        };
+        return shellMocks.ls;
+      } else if (input.indexOf('git rev-parse') == 0) {
+        return shellMocks.rev;
+      } else if (input.indexOf('git describe --exact-match') == 0) {
+        return shellMocks.describe;
+      } else if (input.indexOf('git cat-file') == 0) {
+        return shellMocks.cat;
       } else {
-        return {
-          code: 1,
-          output: "default"
-        };
+        return mocks.mockShellDefault;
       }
     };
 
@@ -64,49 +71,110 @@ describe("versionInfo", function() {
       versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.previousVersions.length).toBe(2);
     });
+
+    it("should all be decorated", function() {
+      var decorator = function(version) {
+        version.decoration = "decorated"
+      };
+      versionInfo = versionInfoFactory(decorator);
+      expect(versionInfo.previousVersions.every(function(item) {
+        return item.decoration == "decorated";
+      })).toBeTruthy(); 
+    });
   });
 
-  describe("snapshot version", function() {
+  describe("currentVersion with no tag", function() {
     it("should have isSnapshot set to true", function() {
       versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.currentVersion.isSnapshot).toBe(true);
     });
+
     it("should have codeName of snapshot", function() {
       versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.currentVersion.codeName).toBe('snapshot');
     });
+
+    it("should have the commitSHA set", function() {
+      versionInfo = versionInfoFactory(function(){});
+      expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.output);
+    });
+
+    describe("with branchVersion/Pattern", function() {
+      beforeEach(function() {
+        fs.readFileSync = function() {
+          return JSON.stringify(mocks.packageWithBranchVersion);
+        };
+
+      });
+
+      it("should satisfy the branchVersion", function() {
+        versionInfo = versionInfoFactory(function(){});
+        expect(semver.satisfies(versionInfo.currentVersion, mocks.packageWithBranchVersion.branchVersion))
+          .toBeTruthy();
+      });
+
+      it("should have a prerelease", function() {
+        versionInfo = versionInfoFactory(function(){});
+        expect(versionInfo.currentVersion.prerelease).toBeTruthy();
+      });
+    });
+
+    describe("with no BUILD_NUMBER", function() {
+      it("should have a local prerelease", function() {
+        versionInfo = versionInfoFactory(function(){});
+        expect(versionInfo.currentVersion.prerelease[0]).toBe('local');
+      });
+    });
+
+    describe("with a BUILD_NUMBER", function() {
+      it("should have a build prerelease", function() {
+        process.env.TRAVIS_BUILD_NUMBER = '10';
+        versionInfo = versionInfoFactory(function(){});
+        expect(versionInfo.currentVersion.prerelease[0]).toBe('build');
+        expect(versionInfo.currentVersion.prerelease[1]).toBe('10');
+      });
+    });
   });
 
 
-  describe("tagged Version", function() {
-    beforeEach(function() {
-      shell.exec = function (input) {
-        if (input.indexOf('git describe --exact-match') == 0) {
-          return {code: 0, output: 'v0.10.15'};
-        } else if (input.indexOf('git cat-file') == 0) {
-          return {
-            code: 0,
-            output: 'codename(versionInfo)'
-          };
-        } else {
-          return {
-            code: 1,
-            output: "default"
-          };
-        }
-      };
+  describe("currentVersion with annotated tag", function() {
 
+    beforeEach(function() {
+      shellMocks.ls = mocks.mockShellDefault;
+      shellMocks.cat = mocks.mockGitCatFile;
+      shellMocks.describe = mocks.mockGitDescribe;
+    });
+
+    it("should have a version matching the tag", function() {
       versionInfo = versionInfoFactory(function(){});
 
+      var tag = shellMocks.describe.output.trim();
+      var version = semver.parse(tag);
+      expect(versionInfo.currentVersion.version).toBe(version.version);
     });
 
-    it("should have a version of 0.10.15", function() {
-      expect(versionInfo.currentVersion.version).toBe('0.10.15');
+    it("should pull the codeName from the tag", function() {
+      versionInfo = versionInfoFactory();
+      expect(versionInfo.currentVersion.codeName).toBe('mockCodeName');
     });
 
-    it("should have a codename of 'versionInfo'", function() {
-      expect(versionInfo.currentVersion.codeName).toBe('versionInfo');
+    it("should throw an error if it doesn't have a codename specified", function() {
+      shellMocks.cat = mocks.mockGitCatFileNoCodeName;
+
+      expect(versionInfoFactory).toThrow();
+    });
+
+    it("should throw an error if it has a bad format for the codename", function() {
+      shellMocks.cat = mocks.mockGitCatFileBadFormat;
+
+      expect(versionInfoFactory).toThrow();
+    });
+
+    it("should have the commitSHA set", function() {
+      versionInfo = versionInfoFactory(function(){});
+      expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.output);
     });
   });
+
 
 });

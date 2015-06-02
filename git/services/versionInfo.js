@@ -117,10 +117,10 @@ var getTaggedVersion = function() {
 
 /**
  * Get a collection of all the previous versions sorted by semantic version
- * @param {Function} setCustomVersionProperties A function to set the docsUrl on the inputted SemVer
+ * @param {Function} decorateVersion A function to set the docsUrl on the inputted SemVer
  * @return {Array.<SemVer>} The collection of previous versions
  */
-var getPreviousVersions =  function(setCustomVersionProperties) {
+var getPreviousVersions =  function(decorateVersion) {
   // always use the remote tags as the local clone might
   // not contain all commits when cloned with git clone --depth=...
   // Needed e.g. for Travis
@@ -136,7 +136,7 @@ var getPreviousVersions =  function(setCustomVersionProperties) {
       .filter()
       .map(function(version) {
 
-        setCustomVersionProperties(version);
+        decorateVersion(version);
         return version;
       })
       .sort(semver.compare)
@@ -198,10 +198,10 @@ var getSnapshotVersion = function() {
 };
 
 
-module.exports = function versionInfo(setCustomVersionProperties) {
+module.exports = function versionInfo(decorateVersion) {
   currentPackage = getPackage();
   gitRepoInfo = getGitRepoInfo();
-  previousVersions = getPreviousVersions(setCustomVersionProperties);
+  previousVersions = getPreviousVersions(decorateVersion);
   currentVersion = getTaggedVersion() || getSnapshotVersion();
   currentVersion.commitSHA = getCommitSHA();
 

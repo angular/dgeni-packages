@@ -1,14 +1,15 @@
 "use strict";
 
 /**
- * @dgService setCustomVersionProperties
+ * @dgService decorateVersion
  * @description
- * A function that sets customProperties, this version sets defaults used by the angular.js project.
+ * A function that decorates the semver with custom properties.
+ * This version sets some defaults used by the angular.js project.
  */
-module.exports = function setCustomVersionProperties() {
+module.exports = function decorateVersion() {
 
   /**
-   * Set the some custom properties on version
+   * Decorate version with custom properties
    * @param {SemVer} version should be a semver version.
    */
   return function(version) { 

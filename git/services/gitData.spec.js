@@ -1,25 +1,14 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+var rewire = require('rewire');
+var gitDataFactory = rewire('./gitData.js');
+var mocks = require('../mocks/mocks.js');
 
 describe("gitData", function() {
-  var gitData, mockVersionInfo, mockPackageImpl;
+  var gitData, mockVersionInfo;
 
   beforeEach(function() {
-    mockVersionInfo = {
-      currentVersion: 'currentVersion',
-      previousVersions: 'previousVersions',
-      gitRepoInfo: 'gitRepoInfo'
-    };
+    mockVersionInfo = mocks.mockVersionInfo;
 
-    mockPackageImpl = mockPackage()
-      .factory('versionInfo', function dummyVersionInfo() {
-        return mockVersionInfo;
-      });
-
-    var dgeni = new Dgeni([mockPackageImpl]);
-
-    var injector = dgeni.configureInjector();
-    gitData = injector.get('gitData');
+    gitData = gitDataFactory(mockVersionInfo);
   });
 
   describe("version", function() {
