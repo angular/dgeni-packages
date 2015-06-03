@@ -4,19 +4,9 @@ var versionInfoFactory = rewire('./versionInfo.js');
 var semver = require('semver');
 
 describe("versionInfo", function() {
-  var versionInfo, mockSetDocsUrl, shell, fs, shellMocks;
+  var versionInfo, mockSetDocsUrl, shell, shellMocks;
 
   beforeEach(function() {
-    fs = versionInfoFactory.__get__('fs');
-
-    fs.existsSync = function() {
-      return true;
-    };
-
-    fs.readFileSync = function() {
-      return JSON.stringify(mocks.packageWithVersion);
-    };
-
     shell = versionInfoFactory.__get__('shell');
 
     shellMocks = {
@@ -40,35 +30,36 @@ describe("versionInfo", function() {
       }
     };
 
+
+    versionInfo = versionInfoFactory(
+      function() {},
+      mocks.packageWithVersion
+    );
+
   });
 
   describe("currentPackage", function() {
     it("should be set", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.currentPackage).not.toBe(null);
     });
   });
 
   describe("gitRepoInfo", function() {
     it("should be set", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.gitRepoInfo).not.toBe(null);
     });
 
     it("should have owner set from package repository url", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.gitRepoInfo.owner).toBe('owner');
     });
 
     it("should have repo set from package repository url", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.gitRepoInfo.repo).toBe('repo');
     });
   });
 
   describe("previousVersions", function() {
     it("should read from git ls-remote", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.previousVersions.length).toBe(2);
     });
 
@@ -76,52 +67,51 @@ describe("versionInfo", function() {
       var decorator = function(version) {
         version.decoration = "decorated"
       };
-      versionInfo = versionInfoFactory(decorator);
+
+      versionInfo = versionInfoFactory(
+        decorator,
+        mocks.packageWithVersion
+      );
+
       expect(versionInfo.previousVersions.every(function(item) {
         return item.decoration == "decorated";
-      })).toBeTruthy(); 
+      })).toBeTruthy();
     });
   });
 
   describe("currentVersion with no tag", function() {
     it("should have isSnapshot set to true", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.currentVersion.isSnapshot).toBe(true);
     });
 
     it("should have codeName of snapshot", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.currentVersion.codeName).toBe('snapshot');
     });
 
     it("should have the commitSHA set", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.output);
     });
 
     describe("with branchVersion/Pattern", function() {
       beforeEach(function() {
-        fs.readFileSync = function() {
-          return JSON.stringify(mocks.packageWithBranchVersion);
-        };
-
+        versionInfo = versionInfoFactory(
+          function(){},
+          mocks.packageWithBranchVersion
+        );
       });
 
       it("should satisfy the branchVersion", function() {
-        versionInfo = versionInfoFactory(function(){});
         expect(semver.satisfies(versionInfo.currentVersion, mocks.packageWithBranchVersion.branchVersion))
           .toBeTruthy();
       });
 
       it("should have a prerelease", function() {
-        versionInfo = versionInfoFactory(function(){});
         expect(versionInfo.currentVersion.prerelease).toBeTruthy();
       });
     });
 
     describe("with no BUILD_NUMBER", function() {
       it("should have a local prerelease", function() {
-        versionInfo = versionInfoFactory(function(){});
         expect(versionInfo.currentVersion.prerelease[0]).toBe('local');
       });
     });
@@ -129,7 +119,12 @@ describe("versionInfo", function() {
     describe("with a BUILD_NUMBER", function() {
       it("should have a build prerelease", function() {
         process.env.TRAVIS_BUILD_NUMBER = '10';
-        versionInfo = versionInfoFactory(function(){});
+
+        versionInfo = versionInfoFactory(
+          function() {},
+          mocks.packageWithVersion
+        );
+
         expect(versionInfo.currentVersion.prerelease[0]).toBe('build');
         expect(versionInfo.currentVersion.prerelease[1]).toBe('10');
       });
@@ -143,18 +138,20 @@ describe("versionInfo", function() {
       shellMocks.ls = mocks.mockShellDefault;
       shellMocks.cat = mocks.mockGitCatFile;
       shellMocks.describe = mocks.mockGitDescribe;
+
+      versionInfo = versionInfoFactory(
+        function() {},
+        mocks.packageWithVersion
+      );
     });
 
     it("should have a version matching the tag", function() {
-      versionInfo = versionInfoFactory(function(){});
-
       var tag = shellMocks.describe.output.trim();
       var version = semver.parse(tag);
       expect(versionInfo.currentVersion.version).toBe(version.version);
     });
 
     it("should pull the codeName from the tag", function() {
-      versionInfo = versionInfoFactory();
       expect(versionInfo.currentVersion.codeName).toBe('mockCodeName');
     });
 
@@ -171,7 +168,6 @@ describe("versionInfo", function() {
     });
 
     it("should have the commitSHA set", function() {
-      versionInfo = versionInfoFactory(function(){});
       expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.output);
     });
   });

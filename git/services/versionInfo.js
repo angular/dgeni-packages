@@ -1,7 +1,5 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
 var shell = require('shelljs');
 var semver = require('semver');
 var _ = require('lodash');
@@ -21,23 +19,6 @@ var satisfiesVersion = function(version) {
     return true;
   }
 };
-
-/**
- * Load information about this project from the package.json
- * @return {Object} The package information
- */
-var getPackage = function() {
-  // Search up the folder hierarchy for the first package.json
-  var packageFolder = path.resolve('.');
-  while (!fs.existsSync(path.join(packageFolder, 'package.json'))) {
-    var parent = path.dirname(packageFolder);
-    if (parent === packageFolder) { break; }
-    packageFolder = parent;
-  }
-
-  return JSON.parse(fs.readFileSync(path.join(packageFolder,'package.json'), 'UTF-8'));
-};
-
 
 /**
  * Parse the github URL for useful information
@@ -198,8 +179,8 @@ var getSnapshotVersion = function() {
 };
 
 
-module.exports = function versionInfo(decorateVersion) {
-  currentPackage = getPackage();
+module.exports = function versionInfo(decorateVersion, packageInfo) {
+  currentPackage = packageInfo;
   gitRepoInfo = getGitRepoInfo();
   previousVersions = getPreviousVersions(decorateVersion);
   currentVersion = getTaggedVersion() || getSnapshotVersion();

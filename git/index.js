@@ -11,6 +11,7 @@ module.exports = new Package('git', [])
 
 
 .factory(require('./services/gitData'))
+.factory(require('./services/packageInfo'))
 .factory(require('./services/decorateVersion'))
 .factory(require('./services/versionInfo'))
 
