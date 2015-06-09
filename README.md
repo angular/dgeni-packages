@@ -66,6 +66,36 @@ templateFinder.templatePatterns = [
 ]
 ```
 
+## `git` Package
+
+This package provides some git and version information to the `renderDocsPocessor` that is available
+in the templates. This code as it is was made for the angular.js document generation, including some
+custom logic for special versions. However, any of the services can be overriden with custom
+behavior.
+
+The git information is made available to templates via the `extraData.git` property. See the section
+below to see an example usage.
+
+### Services
+
+* `decorateVersion` - all semvers are passed through this function so that additional data can before
+added to them.
+* `getPreviousVersions` - pulls versions from git tags of the repository.
+* `gitData` - the additional information that is added to the extraData of `renderDocsPocessor`.
+* `gitRepoInfo` - the owner and repo of the local git repository.
+* `packageInfo` - the contents of the package.js.
+* `versionInfo` - aggregated version and git information.
+
+### Using `extraData.git`
+
+An example as used in `ngdoc/templates/api/api.template.html`
+
+```html+jinja
+<a href='https://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.isSnapshot and 'master' or git.version.raw $}/{$ doc.fileInfo.projectRelativePath $}#L{$ doc.startingLine $}' class='view-source pull-right btn btn-primary'>
+  <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
+</a>
+```
+
 
 ## `nunjucks` Package
 
@@ -123,7 +153,7 @@ and type from the tag description accordingly but do not fully implement all the
 
 ## `ngdoc` Package
 
-The `ngdoc` Package depends upon the `jsdoc` and `nunjucks` packages. It provides additional support for
+The `ngdoc` Package depends upon the `jsdoc`, `nunjucks`, and `git` packages. It provides additional support for
 non-API documents written in files with `.ngdoc` extension; it also computes additional properties specific
 to Angular related code.
 
