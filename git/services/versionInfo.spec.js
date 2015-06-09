@@ -1,25 +1,29 @@
 var rewire = require('rewire');
-var mocks = require('../mocks/mocks.js');
-var versionInfoFactory = rewire('./versionInfo.js');
 var semver = require('semver');
+var Dgeni = require('dgeni');
+
+var mocks = require('../mocks/mocks.js');
+var mockPackageFactory = require('../mocks/mockPackage');
+
+var versionInfoFactory = rewire('./versionInfo.js');
+
 
 describe("versionInfo", function() {
-  var versionInfo, mockSetDocsUrl, shell, shellMocks;
+  var versionInfo, mockPackage, shellMocks;
 
   beforeEach(function() {
-    shell = versionInfoFactory.__get__('shell');
+    mocks.getPreviousVersions.calls.reset();
+
+    var shell = versionInfoFactory.__get__('shell');
 
     shellMocks = {
-      ls: mocks.mockGitLsRemoteTags,
       rev: mocks.mockGitRevParse,
       describe: mocks.mockShellDefault,
       cat: mocks.mockShellDefault
     };
 
-    shell.exec = function (input) {
-      if (input.indexOf('git ls-remote --tags ') == 0) {
-        return shellMocks.ls;
-      } else if (input.indexOf('git rev-parse') == 0) {
+    spyOn(shell, 'exec').and.callFake(function (input) {
+      if (input.indexOf('git rev-parse') == 0) {
         return shellMocks.rev;
       } else if (input.indexOf('git describe --exact-match') == 0) {
         return shellMocks.describe;
@@ -28,54 +32,40 @@ describe("versionInfo", function() {
       } else {
         return mocks.mockShellDefault;
       }
-    };
+    });
 
+    mockPackage = mockPackageFactory()
+      .factory(versionInfoFactory);
 
-    versionInfo = versionInfoFactory(
-      function() {},
-      mocks.packageWithVersion
-    );
+    var dgeni = new Dgeni([mockPackage]);
 
+    var injector = dgeni.configureInjector();
+    versionInfo = injector.get('versionInfo');
   });
 
   describe("currentPackage", function() {
     it("should be set", function() {
       expect(versionInfo.currentPackage).not.toBe(null);
     });
+
+    it("should be set to passed in package", function() {
+      expect(versionInfo.currentPackage).toBe(mocks.packageWithVersion);
+    });
   });
 
-  describe("gitRepoInfo", function() {
-    it("should be set", function() {
-      expect(versionInfo.gitRepoInfo).not.toBe(null);
-    });
-
-    it("should have owner set from package repository url", function() {
-      expect(versionInfo.gitRepoInfo.owner).toBe('owner');
-    });
-
-    it("should have repo set from package repository url", function() {
-      expect(versionInfo.gitRepoInfo.repo).toBe('repo');
-    });
+  it("should set gitRepoInfo", function() {
+    expect(versionInfo.gitRepoInfo).toBe(mocks.gitRepoInfo);
   });
 
   describe("previousVersions", function() {
-    it("should read from git ls-remote", function() {
-      expect(versionInfo.previousVersions.length).toBe(2);
+    it("should call getPreviousVersions", function() {
+      expect(mocks.getPreviousVersions.calls.all().length).toEqual(1);
+      expect(mocks.getPreviousVersions).toHaveBeenCalled();
     });
 
-    it("should all be decorated", function() {
-      var decorator = function(version) {
-        version.decoration = "decorated"
-      };
-
-      versionInfo = versionInfoFactory(
-        decorator,
-        mocks.packageWithVersion
-      );
-
-      expect(versionInfo.previousVersions.every(function(item) {
-        return item.decoration == "decorated";
-      })).toBeTruthy();
+    it("should equal getPreviousVersions", function() {
+      expect(mocks.getPreviousVersions.calls.all().length).toEqual(1);
+      expect(versionInfo.previousVersions).toEqual(mocks.getPreviousVersions());
     });
   });
 
@@ -135,7 +125,6 @@ describe("versionInfo", function() {
   describe("currentVersion with annotated tag", function() {
 
     beforeEach(function() {
-      shellMocks.ls = mocks.mockShellDefault;
       shellMocks.cat = mocks.mockGitCatFile;
       shellMocks.describe = mocks.mockGitDescribe;
 

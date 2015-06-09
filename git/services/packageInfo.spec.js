@@ -20,7 +20,7 @@ describe("packageInfo", function() {
     expect(fs.readFileSync).toHaveBeenCalledWith('package.json', 'UTF-8');
   });
   it('should return parsed file contents', function() {
-    fs.existsSync = function() { return true };
+    fs.existsSync.and.returnValue(true);
     spyOn(fs, 'readFileSync').and.returnValue('{"foo":"bar"}');
 
     var packageInfo = packageInfoFactory();

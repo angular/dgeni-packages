@@ -53,7 +53,7 @@ describe("decorateVersion", function() {
       expect(semver.parse(version.raw)).toEqual(null);
       expect(semver.parse(version.version)).toEqual(null);
     });
-  }); 
+  });
 
   describe('isOldDocsUrl', function() {
     it('should not be set for 1.0.2', function() {

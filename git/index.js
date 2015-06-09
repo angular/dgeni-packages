@@ -9,10 +9,11 @@ var Package = require('dgeni').Package;
  */
 module.exports = new Package('git', [])
 
-
-.factory(require('./services/gitData'))
-.factory(require('./services/packageInfo'))
 .factory(require('./services/decorateVersion'))
+.factory(require('./services/getPreviousVersions'))
+.factory(require('./services/gitData'))
+.factory(require('./services/gitRepoInfo'))
+.factory(require('./services/packageInfo'))
 .factory(require('./services/versionInfo'))
 
 .config(function(renderDocsProcessor, gitData) {

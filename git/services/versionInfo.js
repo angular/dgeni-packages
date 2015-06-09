@@ -4,7 +4,7 @@ var shell = require('shelljs');
 var semver = require('semver');
 var _ = require('lodash');
 
-var currentVersion, currentPackage, previousVersions, gitRepoInfo;
+var currentVersion, currentPackage, previousVersions;
 
 /**
 * Check the version is satisfactory.
@@ -19,22 +19,6 @@ var satisfiesVersion = function(version) {
     return true;
   }
 };
-
-/**
- * Parse the github URL for useful information
- * @return {Object} An object containing the github owner and repository name
- */
-var getGitRepoInfo = function() {
-  var GITURL_REGEX = /^https:\/\/github.com\/([^\/]+)\/(.+).git$/;
-  var match = GITURL_REGEX.exec(currentPackage.repository.url);
-  var git = {
-    owner: match[1],
-    repo: match[2]
-  };
-  return git;
-};
-
-
 
 /**
  * Extract the code name from the tagged commit's message - it should contain the text of the form:
@@ -97,37 +81,6 @@ var getTaggedVersion = function() {
 };
 
 /**
- * Get a collection of all the previous versions sorted by semantic version
- * @param {Function} decorateVersion A function to set the docsUrl on the inputted SemVer
- * @return {Array.<SemVer>} The collection of previous versions
- */
-var getPreviousVersions =  function(decorateVersion) {
-  // always use the remote tags as the local clone might
-  // not contain all commits when cloned with git clone --depth=...
-  // Needed e.g. for Travis
-  var repo_url = currentPackage.repository.url;
-  var tagResults = shell.exec('git ls-remote --tags ' + repo_url,
-                              {silent: true});
-  if (tagResults.code === 0) {
-    return _(tagResults.output.match(/v[0-9].*[0-9]$/mg))
-      .map(function(tag) {
-        var version = semver.parse(tag);
-        return version;
-      })
-      .filter()
-      .map(function(version) {
-
-        decorateVersion(version);
-        return version;
-      })
-      .sort(semver.compare)
-      .value();
-  } else {
-    return [];
-  }
-};
-
-/**
  * Get the unstable snapshot version
  * @return {SemVer} The snapshot version
  */
@@ -179,10 +132,9 @@ var getSnapshotVersion = function() {
 };
 
 
-module.exports = function versionInfo(decorateVersion, packageInfo) {
+module.exports = function versionInfo(getPreviousVersions, packageInfo, gitRepoInfo) {
   currentPackage = packageInfo;
-  gitRepoInfo = getGitRepoInfo();
-  previousVersions = getPreviousVersions(decorateVersion);
+  previousVersions = getPreviousVersions();
   currentVersion = getTaggedVersion() || getSnapshotVersion();
   currentVersion.commitSHA = getCommitSHA();
 

@@ -1,3 +1,5 @@
+var semver = require('semver');
+
 var packageWithVersion = {
   "name": "dgeni-packages",
   "version": "0.10.13",
@@ -60,15 +62,27 @@ var mockShellDefault = {
   output: "default"
 };
 
+var mockGitRepoInfo = {
+  owner: 'owner',
+  repo: 'repo'
+};
+
 module.exports = {
-  packageWithVersion: packageWithVersion,
+  decorateVersion: jasmine.createSpy('decorateVersion'),
+  getPreviousVersions: jasmine.createSpy('getPreviousVersions')
+    .and.returnValue(
+      [semver('0.10.11-rc2'), semver('0.10.13')]
+    ),
+  gitData: {},
+  gitRepoInfo: mockGitRepoInfo,
   packageWithBranchVersion: packageWithBranchVersion,
-  mockVersionInfo: mockVersionInfo,
+  packageWithVersion: packageWithVersion,
+  versionInfo: mockVersionInfo,
+  mockGitCatFile: mockGitCatFile,
+  mockGitCatFileBadFormat: mockGitCatFileBadFormat,
+  mockGitCatFileNoCodeName: mockGitCatFileNoCodeName,
+  mockGitDescribe: mockGitDescribe,
   mockGitLsRemoteTags: mockGitLsRemoteTags,
   mockGitRevParse: mockGitRevParse,
-  mockGitDescribe: mockGitDescribe,
-  mockGitCatFile: mockGitCatFile,
-  mockGitCatFileNoCodeName: mockGitCatFileNoCodeName,
-  mockGitCatFileBadFormat: mockGitCatFileBadFormat,
   mockShellDefault: mockShellDefault
 };
