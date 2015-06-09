@@ -7,11 +7,12 @@ generator to create documentation from source code.
 Out of the box there are the following packages:
 
 * base - The minimal set of processors to get started with Dgeni
+* git - Provides some git and version information
 * jsdoc - Tag parsing and extracting
 * nunjucks - The nunjucks template rendering engine. No longer in jsdoc - you must add this
   explicitly to your config or you will get
   `Error: No provider for "templateEngine"! (Resolving: templateEngine)`
-* ngdoc - The angular.js specific tag-defs, processors and templates.  This loads the jsdoc and
+* ngdoc - The angular.js specific tag-defs, processors and templates.  This loads the git, jsdoc and
   nunjucks packages for you.
 * examples - Processors to support the runnable examples feature in the angular.js docs site.
 * dgeni - Support for documenting Dgeni packages (**incomplete**)
@@ -70,7 +71,7 @@ templateFinder.templatePatterns = [
 
 This package provides some git and version information to the `renderDocsPocessor` that is available
 in the templates. This code as it is was made for the angular.js document generation, including some
-custom logic for special versions. However, any of the services can be overriden with custom
+custom logic for special versions. However, any of the services can be overridden with custom
 behavior.
 
 ### Services
@@ -80,7 +81,7 @@ added to them.
 * `getPreviousVersions` - pulls versions from git tags of the repository.
 * `gitData` - the additional information that is added to the extraData of `renderDocsPocessor`.
 * `gitRepoInfo` - the owner and repo of the local git repository.
-* `packageInfo` - the contents of the package.js.
+* `packageInfo` - the contents of the package.json.
 * `versionInfo` - aggregated version and git information.
 
 ### Using `extraData.git`
