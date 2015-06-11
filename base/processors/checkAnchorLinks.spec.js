@@ -36,6 +36,14 @@ describe("checkAnchorLinks", function() {
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 
+  it('should match links who are prone to uri encoding', function() {
+    processor.$process([
+      { renderedContent: '<a href="Foo extends Bar"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
+      { renderedContent: 'CONTENT OF FOO', outputPath: 'doc/Foo extends Bar.html', path: 'doc/Foo extends Bar' }
+    ])
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
+
   it("should not warn if the link matches a path after it has been modified with a path variant", function() {
     processor.$process([
       { renderedContent: '<a href="/foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
