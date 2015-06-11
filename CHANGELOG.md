@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.14 11th June 2015
+
+ * fix(checkAnchorLinks): add decodeURIComponent call when checking for dangling links d5ed516b
+ * feat(ngdoc/getLinkInfo): add option to make links relative 7178e9eb
+
 ## v0.10.13 2rd April 2015
 
 * fix(ngdoc/macros.html): use optional property from param rather than type
