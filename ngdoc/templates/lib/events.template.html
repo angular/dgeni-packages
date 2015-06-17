@@ -19,6 +19,12 @@
       <div class="target">{$ event.eventTarget $}</div>
     </div>
     {% endif -%}
+    {%- if event.params %}
+    <section class="api-section">
+      <h3>Parameters</h3>
+      {$ paramTable(event.params) $}
+    </section>
+    {%- endif -%}
   </li>
   {% endfor -%}
 </ul>
