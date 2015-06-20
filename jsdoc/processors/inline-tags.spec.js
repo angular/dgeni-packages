@@ -32,7 +32,8 @@ describe("inlineTagsProcessor", function() {
         renderedContent:
           'abc def\n' +
           'xyz {@unhandledTag some description} fgh\n' +
-          '{@handledTag other description}'
+          '{@handledTag other description}\n' +
+          'text {@handledTag more\ndescription }'
       };
       var docs = [doc];
 
@@ -60,14 +61,16 @@ describe("inlineTagsProcessor", function() {
 
       // We expect the handler to have been invoked for the handledTag
       expect(tagsFound).toEqual([
-        { name: 'handledTag', description: 'other description' }
+        { name: 'handledTag', description: 'other description' },
+        { name: 'handledTag', description: 'more\ndescription' }
       ]);
 
       // We expect the unhandled tag to habe been left alone and the handled tag to have been replaced
       expect(doc.renderedContent).toEqual(
         'abc def\n' +
         'xyz {@unhandledTag some description} fgh\n' +
-        '<Tag Handled>'
+        '<Tag Handled>\n' +
+        'text <Tag Handled>'
       );
     });
   });
