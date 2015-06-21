@@ -7,12 +7,13 @@ de documentation, pour créer une documentation à partir du code source.
 Actuellement, il y a les packages suivants :
 
 * base - L'ensemble minimal des processeurs pour commencer avec Dgeni
+* git - Fournit plusieurs informations de git et des versions
 * jsdoc - Extraction et analyse des balises
 * nunjucks - Le moteur de rendu de template de nunjucks. Comme il n'est plus dans jsdoc, vous devez l'ajouter
   explicitement dans votre configuration ou vous obtiendrez l'erreur
   `Error: No provider for "templateEngine"! (Resolving: templateEngine)`
 * ngdoc - La partie spécifique d'angular.js, avec la définition des balises, des processeurs et des templates.
-  Celui-ci charge les packages de jsdoc et nunjucks pour vous.
+  Celui-ci charge les packages de git, jsdoc et nunjucks pour vous.
 * examples - Processeurs pour supporter les exemples exécutables qui figurent sur les docs du site d'angular.js.
 * dgeni - support pour la documentation des packages de Dgeni (**incomplet**)
 
@@ -64,6 +65,33 @@ templateFinder.templatePatterns = [
   '${ doc.id }.template.html',
   '${ doc.docType }.template.html'
 ]
+```
+
+## Le package `git`
+
+Ce package fournit plusieurs informations de git et des versions pour le `renderDocsPocessor` qui est utilisable
+dans les templates. Ce code a été fait pour générer la documentation d'angular.js, il inclut une logique
+personnalisée pour des versions particulières d'angular.js. Cependant, tous ces services peuvent être remplacés pour
+avoir un autre comportement.
+
+### Services
+
+* `decorateVersion` - tous les semvers sont passés à travers cette fonction afin de mettre des données supplémentaires
+avant de les ajouter.
+* `getPreviousVersions` - récupère les versions depuis les tags de git tags du dépôt.
+* `gitData` - les informations supplémentaires qui sont ajoutées à extraData de `renderDocsPocessor`.
+* `gitRepoInfo` - Le nom du dêpot et du propriétaire du dépôt local de git.
+* `packageInfo` - Le contenu du package.json.
+* `versionInfo` - information des différentes versions et de git.
+
+### Utilisation de `extraData.git`
+
+Un exemple qui est utilisée dans `ngdoc/templates/api/api.template.html`
+
+```html+jinja
+<a href='https://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.isSnapshot and 'master' or git.version.raw $}/{$ doc.fileInfo.projectRelativePath $}#L{$ doc.startingLine $}' class='view-source pull-right btn btn-primary'>
+  <i class="glyphicon glyphicon-zoom-in">&nbsp;</i>View Source
+</a>
 ```
 
 
