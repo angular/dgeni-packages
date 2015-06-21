@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.10.15 21 June 2015
+
+* feat(git): add git information package  81944685
+* fix(ngdoc/templates/lib/events): add event params  860dce98
+* fix(extractTypeTransform): support record types 32b269aa
+* feat(ngdoc/multiElement tag): directives can declare that they support multiElement 41d583f8
+
+
 ## v0.10.14 11th June 2015
 
  * fix(checkAnchorLinks): add decodeURIComponent call when checking for dangling links d5ed516b
