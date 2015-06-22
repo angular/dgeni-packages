@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var path = require('path');
+var path = require('canonical-path');
 
 /**
  * Load information about this project from the package.json
