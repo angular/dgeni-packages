@@ -38,13 +38,13 @@ par exemple `*/`
 
 * `aliasMap` - Un map de ids/aliases pour les docs. C'est utilisé pour faire correspondre les références aux documents dans
 des liens et des relations tels que les modules et les membres de l'objet.
-* `createDocMessage` - une aide pour créer de beaux messages à prpopos des documents (utile pour les logs et
+* `createDocMessage` - une aide pour créer de beaux messages à propos des documents (utile pour les logs et
 les erreurs)
 * `encodeDocBlock` - convertir un bloc de code en HTML
 * `templateFinder` - recherche dans les répertoires à l'aide de modèle (pattern) pour trouver un template qui correspond au document donné.
 * `trimIndentation` - coupe "intelligemment" l'indentation dès le début de chaque ligne d'un bloc
 de texte.
-* `writeFile` - Ecrit du contenu dans un fichier, en s'assurant que le chemin du fichier existe.
+* `writeFile` - écrit du contenu dans un fichier, en s'assurant que le chemin du fichier existe.
 
 
 #### Recherche du Template
@@ -74,13 +74,16 @@ dans les templates. Ce code a été fait pour générer la documentation d'angul
 personnalisée pour des versions particulières d'angular.js. Cependant, tous ces services peuvent être remplacés pour
 avoir un autre comportement.
 
+Les informations de git sont mises à la disposition des templates via la propriété `extraData.git`. Regardez la section
+ci-dessous pour voir un exemple d'utilisation.
+
 ### Services
 
 * `decorateVersion` - tous les semvers sont passés à travers cette fonction afin de mettre des données supplémentaires
 avant de les ajouter.
 * `getPreviousVersions` - récupère les versions depuis les tags de git tags du dépôt.
 * `gitData` - les informations supplémentaires qui sont ajoutées à extraData de `renderDocsPocessor`.
-* `gitRepoInfo` - Le nom du dêpot et du propriétaire du dépôt local de git.
+* `gitRepoInfo` - Le nom du dépôt et du propriétaire du dépôt local de git.
 * `packageInfo` - Le contenu du package.json.
 * `versionInfo` - information des différentes versions et de git.
 
@@ -98,7 +101,7 @@ Un exemple qui est utilisée dans `ngdoc/templates/api/api.template.html`
 ## Le package `nunjucks`
 
 Ce package fournit une implémentation de `templateEngine` basé sur nunjucks, qui est requis par le
-`renderDocsPocessor` du package `base`. La boite à outils de template Javascript de "nunjucks" génére du HTML
+`renderDocsPocessor` du package `base`. La boite à outils de template Javascript de "nunjucks" génère du HTML
 basé sur les données de chaque document. Nous avons les templates, les tags et les filtres de nunjucks qui
 peuvent rendre des liens et du texte en markdown et mettre le code en évidence.
 
@@ -173,7 +176,7 @@ leurs docs contenants, et les retire de la collection des docs principaux.
 
 * `moduleDocsProcessor` - Ce processeur détermine les propriétés pour les docs des modules tels que `packageName` et
 `packageFileName`. Il ajoute les modules au service `moduleMap` et relie tous les docs qui sont dans un module
-au doc du moduledans la propriété `components`
+au doc du module dans la propriété `components`
 
 * `providerDocsProcessor` - Ce processeur lie les documents sur les services angular au document de leur
 provider correspondant.
@@ -196,7 +199,7 @@ des ancres HTML
 
 * `getAliases()` - Récupère une liste de tous les alias qui peuvent être faits à partir de la doc fournie
 * `getDocFromAliases()` - Trouve un document depuis `aliasMap` qui correspond à l'alias donné
-* `getLinkInfo()` - Récupère les informations du lien depuis un document qui correspond à l'url donné
+* `getLinkInfo()` - Récupère les informations du lien depuis un document qui correspond à l'url donnée
 * `gettypeClass()` - Récupère un string de classe CSS pour un string de type donné
 * `moduleMap` - Une collection de modules correspondant à l'id du module
 
@@ -258,7 +261,7 @@ des tests de e2e. Ce processeur doit être configuré avec une collection des di
 la version à générer pour chaque exemple . Voir la section de **Configuration de déploiement** ci-dessous.
 * `parseExamplesProcessor` - Analyse les balises `<example>` depuis le contenu et les ajoute au service `examples`
 * `generateProtractorTestsProcessor` - Génère les fichiers de test de protractor depuis les tests e2e dans les exemples. Ce processeur
-doit être configuré avec une collection des différents déploiements qui lui indiquera la version des tests de protaractor à générer. Voir la
+doit être configuré avec une collection des différents déploiements qui lui indiquera la version des tests de protractor à générer. Voir la
 section de **Configuration de déploiement** ci-dessous.
 
 #### Configuration de déploiement
