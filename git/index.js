@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
 /**
@@ -20,5 +21,10 @@ module.exports = new Package('git', [])
 
 .config(function(renderDocsProcessor, gitData) {
   renderDocsProcessor.extraData.git = gitData;
+})
+
+
+.config(function(templateFinder) {
+  templateFinder.templateFolders.unshift(path.resolve(__dirname, 'templates'));
 });
 
