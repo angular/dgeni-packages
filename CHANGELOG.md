@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.16 22 June 2015
+
+* fix(ngdoc): remove `git` package as a dependency  f0647968
+* fix(git/packageInfo): ensure that we return consistent paths on all OSes  4e29bb62
+
+
 ## v0.10.15 21 June 2015
 
 * feat(git): add git information package  81944685
