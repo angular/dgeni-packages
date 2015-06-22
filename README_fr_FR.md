@@ -13,7 +13,7 @@ Actuellement, il y a les packages suivants :
   explicitement dans votre configuration ou vous obtiendrez l'erreur
   `Error: No provider for "templateEngine"! (Resolving: templateEngine)`
 * ngdoc - La partie spécifique d'angular.js, avec la définition des balises, des processeurs et des templates.
-  Celui-ci charge les packages de git, jsdoc et nunjucks pour vous.
+  Celui-ci charge les packages de jsdoc et nunjucks pour vous.
 * examples - Processeurs pour supporter les exemples exécutables qui figurent sur les docs du site d'angular.js.
 * dgeni - support pour la documentation des packages de Dgeni (**incomplet**)
 
@@ -89,7 +89,7 @@ avant de les ajouter.
 
 ### Utilisation de `extraData.git`
 
-Un exemple qui est utilisée dans `ngdoc/templates/api/api.template.html`
+Un exemple qui est utilisée dans `git/templates/api/api.template.html`
 
 ```html+jinja
 <a href='https://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.isSnapshot and 'master' or git.version.raw $}/{$ doc.fileInfo.projectRelativePath $}#L{$ doc.startingLine $}' class='view-source pull-right btn btn-primary'>

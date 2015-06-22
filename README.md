@@ -12,7 +12,7 @@ Out of the box there are the following packages:
 * nunjucks - The nunjucks template rendering engine. No longer in jsdoc - you must add this
   explicitly to your config or you will get
   `Error: No provider for "templateEngine"! (Resolving: templateEngine)`
-* ngdoc - The angular.js specific tag-defs, processors and templates.  This loads the git, jsdoc and
+* ngdoc - The angular.js specific tag-defs, processors and templates.  This loads the jsdoc and
   nunjucks packages for you.
 * examples - Processors to support the runnable examples feature in the angular.js docs site.
 * dgeni - Support for documenting Dgeni packages (**incomplete**)
@@ -89,7 +89,7 @@ added to them.
 
 ### Using `extraData.git`
 
-An example as used in `ngdoc/templates/api/api.template.html`
+An example as used in `git/templates/api/api.template.html`
 
 ```html+jinja
 <a href='https://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.isSnapshot and 'master' or git.version.raw $}/{$ doc.fileInfo.projectRelativePath $}#L{$ doc.startingLine $}' class='view-source pull-right btn btn-primary'>
@@ -154,7 +154,7 @@ and type from the tag description accordingly but do not fully implement all the
 
 ## `ngdoc` Package
 
-The `ngdoc` Package depends upon the `jsdoc`, `nunjucks`, and `git` packages. It provides additional support for
+The `ngdoc` Package depends upon the `jsdoc` and `nunjucks` packages. It provides additional support for
 non-API documents written in files with `.ngdoc` extension; it also computes additional properties specific
 to Angular related code.
 
