@@ -89,7 +89,7 @@ avant de les ajouter.
 
 ### Utilisation de `extraData.git`
 
-Un exemple qui est utilisée dans `git/templates/api/api.template.html`
+Un exemple qui est utilisé dans `git/templates/api/api.template.html`
 
 ```html+jinja
 <a href='https://github.com/{$ git.info.owner $}/{$ git.info.repo $}/tree/{$ git.version.isSnapshot and 'master' or git.version.raw $}/{$ doc.fileInfo.projectRelativePath $}#L{$ doc.startingLine $}' class='view-source pull-right btn btn-primary'>
