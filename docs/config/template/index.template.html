@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="dgeniPipeline">
+
+  <head>
+    <script data-require="jquery@*" data-semver="2.1.4" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script data-require="angular.js@1.4.1" data-semver="1.4.1" src="https://code.angularjs.org/1.4.1/angular.js"></script>
+    <script data-require="angular.js@1.4.1" data-semver="1.4.1" src="https://code.angularjs.org/1.4.1/angular-sanitize.js"></script>
+    <script data-require="angular.js@1.4.1" data-semver="1.4.1" src="https://code.angularjs.org/1.4.1/angular-animate.js"></script>
+    <link href="http://fonts.googleapis.com/css?family=Lato|Oswald" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+
+  <body ng-controller="Main as vm">
+    <div class="container">
+      <div class="head">
+        <div class="text">
+          <span class="title">Dgeni Pipeline</span>
+          <br />
+          <span class="snippet">What each processor does and when</span>
+        </div>
+        <div class="pattern"></div>
+      </div>
+      <div class="contents">
+        <div class="key">
+          <!-- Base packages -->
+          <div class="key-type">
+            <div class="key-item base">
+              <div class="key-circle base">
+                <div class="key-circle-inner"></div>
+              </div>
+              <div class="key-text">Base Package</div>
+            </div>
+            <div class="key-item base placeholder">
+              <div class="key-circle base placeholder">
+                <div class="key-circle-inner"></div>
+              </div>
+              <div class="key-text">
+                Psuedo marker <small>(placeholder)</small>
+              </div>
+            </div>
+          </div>
+          <!-- Other packages -->
+          <div class="key-type">
+            <div class="key-item package" ng-repeat="p in vm.packages">
+              <div class="key-circle package">
+                <div class="key-circle-inner">
+                  <span class="text" ng-bind="p.abbr"></span>
+                </div>
+              </div>
+              <div class="key-text">{{ p.name }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="panels">
+          <div class="processors">
+            <div class="processor" ng-repeat="p in vm.processors" ng-class="vm.processorClass(p)" ng-click="vm.selectProcessor(p)">
+              {{ p.name }}
+            </div>
+          </div>
+          <div class="explanation">
+            <div ng-show="vm.selectedProcessor && vm.selectedProcessor.explain"
+                class="explain"
+                ng-class="vm.processorClass(vm.selectedProcessor)"
+                set-class-when-at-top="fixed-top"
+            >
+
+              <div class="key-item" ng-class="vm.processorClass(vm.selectedProcessor)">
+                <div class="key-circle" ng-class="vm.processorClass(vm.selectedProcessor)">
+                  <div class="key-circle-inner">
+                    <span class="text" ng-bind="vm.findPackage(vm.selectedProcessor.package).abbr"></span>
+                  </div>
+                </div>
+                <div class="key-text" ng-bind="vm.selectedProcessor.name"></div>
+              </div>
+              <div ng-bind-html="vm.selectedProcessor.explain | format"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
