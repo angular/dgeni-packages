@@ -1,6 +1,10 @@
 var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
+/**
+ * @dgPackage jsdoc
+ * @description Tag parsing and extracting for JSDoc-based documentation
+ */
 module.exports = new Package('jsdoc', [require('../base')])
 
 // Add in extra pseudo marker processors

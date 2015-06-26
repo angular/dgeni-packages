@@ -1,6 +1,10 @@
 var Package = require('dgeni').Package;
 
 // Define the `base` package
+/**
+ * @dgPackage base
+ * @description Defines minimal set of processors to get started with Dgeni
+ */
 module.exports = new Package('base')
 
 // A set of pseudo processors that act as markers to help position real processors at the right
