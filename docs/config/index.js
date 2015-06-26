@@ -38,11 +38,16 @@ module.exports = new Package('dgeni-docs', [
   writeFilesProcessor.outputFolder = '.tmp/docs';
 })
 
-.config(function (templateFinder) {
+.config(function (templateFinder, templateEngine) {
   templateFinder.templateFolders = [path.resolve(packagePath, 'template')];
 
   // templateFinder.templatePatterns.unshift('${doc.template}');
   templateFinder.templatePatterns.unshift('${doc.docType}.template.html');
+
+  templateEngine.config.tags = {
+    variableStart: '{$',
+    variableEnd: '$}'
+  };
 })
 
 ;

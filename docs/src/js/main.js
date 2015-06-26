@@ -1,4 +1,4 @@
-// Code goes here
+'use strict';
 
 angular.module('dgeniPipeline', ['ngSanitize', 'ngAnimate'])
 

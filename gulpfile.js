@@ -17,7 +17,7 @@ var config = {
       css: '.tmp/docs/css',
       js: '.tmp/docs/js'
     },
-    js: ['src/js/**/*.js'],
+    js: ['docs/src/js/**/*.js'],
     less: {
       src: 'docs/src/less/main.less',
       watch: ['src/less/**/*.less']
@@ -40,23 +40,11 @@ gulp.task('js',  function () {
     .pipe($g.cached('js'))
     .pipe($g.jshint())
     .pipe($g.jscs())
-    .on('error', noop)
+    .on('error', function () {})
     .pipe($g.jscsStylish.combineWithHintResults())
     .pipe($g.jshint.reporter('jshint-stylish'))
-    .pipe($g.ngAnnotate());
-
-  return merge(js, templates())
-    .pipe($g.remember('js'))
+    .pipe($g.ngAnnotate())
     .pipe(gulp.dest(config.paths.dist.js))
-    // .pipe($g.uglify({
-    //   compress: {
-    //     negate_iife: false
-    //   }
-    // }))
-    .pipe($g.size({ title: 'js' }))
-    .pipe(
-      gulp.dest(config.paths.dist.js)
-    )
     .pipe($g.connect.reload());
 });
 
@@ -77,7 +65,7 @@ gulp.task('less', function () {
     .pipe($g.connect.reload());
 });
 
-gulp.task('dgeni', function (done) {
+gulp.task('dgeni', function () {
   // Copy asset files straight over
   gulp.src(config.paths.docs.assets, { base: 'docs/assets' })
     .pipe(gulp.dest(config.paths.dist.docs))
@@ -89,13 +77,12 @@ gulp.task('dgeni', function (done) {
       $g.connect.reload,
       function (err) {
         return console.log('error', err);
-      })
-    .then(done);
+      });
 });
 
-gulp.task('watch', ['dgeni'], function (done) {
+gulp.task('watch', ['dgeni', 'less', 'js'], function (done) {
   gulp.watch(config.paths.js, ['js', 'docs']);
-  gulp.watch(config.paths.docs.watch, ['docs']);
+  gulp.watch(config.paths.docs.watch, ['dgeni']);
   gulp.watch(config.paths.less.watch, ['less']);
 
   // Fire up connect server
