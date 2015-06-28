@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 /**
- * dgProcessor filterNgDocsProcessor
+ * @dgProcessor filterNgDocsProcessor
  * @description
  * Remove docs that do not contain the ngdoc tag
  */
