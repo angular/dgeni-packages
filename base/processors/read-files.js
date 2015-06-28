@@ -7,7 +7,7 @@ var Minimatch = require("minimatch").Minimatch;
 var StringMap = require('stringmap');
 
 /**
- * @dgPackage readFilesProcessor
+ * @dgProcessor readFilesProcessor
  *
  * @description Read documents from files and add them to the docs collection
  *

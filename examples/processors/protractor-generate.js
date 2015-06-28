@@ -3,7 +3,7 @@
 var _ = require('lodash');
 
 /**
- * dgProcessor generateProtractorTestsProcessor
+ * @dgProcessor generateProtractorTestsProcessor
  * @description
  * Generate a protractor test files from the e2e tests in the examples
  */
