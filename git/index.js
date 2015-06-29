@@ -1,5 +1,6 @@
 "use strict";
 
+var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
 /**
@@ -9,7 +10,7 @@ var Package = require('dgeni').Package;
  * some git and version information to the `extraData` for the
  * `renderDocsProcessor`.
  */
-module.exports = new Package('git', [])
+module.exports = new Package('git', ['base'])
 
 .factory(require('./services/decorateVersion'))
 .factory(require('./services/getPreviousVersions'))
@@ -20,5 +21,10 @@ module.exports = new Package('git', [])
 
 .config(function(renderDocsProcessor, gitData) {
   renderDocsProcessor.extraData.git = gitData;
+})
+
+
+.config(function(templateFinder) {
+  templateFinder.templateFolders.unshift(path.resolve(__dirname, 'templates'));
 });
 

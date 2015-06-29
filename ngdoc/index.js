@@ -1,7 +1,7 @@
 var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
-module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks'), require('../git')])
+module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks')])
 
 .factory(require('./file-readers/ngdoc'))
 .factory(require('./inline-tag-defs/link'))

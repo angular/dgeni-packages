@@ -4,7 +4,7 @@ var path = require('canonical-path');
 /**
  * @dgProcessor generateExamplesProcessor
  * @description
- * Create doc objects of the various things that need to be rendered for an example
+ * Create doc objects of the various things that need to be rendered for an example.
  * This includes the files that will be run in an iframe, the code that will be injected
  * into the HTML pages and the protractor test files.
  */

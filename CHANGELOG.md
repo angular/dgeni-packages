@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.10.17 23 June 2015
+
+* fix(git/api.template): remove weird character in folder name 3ad11ff1
+
+
+## v0.10.16 22 June 2015
+
+* fix(ngdoc): remove `git` package as a dependency  f0647968
+* fix(git/packageInfo): ensure that we return consistent paths on all OSes  4e29bb62
+
+
 ## v0.10.15 21 June 2015
 
 * feat(git): add git information package  81944685

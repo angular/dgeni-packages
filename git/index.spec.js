@@ -1,25 +1,15 @@
-var gitPackage = require('./');
+var gitPackage = require('./mocks/mockPackage');
 var Dgeni = require('dgeni');
-var mocks = require('./mocks/mocks.js');
+var mocks = require('./mocks/mocks');
 
 describe('git package', function() {
   var extraData, dgeni;
   beforeEach(function() {
-    extraData = {};
-
-    gitPackage
-    .factory(function gitData() { return mocks.gitData })
-    .factory('renderDocsProcessor', function dummyRenderDocsProcessor() {
-      return {
-        extraData: extraData
-      };
-    });
-
-    dgeni = new Dgeni([gitPackage]);
+    dgeni = new Dgeni([gitPackage()]);
   });
 
   it("should be instance of Package", function() {
-    expect(gitPackage instanceof Dgeni.Package).toBeTruthy();
+    expect(require('./') instanceof Dgeni.Package).toBeTruthy();
   });
 
   it("should have factories set", function() {
@@ -33,8 +23,8 @@ describe('git package', function() {
   });
 
   it("should set extraData.git to gitData", function() {
-    dgeni.generate();
-
-    expect(extraData.git).toBe(mocks.gitData);
+    var injector = dgeni.configureInjector();
+    var renderDocsProcessor = injector.get('renderDocsProcessor');
+    expect(renderDocsProcessor.extraData.git).toBe(mocks.gitData);
   });
 });
