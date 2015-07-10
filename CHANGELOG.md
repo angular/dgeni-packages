@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.18 10 July 2015
+
+* fix(jsdoc/private tagdef): assign true to private property if tag is found  640d3da6
+
+
 ## v0.10.17 23 June 2015
 
 * fix(git/api.template): remove weird character in folder name 3ad11ff1
