@@ -1,3 +1,6 @@
 module.exports = function() {
-  return { name: 'private' };
+  return {
+    name: 'private',
+    transforms: function() { return true; }
+  };
 };
