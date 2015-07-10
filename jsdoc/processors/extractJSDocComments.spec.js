@@ -1,5 +1,5 @@
 var path = require('canonical-path');
-var esprima = require('esprima');
+var espree = require('espree');
 var Dgeni = require('dgeni');
 var mockPackage = require('../mocks/mockPackage');
 
@@ -19,7 +19,7 @@ describe("extractJSDocCommentsProcessor", function() {
       basePath: basePath,
       relativePath: path.relative(basePath, file),
       content: content,
-      ast: esprima.parse(content, {
+      ast: espree.parse(content, {
         loc: true,
         attachComment: true
       }),
