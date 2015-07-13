@@ -1,5 +1,4 @@
 var path = require('canonical-path');
-var esprima = require('esprima');
 var Dgeni = require('dgeni');
 var mockPackage = require('../mocks/mockPackage');
 
@@ -9,7 +8,7 @@ var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
 
 describe("extractJSDocCommentsProcessor", function() {
 
-  var processor;
+  var processor, jsParser;
 
   var createFileInfo = function(file, content, basePath) {
     return {
@@ -19,10 +18,7 @@ describe("extractJSDocCommentsProcessor", function() {
       basePath: basePath,
       relativePath: path.relative(basePath, file),
       content: content,
-      ast: esprima.parse(content, {
-        loc: true,
-        attachComment: true
-      }),
+      ast: jsParser(content),
     };
   };
 
@@ -36,7 +32,7 @@ describe("extractJSDocCommentsProcessor", function() {
   beforeEach(function() {
     dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
-
+    jsParser = injector.get('jsParser');
     processor = injector.get('extractJSDocCommentsProcessor');
   });
 

@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var esprima = require('esprima');
 
 /**
  * @dgService jsdocFileReader
@@ -7,17 +6,14 @@ var esprima = require('esprima');
  * This file reader will create a simple doc for each js
  * file including a code AST of the JavaScript in the file.
  */
-module.exports = function jsdocFileReader(log) {
+module.exports = function jsdocFileReader(log, jsParser) {
   return {
     name: 'jsdocFileReader',
     defaultPattern: /\.js$/,
     getDocs: function(fileInfo) {
 
       try {
-        fileInfo.ast = esprima.parse(fileInfo.content, {
-          loc: true,
-          attachComment: true
-        });
+        fileInfo.ast = jsParser(fileInfo.content);
       } catch(ex) {
        ex.file = fileInfo.filePath;
         throw new Error(
