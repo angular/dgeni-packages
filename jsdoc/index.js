@@ -23,12 +23,13 @@ module.exports = new Package('jsdoc', [require('../base')])
 .factory(require('./services/transforms/whole-tag'))
 .factory(require('./services/transforms/trim-whitespace'))
 
+.factory(require('./services/jsParser'))
 .factory(require('./file-readers/jsdoc'))
 
 // Configure the processors
 
 .config(function(readFilesProcessor, jsdocFileReader) {
-  readFilesProcessor.fileReaders = [jsdocFileReader];
+  readFilesProcessor.fileReaders = [jsdocFileReader].concat(readFilesProcessor.fileReaders || []);
 })
 
 .config(function(parseTagsProcessor, getInjectables) {

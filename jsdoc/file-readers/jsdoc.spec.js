@@ -1,6 +1,6 @@
 var path = require('canonical-path');
-var fileReaderFactory = require('./jsdoc');
-var mockLog = require('dgeni/lib/mocks/log')();
+var Dgeni = require('dgeni');
+var mockPackage = require('../mocks/mockPackage');
 
 var srcJsContent = require('../mocks/_test-data/srcJsFile.js');
 var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
@@ -8,7 +8,7 @@ var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
 
 describe("jsdoc fileReader", function() {
 
-  var fileReader;
+  var fileReader, jsDocParser;
 
   var createFileInfo = function(file, content, basePath) {
     return {
@@ -23,7 +23,9 @@ describe("jsdoc fileReader", function() {
   };
 
   beforeEach(function() {
-    fileReader = fileReaderFactory(mockLog);
+    var dgeni = new Dgeni([mockPackage()]);
+    var injector = dgeni.configureInjector();
+    fileReader = injector.get('jsdocFileReader');
   });
 
   describe("defaultPattern", function() {
@@ -52,6 +54,19 @@ describe("jsdoc fileReader", function() {
       expect(fileInfo.ast).toEqual(jasmine.objectContaining({
         type: 'Program',
         range: [ 0, 3135 ]
+      }));
+    });
+    
+    
+    it('should understand ES6 features', function() {
+      var fileInfo = createFileInfo(
+        'some/file.js',
+        "function *someGenerator() { yield 10; }",
+        '.');
+      var docs = fileReader.getDocs(fileInfo);
+      expect(fileInfo.ast.body[0]).toEqual(jasmine.objectContaining({
+        type: 'FunctionDeclaration',
+        generator: true
       }));
     });
 

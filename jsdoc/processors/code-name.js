@@ -19,7 +19,7 @@ module.exports = function codeNameProcessor(log) {
 
   /**
    * Recurse down the code AST node that is associated with this doc for a name
-   * @param  {Object} node The esprima node information for the code to find the name of
+   * @param  {Object} node The JS AST node information for the code to find the name of
    * @return {String}      The name of the code or null if none found.
    */
   function findCodeName(node) {
