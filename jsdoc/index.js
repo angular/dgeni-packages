@@ -28,7 +28,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 // Configure the processors
 
 .config(function(readFilesProcessor, jsdocFileReader) {
-  readFilesProcessor.fileReaders = [jsdocFileReader];
+  readFilesProcessor.fileReaders = [jsdocFileReader].concat(readFilesProcessor.fileReaders || []);
 })
 
 .config(function(parseTagsProcessor, getInjectables) {
