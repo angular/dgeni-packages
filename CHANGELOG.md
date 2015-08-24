@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.19 23 August 2015
+
+* fix(ngdoc/templates): move module installation above description  6f7b0fc3
+
+
 ## v0.10.18 10 July 2015
 
 * fix(jsdoc/private tagdef): assign true to private property if tag is found  640d3da6
