@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
+var INLINE_TAG = /(?:^|)\{@([^\s]+)\s+(.*)\}(?:$|)/g;
 var StringMap = require('stringmap');
 
 /**
