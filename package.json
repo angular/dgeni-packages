@@ -37,7 +37,7 @@
     "catharsis": "^0.8.1",
     "change-case": "^2.1.0",
     "dgeni": "^0.4.0",
-    "esprima": "^1.0.4",
+    "esprima": "^1.1.0",
     "estraverse": "^1.5.1",
     "glob": "~3.2.8",
     "htmlparser2": "^3.7.3",
