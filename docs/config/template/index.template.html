@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html ng-app="dgeniPipeline" ng-cloak>
+
+  <head>
+    <script data-require="jquery@*" data-semver="2.1.4" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.js"></script>
+    <script data-require="angular.js@1.4.1" data-semver="1.4.1" src="https://code.angularjs.org/1.4.1/angular.js"></script>
+    <script data-require="angular.js@1.4.1" data-semver="1.4.1" src="https://code.angularjs.org/1.4.1/angular-sanitize.js"></script>
+    <script data-require="angular.js@1.4.1" data-semver="1.4.1" src="https://code.angularjs.org/1.4.1/angular-animate.js"></script>
+    <script src="http://pc035860.github.io/angular-highlightjs/angular-highlightjs.min.js"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=Lato|Oswald" rel="stylesheet" type="text/css" />
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/monokai_sublime.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <script src="js/processors-data.js"></script>
+    <script src="js/packages-data.js"></script>
+    <script src="js/main.js"></script>
+  </head>
+
+  <body ng-controller="Main as vm">
+    <div class="container">
+      <div class="head">
+        <div class="text">
+          <span class="title">Dgeni Pipeline</span>
+          <br />
+          <span class="snippet">What each processor does and when</span>
+        </div>
+        <div class="pattern"></div>
+      </div>
+      <div class="contents">
+        <div class="key">
+          <!-- Base packages -->
+          <div class="key-type">
+            <div
+              class="key-item base filterable-package"
+              ng-click="vm.setPackageFilter('base')"
+              ng-class="{ 'active': vm.filterForPackage == 'base' }">
+
+              <div class="key-circle base">
+                <div class="key-circle-inner">
+                  <span class="text">BA</span>
+                </div>
+              </div>
+              <div class="key-text">Base Package</div>
+            </div>
+            <div class="key-item base placeholder">
+              <div class="key-circle base placeholder">
+                <div class="key-circle-inner"></div>
+              </div>
+              <div class="key-text">
+                Psuedo marker <small>(placeholder)</small>
+              </div>
+            </div>
+          </div>
+          <!-- Other packages -->
+          <div class="key-type">
+            <div
+              class="key-item package filterable-package"
+              ng-repeat="p in vm.packages | filter:{ name: '!base' } | filter:vm.hasProcessors | orderBy:'name'"
+              ng-click="vm.setPackageFilter(p.name)"
+              ng-class="{ 'active': p.name == vm.filterForPackage }">
+
+              <div class="key-circle package">
+                <div class="key-circle-inner">
+                  <span class="text" ng-bind="p.abbr"></span>
+                </div>
+              </div>
+              <div class="key-text">{{ p.name }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="panels">
+          <div class="processors">
+            <div class="processor"
+                 ng-repeat="p in vm.processors | filter:{ $package: vm.filterForPackage } | orderBy:'index'"
+                 ng-class="vm.processorClass(p)"
+                 ng-click="vm.selectProcessor(p)">
+
+              {{ p.readableName }}
+            </div>
+          </div>
+          <div class="explanation">
+            <div ng-show="vm.selectedProcessor && vm.selectedProcessor.description"
+                class="explain"
+                ng-class="vm.processorClass(vm.selectedProcessor)"
+                set-class-when-at-top="fixed-top"
+                set-class-watch="vm.selectedProcessor">
+
+              <div class="key-item" ng-class="vm.processorClass(vm.selectedProcessor)">
+                <div class="key-circle" ng-class="vm.processorClass(vm.selectedProcessor)">
+                  <div class="key-circle-inner">
+                    <span class="text" ng-bind="vm.findPackage(vm.selectedProcessor.dgPackage).abbr"></span>
+                  </div>
+                </div>
+                <div class="key-text" ng-bind="vm.selectedProcessor.readableName"></div>
+              </div>
+              <div ng-bind-html="vm.selectedProcessor.description | format"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/javascript.min.js"></script>
+  </body>
+
+</html>

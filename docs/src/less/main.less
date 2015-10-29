@@ -1,0 +1,247 @@
+/* Styles go here */
+
+html, body {
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  margin-top: 40px;
+}
+
+.container {
+  background-color: #d6dad6; /* rgba(151, 161, 150, 0.38); */
+  padding: 0;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.head {
+  width: 100%;
+  background-color: #b3a486;
+  color: #552500;
+  text-align: center;
+  position: relative;
+  margin-bottom: 23px;
+}
+
+.head > .text {
+  padding: 50px;
+}
+
+.head .title {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  font-size: 28.6pt;
+  line-height: 46.3pt;
+  letter-spacing: 10px;
+}
+
+.head .snippet {
+  font-family: 'Lato', sans-serif;
+  opacity: 0.5;
+  font-weight: bold;
+  font-size: 14pt;
+  margin-top: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.pattern {
+  background-image: linear-gradient(320deg, #b3a486 10px, transparent 11px), linear-gradient(40deg, #b3a486 10px, transparent 11px);
+  background-size: 15px 23px;
+  background-repeat: repeat-x;
+  height: 26px;
+  width: 100%;
+  /* transform:rotateZ(90deg) translate(200px,250px); */
+  transform: rotateZ(180deg);
+  bottom: -23px;
+  position: absolute;
+}
+
+.contents {
+  min-height: 800px;
+  padding: 20px 40px 40px 40px;
+  margin-bottom: 20px;
+}
+
+.panels {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+/* Colors */
+
+.base {
+  color: #002f56;
+}
+
+.placeholder {
+  color: #002f56;
+  opacity: 0.5;
+}
+
+.package {
+  color: #b23916;
+}
+
+.package-bg {
+  background-color: #b23916;
+  opacity: 0.5;
+}
+
+/* Legend / Key */
+
+.key {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  margin-bottom: 80px;
+}
+
+.key-type {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+
+.key-item {
+  display: flex;
+  display: -webkit-flex;
+  font-weight: bold;
+  // padding: 4px 8px 4px 0;
+  padding: 8px;
+  line-height: 20px;
+  flex-direction: row;
+}
+
+.key-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: relative;
+  color: #ededed;
+  background-color: transparent;
+  border: 3px solid white;
+}
+
+.key-circle-inner {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  text-align: center;
+  border: 3px solid transparent;
+}
+
+.key-circle-inner > .text {
+  /* padding-left: 8px; */
+  line-height: 28px;
+  font-size: 14px;
+}
+
+.key-text {
+  font-size: 20px;
+  padding: 8px;
+}
+
+.key-circle.base {
+  border-color: #002f56;
+}
+.key-circle.base > .key-circle-inner {
+  background-color: #002f56;
+}
+
+.key-circle.package {
+  border-color: #b23916;
+}
+.key-circle.package > .key-circle-inner {
+  background-color: #b23916;
+}
+
+// A package that can be clicked and filtered
+.key .key-item.filterable-package {
+  cursor: pointer;
+
+  &.active {
+    border-radius: 4px;
+    background-color: darken(#d6dad6, 20%);
+  }
+}
+
+/* Explanation */
+
+.explanation {
+  flex: 2 0 0;
+  /* border: 1px solid black; */
+}
+
+.explain {
+  border-radius: 8px;
+  font-weight: normal;
+  color: #ececec;
+  padding: 20px;
+
+  &.base {
+    background-color: rgba(0, 47, 86, 0.5);
+  }
+
+  &.package {
+    background-color: rgba(178, 57, 22, 0.5);
+  }
+}
+
+
+/* Processors */
+
+.processors {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  flex: 1 1 0;
+  /* border: 1px solid black; */
+}
+
+.processor {
+  font-weight: bold;
+  color: #b23916;
+  padding: 4px 8px;
+  cursor: pointer;
+
+  &.placeholder {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &.active {
+    background-color: rgba(178, 57, 22, 0.5);
+    border-radius: 4px;
+  }
+
+  &.base {
+    color: #002f56;
+
+    &.active {
+      background-color: rgba(0, 47, 86, 0.5);
+    }
+  }
+}
+
+pre code {
+  border-radius: 4px;
+}
