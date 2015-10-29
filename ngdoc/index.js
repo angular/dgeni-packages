@@ -1,6 +1,10 @@
 var path = require('canonical-path');
 var Package = require('dgeni').Package;
 
+/**
+ * @dgPackage ngdoc
+ * @description AngularJS specific tag-defs, processors and templates. This loads the jsdoc and nunjucks packages for you.
+ */
 module.exports = new Package('ngdoc', [require('../jsdoc'), require('../nunjucks')])
 
 .factory(require('./file-readers/ngdoc'))

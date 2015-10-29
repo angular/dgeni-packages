@@ -2,6 +2,10 @@ var path = require('canonical-path');
 var packagePath = __dirname;
 var Package = require('dgeni').Package;
 
+/**
+ * @dgPackage examples
+ * @description Processors to support the runnable examples feature in the AngularJS docs site.
+ */
 module.exports = new Package('examples', ['jsdoc'])
 
 .processor(require('./processors/examples-parse'))
