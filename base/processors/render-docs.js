@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 /**
- * @dgProcessor renderDoc
+ * @dgProcessor
  * @description
  * Render the set of documents using the provided `templateEngine`, to `doc.renderedContent`
  * using the `extraData`, `helpers` and the templates found by `templateFinder`.
