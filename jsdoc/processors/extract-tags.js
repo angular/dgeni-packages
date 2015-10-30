@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 /**
- * @dgProcessor extract-tags
+ * @dgProcessor
  * @description
  * Extract the information from the tags that were parsed
  */
