@@ -1,5 +1,5 @@
 var codeNameProcessorFactory = require('./code-name');
-var jsParser = require('esprima');
+var jsParser = require('espree');
 
 var mockLog = jasmine.createSpyObj('log', ['error', 'warn', 'info', 'debug', 'silly']);
 
