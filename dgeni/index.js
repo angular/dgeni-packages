@@ -25,7 +25,7 @@ module.exports = new Package('dgeni', [
     ]));
 })
 
-.config(function (computePathsProcessor, computeIdsProcessor) {
+.config(function (computeIdsProcessor) {
   computeIdsProcessor.idTemplates.push({
     docTypes: ['dgPackage'],
     idTemplate: '${name}',
@@ -38,25 +38,6 @@ module.exports = new Package('dgeni', [
     getAliases: function(doc) { return [doc.name, doc.id]; }
   });
 
-  computePathsProcessor.pathTemplates.push({
-    docTypes: ['dgPackage'],
-    pathTemplate: '${id}',
-    outputPathTemplate: 'partials/${path}.html'
-  });
-
-  computePathsProcessor.pathTemplates.push({
-    docTypes: ['dgProcessor'],
-    pathTemplate: '${packageDoc.id}/processors/${name}',
-    outputPathTemplate: 'partials/${path}.html'
-  });
-  computePathsProcessor.pathTemplates.push({
-    docTypes: ['dgService'],
-    pathTemplate: '${packageDoc.id}/services/${name}',
-    outputPathTemplate: 'partials/${path}.html'
-  });
-})
-
-
-.config(function(debugDumpProcessor) {
-  debugDumpProcessor.$enabled = true;
-});
+  // TODO: When using this package you will need to provide
+  // * path templates to the computePathsProcessor for dgPackage, dgProcessor and dgService
+  // * rendered content templates to the templateFinder
