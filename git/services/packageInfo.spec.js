@@ -1,3 +1,4 @@
+var path = require('path');
 var rewire = require('rewire');
 var packageInfoFactory = rewire('./packageInfo.js');
 
@@ -38,10 +39,10 @@ describe("packageInfo", function() {
     });
 
     spyOn(fs, 'readFileSync').and.returnValue('{}');
-    spyOn(path, 'dirname').and.returnValue('../');
+    spyOn(path, 'dirname').and.returnValue('..' + path.sep);
 
     packageInfoFactory();
 
-    expect(fs.readFileSync).toHaveBeenCalledWith('../package.json', 'UTF-8');
+    expect(fs.readFileSync).toHaveBeenCalledWith('..' + path.sep + 'package.json', 'UTF-8');
   });
 });
