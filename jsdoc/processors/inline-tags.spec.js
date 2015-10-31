@@ -14,7 +14,7 @@ describe("inlineTagsProcessor", function() {
   });
 
 
-  xit("should run after docs are rendered and before writing files", function() {
+  it("should run after docs are rendered and before writing files", function() {
     expect(processor.$runAfter).toEqual(['docs-rendered']);
     expect(processor.$runBefore).toEqual(['writing-files']);
   });
@@ -22,7 +22,7 @@ describe("inlineTagsProcessor", function() {
 
   describe("$process", function() {
 
-    xit("should parse the inline tags from the renderedContent", function() {
+    it("should parse the inline tags from the renderedContent", function() {
 
       // The processor is mostly only interested in the renderedContent but the other fields are
       // used in error reporting
