@@ -12,7 +12,7 @@ var path = require('canonical-path');
  *
  * @property {boolean} relativeLinks Whether we expect the links to be relative to the originating doc
  */
-module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
+module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock, log) {
 
   return function getLinkInfoImpl(url, title, currentDoc) {
     var linkInfo = {
@@ -28,20 +28,25 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
 
     var docs = getDocFromAlias(url, currentDoc);
 
-    if ( docs.length > 1 ) {
+    if ( !getLinkInfoImpl.useFirstAmbiguousLink && docs.length > 1 ) {
 
       linkInfo.valid = false;
+      linkInfo.errorType = 'ambiguous';
       linkInfo.error = 'Ambiguous link: "' + url + '".\n' +
-        docs.reduce(function(msg, doc) { return msg + '\n  "' + doc.id + '" ('+ doc.docType + ') : (' + doc.area + ')'; }, 'Matching docs: ');
+        docs.reduce(function(msg, doc) { return msg + '\n  "' + doc.id + '" ('+ doc.docType + ') : (' + doc.path + ' / ' + doc.fileInfo.relativePath + ')'; }, 'Matching docs: ');
 
-    } else if ( docs.length === 1 ) {
+    } else if ( docs.length >= 1 ) {
 
       linkInfo.url = docs[0].path;
       linkInfo.title = title || encodeCodeBlock(docs[0].name, true);
       linkInfo.type = 'doc';
 
       if ( getLinkInfoImpl.relativeLinks && currentDoc && currentDoc.path ) {
-        linkInfo.url = path.relative(path.join('/', currentDoc.path), path.join('/', linkInfo.url));
+        var currentFolder = path.dirname(currentDoc.path);
+        var docFolder = path.dirname(linkInfo.url);
+        var relativeFolder = path.relative(path.join('/', currentFolder), path.join('/', docFolder));
+        linkInfo.url = path.join(relativeFolder, path.basename(linkInfo.url));
+        log.debug(currentDoc.path, docs[0].path, linkInfo.url);
       }
 
     } else if ( url.indexOf('#') > 0 ) {
@@ -53,6 +58,7 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock) {
     } else if ( url.indexOf('/') === -1 && url.indexOf('#') !== 0 ) {
 
       linkInfo.valid = false;
+      linkInfo.errorType = 'missing';
       linkInfo.error = 'Invalid link (does not match any doc): "' + url + '"';
 
     } else {

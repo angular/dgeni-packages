@@ -5,7 +5,7 @@ var Dgeni = require('dgeni');
 var tagDefFactory = require('./link');
 
 describe("links inline tag handler", function() {
-  var tagDef, getLinkInfoSpy, doc, links;
+  var tagDef, getLinkInfoSpy, doc, links, log;
 
   beforeEach(function() {
 
@@ -18,6 +18,7 @@ describe("links inline tag handler", function() {
 
     var dgeni = new Dgeni([testPackage]);
     var injector = dgeni.configureInjector();
+    log = injector.get('log');
     tagDef = injector.get('linkInlineTagDef');
 
     doc = {
@@ -52,14 +53,13 @@ describe("links inline tag handler", function() {
   });
 
 
-  it("should throw an error if the link is invalid", function() {
+  it("should log a warning if the link is invalid", function() {
     getLinkInfoSpy.and.returnValue({
       valid: false,
       error: 'Invalid link (does not match any doc): "module:ngOther.directive:ngDirective"'
     });
-    expect(function() {
-      tagDef.handler(doc, 'link', 'module:ngOther.directive:ngDirective');
-    }).toThrowError('Invalid link (does not match any doc): "module:ngOther.directive:ngDirective" - doc "module:ng.directive:ngInclude"');
+    tagDef.handler(doc, 'link', 'module:ngOther.directive:ngDirective');
+    expect(log.warn).toHaveBeenCalledWith('Invalid link (does not match any doc): "module:ngOther.directive:ngDirective" - doc "module:ng.directive:ngInclude"');
     expect(getLinkInfoSpy).toHaveBeenCalled();
   });
 });
