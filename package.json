@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.10.19",
+  "version": "0.11.0",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node .",
@@ -80,6 +80,10 @@
     "MaartenVerbaarschot <m.vbschot@gmail.com>",
     "Martin Staffa <mjstaffa@googlemail.com>",
     "Jacob Eggers <eggers@brandeis.edu>",
-    "Shai Resnik <shai.reznik@gmail.com>"
+    "Shai Resnik <shai.reznik@gmail.com>",
+    "Brian Hann <emailc0bra@gmail.com>",
+    "Matt Fairbrass <matt.fairbrass@gmail.com>",
+    "Keir Lawson <keirlawson@gmail.com>",
+    "Yair Leviel <yleviel@akamai.com>"
   ]
 }

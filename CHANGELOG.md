@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.11.0 31 October 2015
+
+**ES6 Support:**
+
+* fix(code-name): update espree, estraverse and add support for ExportDefaultDeclaration  Yair Leviel 080620c2
+* fix(jsdoc/jsParser): support parsing ES6 features Peter Bacon Darwin  c14c18ce
+
+**Dgeni self-documentation:**
+
+* feat(docs): initial dgeni doc-gen package Peter Bacon Darwin  603e333e
+* feat(docs): initial dgeni doc-gen package Peter Bacon Darwin  8c176e53
+* feat(dgeni): add dgeni configuration documentation processing Peter Bacon Darwin  0f4f5dd4
+
+**Links package:**
+
+* feat(links): initial links package, abstracted from the ngdoc package Peter Bacon Darwin  94271a1a
+
+**Start-End Inline Tags**
+
+* feat(inline-tags): allow start-end tags Peter Bacon Darwin  362a3495
+
+**Bug Fixes**
+
+* fix(versionInfo): don't crash if no codename match is found Peter Bacon Darwin  069c7762
+* fix(jsdoc) file-readers assignment via concat Matt Fairbrass  c6af7204
+
 ## v0.10.19 23 August 2015
 
 * fix(ngdoc/templates): move module installation above description  6f7b0fc3
