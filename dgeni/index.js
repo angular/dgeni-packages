@@ -37,7 +37,7 @@ module.exports = new Package('dgeni', [
     idTemplate: '${packageDoc.id}.${name}',
     getAliases: function(doc) { return [doc.name, doc.id]; }
   });
-
+});
   // TODO: When using this package you will need to provide
   // * path templates to the computePathsProcessor for dgPackage, dgProcessor and dgService
   // * rendered content templates to the templateFinder
