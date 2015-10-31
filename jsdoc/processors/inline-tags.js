@@ -1,5 +1,7 @@
 var _ = require('lodash');
-var INLINE_TAG = /\{@([^\s]+)\s+([^\}]*)\}/g;
+var INLINE_TAG = /(\{@[^\s]+[^\}]*\})/;
+                        //  11111111   22222222
+var INLINE_TAG_DETAIL = /\{@([^\s]+)\s*([^\}]*)\}/;
 var StringMap = require('stringmap');
 
 /**
@@ -42,32 +44,98 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
       _.forEach(docs, function(doc) {
 
         if ( doc.renderedContent ) {
+          // This is a stack of start-end tag instances
+          // as a new start-end tag is found it is unshifted onto the front of this array
+          // Each item looks like: { definition: tagDef, value: { tag: '...', content: '...' } }
+          var pendingTags = [];
 
-          // Replace any inline tags found in the rendered content
-          doc.renderedContent = doc.renderedContent.replace(INLINE_TAG, function(match, tagName, tagDescription) {
+          // The resulting array from the split is alternating plain content and inline tags
+          var parts = doc.renderedContent.split(INLINE_TAG);
 
-            var definition = definitionMap.get(tagName);
-            if ( definition ) {
+          doc.renderedContent = parts.reduce(function(renderedContent, nextPart) {
 
-              try {
+            var match = INLINE_TAG_DETAIL.exec(nextPart);
 
-                // It is easier to trim the description here than to fiddle around with the INLINE_TAG regex
-                tagDescription = tagDescription && tagDescription.trim();
+            if (match) {
 
-                // Call the handler with the parameters that its factory would not have been able to get from the injector
-                return definition.handler(doc, tagName, tagDescription, docs);
+              // We have a new tag
+              var tagName = match[1];
+              var tagDescription = match[2] && match[2].trim();
+              if (pendingTags.length > 0 && tagName === pendingTags[0].definition.end) {
 
-              } catch(e) {
-                throw new Error(createDocMessage('There was a problem running the @' + tagName + ' inline tag handler for ' + match, doc, e));
+                // We have found a matching end tag. Remove it from the stack and run its handler
+                var pendingTag = pendingTags.shift();
+                var startTag = pendingTag.definition;
+
+                nextPart = startTag.handler(doc, startTag.name, pendingTag.value, docs);
+
+              } else {
+
+                // We have a new tag. Look it up in the definitions
+                var definition = definitionMap.get(tagName);
+
+                if (!definition) {
+
+                  // There is no matching tag definition
+                  log.warn(createDocMessage('No handler provided for inline tag "' + match[0] + '"', doc));
+                  nextPart = match[0];
+
+                } else if(definition.end) {
+
+                  // We have a new start-end tag. Unshift it onto the pendingTags stack
+                  pendingTags.unshift({
+                    definition: definition,
+                    value: {
+                      tag: tagDescription,
+                      content: ''
+                    }
+                  });
+
+                  nextPart = '';
+
+                } else {
+
+                  // We have a new normal tag. Run its handler
+                  nextPart = definition.handler(doc, definition.name, tagDescription, docs);
+                }
               }
-
-            } else {
-              log.warn(createDocMessage('No handler provided for inline tag "' + match + '"', doc));
-              return match;
+            } else if (pendingTags.length) {
+              // We have some plain content but we are inside a start-end tag
+              // Add this content to the current start-end tag
+              pendingTags[0].value.content += nextPart;
+              nextPart = '';
             }
 
+            return renderedContent + nextPart;
           });
         }
+        // if ( doc.renderedContent ) {
+
+        //   // Replace any inline tags found in the rendered content
+        //   doc.renderedContent = doc.renderedContent.replace(INLINE_TAG, function(match, tagName, tagDescription) {
+
+        //     var definition = definitionMap.get(tagName);
+        //     if ( definition ) {
+
+        //       try {
+
+        //         // It is easier to trim the description here than to fiddle around with the INLINE_TAG regex
+        //         tagDescription = tagDescription && tagDescription.trim();
+
+        //         // Call the handler with the parameters that its factory would not have been able to get from the injector
+        //         return definition.handler(doc, tagName, tagDescription, docs);
+
+        //       } catch(e) {
+        //         throw new Error(createDocMessage('There was a problem running the @' + tagName + ' inline tag handler for ' + match, doc, e));
+        //       }
+
+        //     } else {
+        //       log.warn(createDocMessage('No handler provided for inline tag "' + match + '"', doc));
+        //       return match;
+        //     }
+
+        //   });
+        // }
       });
     }
   };
