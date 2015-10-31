@@ -18,3 +18,7 @@ node_modules
 .agignore
 
 coverage
+
+.tmp
+
+debug-dump.txt
