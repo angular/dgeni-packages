@@ -4,7 +4,8 @@
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node .",
-    "cover": "istanbul cover jasmine-node -- ."
+    "cover": "istanbul cover jasmine-node -- .",
+    "docs": "dgeni ./docs"
   },
   "repository": {
     "type": "git",

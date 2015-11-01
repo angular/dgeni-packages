@@ -30,7 +30,7 @@ module.exports = new Package('dgeni-docs', [require('../dgeni')])
 
 .config(function(computePathsProcessor) {
   computePathsProcessor.pathTemplates.push({
-    docTypes: ['dgPackage'],
+    docTypes: ['dgPackage', 'indexPage'],
     pathTemplate: '${id}.md',
     outputPathTemplate: '${path}'
   });

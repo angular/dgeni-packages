@@ -1,5 +1,6 @@
-# {$ doc.name $} processor {% if not doc.$process %}*(pseudo)*{% endif %}
-## from {@link {$ doc.packageDoc.id $} } package
+{% include 'partials/header.template.md' %}
+## {$ doc.name $} processor {% if not doc.$process %}*(pseudo)*{% endif %}
+**from {@link {$ doc.packageDoc.id $} } package**
 
 {$ doc.description $}
 
