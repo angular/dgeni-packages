@@ -1,2 +1,0 @@
-# Dgeni Packages Documentation
-
