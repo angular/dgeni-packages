@@ -317,3 +317,7 @@ plus any dependencies referenced in the example itself are made relative to the 
 * `exampleMap` - a hash map holding each example by id, which is a unique id generated from the name
 of the example
 
+
+## License
+
+Apache 2
