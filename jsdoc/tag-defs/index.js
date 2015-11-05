@@ -21,5 +21,6 @@ module.exports = [
   require('./namespace'),
   require('./kind'),
   require('./function'),
-  require('./method')
+  require('./method'),
+  require('./license')
 ];
