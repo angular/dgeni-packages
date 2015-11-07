@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.11.1 7 November 2015
+
+* fix(jsdoc/inline-tags): don't conflate successive inline tags when matching Peter Bacon Darwin  67c2abf5
+* feat(jsdoc): add license tag  Peter Bacon Darwin  6f4bb5f7
+* feat(docs): improve templates and add npm script for generating docs  Peter Bacon Darwin  3c75243e
+* feat(dgeni): compute the full pipeline of processors for each package and add index page  Peter Bacon Darwin  c12cd9ec
+
+
 ## v0.11.0 31 October 2015
 
 **ES6 Support:**
