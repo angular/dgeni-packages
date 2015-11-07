@@ -120,6 +120,61 @@ describe("inlineTagsProcessor", function() {
 
       expect(doc.renderedContent).toEqual('content before <Tag Handled> content after');
     });
+
+    it("should not get confused by successive inline tags", function() {
+      var doc = {
+        file: 'a/b/c.js',
+        startingLine: 123,
+        renderedContent:
+          '{@block param1 param2}' +
+          'content within the inline tag' +
+          '{@endblock} ' +
+          '{@block param3 param4}' +
+          'more content within another inline tag' +
+          '{@endblock}'
+      };
+      var docs = [doc];
+
+      // Provide a mock tag handler to track what tags have been handled
+      var tagsFound = [];
+      var mockInlineTagDefinition = {
+        name: 'block',
+        end: 'endblock',
+        handler: function(doc, tagName, tagDescription, docs) {
+          tagsFound.push({ name: tagName, description: tagDescription });
+          return '<Tag Handled>';
+        }
+      };
+
+      processor.inlineTagDefinitions = [mockInlineTagDefinition];
+
+      // Run the processor
+      var results = processor.$process(docs);
+
+      // This processor should not return anything.  All its work is done on the docs, in place
+      expect(results).toBeUndefined();
+
+
+      // We expect the handler to have been invoked for the block tag
+      expect(tagsFound).toEqual([
+        {
+          name: 'block',
+          description: {
+            tag: 'param1 param2',
+            content: 'content within the inline tag'
+          }
+        },
+        {
+          name: 'block',
+          description: {
+            tag: 'param3 param4',
+            content: 'more content within another inline tag'
+          }
+        }
+      ]);
+
+      expect(doc.renderedContent).toEqual('<Tag Handled> <Tag Handled>');
+    });
   });
 
 });
