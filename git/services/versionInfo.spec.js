@@ -144,16 +144,22 @@ describe("versionInfo", function() {
       expect(versionInfo.currentVersion.codeName).toBe('mockCodeName');
     });
 
-    it("should throw an error if it doesn't have a codename specified", function() {
+    it("should set codeName to null if it doesn't have a codename specified", function() {
       shellMocks.cat = mocks.mockGitCatFileNoCodeName;
 
-      expect(versionInfoFactory).toThrow();
+      var dgeni = new Dgeni([mockPackage]);
+      var injector = dgeni.configureInjector();
+      versionInfo = injector.get('versionInfo');
+      expect(versionInfo.currentVersion.codeName).toBe(null);
     });
 
-    it("should throw an error if it has a bad format for the codename", function() {
+    it("should set codeName to falsy if it has a badly formatted codename", function() {
       shellMocks.cat = mocks.mockGitCatFileBadFormat;
 
-      expect(versionInfoFactory).toThrow();
+      var dgeni = new Dgeni([mockPackage]);
+      var injector = dgeni.configureInjector();
+      versionInfo = injector.get('versionInfo');
+      expect(versionInfo.currentVersion.codeName).toBeFalsy();
     });
 
     it("should have the commitSHA set", function() {

@@ -30,12 +30,7 @@ var getCodeName = function(tagName) {
   var gitCatOutput = shell.exec('git cat-file -p ' + tagName, {silent:true}).output;
   var match = gitCatOutput.match(/^.*codename.*$/mg);
   var tagMessage = match && match[0];
-  var codeName = tagMessage && tagMessage.match(/codename\((.*)\)/)[1];
-  if (!codeName) {
-    throw new Error("Could not extract release code name. The message of tag " + tagName +
-      " must match '*codename(some release name)*'");
-  }
-  return codeName;
+  return tagMessage && tagMessage.match(/codename\((.*)\)/)[1];
 };
 
 /**
