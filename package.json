@@ -21,12 +21,7 @@
     "jsdoc"
   ],
   "author": "Pete Bacon Darwin",
-  "licenses": [
-    {
-      "type": "Apache",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
-  ],
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/angular/dgeni-packages/issues"
   },
