@@ -16,6 +16,7 @@ Out of the box there are the following packages:
   nunjucks packages for you.
 * examples - Processors to support the runnable examples feature in the angular.js docs site.
 * dgeni - Support for documenting Dgeni packages (**incomplete**)
+* typescript - Tag parsing and extracting for TypeScript modules.
 
 ## `base` Package
 
@@ -317,3 +318,38 @@ plus any dependencies referenced in the example itself are made relative to the 
 * `exampleMap` - a hash map holding each example by id, which is a unique id generated from the name
 of the example
 
+
+## `typescript` Package
+
+### File Readers:
+
+* at the moment we are not using a filereader but the `readTypeScriptModules` processor to read our modules. 
+
+### Processors
+
+* `readTypeScriptModules` - parse the `sourceFiles` with the help of the `tsParser` service and return doc 
+for each exported member. Members marked with `/** @internal */` are not exported as well as members starting with
+an underscore (`_`)
+
+### Tag Definitions
+
+The `tsdoc` package will generate docs for the following types: 
+`class`, `interface`, `function`, `var`, `const`, `let`, `enum` and `type-alias`
+
+### Services
+
+* `convertPrivateClassesToInterfaces` - if a constructor of an exported class is marked as `/** @internal */`
+the class will be "converted" to an interface
+* `tsParser` - uses the typescript compiler and a host created by `createCompilerHost` to actually read
+and compile the source files. The docs are created from the symbols read by the typescript program.
+* `createCompilerHost` - creates a new compiler host which can, among other things, resolve file paths and 
+check if files exist
+* `getContent` - retrieves the file contents and comments.
+
+### Templates
+
+**This package does not provide any templates nor a `templateEngine` to render templates (use the
+`nunjucks` package to add this).**
+
+### Tag Definitions
+Please note that at the moment the `@param` documentation is ignored.
