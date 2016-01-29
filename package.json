@@ -18,7 +18,8 @@
     "dgeni",
     "document generation",
     "javascript",
-    "jsdoc"
+    "jsdoc",
+    "typescript"
   ],
   "author": "Pete Bacon Darwin",
   "license": "MIT",
@@ -48,7 +49,8 @@
     "shelljs": "^0.5.0",
     "spdx-license-list": "^2.1.0",
     "stringmap": "^0.2.2",
-    "winston": "~0.7.2"
+    "typescript": "^1.7.5",
+    "winston": "~0.7.2"  
   },
   "devDependencies": {
     "istanbul": "^0.2.7",
