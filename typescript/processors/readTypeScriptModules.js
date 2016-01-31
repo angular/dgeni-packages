@@ -3,7 +3,7 @@ var path = require('canonical-path');
 var _ = require('lodash');
 var ts = require('typescript');
 
-module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo,
+module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, untouchedNamespaces,
                                                 getExportDocType, getContent, createDocMessage, log) {
 
   return {
@@ -409,8 +409,8 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo,
   function getType(sourceFile, type) {
     var text = getText(sourceFile, type);
     while (text.indexOf(".") >= 0) {
-      // Keep namespaced symbols in RxNext
-      if (text.match(/^\s*RxNext\./)) break;
+      // Keep some namespaced symbols
+      if (_.some(untouchedNamespaces, function(regex) { return text.match(regex); })) break;
       // handle the case List<thing.stuff> -> List<stuff>
       text = text.replace(/([^.<]*)\.([^>]*)/, "$2");
     }

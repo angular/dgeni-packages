@@ -28,6 +28,9 @@ module.exports = new Package('typescript-parsing', [basePackage])
   ];
 })
 
+// use `untouchedNamespaces.push()` to inject your own regexes here.
+// these namespaces will not be stripped if used for type parameters.
+.factory('untouchedNamespaces', function() { return []; })
 
 // Register the processors
 .processor(require('./processors/readTypeScriptModules'))
