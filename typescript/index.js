@@ -1,9 +1,8 @@
-var basePackage = require('dgeni-packages/base');
 var Package = require('dgeni').Package;
 var path = require('canonical-path');
 
 // Define the dgeni package for generating the docs
-module.exports = new Package('typescript-parsing', [basePackage])
+module.exports = new Package('typescript', [require('../base')])
 
 // Register the services and file readers
 .factory(require('./services/modules'))
