@@ -129,6 +129,26 @@ describe('readTypeScriptModules', function() {
       ]);
     });
   });
+
+  describe('strip namespaces', function () {
+    it('should strip namespaces in return types', function () {
+      processor.sourceFiles = ['stripNamespaces.ts'];
+      var docs = [];
+      processor.$process(docs);
+      var functionDoc = _.find(docs, { docType: 'function' });
+      expect(functionDoc.returnType).toEqual('IDirective');
+    });
+
+    it('should not strip untouched namespaces in return types', function () {
+      var untouchedNamespaces = injector.get('untouchedNamespaces');
+      untouchedNamespaces.push(/angular/);
+      processor.sourceFiles = ['stripNamespaces.ts'];
+      var docs = [];
+      processor.$process(docs);
+      var functionDoc = _.find(docs, { docType: 'function' });
+      expect(functionDoc.returnType).toEqual('angular.IDirective');
+    });
+  });
 });
 
 function getNames(collection) {
