@@ -327,19 +327,17 @@ of the example
 
 ### Processors
 
-* `readTypeScriptModules` - parse the `sourceFiles` with the help of the `tsParser` service and return doc 
-for each exported member. Members marked with `/** @internal */` are not exported as well as members starting with
-an underscore (`_`)
-
-### Tag Definitions
-
-The `tsdoc` package will generate docs for the following types: 
-`class`, `interface`, `function`, `var`, `const`, `let`, `enum` and `type-alias`
+* `readTypeScriptModules` - parse the `sourceFiles` with the help of the `tsParser` service and return a doc 
+for each exported member. This processor can be configured to export private members (marked as `/** @internal */` 
+as well as members starting with an underscore (`_`)) by setting the property `hidePrivateMembers` to `false`.
+Set `sortClassMembers` to `true` to sort instance and static members by name (defaults to order of appearence).
+You can ignore special exports by adding strings or regexes to the `ignoreExportsMatching` property (defaults to 
+`___esModule`.
 
 ### Services
 
-* `convertPrivateClassesToInterfaces` - if a constructor of an exported class is marked as `/** @internal */`
-the class will be "converted" to an interface
+* `convertPrivateClassesToInterfaces` - pass this service a list of exported docs and if it represents a 
+class that is marked as `/** @internal */` the doc will be converted to represent an interface.
 * `tsParser` - uses the typescript compiler and a host created by `createCompilerHost` to actually read
 and compile the source files. The docs are created from the symbols read by the typescript program.
 * `createCompilerHost` - creates a new compiler host which can, among other things, resolve file paths and 
