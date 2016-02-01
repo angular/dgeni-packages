@@ -19,7 +19,6 @@ describe("gitRepoInfo", function() {
     expect(gitRepoInfo).not.toBe(null);
   });
 
-
   it("should have owner set from package repository url", function() {
     expect(gitRepoInfo.owner).toBe('owner');
   });
@@ -37,25 +36,4 @@ describe("gitRepoInfo", function() {
 
     expect(function(){injector.get('gitRepoInfo')}).toThrow();
   });
-
-  it("should throw an error if not a github repo url", function() {
-    var badPackage = {
-      repository: {
-        url: 'https://abc.com/foo/bar.git'
-      }
-    };
-
-    mockPackage.factory(function packageInfo() {
-      return badPackage;
-    });
-    var dgeni = new Dgeni([mockPackage]);
-    var injector = dgeni.configureInjector();
-
-    expect(function(){injector.get('gitRepoInfo')}).toThrow();
-
-    expect(gitRepoInfoFactory).toThrow();
-  });
-
-
 });
-
