@@ -33,6 +33,7 @@
     "catharsis": "^0.8.1",
     "change-case": "^2.1.0",
     "dgeni": "^0.4.0",
+    "escope": "^3.4.0",
     "espree": "^2.2.3",
     "estraverse": "^4.1.0",
     "glob": "~3.2.8",
