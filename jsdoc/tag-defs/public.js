@@ -1,10 +1,10 @@
 module.exports = function(accessTagTransform) {
-  var name = 'private';
+  var name = 'public';
 
   accessTagTransform.addTag(name);
   accessTagTransform.addValue(name);
 
-  function getValue () {
+  function getValue() {
     return name;
   }
 
