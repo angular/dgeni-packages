@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var Tag = require('dgeni-packages/jsdoc/lib/Tag');
+var Tag = require('../../jsdoc/lib/Tag');
 
 
 module.exports = function generateAngularTagsProcessor(parseTagsProcessor) {

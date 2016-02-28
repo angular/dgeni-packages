@@ -4,7 +4,7 @@ var dgeni = require('dgeni');
 
 
 module.exports = new dgeni.Package('angular', [
-  require('dgeni-packages/ngdoc')
+  require('../ngdoc')
 ])
 
 .processor(require('./processors/extract-angular-ast'))

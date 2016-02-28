@@ -20,9 +20,11 @@ module.exports = function resolveAngularComponentsProcessor(angularComponents, l
           return;
         }
         var members = definition.resolveValue(doc, value);
-        members.forEach(function(member) {
-          log.debug('Extracted member ' + member.autoTags.name[0]);
-        });
+        if (members) {
+          members.forEach(function(member) {
+            log.debug('Extracted member ' + member.autoTags.name[0]);
+          });
+        }
         Array.prototype.push.apply(docs, members);
         resolveDI(value, doc);
       });
