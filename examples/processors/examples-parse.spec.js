@@ -68,4 +68,11 @@ describe("parseExamplesProcessor", function() {
 
   });
 
+  it("should cope with docs that have no content", function() {
+    doc = {};
+    expect(function() {
+      processor.$process([doc]);
+    }).not.toThrow();
+  });
+
 });
