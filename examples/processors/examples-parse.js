@@ -19,6 +19,7 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
 
       docs.forEach(function(doc) {
         try {
+          if (!doc.content) { return; }
           doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
 
             var example = extractAttributes(attributeText);
