@@ -394,7 +394,16 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
   function expandSourceFiles(sourceFiles, basePath) {
     var filePaths = [];
     sourceFiles.forEach(function(sourcePattern) {
-      filePaths = filePaths.concat(glob.sync(sourcePattern, { cwd: basePath }));
+      if (sourcePattern.include) {
+        var include = glob.sync(sourcePattern.include, {cwd: basePath});
+        var exclude = [];
+        if (sourcePattern.exclude) {
+          exclude = glob.sync(sourcePattern.exclude, {cwd: basePath});
+        }
+        filePaths = filePaths.concat(_.difference(include, exclude));
+      } else {
+        filePaths = filePaths.concat(glob.sync(sourcePattern, {cwd: basePath}));
+      }
     });
     return filePaths;
   }
