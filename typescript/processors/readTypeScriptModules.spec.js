@@ -149,6 +149,37 @@ describe('readTypeScriptModules', function() {
       expect(functionDoc.returnType).toEqual('angular.IDirective');
     });
   });
+
+  describe('source file globbing patterns', function() {
+    it('should work with include patterns', function () {
+      processor.sourceFiles = [
+        {
+          include: '*Module.ts'
+        }
+      ];
+      var docs = [];
+      processor.$process(docs);
+
+      var moduleDocs = _.filter(docs, { docType: 'module' });
+      expect(moduleDocs.length).toBe(2);
+      expect(moduleDocs[0].name).toEqual('privateModule');
+      expect(moduleDocs[1].name).toEqual('publicModule');
+    });
+
+    it('should work with include/exclude patterns', function () {
+      processor.sourceFiles = [
+        {
+          include: '*Module.ts',
+          exclude: 'public*.ts'
+        }
+      ];
+      var docs = [];
+      processor.$process(docs);
+
+      var moduleDoc = docs[0];
+      expect(moduleDoc.name).toEqual('privateModule');
+    });
+  });
 });
 
 function getNames(collection) {
