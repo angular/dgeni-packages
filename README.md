@@ -328,8 +328,11 @@ of the example
 ### Processors
 
 * `readTypeScriptModules` - parse the `sourceFiles` with the help of the `tsParser` service and return a doc 
-for each exported member. This processor can be configured to export private members (marked as `/** @internal */` 
-as well as members starting with an underscore (`_`)) by setting the property `hidePrivateMembers` to `false`.
+for each exported member. You can either pass an array of strings or an array of objects with `include` and
+`exclude` globbing patterns. A mix of both is possible as well.
+The processor can be configured to export private
+members (marked as `/** @internal */` as well as members starting with an underscore (`_`)) by setting the property
+`hidePrivateMembers` to `false`.
 Set `sortClassMembers` to `true` to sort instance and static members by name (defaults to order of appearence).
 You can ignore special exports by adding strings or regexes to the `ignoreExportsMatching` property (defaults to 
 `___esModule`.
