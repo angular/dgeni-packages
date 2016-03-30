@@ -14,5 +14,6 @@ module.exports = [
   require('./parent'),
   require('./packageName'),
   require('./scope'),
-  require('./multiElement')
+  require('./multiElement'),
+  require('./knownIssue')
 ];
