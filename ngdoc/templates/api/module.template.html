@@ -41,6 +41,26 @@
 
 {$ doc.description | marked $}
 
+{% if doc.knownIssueDocs %}
+<div class="known-issues">
+  <h2 id="known-issues">Known Issues</h2>
+  <table class="definition-table">
+  <tr><th>Name</th><th>Description</th></tr>
+  {% for issueDoc in doc.knownIssueDocs -%}
+  <tr>
+    <td>{$ issueDoc.id | link(issueDoc.name, issueDoc) $}</td>
+    <td>
+    {% for issue in issueDoc.knownIssues -%}
+      {$ issue | marked $}
+    {% endfor -%}
+    </td>
+  </tr>
+  {% endfor -%}
+  </table>
+</div>
+{% endif %}
+
+
 <div class="component-breakdown">
   <h2>Module Components</h2>
   {% for componentGroup in doc.componentGroups %}

@@ -19,6 +19,7 @@ module.exports = new Package('ngdoc', [
 .processor(require('./processors/memberDocs'))
 .processor(require('./processors/moduleDocs'))
 .processor(require('./processors/providerDocs'))
+.processor(require('./processors/collectKnownIssues'))
 
 
 .config(function(readFilesProcessor, ngdocFileReader) {

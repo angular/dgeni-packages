@@ -20,6 +20,15 @@
 </div>
 {% endblock %}
 
+{% if doc.knownIssues %}
+<h2 id="known-issues">Known Issues</h2>
+{% for issue in doc.knownIssues -%}
+<div class="known-issue">
+  {$ issue | marked $}
+</div>
+{% endfor -%}
+{% endif %}
+
 {% if doc.deprecated %}
 <fieldset class="deprecated">
   <legend>Deprecated API</legend>
