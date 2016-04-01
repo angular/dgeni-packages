@@ -13,7 +13,7 @@ module.exports = function getFileInfo(log) {
       extension: path.extname(file).replace(/^\./, ''),
       basePath: basePath,
       relativePath: fileName,
-      projectRelativePath: fileName
+      projectRelativePath: path.relative(basePath, file)
     };
     return fileInfo;
   };
