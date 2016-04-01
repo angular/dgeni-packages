@@ -34,13 +34,6 @@ module.exports = new Package('typescript', [require('../base')])
 // Register the processors
 .processor(require('./processors/readTypeScriptModules'))
 
-
-// Configure the log service
-.config(function(log) {
-  log.level = 'warn';
-})
-
-
 // Configure ids and paths
 .config(function(computeIdsProcessor, computePathsProcessor, EXPORT_DOC_TYPES) {
 
