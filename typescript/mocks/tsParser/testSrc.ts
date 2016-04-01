@@ -4,7 +4,7 @@
  * This is the module description
  */
 
-export * from 'importedSrc';
+export * from './importedSrc';
 
 /**
  * This is some random other comment
