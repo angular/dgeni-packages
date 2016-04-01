@@ -240,7 +240,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     }
 
     // Compute the original module name from the relative file path
-    exportDoc.originalModule = exportDoc.fileInfo.relativePath
+    exportDoc.originalModule = exportDoc.fileInfo.projectRelativePath
         .replace(new RegExp('\.' + exportDoc.fileInfo.extension + '$'), '');
 
     return exportDoc;
