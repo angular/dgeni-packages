@@ -139,9 +139,9 @@ describe('readTypeScriptModules', function() {
       expect(functionDoc.returnType).toEqual('IDirective');
     });
 
-    it('should not strip untouched namespaces in return types', function () {
-      var untouchedNamespaces = injector.get('untouchedNamespaces');
-      untouchedNamespaces.push(/angular/);
+    it('should not strip ignored namespaces in return types', function () {
+      var ignoreTypeScriptNamespaces = injector.get('ignoreTypeScriptNamespaces');
+      ignoreTypeScriptNamespaces.push(/angular/);
       processor.sourceFiles = ['stripNamespaces.ts'];
       var docs = [];
       processor.$process(docs);

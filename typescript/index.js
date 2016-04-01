@@ -27,9 +27,9 @@ module.exports = new Package('typescript', [require('../base')])
   ];
 })
 
-// use `untouchedNamespaces.push()` to inject your own regexes here.
+// use `ignoreTypeScriptNamespaces.push()` to inject your own regexes here.
 // these namespaces will not be stripped if used for type parameters.
-.factory('untouchedNamespaces', function() { return []; })
+.factory('ignoreTypeScriptNamespaces', function() { return []; })
 
 // Register the processors
 .processor(require('./processors/readTypeScriptModules'))
