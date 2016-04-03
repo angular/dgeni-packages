@@ -14,7 +14,6 @@ module.exports = [
   require('./module'),
   require('./description'),
   require('./deprecated'),
-  require('./private'),
   require('./see'),
   require('./usage'),
   require('./animations'),
