@@ -1,11 +1,29 @@
 # Changelog
 
+## v0.12.0 3 April 2016
+
+### Features
+
+* feat(typescript): add package to parse exports from TypeScript modules	3e07adee
+* feat(jsdoc): add support for @access, @private, @protected, @public tags	e87f61f3
+* feat(ngdoc): add knownIssues tag and processing	b590d058
+
+### Fixes
+
+* fix(jsdoc): only declare private tagDef once	04b6e08e
+* fix(git): allow non-github repository URLs	afc213cc
+* fix(examples): don't error if the doc has no content	2944e203
+* fix(ngdoc/api.template): use link filter for module link	4f4ab7ef
+* fix(code-name): add support for MethodDefinition, ArrowFunctionExpression nodes	cf2c28bf
+* fix(git/versionInfo): don't throw error if there is no valid codename	d749314c
+
+
 ## v0.11.1 7 November 2015
 
-* fix(jsdoc/inline-tags): don't conflate successive inline tags when matching Peter Bacon Darwin  67c2abf5
-* feat(jsdoc): add license tag  Peter Bacon Darwin  6f4bb5f7
-* feat(docs): improve templates and add npm script for generating docs  Peter Bacon Darwin  3c75243e
-* feat(dgeni): compute the full pipeline of processors for each package and add index page  Peter Bacon Darwin  c12cd9ec
+* fix(jsdoc/inline-tags): don't conflate successive inline tags when matching  67c2abf5
+* feat(jsdoc): add license tag   6f4bb5f7
+* feat(docs): improve templates and add npm script for generating docs   3c75243e
+* feat(dgeni): compute the full pipeline of processors for each package and add index page   c12cd9ec
 
 
 ## v0.11.0 31 October 2015
