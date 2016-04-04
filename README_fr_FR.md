@@ -16,6 +16,7 @@ Actuellement, il y a les packages suivants :
   Celui-ci charge les packages de jsdoc et nunjucks pour vous.
 * examples - Processeurs pour supporter les exemples exécutables qui figurent sur les docs du site d'angular.js.
 * dgeni - support pour la documentation des packages de Dgeni (**incomplet**)
+* typescript - analyse et extraction de balise des modules TypeScript.
 
 ## Le package `base`
 
@@ -317,3 +318,39 @@ ainsi que les dépendances référencées dans l'exemple qui sont placées par r
 * `exampleMap` - une map contenant chaque exemple par un id. Cet id est généré de façon unique à partir
 du nom de l'exemple
 
+
+## Le package `typescript`
+
+### Les lecteurs de fichier
+
+* Pour le moment, nous n'avons pas utiliser un lecteur de fichier mais un processeur `readTypeScriptModules` pour lire nos modules.
+
+### Processeurs
+
+* `readTypeScriptModules` - analyse le `sourceFiles` à l'aide du service `tsParser` et retourne un doc
+pour chaque membre exporté. Vous pouvez passer soit un tableau de chaînes ou un tableau d'objets avec les patterns
+`include` et `exclude`. Un mélange des deux est aussi possible.
+Le processeur peut être configuré pour exporter des membres
+(privés) private (marqués avec `/** @internal */`, de la même manière que les membres démarrant avec un underscore (`_`)) en définnisant la propriété
+`hidePrivateMembers` à `false`.
+Définnisez `sortClassMembers` à `true` pour trier l'instance et les mebres static par le nom (par défaut, c'est l'ordre d'apparition).
+Vous pouvez ignorer les exportations spéciales en ajoutant des chaînes ou des regex à la propriété `ignoreExportsMatching` (par défaut à
+`___esModule`.
+
+### Services
+
+* `convertPrivateClassesToInterfaces` - passe à ce service une liste de docs exportés et si elle représente une
+classe qui est marquée avec comme `/** @internal */`, le doc sera converti pour représenter une interface.
+* `tsParser` - utilise le compilateur typescript et un hôte, créé par `createCompilerHost`, lit et compile
+les fichiers sources. Les docs sont créés à partir des symboles lu par le programme typescript.
+* `createCompilerHost` - crée un nouvel hôte du compilateur qui peut, entre autres, résoudre les chemins des fichiers et
+vérifier si les fichiers existent
+* `getContent` - récupère le contenu du fichier et des commentaires.
+
+### Templates
+
+**Ce package ne fournit pas de templates, ni un `templateEngine` pour rendre les templates (utilisez le
+package `nunjucks` pour faire cela).**
+
+### Définitions des balises
+Veuillez noter que pour le moment la documentation de `@param` est ignorée.
