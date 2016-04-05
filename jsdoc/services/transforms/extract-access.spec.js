@@ -59,7 +59,7 @@ describe("extract-access transform", function() {
 
       expect(function () {
         transform(doc, tag, value);
-      }).toThrowError('"@access" tag found on @other document while defined for @propery and @method only - doc (other) ');
+      }).toThrowError('"@access" tag found on @other document while defined for @property and @method only - doc (other) ');
     });
 
     it("should throw an error for unknown value", function() {
