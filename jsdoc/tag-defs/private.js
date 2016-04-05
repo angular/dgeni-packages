@@ -1,16 +1,8 @@
-module.exports = function(accessTagTransform) {
-  var name = 'private';
-
-  accessTagTransform.addTag(name);
-  accessTagTransform.addValue(name);
-
-  function getValue () {
-    return name;
-  }
-
+module.exports = function() {
   return {
-    name: name,
-    docProperty: 'access',
-    transforms: [getValue, accessTagTransform]
+    name: 'private',
+    transforms: function(doc, tag, value) {
+      return !value.trim() || value;
+    }
   };
 };
