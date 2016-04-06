@@ -19,6 +19,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 .processor(require('./processors/parse-tags'))
 .processor(require('./processors/extract-tags'))
 .processor(require('./processors/inline-tags'))
+.processor(require('./processors/check-access-tags'))
 
 
 .factory(require('./services/transforms/extract-name'))
