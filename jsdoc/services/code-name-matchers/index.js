@@ -1,0 +1,23 @@
+module.exports = [
+  require('./array-expression.js'),
+  require('./arrow-function-expression.js'),
+  require('./assignment-expression.js'),
+  require('./call-expression.js'),
+  require('./class-declaration.js'),
+  require('./export-default-declaration.js'),
+  require('./expression-statement.js'),
+  require('./function-declaration.js'),
+  require('./function-expression.js'),
+  require('./identifier.js'),
+  require('./literal.js'),
+  require('./member-expression.js'),
+  require('./method-definition.js'),
+  require('./new-expression.js'),
+  require('./object-expression.js'),
+  require('./program.js'),
+  require('./property.js'),
+  require('./return-statement.js'),
+  require('./throw-statement.js'),
+  require('./variable-declaration.js'),
+  require('./variable-declarator.js')
+];
