@@ -142,6 +142,8 @@ the value of the tag from the string in the tag description to something more me
 * `trimWhitespaceTransform` - trim whitespace from before and after the tag value
 * `unknownTagTransform` - add an error to the tag if it is unknown
 * `wholeTagTransform` - Use the whole tag as the value rather than using a tag property
+* `codeNameService` - helper service for `codeNameProcessor`, registers code name matchers and performs
+ actual matches against AST tree
 
 ### Templates
 
@@ -152,6 +154,38 @@ the value of the tag from the string in the tag description to something more me
 
 This package provides a minimal implementation of tags from the JSDoc project. They extract the name
 and type from the tag description accordingly but do not fully implement all the JSDoc tag functionality.
+
+### Code Name Matchers
+Matcher performs a search for a suitable code name at the given jsdoc code point (AST node).
+`codeNameService` matches AST node name against matcher name and if suitable matcher is found, executes it.
+
+Matcher name consists of `<AstNodeName>` and `NodeMatcher` substrings, i.e. `FunctionExpressionNodeMatcher`
+then latter is stripped and matcher is used by the former part, i.e. `FunctionExpression`.
+
+Matcher should accept single argument - node and return either string with name or literal `null`.
+
+Matchers:
+* `ArrayExpression`
+* `ArrowFunctionExpression`
+* `AssignmentExpression`
+* `CallExpression`
+* `ClassDeclaration`
+* `ExportDefaultDeclaration`
+* `ExpressionStatement`
+* `FunctionDeclaration`
+* `FunctionExpression`
+* `Identifier`
+* `Literal`
+* `MemberExpression`
+* `MethodDefinition`
+* `NewExpression`
+* `ObjectExpression`
+* `Program`
+* `Property`
+* `ReturnStatement`
+* `ThrowStatement`
+* `VariableDeclaration`
+* `VariableDeclarator`
 
 ## `ngdoc` Package
 
@@ -203,7 +237,6 @@ HTML anchors
 * `getLinkInfo()` - Get link information to a document that matches the given url
 * `getTypeClass()` - Get a CSS class string for the given type string
 * `moduleMap` - A collection of modules keyed on the module id
-
 
 ### Templates
 
