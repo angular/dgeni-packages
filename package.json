@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node .",
@@ -18,7 +18,8 @@
     "dgeni",
     "document generation",
     "javascript",
-    "jsdoc"
+    "jsdoc",
+    "typescript"
   ],
   "author": "Pete Bacon Darwin",
   "license": "MIT",
@@ -48,6 +49,7 @@
     "shelljs": "^0.5.0",
     "spdx-license-list": "^2.1.0",
     "stringmap": "^0.2.2",
+    "typescript": "^1.7.5",
     "winston": "~0.7.2"
   },
   "devDependencies": {
@@ -81,6 +83,9 @@
     "Brian Hann <emailc0bra@gmail.com>",
     "Matt Fairbrass <matt.fairbrass@gmail.com>",
     "Keir Lawson <keirlawson@gmail.com>",
-    "Yair Leviel <yleviel@akamai.com>"
+    "Yair Leviel <yleviel@akamai.com>",
+    "David Reher <david.reher@gmx.de>",
+    "Ilya WingedFox Lebedev <ilya@lebedev.net>",
+    "Øystein Amundse <oystein.amundsen@bouvet.no>"
   ]
 }

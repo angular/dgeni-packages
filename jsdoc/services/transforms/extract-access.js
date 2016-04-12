@@ -15,7 +15,7 @@ module.exports = function accessTagTransform(createDocMessage, log) {
    */
   function transformAccess (doc, tag, value) {
     if ( !(doc.docType === 'property' || doc.docType === 'method') ) {
-      throw new Error(createDocMessage('"@'+ tag.tagDef.name +'" tag found on @'+ doc.docType +' document while defined for @propery and @method only', doc));
+      throw new Error(createDocMessage('"@'+ tag.tagDef.name +'" tag found on @'+ doc.docType +' document while defined for @property and @method only', doc));
     }
 
     if (tag.tagDef.name != 'access' && tag.tagDef.docProperty != 'access') {
