@@ -3,7 +3,7 @@ module.exports = function() {
     name: 'restrict',
     defaultFn: function(doc) {
       if ( doc.docType === 'directive' || doc.docType === 'input' ) {
-        return { element: false, attribute: true, cssClass: false, comment: false };
+        return { element: true, attribute: true, cssClass: false, comment: false };
       }
     },
     transforms: function(doc, tag, value) {

@@ -15,9 +15,9 @@ describe("restrict tag-def", function() {
     expect(tagDef.transforms({}, {}, 'ACEM')).toEqual({ element: true, attribute: true, cssClass: true, comment: true });
   });
 
-  it("should default to restricting to an attribute if no tag is found and the doc is for a directive", function() {
-    expect(tagDef.defaultFn({ docType: 'directive' })).toEqual({ element: false, attribute: true, cssClass: false, comment: false });
-    expect(tagDef.defaultFn({ docType: 'input' })).toEqual({ element: false, attribute: true, cssClass: false, comment: false });
+  it("should default to restricting to an element and attribute if no tag is found and the doc is for a directive", function() {
+    expect(tagDef.defaultFn({ docType: 'directive' })).toEqual({ element: true, attribute: true, cssClass: false, comment: false });
+    expect(tagDef.defaultFn({ docType: 'input' })).toEqual({ element: true, attribute: true, cssClass: false, comment: false });
   });
 
   it("should not add a restrict property if the docType is not 'directive'", function() {
