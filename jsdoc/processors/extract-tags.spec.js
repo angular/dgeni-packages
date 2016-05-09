@@ -61,6 +61,18 @@ describe("extractTagsProcessor", function() {
       processor.$process([doc]);
       expect(doc.a).toEqual('some content');
     });
+
+    it("should not write a property to the doc if the tag value is undefined", function() {
+      var tagDef = { name: 'a' };
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
+      var tag = new Tag(tagDef, 'a', undefined, 123);
+      var doc = createDoc([tag]);
+
+      processor.$process([doc]);
+      expect(doc.a).toBeUndefined();
+      expect(Object.keys(doc)).not.toContain('a');
+    });
   });
 
   describe("tag-defs with docProperty", function() {
@@ -75,6 +87,18 @@ describe("extractTagsProcessor", function() {
       expect(doc.a).toBeUndefined();
       expect(doc.b).toEqual('some content');
 
+    });
+
+    it("should not write a property to the doc if the tag value is undefined", function() {
+      var tagDef = { name: 'a', docProperty: 'b' };
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
+      var tag = new Tag(tagDef, 'a', undefined, 123);
+      var doc = createDoc([tag]);
+
+      processor.$process([doc]);
+      expect(doc.b).toBeUndefined();
+      expect(Object.keys(doc)).not.toContain('b');
     });
   });
 
@@ -93,6 +117,22 @@ describe("extractTagsProcessor", function() {
 
       processor.$process([docB]);
       expect(docB.a).toEqual(['some content', 'some other content']);
+    });
+
+    it("should not add a value to the array if the tag value is undefined", function() {
+      var tagDef = { name: 'a', multi: true };
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
+      var tag1 = new Tag(tagDef, 'a', undefined, 123);
+      var tag2 = new Tag(tagDef, 'a', 'some other content', 256);
+      var docA = createDoc([tag1]);
+      var docB = createDoc([tag1, tag2]);
+
+      processor.$process([docA]);
+      expect(docA.a).toEqual([]);
+
+      processor.$process([docB]);
+      expect(docB.a).toEqual(['some other content']);
     });
   });
 
@@ -122,6 +162,19 @@ describe("extractTagsProcessor", function() {
       expect(doc.a).toEqual('special value');
 
     });
+
+    it("should not write a property to the doc if the specified tag value is undefined", function() {
+      var tagDef = { name: 'a', tagProperty: 'b' };
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
+      var tag = new Tag(tagDef, 'a', 'some content', 123);
+      tag.b = undefined;
+      var doc = createDoc([tag]);
+
+      processor.$process([doc]);
+      expect(doc.a).toBeUndefined();
+      expect(Object.keys(doc)).not.toContain('a');
+    });
   });
 
   describe("tag-defs with defaultFn", function() {
@@ -138,6 +191,18 @@ describe("extractTagsProcessor", function() {
       expect(defaultFn).toHaveBeenCalled();
     });
 
+
+    it("should not write a property to the doc if the defaultFn returns undefined", function() {
+      var tagDef = { name: 'a', defaultFn: function() {} };
+      parseTagsProcessor.tagDefinitions = [tagDef];
+
+      var doc = createDoc([]);
+
+      processor.$process([doc]);
+      expect(doc.a).toBeUndefined();
+      expect(Object.keys(doc)).not.toContain('a');
+    });
+
     describe("and mult", function() {
 
       it("should run the defaultFn if the tag is missing", function() {
@@ -152,6 +217,15 @@ describe("extractTagsProcessor", function() {
         expect(defaultFn).toHaveBeenCalled();
       });
 
+      it("should not add a value to the array if the defaultFn returns undefined", function() {
+        var tagDef = { name: 'a', defaultFn: function() {}, multi: true };
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
+        var doc = createDoc([]);
+
+        processor.$process([doc]);
+        expect(doc.a).toEqual([]);
+      });
     });
 
   });
@@ -171,6 +245,22 @@ describe("extractTagsProcessor", function() {
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content*A*');
+
+      });
+
+      it("should not write to the property if the transform returns undefined", function() {
+        function returnUndefined(doc, tag, value) {}
+
+        var tagDef = { name: 'a', transforms: returnUndefined };
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
+
+        var tag = new Tag(tagDef, 'a', 'some content', 123);
+        var doc = createDoc([tag]);
+
+        processor.$process([doc]);
+        expect(doc.a).toBeUndefined();
+        expect(Object.keys(doc)).not.toContain('a');
 
       });
 
@@ -204,6 +294,40 @@ describe("extractTagsProcessor", function() {
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content*A**B*');
+
+      });
+
+      it("should not write to the property if the final transform returns undefined", function() {
+        function addA(doc, tag, value) { return value + '*A*'; }
+        function returnUndefined(doc, tag, value) {}
+
+        var tagDef = { name: 'a', transforms: [addA, returnUndefined] };
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
+
+        var tag = new Tag(tagDef, 'a', 'some content', 123);
+        var doc = createDoc([tag]);
+
+        processor.$process([doc]);
+        expect(doc.a).toBeUndefined();
+        expect(Object.keys(doc)).not.toContain('a');
+
+      });
+
+
+      it("should write to the property if transform returns undefined as long as the final transform returns a defined value", function() {
+        function addA(doc, tag, value) { return value + '*A*'; }
+        function returnUndefined(doc, tag, value) {}
+
+        var tagDef = { name: 'a', transforms: [returnUndefined, addA] };
+
+        parseTagsProcessor.tagDefinitions = [tagDef];
+
+        var tag = new Tag(tagDef, 'a', 'some content', 123);
+        var doc = createDoc([tag]);
+
+        processor.$process([doc]);
+        expect(doc.a).toEqual('undefined*A*');
 
       });
 

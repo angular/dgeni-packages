@@ -101,10 +101,13 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       log.silly('   - applying default value function');
       var defaultValue = tagDef.defaultFn(doc);
       log.silly('     - default value: ', defaultValue);
+      if (tagDef.multi) {
+        doc[docProperty] = Array.isArray(doc[docProperty]) ? doc[docProperty] : [];
+      }
       if ( defaultValue !== undefined ) {
         // If the defaultFn returns a value then use this as the document property
         if ( tagDef.multi ) {
-          doc[docProperty] = (doc[docProperty] || []).concat(defaultValue);
+          doc[docProperty].push(defaultValue);
         } else {
           doc[docProperty] = defaultValue;
         }
@@ -113,13 +116,17 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
   }
 
   function readTags(doc, docProperty, tagDef, tags) {
+    var value;
     // Does this tagDef expect multiple instances of the tag?
     if ( tagDef.multi ) {
       // We may have multiple tags for this tag def, so we put them into an array
-      doc[docProperty] = doc[docProperty] || [];
+      doc[docProperty] = Array.isArray(doc[docProperty]) ? doc[docProperty] : [];
       _.forEach(tags, function(tag) {
         // Transform and add the tag to the array
-        doc[docProperty].push(tagDef.getProperty(doc, tag));
+        value = tagDef.getProperty(doc, tag);
+        if ( value !== undefined ) {
+          doc[docProperty].push(value);
+        }
       });
     } else {
       // We only expect one tag for this tag def
@@ -128,7 +135,10 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       }
 
       // Transform and apply the tag to the document
-      doc[docProperty] = tagDef.getProperty(doc, tags[0]);
+      value = tagDef.getProperty(doc, tags[0]);
+      if ( value !== undefined ) {
+        doc[docProperty] = value;
+      }
     }
     log.silly('   - tag extracted: ', doc[docProperty]);
   }
@@ -147,7 +157,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       return transforms;
     }
 
-    if ( _.isArray(transforms) ) {
+    if ( Array.isArray(transforms) ) {
 
       // transform is an array then we will apply each in turn like a pipe-line
       return function(doc, tag, value) {
