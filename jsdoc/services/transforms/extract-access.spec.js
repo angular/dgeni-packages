@@ -4,62 +4,48 @@ var mockPackage = require('../../mocks/mockPackage');
 var transformFactory = require('./extract-access');
 
 describe("extract-access transform", function() {
-  var doc, tag, value, transform;
-  var createDocMessage, log;
+  var transform;
 
   beforeEach(function() {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
-
-    createDocMessage = injector.get('createDocMessage');
-    log = jasmine.createSpyObj('log', ['error', 'warn', 'info', 'debug', 'silly']);
+    transform = injector.get('extractAccessTransform');
   });
 
-  describe('for valid tag', function () {
+  describe('(@access tag)', function () {
+    var doc, tag;
     beforeEach(function() {
       doc = {};
+      tag = { tagDef: { name: "access" } };
 
-      tag = {
-        tagDef: {
-          name: "access"
-        }
-      };
-
-      transform = transformFactory(createDocMessage, log);
-
-      transform.addTag('access');
-      transform.addTag('private');
-      transform.addValue('private');
-      transform.addValue('protected');
-      transform.addValue('public');
+      transform.allowedTags = new Map();
+      transform.allowedTags.set('private');
+      transform.allowedTags.set('public');
     });
 
     it("should extract the access restrictions for property", function() {
       doc.docType = 'property';
 
-      value = 'private';
-      value = transform(doc, tag, value);
-
-      expect(value).toEqual('private');
+      var value = transform(doc, tag, 'private');
+      expect(doc.access).toEqual('private');
+      expect(value).toBeUndefined();
     });
 
     it("should extract the access restrictions for method", function() {
       doc.docType = 'method';
 
-      value = 'public';
-      value = transform(doc, tag, value);
-
-      expect(value).toEqual('public');
+      var value = transform(doc, tag, 'public');
+      expect(doc.access).toEqual('public');
+      expect(value).toBeUndefined();
     });
 
     it("should throw an error for unknown doc types", function() {
       doc.docType = 'other';
-
-      value = 'protected';
-
       expect(function () {
-        transform(doc, tag, value);
-      }).toThrowError('"@access" tag found on @other document while defined for @property and @method only - doc (other) ');
+        transform(doc, tag, 'other');
+      }).toThrowError('Illegal use of "@access" tag.\n' +
+                      'You can only use this tag on the following docTypes: [ property, method ].\n' +
+                      'Register this docType with extractAccessTransform.addDocType("other") prior to use - doc (other) ');
     });
 
     it("should throw an error for unknown value", function() {
@@ -69,7 +55,8 @@ describe("extract-access transform", function() {
 
       expect(function () {
         transform(doc, tag, value);
-      }).toThrowError('@access sets value "root". Only one of [ "private", "protected", "public" ] allowed - doc (method) ');
+      }).toThrowError('Illegal value for `doc.access` property of "root".\n' +
+                      'This property can only contain the following values: [ "private", "public" ] - doc (method) ');
     });
 
     it("should throw an error for more than one access tag", function() {
@@ -80,85 +67,51 @@ describe("extract-access transform", function() {
 
       expect(function () {
         transform(doc, tag, value);
-      }).toThrowError('Access value "private" is already defined. Only one of [ "@access", "@private" ] per comment allowed - doc (method) ');
+      }).toThrowError('Illegal use of "@access" tag.\n' +
+                      '`doc.access` property is already defined as "private".\n' +
+                      'Only one of the following tags allowed per doc: [ "@access", "@private", "@public" ] - doc (method) ');
     });
 
-    it("should throw an error if no value defined and tag name may not be the value", function() {
+    it("should throw an error if no value defined", function() {
       doc.docType = 'method';
 
       value = '';
 
       expect(function () {
         transform(doc, tag, value);
-      }).toThrowError('@access sets value "access". Only one of [ "private", "protected", "public" ] allowed - doc (method) ');
+      }).toThrowError('Illegal value for `doc.access` property of "".\n' +
+                      'This property can only contain the following values: [ "private", "public" ] - doc (method) ');
     });
   });
 
-  describe('for valid document', function () {
-    beforeEach(function() {
-      doc = {
-        docType: 'property'
-      };
+  describe('(other tags)', function () {
 
-      tag = {
-        tagDef: {
-        }
-      };
 
-      transform = transformFactory(createDocMessage, log);
-
-      transform.addTag('access');
-      transform.addValue('private');
-      transform.addValue('public');
-    });
-
-    it("should throw an error for wrong tag definition", function () {
-      tag.tagDef.name = 'other';
-
-      value = 'private';
+    it("should throw an error if the tag is not registered with the extractAccessTransform", function () {
+      doc = { docType: 'property' };
+      tag = { tagDef: { name: 'other' } };
 
       expect(function () {
-        transform(doc, tag, value);
-      }).toThrowError('Tag @other does not fill up doc.access property - doc (property) ');
+        transform(doc, tag, '');
+      }).toThrowError('Register tag @other with extractAccessTransform.allowedTags.set("other") prior to use - doc (property) ');
     });
 
-    it("should throw an error for wrong tag definition", function () {
-      tag.tagDef.name = 'other';
-      tag.tagDef.docProperty = 'access';
+    it('should return the value passed to the allowedTags map', function() {
+      transform.allowedTags.set('a', 'blah');
+      transform.allowedTags.set('b');
 
-      value = 'other';
+      doc = { docType: 'property' };
+      tag = { tagDef: { name: 'a' } };
 
-      expect(function () {
-        transform(doc, tag, value);
-      }).toThrowError('Register tag @other with accessTagTransform.addTag("other") prior to use - doc (property) ');
-    });
-  })
+      var value = transform(doc, tag, 'some value');
+      expect(value).toEqual('blah');
+      expect(doc.access).toEqual('a');
 
-  describe("tag settings", function () {
-    beforeEach(function () {
-      transform = transformFactory(createDocMessage, log);
-    })
-
-    it("should return accessTagTransform after tag registration", function () {
-      expect(transform.addTag("access")).toEqual(transform);
-      expect(transform.addTag("public")).toEqual(transform);
-    });
-
-    it("should log non-fatal error for duplicate tag registration", function () {
-      transform.addTag("access");
-      transform.addTag("access");
-      expect(log.error.calls.allArgs()).toEqual([ [ 'Tag "access" is already defined' ] ]);
-    });
-
-    it("should allow multiple value registration", function () {
-      expect(transform.addValue("tag")).toEqual(transform);
-      expect(transform.addValue("other")).toEqual(transform);
-      expect(transform.addValue("other")).toEqual(transform);
-    });
-
-    it("should ignore empty value", function () {
-      expect(transform.addValue()).toEqual(transform);
-      expect(transform.addValue("")).toEqual(transform);
+      doc = { docType: 'property' };
+      tag = { tagDef: { name: 'b' } };
+      var value = transform(doc, tag, 'some value');
+      expect(value).toBeUndefined();
+      expect(doc.access).toEqual('b');
     });
   });
 });
