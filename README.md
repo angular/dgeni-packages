@@ -129,14 +129,26 @@ file.
 
 The `jsdoc` package contains definitions for a number of standard jsdoc tags including: `name`,
 `memberof`, `param`, `property`, `returns`, `module`, `description`, `usage`,
-`animations`, `constructor`, `class`, `classdesc`, `global`, `namespace`, `method`, `type` and
-`kind`.
+`animations`, `constructor`, `class`, `classdesc`, `global`, `namespace`, `method`, `type`,
+`kind`, `access`, `public`, `private` and `protected`.
 
 ### Services (Tag Transformations)
 
 This package provides a number of **Transform** services that are used in **Tag Definitions** to transform
 the value of the tag from the string in the tag description to something more meaningful in the doc.
 
+* `extractAccessTransform` - extract an access level (e.g. public, protected, private) from tags
+  You can configure this transform to register access tags and set the property where access info is written.
+  * `extractAccessTransform.allowedTags.set('tagName', [propertValue])` - register a tag that can act as
+    as an alias to set an access level. The propertyValue is optional and if not undefined will return this
+    value from the transform that will be written to the property. (defaults to `public:undefined`,
+    `private:undefined`, `protected:undefined`)
+  * `extractAccessTransformImpl.allowedDocTypes.set('docType')` - register a docType that can contain access
+    type tags (defaults to "property" and "method")
+  * `extractAccessTransformImpl.accessProperty` - specify the property to which to write the access value
+    (defaults to "access")
+  * `extractAccessTransformImpl.accessTagName` - specify the name of the tag that can hold access values
+    (defaults to "access")
 * `extractNameTransform` - extract a name from a tag
 * `extractTypeTransform` - extract a type from a tag
 * `trimWhitespaceTransform` - trim whitespace from before and after the tag value
@@ -356,27 +368,27 @@ of the example
 
 ### File Readers:
 
-* at the moment we are not using a filereader but the `readTypeScriptModules` processor to read our modules. 
+* at the moment we are not using a filereader but the `readTypeScriptModules` processor to read our modules.
 
 ### Processors
 
-* `readTypeScriptModules` - parse the `sourceFiles` with the help of the `tsParser` service and return a doc 
+* `readTypeScriptModules` - parse the `sourceFiles` with the help of the `tsParser` service and return a doc
 for each exported member. You can either pass an array of strings or an array of objects with `include` and
 `exclude` globbing patterns. A mix of both is possible as well.
 The processor can be configured to export private
 members (marked as `/** @internal */` as well as members starting with an underscore (`_`)) by setting the property
 `hidePrivateMembers` to `false`.
 Set `sortClassMembers` to `true` to sort instance and static members by name (defaults to order of appearence).
-You can ignore special exports by adding strings or regexes to the `ignoreExportsMatching` property (defaults to 
+You can ignore special exports by adding strings or regexes to the `ignoreExportsMatching` property (defaults to
 `___esModule`.
 
 ### Services
 
-* `convertPrivateClassesToInterfaces` - pass this service a list of exported docs and if it represents a 
+* `convertPrivateClassesToInterfaces` - pass this service a list of exported docs and if it represents a
 class that is marked as `/** @internal */` the doc will be converted to represent an interface.
 * `tsParser` - uses the typescript compiler and a host created by `createCompilerHost` to actually read
 and compile the source files. The docs are created from the symbols read by the typescript program.
-* `createCompilerHost` - creates a new compiler host which can, among other things, resolve file paths and 
+* `createCompilerHost` - creates a new compiler host which can, among other things, resolve file paths and
 check if files exist
 * `getContent` - retrieves the file contents and comments.
 

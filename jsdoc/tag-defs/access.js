@@ -1,13 +1,8 @@
-module.exports = function(accessTagTransform, trimWhitespaceTransform) {
-  var name = 'access'
-  accessTagTransform.addTag(name);
-  accessTagTransform.addValue('private');
-  accessTagTransform.addValue('protected');
-  accessTagTransform.addValue('public');
-
+module.exports = function(extractAccessTransform) {
+  extractAccessTransform.accessProperty = 'access';
+  extractAccessTransform.accessTagName = 'access';
   return {
-    name: name,
-    docProperty: 'access',
-    transforms: [trimWhitespaceTransform, accessTagTransform]
+    name: 'access',
+    transforms: extractAccessTransform
   };
 };
