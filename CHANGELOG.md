@@ -1,5 +1,60 @@
 # Changelog
 
+## v0.13.0 12 May 2016
+
+* fix(jsdoc/access): refactor access tags and transforms to allow more configuration	70cd0bea
+* fix(typescript/createCompilerHost): fix syntax errors	ae47de91
+* refactor(jsdoc/codename): add service, made matchers pluggable	28dc7919
+* fix(restrict): Change default from 'A' to 'EA'.	e0e6a501
+* fix(jsdoc/extract-tags): don't write properties if tag values are `undefined`	3eade6bc
+
+### BREAKING CHANGES
+
+* Due to 3eade6bc
+  Tags that had a value of `undefined` are no longer written to the document.
+  If you relied upon such falsy values forcing keys onto the doc, then change
+  your tagDefs to return `null` instead.
+* Due to e0e6a501
+  If you don't provide a value for the `@restrict` tag it now defaults to `EA` rather
+  than just `A`. If you want your directives to be only `A` then you must provide a
+  `@restrict` tag for them.
+* Due to 70cd0bea
+  The way that you configure `extractAccessTransform` has changed. If you were creating
+  your own access tags then you must use the new API.
+
+  Previously:
+
+  ```
+  module.exports = function(accessTagTransform) {
+    var name = 'private';
+
+    accessTagTransform.addTag(name);
+    accessTagTransform.addValue(name);
+
+    function getValue () {
+      return name;
+    }
+
+    return {
+      name: name,
+      docProperty: 'access',
+      transforms: [getValue, accessTagTransform]
+    };
+  };
+  ```
+
+  Now:
+
+  ```
+  module.exports = function(extractTypeTransform, extractAccessTransform) {
+    extractAccessTransform.allowedTags.set('private');
+    return {
+      name: 'private',
+      transforms: [extractTypeTransform, extractAccessTransform]
+    };
+  };
+  ```
+
 ## v0.12.0 3 April 2016
 
 ### Features
