@@ -57,7 +57,7 @@ module.exports = function createCompilerHost(log) {
       getNewLine: function() {
         return ts.sys.newLine;
       },
-      fileExists(fileName) {
+      fileExists: function(fileName) {
         var text, resolvedPath, resolvedPathWithExt;
 
         // Strip off the extension and resolve relative to the baseDir
@@ -72,7 +72,7 @@ module.exports = function createCompilerHost(log) {
         }
         return false;
       },
-      readFile(fileName) {
+      readFile: function(fileName) {
         console.log('readFile - NOT IMPLEMENTED', fileName);
       }
     };
