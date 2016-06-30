@@ -383,10 +383,16 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       // The symbol does not have a "type" but it is being initialized
       // so we can deduce the type of from the initializer (mostly).
       if (declaration.initializer.expression) {
-        return declaration.initializer.expression.text.trim();
-      } else {
-        return getType(sourceFile, declaration.initializer).trim();
+        var initializerExpressionText = declaration.initializer.expression.text;
+        var intrinsicNameFromTypeChecker = typeChecker.getTypeOfSymbolAtLocation(symbol, sourceFile).intrinsicName;
+        // we might not have an expression text.
+        if (initializerExpressionText) {
+          return initializerExpressionText.replace(/\s+/g, ' ').trim();
+        } else if (intrinsicNameFromTypeChecker) {
+          return intrinsicNameFromTypeChecker.trim();
+        }
       }
+      return getType(sourceFile, declaration.initializer).trim();
     }
   }
 

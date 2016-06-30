@@ -180,6 +180,23 @@ describe('readTypeScriptModules', function() {
       expect(moduleDoc.name).toEqual('privateModule');
     });
   });
+  
+  describe('getReturnType', function () {
+    it('should not throw if "declaration.initializer.expression.text" is undefined', function () {
+      processor.sourceFiles = ['getReturnType.ts'];      
+      var docs = [];
+      expect(function () { processor.$process(docs); }).not.toThrow();
+    });
+
+    it('should try get the type from the typeChecker if possible', function () {
+      processor.sourceFiles = ['getReturnType.ts'];      
+      var docs = [];
+      processor.$process(docs);
+      
+      var overriddenSomePropDoc = _.last(docs);
+      expect(overriddenSomePropDoc.returnType).toEqual('any');
+    });
+  });
 });
 
 function getNames(collection) {
