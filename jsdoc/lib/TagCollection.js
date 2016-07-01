@@ -12,7 +12,7 @@ var TagCollection = function(tags) {
 
   _.forEach(tags, function(tag) {
     this.addTag(tag);
-  }, this);
+  }.bind(this));
 };
 
 TagCollection.prototype = {

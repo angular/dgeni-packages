@@ -30,7 +30,7 @@ module.exports = function templateFinder(log, createDocMessage) {
       var templateSets = _.map(this.templateFolders, function(templateFolder) {
         return {
           templateFolder: templateFolder,
-          templates: _.indexBy(glob.sync('**/*', { cwd: templateFolder }))
+          templates: _.keyBy(glob.sync('**/*', { cwd: templateFolder }))
         };
       });
 
@@ -51,8 +51,8 @@ module.exports = function templateFinder(log, createDocMessage) {
         var templatePath;
 
         // Search the template sets for a matching pattern for the given doc
-        _.any(templateSets, function(templateSet) {
-          return _.any(patternMatchers, function(patternMatcher) {
+        _.some(templateSets, function(templateSet) {
+          return _.some(patternMatchers, function(patternMatcher) {
             log.silly('looking for ', patternMatcher(doc));
             templatePath = templateSet.templates[patternMatcher(doc)];
             if ( templatePath ) {
