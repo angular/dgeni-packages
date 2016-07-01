@@ -36,7 +36,7 @@
     "dgeni": "^0.4.0",
     "espree": "^2.2.3",
     "estraverse": "^4.1.0",
-    "glob": "~3.2.8",
+    "glob": "^7.0.5",
     "htmlparser2": "^3.7.3",
     "lodash": "~2.4.1",
     "marked": "^0.3.2",
