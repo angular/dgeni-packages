@@ -27,39 +27,39 @@ var mockVersionInfo = {
 
 var mockGitLsRemoteTags = {
   code: 0,
-  output: '85ae09c2119bf9b20cd45fc4e9dab77c5940d627	refs/tags/v0.10.11-rc2\n' +
+  stdout: '85ae09c2119bf9b20cd45fc4e9dab77c5940d627	refs/tags/v0.10.11-rc2\n' +
           '373c3bf61785139a65e76c023e798b49b7437c37	refs/tags/v0.10.13\n' +
           '573c3bf61795139a65e76c023e798b49b7437c37	refs/tags/v1.3.invalid'
 };
 
 var mockGitRevParse = {
   code: 0,
-  output: 'revision'
+  stdout: 'revision'
 }
 
 var mockGitCatFile = {
   code: 0,
-  output: 'codename(mockCodeName)'
+  stdout: 'codename(mockCodeName)'
 }
 
 var mockGitCatFileNoCodeName = {
   code: 0,
-  output: 'no code name'
+  stdout: 'no code name'
 }
 
 var mockGitCatFileBadFormat = {
   code: 0,
-  output: 'bad format codename()'
+  stdout: 'bad format codename()'
 }
 
 var mockGitDescribe = {
   code: 0,
-  output: 'v0.10.15'
+  stdout: 'v0.10.15'
 };
 
 var mockShellDefault = {
   code: 1,
-  output: "default"
+  stdout: "default"
 };
 
 var mockGitRepoInfo = {

@@ -18,7 +18,7 @@ module.exports = function getPreviousVersions(decorateVersion, packageInfo) {
     var tagResults = shell.exec('git ls-remote --tags ' + repo_url,
                                 {silent: true});
     if (tagResults.code === 0) {
-      return _(tagResults.output.match(/v[0-9].*[0-9]$/mg))
+      return _(tagResults.stdout.match(/v[0-9].*[0-9]$/mg))
         .map(function(tag) {
           var version = semver.parse(tag);
           return version;

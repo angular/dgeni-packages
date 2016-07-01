@@ -79,7 +79,7 @@ describe("versionInfo", function() {
     });
 
     it("should have the commitSHA set", function() {
-      expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.output);
+      expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.stdout);
     });
 
     describe("with branchVersion/Pattern", function() {
@@ -135,7 +135,7 @@ describe("versionInfo", function() {
     });
 
     it("should have a version matching the tag", function() {
-      var tag = shellMocks.describe.output.trim();
+      var tag = shellMocks.describe.stdout.trim();
       var version = semver.parse(tag);
       expect(versionInfo.currentVersion.version).toBe(version.version);
     });
@@ -163,7 +163,7 @@ describe("versionInfo", function() {
     });
 
     it("should have the commitSHA set", function() {
-      expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.output);
+      expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.stdout);
     });
   });
 

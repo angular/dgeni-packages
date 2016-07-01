@@ -27,7 +27,7 @@ var satisfiesVersion = function(version) {
  * @return {String}         The codename if found, otherwise null/undefined
  */
 var getCodeName = function(tagName) {
-  var gitCatOutput = shell.exec('git cat-file -p ' + tagName, {silent:true}).output;
+  var gitCatOutput = shell.exec('git cat-file -p ' + tagName, {silent:true}).stdout;
   var match = gitCatOutput.match(/^.*codename.*$/mg);
   var tagMessage = match && match[0];
   return tagMessage && tagMessage.match(/codename\((.*)\)/)[1];
@@ -38,7 +38,7 @@ var getCodeName = function(tagName) {
  * @return {String} The commit SHA
  */
 function getCommitSHA() {
-  return shell.exec('git rev-parse HEAD', {silent: true}).output.replace('\n', '');
+  return shell.exec('git rev-parse HEAD', {silent: true}).stdout.replace('\n', '');
 }
 
 /**
@@ -46,7 +46,7 @@ function getCommitSHA() {
  * @return {String} The build segment of the version
  */
 function getBuild() {
-  var hash = shell.exec('git rev-parse --short HEAD', {silent: true}).output.replace('\n', '');
+  var hash = shell.exec('git rev-parse --short HEAD', {silent: true}).stdout.replace('\n', '');
   return 'sha.' + hash;
 }
 
@@ -59,7 +59,7 @@ var getTaggedVersion = function() {
   var gitTagResult = shell.exec('git describe --exact-match', {silent:true});
 
   if (gitTagResult.code === 0) {
-    var tag = gitTagResult.output.trim();
+    var tag = gitTagResult.stdout.trim();
     var version = semver.parse(tag);
 
     if (version && satisfiesVersion(version)) {
