@@ -40,7 +40,7 @@
     "htmlparser2": "^3.7.3",
     "lodash": "~2.4.1",
     "marked": "^0.3.2",
-    "minimatch": "^0.3.0",
+    "minimatch": "^3.0.2",
     "node-html-encoder": "0.0.2",
     "nunjucks": "^1.2.0",
     "q": "~1.0.0",
