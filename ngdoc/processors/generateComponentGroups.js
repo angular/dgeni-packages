@@ -36,7 +36,9 @@ module.exports = function generateComponentGroupsProcessor(moduleMap) {
             _.forEach(groups, function(group) {
               docs.push(group);
             });
-          });
+          })
+          // execute lazy lodash
+          .value();
       });
     }
   };
