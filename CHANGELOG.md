@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.1 1 July 2016
+
+* fix(typescript/readTypeScriptModules): `getReturnType` should cope with computed initializers	823d3f9e
+* fix(ngdoc/macros): use `type.name` to display the directive parameter types	18193fee
+
+
 ## v0.13.0 12 May 2016
 
 * fix(jsdoc/access): refactor access tags and transforms to allow more configuration	70cd0bea
