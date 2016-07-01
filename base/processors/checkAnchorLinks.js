@@ -78,21 +78,19 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
 
           // Filter out links that should be ignored
           .filter(function(href) {
-            return _.all(ignoredLinks, function(rule) {
+            return _.every(ignoredLinks, function(rule) {
               return !rule.test(href);
             });
           })
 
           .forEach(function(link) {
             var normalizedLink = path.join(webRoot, resolveUrl(linkInfo.path, link, base));
-            if ( !_.any(pathVariants, function(pathVariant) {
+            if ( !_.some(pathVariants, function(pathVariant) {
               return allValidReferences[decodeURIComponent(normalizedLink + pathVariant)];
             }) ) {
               unmatchedLinks.push(link);
             }
-          })
-          // execute lazy lodash
-          .value();
+          });
 
         if ( unmatchedLinks.length ) {
           unmatchedLinkCount += unmatchedLinks.length;
