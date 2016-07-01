@@ -57,6 +57,7 @@ var _ = require('lodash');
 
 
 var changers = [
+  'no',
   'lower',
   'pascal',
   'upper',
