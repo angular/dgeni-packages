@@ -90,7 +90,9 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
             }) ) {
               unmatchedLinks.push(link);
             }
-          });
+          })
+          // execute lazy lodash
+          .value();
 
         if ( unmatchedLinks.length ) {
           unmatchedLinkCount += unmatchedLinks.length;

@@ -17,7 +17,7 @@ module.exports = function jsdocFileReader(log, jsParser) {
       } catch(ex) {
        ex.file = fileInfo.filePath;
         throw new Error(
-          _.template('JavaScript error in file "${file}"" [line ${lineNumber}, column ${column}]: "${description}"', ex));
+          _.template('JavaScript error in file "${file}"" [line ${lineNumber}, column ${column}]: "${description}"')(ex));
       }
 
       return [{

@@ -39,7 +39,7 @@ module.exports = function templateFinder(log, createDocMessage) {
 
         // Here we use the lodash micro templating.
         // The document will be available to the micro template as a `doc` variable
-        return _.template(pattern, null, { variable: 'doc' });
+        return _.template(pattern, { variable: 'doc' });
       });
 
       /**
