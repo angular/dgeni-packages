@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.14.0 4 July 2016
+
+Major update of dependencies to latest.
+
+* chore(package.json): update lodash to 4.13.1	f082551
+* chore(package.json): update lodash to 3.x	a37d110
+* chore(package.json): update q-io to 1.13.2	79819fa
+* chore(package.json): update q to 1.4.1	9bb7490
+* chore(package.json): update semver to 5.2.0	5bfdbba
+* chore(package.json): update shelljs to 0.7.0	5480c55
+* chore(package.json): removed unused packages	1546b8e
+* chore(package.json): update glob to 7.0.5	5208f8a
+* chore(package.json): update change-case to 3.0.0	7fcc9c7
+* chore(package.json): update minimatch to 3.0.2	8f57d2c
+
+
+### BREAKING CHANGES
+
+The `nunjucks` package rendering filter `sentenceCase` now capitalizes
+the first letter of the sentence. If you relied on the previous behaviour
+then you should use the `noCase` filter instead.
+
+
 ## v0.13.1 1 July 2016
 
 * fix(typescript/readTypeScriptModules): `getReturnType` should cope with computed initializers	823d3f9e
