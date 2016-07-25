@@ -129,19 +129,33 @@ dans le fichier source.
 
 Le package `jsdoc` contient des définitions pour un certain nombre de balise standard de jsdoc : `name`,
 `memberof`, `param`, `property`, `returns`, `module`, `description`, `usage`,
-`animations`, `constructor`, `class`, `classdesc`, `global`, `namespace`, `method`, `type` et
-`kind`.
+`animations`, `constructor`, `class`, `classdesc`, `global`, `namespace`, `method`, `type`,
+`kind`, `access`, `public`, `private` et `protected`.
 
 ### Services (Transformations de balise)
 
 Ce package fournit un certain nombre de services **Transform** qui sont utilisés dans les **définitions de balise** pour transformer
 la valeur de la balise depuis le string du commentaire en quelque chose de plus significatif dans le doc.
 
+* `extractAccessTransform` - extrait un niveau d'accès (par exemple public, protected, private) depuis les tags
+  Vous pouvez configurer cette transformation pour enregistrer les tags d'accès et définir la propriété où l'information de l'accès sera écrit.
+  * `extractAccessTransform.allowedTags.set('tagName', [propertValue])` - enregistre un tag qui peut agir
+    comme un alias pour définir un niveau d'accès. PropertyValue est facultatif et s'il n'est pas undefined, il retournera cette
+    valeur de la transformation qui sera écrite dans la propriété. (par défaut à `public:undefined`,
+    `private:undefined`, `protected:undefined`)
+  * `extractAccessTransformImpl.allowedDocTypes.set('docType')` - enregistrer un docType qui peut contenir des tags
+    de type d'accès (par défaut à "property" et "method")
+  * `extractAccessTransformImpl.accessProperty` - spécifie la propriété dans laquelle il faut écrire la valeur de l’accès
+    (par défaut à "access")
+  * `extractAccessTransformImpl.accessTagName` - spécifie le nom du tag qui peut contenir des valeurs d'accès
+    (par défaut à "access")
 * `extractNameTransform` - extrait un nom à partir d'une balise
 * `extractTypeTransform` - extrait un type à partir d'une balise
 * `trimWhitespaceTransform` - enlève les espaces avant et après la valeur de la balise
 * `unknownTagTransform` - ajouter une erreur à la balise si elle est inconnue
-* `wholeTagTransform` -  Utilise la balise comme valeur plutôt que d'utiliser une propriété de la balise
+* `wholeTagTransform` -  utilise la balise comme valeur plutôt que d'utiliser une propriété de la balise
+* `codeNameService` - service d'aide pour `codeNameProcessor`, enregistre les comparateurs de nom de code et effectue
+ les correspondances avec l'aborescence AST
 
 ### Templates
 
@@ -152,6 +166,38 @@ package `nunjucks` pour faire cela).**
 
 Ce package fournit une implémentation minimale des balises du projet JSDoc. Elles extraient le nom et
 le type depuis la description de la balise trouvée, mais elles n'implémentent pas la totalité des fonctionnalités des balises JSDoc.
+
+### Comparateurs de nom de code
+Le comparateur effectue une recherche pour un nom de code approprié pour le point de code jsdoc donné (nœud de l’AST).
+`codeNameService` fait correspondre le nom du nœud de l'AST avec le nom du comparateur et si un comparateur est trouvé, il l'exécute.
+
+Le nom du comparateur est constitué des sous chaines de `<AstNodeName>` et `NodeMatcher`, par exemple `FunctionExpressionNodeMatcher`,
+ensuite, ce dernier est enlevé et le comparateur est composé de la première partie, par exemple `FunctionExpression`.
+
+Le comparateur devrait accepter un seul argument - un nœud et il retourne soit une chaine avec un nom ou la valeur littérale `null`.
+
+Les comparateurs :
+* `ArrayExpression`
+* `ArrowFunctionExpression`
+* `AssignmentExpression`
+* `CallExpression`
+* `ClassDeclaration`
+* `ExportDefaultDeclaration`
+* `ExpressionStatement`
+* `FunctionDeclaration`
+* `FunctionExpression`
+* `Identifier`
+* `Literal`
+* `MemberExpression`
+* `MethodDefinition`
+* `NewExpression`
+* `ObjectExpression`
+* `Program`
+* `Property`
+* `ReturnStatement`
+* `ThrowStatement`
+* `VariableDeclaration`
+* `VariableDeclarator`
 
 ## Le package `ngdoc`
 
@@ -203,7 +249,6 @@ des ancres HTML
 * `getLinkInfo()` - Récupère les informations du lien depuis un document qui correspond à l'url donnée
 * `gettypeClass()` - Récupère un string de classe CSS pour un string de type donné
 * `moduleMap` - Une collection de modules correspondant à l'id du module
-
 
 ### Templates
 
