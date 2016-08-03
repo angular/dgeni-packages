@@ -5,7 +5,7 @@
  * @return {Object} An object containing the github owner and repository name
  */
 module.exports = function gitRepoInfo(packageInfo) {
-  var GITURL_REGEX = /^[git\+h|h]+ttps:\/\/github.com\/([^\/]+)\/(.+).git$/;
+  var GITURL_REGEX = /^(?:git\+https|https?):\/\/[^/]+\/([^/]+)\/(.+).git$/;
   var match = GITURL_REGEX.exec(packageInfo.repository.url);
   return {
     owner: match[1],
