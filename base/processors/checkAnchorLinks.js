@@ -10,7 +10,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
   return {
     ignoredLinks: [/^http(?:s)?:\/\//, /^mailto:/, /^chrome:/],
     pathVariants: ['', '/', '.html', '/index.html'],
-    checkDoc: function(doc) { return doc.path && path.extname(doc.outputPath) === '.html'; },
+    checkDoc: function(doc) { return doc.path && doc.outputPath && path.extname(doc.outputPath) === '.html'; },
     base: null,
     webRoot: '/',
     $validate: {
