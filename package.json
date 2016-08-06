@@ -42,7 +42,7 @@
     "marked": "^0.3.2",
     "minimatch": "^3.0.2",
     "node-html-encoder": "0.0.2",
-    "nunjucks": "^1.2.0",
+    "nunjucks": "^2.4.2",
     "q": "~1.4.1",
     "q-io": "~1.13.2",
     "semver": "^5.2.0",
