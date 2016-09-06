@@ -1,5 +1,37 @@
 # Changelog
 
+## v0.15.0 6 September 2016
+
+* fix(git): allow for git URLs that start with `git+https:`	c27a324d
+* doc(readme_fr_FR) : update readme in french	 da7f6b3c
+* fix(ngdocs): use `import` syntax for macros		9a69a096
+* fix(nunjucks): explicitly set autoescaping to off		54e20018
+* fix(nunjucks): warnings for upgraded API, add error check		e339b7d8
+* chore(package.json) update nunjucks to 2.4.2	01108e4e
+
+### BREAKING CHANGES
+
+The update to `nunjucks` 2.4.2 has changed how macros are used. Now you must import them rather than
+just including them in a template. See http://mozilla.github.io/nunjucks/templating.html#import for
+more detail on the syntax.
+
+Before:
+
+```
+{% include "lib/macros.html" -%}
+{$ functionSyntax(doc) $}
+```
+
+Now:
+
+```
+{% import "lib/macros.html" as lib -%}
+{$ lib.functionSyntax(doc) $}
+```
+
+The templates provided by this project (in particular those in the `ngdocs` package) have been updated
+but if your project uses macros in its own templates then these will need updating too.
+
 ## v0.14.0 4 July 2016
 
 Major update of dependencies to latest.
