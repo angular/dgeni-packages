@@ -1,3 +1,4 @@
+{% import "lib/macros.html" as lib -%}
 {%- if doc.events %}
 <h2>Events</h2>
 <ul class="events">
@@ -22,7 +23,7 @@
     {%- if event.params %}
     <section class="api-section">
       <h3>Parameters</h3>
-      {$ paramTable(event.params) $}
+      {$ lib.paramTable(event.params) $}
     </section>
     {%- endif -%}
   </li>
