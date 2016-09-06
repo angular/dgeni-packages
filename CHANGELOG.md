@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.15.0 6 September 2016
+## v0.15.1 6 September 2016
 
 * fix(git): allow for git URLs that start with `git+https:`	c27a324d
 * doc(readme_fr_FR) : update readme in french	 da7f6b3c
