@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.15.2 9 September 2016
+
+* feat(typescript/readTypeScriptModules): hide private Typescript members  8a1277de
+
+
 ## v0.15.1 6 September 2016
 
 * fix(git): allow for git URLs that start with `git+https:`	c27a324d
