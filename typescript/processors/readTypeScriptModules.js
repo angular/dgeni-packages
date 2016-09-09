@@ -4,7 +4,7 @@ var _ = require('lodash');
 var ts = require('typescript');
 
 module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, ignoreTypeScriptNamespaces,
-                                                getExportDocType, getContent, createDocMessage, log) {
+                                                getExportDocType, getExportAccessibility, getContent, createDocMessage, log) {
 
   return {
     $runAfter: ['files-read'],
@@ -93,7 +93,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
               if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
                 exportDoc.constructorDoc = memberDoc;
                 docs.push(memberDoc);
-              } else if (!hidePrivateMembers || memberSymbol.name.charAt(0) !== '_') {
+              } else if (!hidePrivateMembers || (memberSymbol.name.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
                 docs.push(memberDoc);
                 exportDoc.members.push(memberDoc);
               } else if (memberSymbol.name === '__call' && memberSymbol.flags & ts.SymbolFlags.Signature) {
@@ -206,6 +206,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
 
     var exportDoc = {
       docType: getExportDocType(exportSymbol),
+      accessibility: getExportAccessibility(exportSymbol),
       exportSymbol: exportSymbol,
       name: name,
       id: moduleDoc.id + '/' + name,
@@ -251,6 +252,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       docType: 'member',
       classDoc: classDoc,
       name: memberSymbol.name,
+      accessibility: getExportAccessibility(memberSymbol),
       decorators: getDecorators(memberSymbol),
       content: getContent(memberSymbol),
       fileInfo: getFileInfo(memberSymbol, basePath),

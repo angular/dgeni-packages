@@ -32,6 +32,14 @@ describe('readTypeScriptModules', function() {
       expect(exportedDoc.name).toEqual('AbstractClass');
     });
 
+    it('should hide members marked as private in TypeScript', function() {
+      processor.sourceFiles = [ 'privateMembers.ts' ];
+      var docs = [];
+      processor.$process(docs);
+
+      expect(docs.every(function(doc) { return doc.name !== 'privateProperty'; })).toBe(true);
+    });
+
   });
 
 
@@ -180,19 +188,19 @@ describe('readTypeScriptModules', function() {
       expect(moduleDoc.name).toEqual('privateModule');
     });
   });
-  
+
   describe('getReturnType', function () {
     it('should not throw if "declaration.initializer.expression.text" is undefined', function () {
-      processor.sourceFiles = ['getReturnType.ts'];      
+      processor.sourceFiles = ['getReturnType.ts'];
       var docs = [];
       expect(function () { processor.$process(docs); }).not.toThrow();
     });
 
     it('should try get the type from the typeChecker if possible', function () {
-      processor.sourceFiles = ['getReturnType.ts'];      
+      processor.sourceFiles = ['getReturnType.ts'];
       var docs = [];
       processor.$process(docs);
-      
+
       var overriddenSomePropDoc = _.last(docs);
       expect(overriddenSomePropDoc.returnType).toEqual('any');
     });

@@ -10,6 +10,7 @@ module.exports = new Package('typescript', [require('../base')])
 .factory(require('./services/tsParser/createCompilerHost'))
 .factory(require('./services/tsParser/getFileInfo'))
 .factory(require('./services/tsParser/getExportDocType'))
+.factory(require('./services/tsParser/getExportAccessibility'))
 .factory(require('./services/tsParser/getContent'))
 
 .factory(require('./services/convertPrivateClassesToInterfaces'))
