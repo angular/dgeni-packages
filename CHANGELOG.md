@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.16.0 13 September 2016
+
+* fix(readTypeScriptModules): don't concatenate multiple declarations		fb22bac5
+
+### BREAKING CHANGES
+
+Previously, if there were multiple declarations for an exported symbol,
+then the docs for those declarations were simply joined together with
+newlines.
+
+Now only the first declaration (or the valueDeclaration if there is one)
+is used in an export doc.
+
+If you needed the content for the other declarations then you can still
+access them via a call like `getContent(doc.additionalDeclarations[i])`.
+
 ## v0.15.2 9 September 2016
 
 * feat(typescript/readTypeScriptModules): hide private Typescript members  8a1277de
