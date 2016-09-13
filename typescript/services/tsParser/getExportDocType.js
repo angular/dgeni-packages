@@ -41,8 +41,7 @@ module.exports = function getExportDocType(log) {
   };
 
   function getBlockScopedVariableDocType(symbol) {
-
-    var node = symbol.valueDeclaration;
+    var node = symbol.valueDeclaration || symbol.declarations[0];
     while(node) {
       if ( node.flags & 0x2000 /* const */) {
         return 'const';

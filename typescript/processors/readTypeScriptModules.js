@@ -153,10 +153,10 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       id: id,
       aliases: [id, name],
       moduleTree: moduleSymbol,
-      content: getContent(moduleSymbol),
+      content: getContent(moduleSymbol.valueDeclaration),
       exports: [],
       fileInfo: getFileInfo(moduleSymbol, basePath),
-      location: getLocation(moduleSymbol)
+      location: getLocation(moduleSymbol.valueDeclaration)
     };
     return moduleDoc;
   }
@@ -166,36 +166,37 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     var heritageString = '';
     var typeDefinition = '';
 
-    exportSymbol.declarations.forEach(function(decl) {
-      var sourceFile = ts.getSourceFileOfNode(decl);
+    var declaration = exportSymbol.valueDeclaration || exportSymbol.declarations[0];
+    var additionalDeclarations = exportSymbol.declarations.filter(function(d) { return declaration !== d; });
 
-      if (decl.typeParameters) {
-        typeParamString = '<' + getText(sourceFile, decl.typeParameters) + '>';
-      }
+    var sourceFile = ts.getSourceFileOfNode(declaration);
 
-      if (decl.symbol.flags & ts.SymbolFlags.TypeAlias) {
-        typeDefinition = getText(sourceFile, decl.type);
-      }
+    if (declaration.typeParameters) {
+      typeParamString = '<' + getText(sourceFile, declaration.typeParameters) + '>';
+    }
 
-      if (decl.heritageClauses) {
-        decl.heritageClauses.forEach(function(heritage) {
+    if (declaration.symbol.flags & ts.SymbolFlags.TypeAlias) {
+      typeDefinition = getText(sourceFile, declaration.type);
+    }
 
-          if (heritage.token == ts.SyntaxKind.ExtendsKeyword) {
-            heritageString += " extends";
-            heritage.types.forEach(function(typ, idx) {
-              heritageString += (idx > 0 ? ',' : '') + typ.getFullText();
-            });
-          }
+    if (declaration.heritageClauses) {
+      declaration.heritageClauses.forEach(function(heritage) {
 
-          if (heritage.token == ts.SyntaxKind.ImplementsKeyword) {
-            heritageString += " implements";
-            heritage.types.forEach(function(typ, idx) {
-              heritageString += (idx > 0 ? ', ' : '') + typ.getFullText();
-            });
-          }
-        });
-      }
-    });
+        if (heritage.token == ts.SyntaxKind.ExtendsKeyword) {
+          heritageString += " extends";
+          heritage.types.forEach(function(typ, idx) {
+            heritageString += (idx > 0 ? ',' : '') + typ.getFullText();
+          });
+        }
+
+        if (heritage.token == ts.SyntaxKind.ImplementsKeyword) {
+          heritageString += " implements";
+          heritage.types.forEach(function(typ, idx) {
+            heritageString += (idx > 0 ? ', ' : '') + typ.getFullText();
+          });
+        }
+      });
+    }
 
     //Make sure duplicate aliases aren't created, so "Ambiguous link" warnings are prevented
     var aliasNames = [name, moduleDoc.id + '/' + name];
@@ -206,35 +207,36 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
 
     var exportDoc = {
       docType: getExportDocType(exportSymbol),
-      accessibility: getExportAccessibility(exportSymbol),
+      accessibility: getExportAccessibility(declaration),
       exportSymbol: exportSymbol,
       name: name,
       id: moduleDoc.id + '/' + name,
       typeParams: typeParamString,
       heritage: heritageString,
-      decorators: getDecorators(exportSymbol),
+      decorators: getDecorators(declaration),
       aliases: aliasNames,
       moduleDoc: moduleDoc,
-      content: getContent(exportSymbol),
+      content: getContent(declaration),
       fileInfo: getFileInfo(exportSymbol, basePath),
-      location: getLocation(exportSymbol)
+      location: getLocation(declaration),
+      additionalDeclarations: additionalDeclarations
     };
 
     if (exportDoc.docType === 'var' || exportDoc.docType === 'const' || exportDoc.docType === 'let') {
-      exportDoc.symbolTypeName = exportSymbol.valueDeclaration.type &&
-                                 exportSymbol.valueDeclaration.type.typeName &&
-                                 exportSymbol.valueDeclaration.type.typeName.text;
+      exportDoc.symbolTypeName = declaration.type &&
+                                 declaration.type.typeName &&
+                                 declaration.type.typeName.text;
     }
 
     if (exportDoc.docType === 'type-alias') {
-      exportDoc.returnType = getReturnType(typeChecker, exportSymbol);
+      exportDoc.returnType = getReturnType(typeChecker, declaration);
     }
 
     if(exportSymbol.flags & ts.SymbolFlags.Function) {
-      exportDoc.parameters = getParameters(typeChecker, exportSymbol);
+      exportDoc.parameters = getParameters(typeChecker, declaration);
     }
     if(exportSymbol.flags & ts.SymbolFlags.Value) {
-      exportDoc.returnType = getReturnType(typeChecker, exportSymbol);
+      exportDoc.returnType = getReturnType(typeChecker, declaration);
     }
     if (exportSymbol.flags & ts.SymbolFlags.TypeAlias) {
       exportDoc.typeDefinition = typeDefinition;
@@ -248,22 +250,23 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
   }
 
   function createMemberDoc(memberSymbol, classDoc, basePath, typeChecker) {
+    var declaration = memberSymbol.valueDeclaration || memberSymbol.declarations[0];
     var memberDoc = {
       docType: 'member',
       classDoc: classDoc,
       name: memberSymbol.name,
-      accessibility: getExportAccessibility(memberSymbol),
-      decorators: getDecorators(memberSymbol),
-      content: getContent(memberSymbol),
+      accessibility: getExportAccessibility(declaration),
+      decorators: getDecorators(declaration),
+      content: getContent(declaration),
       fileInfo: getFileInfo(memberSymbol, basePath),
-      location: getLocation(memberSymbol)
+      location: getLocation(declaration)
     };
 
     memberDoc.typeParameters = getTypeParameters(typeChecker, memberSymbol);
 
     if(memberSymbol.flags & (ts.SymbolFlags.Signature) ) {
-      memberDoc.parameters = getParameters(typeChecker, memberSymbol);
-      memberDoc.returnType = getReturnType(typeChecker, memberSymbol);
+      memberDoc.parameters = getParameters(typeChecker, declaration);
+      memberDoc.returnType = getReturnType(typeChecker, declaration);
       switch(memberDoc.name) {
         case '__call':
           memberDoc.name = '';
@@ -278,16 +281,16 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       // NOTE: we use the property name `parameters` here so we don't conflict
       // with the `params` property that will be updated by dgeni reading the
       // `@param` tags from the docs
-      memberDoc.parameters = getParameters(typeChecker, memberSymbol);
+      memberDoc.parameters = getParameters(typeChecker, declaration);
     }
 
     if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
-      memberDoc.parameters = getParameters(typeChecker, memberSymbol);
+      memberDoc.parameters = getParameters(typeChecker, declaration);
       memberDoc.name = 'constructor';
     }
 
     if(memberSymbol.flags & ts.SymbolFlags.Value) {
-      memberDoc.returnType = getReturnType(typeChecker, memberSymbol);
+      memberDoc.returnType = getReturnType(typeChecker, declaration);
     }
 
     if(memberSymbol.flags & ts.SymbolFlags.Optional) {
@@ -298,9 +301,8 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
   }
 
 
-  function getDecorators(symbol) {
+  function getDecorators(declaration) {
 
-    var declaration = symbol.valueDeclaration || symbol.declarations[0];
     var sourceFile = ts.getSourceFileOfNode(declaration);
 
     var decorators = declaration.decorators && declaration.decorators.map(function(decorator) {
@@ -336,12 +338,11 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     return text;
   }
 
-  function getParameters(typeChecker, symbol) {
-    var declaration = symbol.valueDeclaration || symbol.declarations[0];
+  function getParameters(typeChecker, declaration) {
     var sourceFile = ts.getSourceFileOfNode(declaration);
     if (!declaration.parameters) {
-      var location = getLocation(symbol);
-      throw new Error('missing declaration parameters for "' + symbol.name +
+      var location = getLocation(declaration);
+      throw new Error('missing declaration parameters for "' + declaration.symbol.name +
         '" in ' + sourceFile.fileName +
         ' at line ' + location.start.line);
     }
@@ -376,8 +377,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     return typeParams;
   }
 
-  function getReturnType(typeChecker, symbol) {
-    var declaration = symbol.valueDeclaration || symbol.declarations[0];
+  function getReturnType(typeChecker, declaration) {
     var sourceFile = ts.getSourceFileOfNode(declaration);
     if (declaration.type) {
       return getType(sourceFile, declaration.type).trim();
@@ -386,7 +386,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       // so we can deduce the type of from the initializer (mostly).
       if (declaration.initializer.expression) {
         var initializerExpressionText = declaration.initializer.expression.text;
-        var intrinsicNameFromTypeChecker = typeChecker.getTypeOfSymbolAtLocation(symbol, sourceFile).intrinsicName;
+        var intrinsicNameFromTypeChecker = typeChecker.getTypeOfSymbolAtLocation(declaration.symbol, sourceFile).intrinsicName;
         // we might not have an expression text.
         if (initializerExpressionText) {
           return initializerExpressionText.replace(/\s+/g, ' ').trim();
@@ -434,12 +434,11 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     return text;
   }
 
-  function getLocation(symbol) {
-    var node = symbol.valueDeclaration || symbol.declarations[0];
-    var sourceFile = ts.getSourceFileOfNode(node);
+  function getLocation(declaration) {
+    var sourceFile = ts.getSourceFileOfNode(declaration);
     var location = {
-      start: ts.getLineAndCharacterOfPosition(sourceFile, node.pos),
-      end: ts.getLineAndCharacterOfPosition(sourceFile, node.end)
+      start: ts.getLineAndCharacterOfPosition(sourceFile, declaration.pos),
+      end: ts.getLineAndCharacterOfPosition(sourceFile, declaration.end)
     };
     return location;
   }

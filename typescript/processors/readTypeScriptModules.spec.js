@@ -40,6 +40,21 @@ describe('readTypeScriptModules', function() {
       expect(docs.every(function(doc) { return doc.name !== 'privateProperty'; })).toBe(true);
     });
 
+
+    it('should create add additional declarations of a symbol onto the exportDoc', function() {
+      processor.sourceFiles = [ 'multipleDeclarations.ts' ];
+      var docs = [];
+      processor.$process(docs);
+
+      var someThingDoc = docs[3];
+      expect(someThingDoc.name).toEqual('SomeThing');
+      expect(someThingDoc.docType).toEqual('interface');
+      expect(someThingDoc.content).toEqual('constant\n');
+      expect(someThingDoc.additionalDeclarations).toEqual([
+        someThingDoc.exportSymbol.declarations[0]
+      ]);
+    });
+
   });
 
 
