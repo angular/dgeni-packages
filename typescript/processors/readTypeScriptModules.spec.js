@@ -32,6 +32,30 @@ describe('readTypeScriptModules', function() {
       expect(exportedDoc.name).toEqual('AbstractClass');
     });
 
+    it('should exclude private exports', function() {
+      processor.sourceFiles = [ 'privateExports.ts' ];
+      var docs = [];
+      processor.$process(docs);
+
+      expect(docs.length).toBe(2);
+      expect(docs[1].name).toEqual('x');
+    });
+
+    it('should include private exports if flag hidePrivateMembers is false', function() {
+      processor.sourceFiles = [ 'privateExports.ts' ];
+      processor.hidePrivateMembers = false;
+      var docs = [];
+      processor.$process(docs);
+
+      expect(docs.length).toBe(4);
+      expect(docs[1].name).toEqual('x');
+      expect(docs[1].shouldHideExport).toBe(false);
+      expect(docs[2].name).toEqual('y');
+      expect(docs[2].shouldHideExport).toBe(true);
+      expect(docs[3].name).toEqual('z');
+      expect(docs[3].shouldHideExport).toBe(true);
+    });
+
     it('should hide members marked as private in TypeScript', function() {
       processor.sourceFiles = [ 'privateMembers.ts' ];
       var docs = [];
