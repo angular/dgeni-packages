@@ -1,4 +1,5 @@
-var encoder = new require('node-html-encoder').Encoder();
+var encoder = new (require('node-html-encoder').Encoder)();
+
 module.exports = function encodeCodeBlock() {
   return function(str, inline, lang) {
 
