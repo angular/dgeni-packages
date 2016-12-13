@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.16.1  13 December 2016
+
+* fix(base/services): split node-html-encoder require and instantiation over two lines   96cb8139e8876150b5a6ce08f2c5eef7fbd791f6
+
+
 ## v0.16.0 13 September 2016
 
 * fix(readTypeScriptModules): don't concatenate multiple declarations		fb22bac5
