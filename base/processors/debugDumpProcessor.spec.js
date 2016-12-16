@@ -1,5 +1,4 @@
 var path = require('canonical-path');
-var Q = require('q');
 
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
@@ -8,7 +7,7 @@ var Dgeni = require('dgeni');
 describe("debugDumpProcessor", function() {
   it("should write out the docs to a file", function() {
 
-    var writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Q());
+    var writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Promise.resolve());
     var testPackage = mockPackage().factory('writeFile', function() { return writeFileSpy; });
 
     var dgeni = new Dgeni([testPackage]);

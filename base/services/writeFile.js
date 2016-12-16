@@ -1,5 +1,6 @@
-var fs = require('q-io/fs');
-
+var mkdirp = require('mkdirp-promise');
+var fs = require('fs');
+var path = require('canonical-path');
 /**
  * @dgService writeFile
  * @description
@@ -7,8 +8,13 @@ var fs = require('q-io/fs');
  */
 module.exports = function writeFile() {
   return function(file, content) {
-    return fs.makeTree(fs.directory(file)).then(function() {
-      return fs.write(file, content, 'wb');
+    return mkdirp(path.dirname(file)).then(function() {
+      return new Promise(function(resolve, reject) {
+        fs.writeFile(file, content, function(err) {
+          if (err) { reject(err); }
+          resolve();
+        });
+      });
     });
   };
 };

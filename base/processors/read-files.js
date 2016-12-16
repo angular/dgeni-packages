@@ -1,6 +1,5 @@
 var path = require('canonical-path');
-var Q = require('q');
-var qfs = require('q-io/fs');
+var fs = require('fs');
 var _ = require('lodash');
 var glob = require('glob');
 var Minimatch = require("minimatch").Minimatch;
@@ -61,7 +60,7 @@ module.exports = function readFilesProcessor(log) {
           files.forEach(function(file) {
 
             // Load up each file and extract documents using the appropriate fileReader
-            var docsPromise = qfs.read(file).then(function(content) {
+            var docsPromise = readFile(file).then(function(content) {
 
               // Choose a file reader for this file
               var fileReader = sourceInfo.fileReader ? fileReaderMap.get(sourceInfo.fileReader) : matchFileReader(fileReaders, file);
@@ -83,11 +82,11 @@ module.exports = function readFilesProcessor(log) {
             docsPromises.push(docsPromise);
 
           });
-          return Q.all(docsPromises).then(_.flatten);
+          return Promise.all(docsPromises).then(_.flatten);
         });
 
       });
-      return Q.all(sourcePromises).then(_.flatten);
+      return Promise.all(sourcePromises).then(_.flatten);
     }
   };
 };
@@ -124,8 +123,7 @@ function getFileReaderMap(fileReaders) {
 
 
 function matchFileReader(fileReaders, file) {
-  // We can't use fileReaders.find here because q-io overrides the es6-shim find() function
-  var found = _.find(fileReaders, function(fileReader) {
+  var found = fileReaders.find(function(fileReader) {
     // If no defaultPattern is defined then match everything
     return !fileReader.defaultPattern || fileReader.defaultPattern.test(file);
   });
@@ -178,10 +176,10 @@ function getSourceFiles(sourceInfo) {
   // Get a list of files to include
   var filesPromises = _.map(sourceInfo.include, function(include) {
     // Each call to glob will produce a array of file paths
-    return Q.nfcall(glob, include);
+    return matchFiles(include);
   });
 
-  return Q.all(filesPromises).then(function(filesCollections) {
+  return Promise.all(filesPromises).then(function(filesCollections) {
 
     // Once we have all the file path arrays, flatten them into a single array
     return _.flatten(filesCollections);
@@ -194,17 +192,46 @@ function getSourceFiles(sourceInfo) {
       if ( _.some(excludeMatchers, function(excludeMatcher) { return excludeMatcher.match(file); }) ) {
         // Return a promise for `null` if the path is excluded
         // Doing this first - it is synchronous - saves us even making the isFile call if not needed
-        return Q(null);
+        return Promise.resolve(null);
       } else {
         // Return a promise for the file if path is a file, otherwise return a promise for `null`
-        return qfs.isFile(file).then(function(isFile) { return isFile ? file : null; });
+        return isFile(file).then(function(isFile) { return isFile ? file : null; });
       }
     });
 
     // Return a promise to a filtered list of files, those that are files and not excluded
     // (i.e. those that are not `null` from the previous block of code)
-    return Q.all(filteredFilePromises).then(function(filteredFiles) {
+    return Promise.all(filteredFilePromises).then(function(filteredFiles) {
       return filteredFiles.filter(function(filteredFile) { return filteredFile; });
     });
+  });
+}
+
+
+function readFile(file) {
+  return new Promise(function(resolve, reject) {
+    fs.readFile(file, 'utf-8', function(err, data) {
+      if (err) { reject(err); }
+      resolve(data);
+    });
+  });
+}
+
+function isFile(file) {
+  return new Promise(function(resolve, reject) {
+    fs.stat(file, function(err, stat) {
+      if (err) { reject(err); }
+      resolve(stat.isFile());
+    });
+  });
+}
+
+
+function matchFiles(pattern) {
+  return new Promise(function(resolve, reject) {
+    glob(pattern, function(err, data) {
+      if (err) { reject(err); }
+      resolve(data);
+    })
   });
 }

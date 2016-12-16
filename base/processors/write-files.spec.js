@@ -1,5 +1,4 @@
 var path = require('canonical-path');
-var Q = require('q');
 
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
@@ -9,7 +8,7 @@ describe("writeFilesProcessor", function() {
 
 
   beforeEach(function() {
-    writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Q());
+    writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Promise.resolve());
 
     var testPackage = mockPackage().factory('writeFile', function() { return writeFileSpy; });
 

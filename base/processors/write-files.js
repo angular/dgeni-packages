@@ -1,7 +1,5 @@
 var _ = require('lodash');
 var path = require('canonical-path');
-var fs = require('q-io/fs');
-var Q = require('q');
 
 /**
  * @dgProcessor writeFilesProcessor
@@ -19,7 +17,7 @@ module.exports = function writeFilesProcessor(log, readFilesProcessor, writeFile
     $runBefore: ['files-written'],
     $process: function(docs) {
       var outputFolder = this.outputFolder;
-      return Q.all(_.map(docs, function(doc) {
+      return Promise.all(_.map(docs, function(doc) {
 
         if ( !doc.outputPath ) {
           log.debug('Document "' + doc.id + ', ' + doc.docType + '" has no outputPath.');
