@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.16.2  16 December 2016
+
+*	refactor(*): remove Q and use native Promise 	d782698d
+
+This fix removes the q and q-io dependencies, since q-io was causing Array.find
+to be shimmed incorrectly.
+
 # 0.16.1  13 December 2016
 
 * fix(base/services): split node-html-encoder require and instantiation over two lines   96cb8139e8876150b5a6ce08f2c5eef7fbd791f6
