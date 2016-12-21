@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.16.3  21 December 2016
+
+* chore(package): relax yarn version dependency	0f875b0d
+
 # 0.16.2  16 December 2016
 
 *	refactor(*): remove Q and use native Promise 	d782698d
