@@ -46,6 +46,7 @@
     "lodash": "^4.13.1",
     "marked": "^0.3.2",
     "minimatch": "^3.0.2",
+    "mkdirp": "^0.5.1",
     "mkdirp-promise": "^5.0.0",
     "node-html-encoder": "0.0.2",
     "nunjucks": "^2.4.2",
