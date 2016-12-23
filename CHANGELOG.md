@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.16.4  23 December 2016
+
+* chore(package): add missing mkdirp dependency	0a2c2e9f
+
 # 0.16.3  21 December 2016
 
 * chore(package): relax yarn version dependency	0f875b0d
