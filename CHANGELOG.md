@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.16.5  14 January 2017
+
+* chore(package): relax node version dependency 8ad91e57
+
 # 0.16.4  23 December 2016
 
 * chore(package): add missing mkdirp dependency	0a2c2e9f
