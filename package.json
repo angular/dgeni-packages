@@ -9,7 +9,7 @@
     "changelog": "changez -o changes.md"
   },
   "engines": {
-    "node": "^6.9.1",
+    "node": ">=6.9.1",
     "yarn": ">=0.17.9"
   },
   "repository": {
