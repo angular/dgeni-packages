@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.16.6  13 February 2017
+
+* fix(typescript): support symbols of type ValueModule	ffce6227
+
+
 # 0.16.5  14 January 2017
 
 * chore(package): relax node version dependency 8ad91e57
