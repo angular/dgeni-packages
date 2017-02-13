@@ -83,7 +83,7 @@ module.exports = new Package('ngdoc', [
   });
 
   computeIdsProcessor.idTemplates.push({
-    docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type' ],
+    docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type', 'controller', 'constant'],
     idTemplate: 'module:${module}.${docType}:${name}',
     getAliases: getAliases
   });
@@ -93,7 +93,7 @@ module.exports = new Package('ngdoc', [
 
 .config(function(computePathsProcessor, createDocMessage) {
   computePathsProcessor.pathTemplates.push({
-    docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type' ],
+    docTypes: ['provider', 'service', 'directive', 'input', 'object', 'function', 'filter', 'type', 'controller', 'constant'],
     pathTemplate: '${area}/${module}/${docType}/${name}',
     outputPathTemplate: 'partials/${area}/${module}/${docType}/${name}.html'
   });
