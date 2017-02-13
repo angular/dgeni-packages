@@ -24,7 +24,8 @@ module.exports = new Package('typescript', [require('../base')])
     'const',
     'let',
     'enum',
-    'type-alias'
+    'type-alias',
+    'value-module'
   ];
 })
 

@@ -30,6 +30,9 @@ module.exports = function getExportDocType(log) {
     if(symbol.flags & ts.SymbolFlags.BlockScopedVariable) {
       return getBlockScopedVariableDocType(symbol);
     }
+    if(symbol.flags & ts.SymbolFlags.ValueModule) {
+      return 'value-module';
+    }
 
     log.warn('getExportDocType(): Unknown symbol type', {
       symbolName: symbol.name,
