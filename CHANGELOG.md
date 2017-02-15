@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.16.7 15 February 2017
+
+Upgrades to dgeni 0.4.7 which correctly exports the mock logger for testing.
+
+* fix(typescript): the processors actually rely upon jsdoc pseudo-processors	f5162131
+
 # 0.16.6  13 February 2017
 
 * fix(typescript): support symbols of type ValueModule	ffce6227
