@@ -122,6 +122,17 @@ describe('readTypeScriptModules', function() {
     });
   });
 
+  describe('type aliases', function() {
+    it('should find the correct type when there are multiple declarations', function() {
+      processor.sourceFiles = [ 'type-aliases.ts'];
+      var docs = [];
+      processor.$process(docs);
+      var typeAliasDoc = docs[2];
+      expect(typeAliasDoc.docType).toEqual('type-alias');
+      expect(typeAliasDoc.typeDefinition).toEqual('X<any>');
+    });
+  });
+
 
   describe('ordering of members', function() {
     it('should order class members in order of appearance (by default)', function() {

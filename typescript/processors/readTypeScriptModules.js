@@ -176,7 +176,14 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     }
 
     if (declaration.symbol.flags & ts.SymbolFlags.TypeAlias) {
-      typeDefinition = getText(sourceFile, declaration.type);
+      var type = declaration.type;
+      if (!type) {
+        // this symbol is a type alias but also a value declaration
+        // so we will search the additionalDeclarations for the type that is
+        // being aliased.
+        additionalDeclarations.some(function(decl) { return type = decl.type; });
+      }
+      typeDefinition = getText(sourceFile, type).trim();
     }
 
     if (declaration.heritageClauses) {
