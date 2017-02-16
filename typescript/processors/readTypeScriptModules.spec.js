@@ -41,7 +41,7 @@ describe('readTypeScriptModules', function() {
     });
 
 
-    it('should create add additional declarations of a symbol onto the exportDoc', function() {
+    it('should add additional declarations of a symbol onto the exportDoc', function() {
       processor.sourceFiles = [ 'multipleDeclarations.ts' ];
       var docs = [];
       processor.$process(docs);
