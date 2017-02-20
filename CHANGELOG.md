@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.16.8 20 February 2017
+
+* fix(typescript): correctly extract the type definition from type aliases	573111ea
+
+
 # 0.16.7 15 February 2017
 
 Upgrades to dgeni 0.4.7 which correctly exports the mock logger for testing.
