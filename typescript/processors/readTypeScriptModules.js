@@ -41,6 +41,10 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       var filesPaths = expandSourceFiles(this.sourceFiles, basePath);
       var parseInfo = tsParser.parse(filesPaths, this.basePath);
       var moduleSymbols = parseInfo.moduleSymbols;
+      var typeChecker = parseInfo.typeChecker;
+
+      // Map of pending inheritances that will be assigned to the associated exportDoc.
+      var pendingInheritances = new Map();
 
       // Iterate through each of the modules that were parsed and generate a module doc
       // as well as docs for each module's exports.
@@ -67,7 +71,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
           // TODO: find a way of generating docs for them
           if (!resolvedExport.declarations) return;
 
-          var exportDoc = createExportDoc(exportSymbol.name, resolvedExport, moduleDoc, basePath, parseInfo.typeChecker);
+          var exportDoc = createExportDoc(exportSymbol.name, resolvedExport, moduleDoc, basePath, typeChecker);
           log.debug('>>>> EXPORT: ' + exportDoc.name + ' (' + exportDoc.docType + ') from ' + moduleDoc.id);
 
           // Add this export doc to its module doc
@@ -76,6 +80,18 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
 
           exportDoc.members = [];
           exportDoc.statics = [];
+
+          // In some cases a doc will have other inherited docs that will be create later.
+          // Once those are created, the docs will be pushed to the previously stored doc.
+          if (pendingInheritances.has(resolvedExport)) {
+            pendingInheritances.get(resolvedExport).forEach(function(relatedDoc) {
+              relatedDoc.inheritedDocs.push(exportDoc);
+            });
+            pendingInheritances.delete(resolvedExport);
+          }
+
+          // Resolve all inherited docs and store them inside of the exportDoc object.
+          resolveInheritedDocs(resolvedExport, exportDoc);
 
           // Generate docs for each of the export's members
           if (resolvedExport.flags & ts.SymbolFlags.HasMembers) {
@@ -87,7 +103,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
               }
               log.silly('>>>>>> member: ' + memberName + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
               var memberSymbol = resolvedExport.members[memberName];
-              var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, parseInfo.typeChecker);
+              var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, typeChecker);
 
               // We special case the constructor and sort the other members alphabetically
               if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
@@ -140,9 +156,65 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
           }
         });
       });
+
+      /** Resolves the inherited docs and stores them in the export doc. */
+      function resolveInheritedDocs(exportSymbol, exportDoc) {
+        var inheritedSymbols = resolveInheritedSymbols(exportSymbol, typeChecker);
+        var inheritedDocs = inheritedSymbols.map(function(symbol) {
+          var relatedDoc = docs.find(function(doc) { return doc.exportSymbol === symbol; });
+
+          if (relatedDoc) {
+            return relatedDoc;
+          } else {
+            var pendingDocs = [exportDoc].concat(pendingInheritances.get(symbol) || []);
+            pendingInheritances.set(symbol, pendingDocs);
+          }
+        });
+
+        exportDoc.inheritedDocs = inheritedDocs.filter(function(doc) { return !!doc });
+      }
+
     }
   };
 
+  /**
+   * Resolves all inherited class symbols of the specified symbol.
+   * @param {ts.Symbol} symbol ClassDeclaration symbol with members
+   * @param {ts.TypeChecker} typeChecker TypeScript TypeChecker for symbols
+   * @returns {Symbol[]} List of inherited class symbols.
+   **/
+  function resolveInheritedSymbols(symbol, typeChecker) {
+    var declaration = symbol.valueDeclaration || symbol.declarations[0];
+    var symbols = [];
+
+    if (declaration && declaration.heritageClauses) {
+      symbols = declaration.heritageClauses
+        // Filter for extends heritage clauses.
+        .filter(isExtendsHeritage)
+        // Resolve an array of the inherited symbols from the heritage clause.
+        .map(function (heritage) { return convertHeritageClauseToSymbols(heritage, typeChecker); })
+        // Flatten the arrays of inherited symbols.
+        .reduce(function(symbols, cur) { return symbols.concat(cur); }, []);
+    }
+
+    return symbols;
+  }
+
+  /**
+   * Converts a heritage clause into a list of symbols
+   * @param {ts.HeritageClause} heritage
+   * @param {ts.TypeChecker} typeChecker
+   * @returns {ts.SymbolTable} List of heritage symbols.
+   **/
+  function convertHeritageClauseToSymbols(heritage, typeChecker) {
+    var heritages = heritage.types.map(function(expression) {
+      return typeChecker.getTypeAtLocation(expression).getSymbol();
+    });
+
+    return heritages.reduce(function(inheritances, current) {
+      return inheritances.concat(current);
+    }, []);
+  }
 
   function createModuleDoc(moduleSymbol, basePath) {
     var id = moduleSymbol.name.replace(/^"|"$/g, '');
@@ -189,7 +261,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     if (declaration.heritageClauses) {
       declaration.heritageClauses.forEach(function(heritage) {
 
-        if (heritage.token == ts.SyntaxKind.ExtendsKeyword) {
+        if (isExtendsHeritage(heritage)) {
           heritageString += " extends";
           heritage.types.forEach(function(typ, idx) {
             heritageString += (idx > 0 ? ',' : '') + typ.getFullText();
@@ -450,6 +522,10 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     return location;
   }
 
+  /** Checks if the specified heritage clause is an extends keyword. */
+  function isExtendsHeritage(heritageClause) {
+    return heritageClause.token === ts.SyntaxKind.ExtendsKeyword
+  }
 };
 
 function convertToRegexCollection(items) {

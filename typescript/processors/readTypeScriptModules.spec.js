@@ -57,6 +57,54 @@ describe('readTypeScriptModules', function() {
 
   });
 
+  describe('inherited docs', function() {
+
+    it('should add the list of inherited docs to a class doc', function() {
+      processor.sourceFiles = [ 'inheritedMembers.ts' ];
+      var docs = [];
+
+      processor.$process(docs);
+
+      var childDoc = docs[3];
+      var firstParentDoc = docs[5];
+      var lastParentDoc = docs[1];
+
+      expect(childDoc.inheritedDocs.length).toBe(1);
+      expect(childDoc.inheritedDocs[0]).toBe(firstParentDoc);
+
+      expect(firstParentDoc.inheritedDocs.length).toBe(1);
+      expect(firstParentDoc.inheritedDocs[0]).toBe(lastParentDoc);
+
+      expect(lastParentDoc.inheritedDocs.length).toBe(0);
+    });
+
+    it('should properly include members for each doc', function() {
+      processor.sourceFiles = [ 'inheritedMembers.ts' ];
+      var docs = [];
+
+      processor.$process(docs);
+
+      var childDoc = docs[3];
+      var members = getInheritedMembers(childDoc);
+
+      expect(members.length).toBe(3);
+      expect(members[0].name).toBe('childProp');
+      expect(members[1].name).toBe('firstParentProp');
+      expect(members[2].name).toBe('lastParentProp');
+    });
+
+    /** Returns a list of all inherited members of a doc. */
+    function getInheritedMembers(doc) {
+      var members = doc.members || [];
+
+      doc.inheritedDocs.forEach(function(inheritedDoc) {
+        members = members.concat(getInheritedMembers(inheritedDoc));
+      });
+
+      return members;
+    }
+
+  });
 
   describe('ignoreExportsMatching', function() {
     it('should ignore exports that match items in the `ignoreExportsMatching` property', function() {
