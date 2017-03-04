@@ -27,6 +27,23 @@ describe('linkInheritedDocs', function() {
     linkProcessor.$process(docsArray);
 
     let childDoc = docsArray[3];
+    let firstParentDoc = docsArray[5];
+    let lastParentDoc = docsArray[1];
+
+    expect(childDoc.inheritedDocs).toEqual([firstParentDoc]);
+    expect(firstParentDoc.inheritedDocs).toEqual([lastParentDoc]);
+    expect(lastParentDoc.inheritedDocs).toEqual([]);
+  });
+
+  it('should properly resolve members in inherited docs', () => {
+    let docsArray = [];
+
+    tsProcessor.sourceFiles = ['inheritedMembers.ts'];
+
+    tsProcessor.$process(docsArray);
+    linkProcessor.$process(docsArray);
+
+    let childDoc = docsArray[3];
     let members = getInheritedMembers(childDoc);
 
     expect(members.length).toBe(3);

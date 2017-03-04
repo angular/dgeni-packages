@@ -5,11 +5,9 @@ var ts = require('typescript');
 
 module.exports = function readTypeScriptModules(
   tsParser, modules, getFileInfo, ignoreTypeScriptNamespaces, getExportDocType,
-  getExportAccessibility, getContent, createDocMessage, log, symbolDocsStorage) {
+  getExportAccessibility, getContent, createDocMessage, log, typescriptSymbolMap) {
 
   return {
-    name: 'parse-typescript-modules',
-
     $runAfter: ['files-read'],
     $runBefore: ['parsing-tags'],
 
@@ -81,8 +79,8 @@ module.exports = function readTypeScriptModules(
           exportDoc.members = [];
           exportDoc.statics = [];
 
-          // Store the dgeni doc of the resolved symbol in the symbolDocsStorage map.
-          symbolDocsStorage.set(resolvedExport, exportDoc);
+          // Store the dgeni doc of the resolved symbol in the typescriptSymbolMap.
+          typescriptSymbolMap.set(resolvedExport, exportDoc);
 
           // Resolve all inherited symbols and store them inside of the exportDoc object.
           exportDoc.inheritedSymbols = resolveInheritedSymbols(resolvedExport, typeChecker);

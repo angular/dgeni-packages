@@ -1,9 +1,9 @@
 /**
  * Processor that links the inherited symbols to the associating dgeni doc.
  **/
-module.exports = function linkInheritedDocs(symbolDocsStorage) {
+module.exports = function linkInheritedDocs(typescriptSymbolMap) {
   return {
-    $runAfter: ['parse-typescript-modules'],
+    $runAfter: ['readTypeScriptModules'],
     $process: docs => {
       // Iterate through all docs and link the doc symbols if present.
       docs.filter(doc => doc.inheritedSymbols).forEach(doc => linkDocSymbols(doc))
@@ -12,6 +12,6 @@ module.exports = function linkInheritedDocs(symbolDocsStorage) {
 
   function linkDocSymbols(doc) {
     doc.inheritedDocs = [];
-    doc.inheritedSymbols.forEach(symbol => doc.inheritedDocs.push(symbolDocsStorage.get(symbol)));
+    doc.inheritedSymbols.forEach(symbol => doc.inheritedDocs.push(typescriptSymbolMap.get(symbol)));
   }
 };

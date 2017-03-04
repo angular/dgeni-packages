@@ -14,7 +14,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 .factory(require('./services/tsParser/getContent'))
 
 .factory(require('./services/convertPrivateClassesToInterfaces'))
-.factory(require('./services/symbol-docs-storage'))
+.factory(require('./services/typescript-symbol-map'))
 
 .factory('EXPORT_DOC_TYPES', function() {
   return [
