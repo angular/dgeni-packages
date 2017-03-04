@@ -4,6 +4,7 @@
 module.exports = function linkInheritedDocs(typescriptSymbolMap) {
   return {
     $runAfter: ['readTypeScriptModules'],
+    $runBefore: ['parsing-tags'],
     $process: docs => {
       // Iterate through all docs and link the doc symbols if present.
       docs.filter(doc => doc.inheritedSymbols).forEach(doc => linkDocSymbols(doc))
