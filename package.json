@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.16.8",
+  "version": "0.16.9",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node .",
@@ -96,6 +96,7 @@
     "Topher Fangio <fangiotophia@gmail.com>",
     "Jerry Orta <jerryorta.dev@gmail.com>",
     "Perry Govier <perrygovier@users.noreply.github.com>",
-    "Rod Leviton <rod@rodleviton.com>"
+    "Rod Leviton <rod@rodleviton.com>",
+    "Paul Gschwendtner <paulgschwendtner@gmail.com>"
   ]
 }

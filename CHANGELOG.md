@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.16.9 6 March 2017
+
+* feat(typescript): link `class` docs to inherited class docs	cf8b7444
+
+
 # 0.16.8 20 February 2017
 
 * fix(typescript): correctly extract the type definition from type aliases	573111ea
