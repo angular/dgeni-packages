@@ -78,33 +78,38 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
           exportDoc.statics = [];
 
           // Generate docs for each of the export's members
-          if (resolvedExport.flags & ts.SymbolFlags.HasMembers) {
+          resolvedExport.declarations.forEach(declaration => {
 
-            for(var memberName in resolvedExport.members) {
-              // FIXME(alexeagle): why do generic type params appear in members?
-              if (memberName === 'T') {
-                continue;
-              }
-              log.silly('>>>>>> member: ' + memberName + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
-              var memberSymbol = resolvedExport.members[memberName];
-              var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, parseInfo.typeChecker);
+            if (declaration.members) {
+              declaration.members.forEach(member => {
+                const memberSymbol = member.symbol;
+                if (!memberSymbol) return;
 
-              // We special case the constructor and sort the other members alphabetically
-              if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
-                exportDoc.constructorDoc = memberDoc;
-                docs.push(memberDoc);
-              } else if (!hidePrivateMembers || (memberSymbol.name.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
-                docs.push(memberDoc);
-                exportDoc.members.push(memberDoc);
-              } else if (memberSymbol.name === '__call' && memberSymbol.flags & ts.SymbolFlags.Signature) {
-                docs.push(memberDoc);
-                exportDoc.callMember = memberDoc;
-              } else if (memberSymbol.name === '__new' && memberSymbol.flags & ts.SymbolFlags.Signature) {
-                docs.push(memberDoc);
-                exportDoc.newMember = memberDoc;
-              }
+                const memberName = memberSymbol.name;
+                // FIXME(alexeagle): why do generic type params appear in members?
+                if (memberName === 'T') {
+                  return;
+                }
+                log.silly('>>>>>> member: ' + memberName + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
+                var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, parseInfo.typeChecker);
+
+                // We special case the constructor and sort the other members alphabetically
+                if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
+                  exportDoc.constructorDoc = memberDoc;
+                  docs.push(memberDoc);
+                } else if (!hidePrivateMembers || (memberSymbol.name.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
+                  docs.push(memberDoc);
+                  exportDoc.members.push(memberDoc);
+                } else if (memberSymbol.name === '__call' && memberSymbol.flags & ts.SymbolFlags.Signature) {
+                  docs.push(memberDoc);
+                  exportDoc.callMember = memberDoc;
+                } else if (memberSymbol.name === '__new' && memberSymbol.flags & ts.SymbolFlags.Signature) {
+                  docs.push(memberDoc);
+                  exportDoc.newMember = memberDoc;
+                }
+              });
             }
-          }
+          });
 
           if (exportDoc.docType === 'enum') {
             for(var memberName in resolvedExport.exports) {

@@ -25,10 +25,10 @@ module.exports = function getContent() {
 
     // Get the source file of this declaration
     var sourceFile = ts.getSourceFileOfNode(declaration);
-    var commentRanges = ts.getJsDocComments(declaration, sourceFile);
+    const commentRanges = ts.getJSDocCommentRanges(declaration, sourceFile.text);
 
     if (commentRanges) {
-      commentRanges.forEach(function(commentRange) {
+      commentRanges.forEach(commentRange => {
         content += sourceFile.text
             .substring(commentRange.pos+ '/**'.length, commentRange.end - '*/'.length)
             .replace(LEADING_STAR, '')
