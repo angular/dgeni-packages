@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.16.9",
+  "version": "0.16.10",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "jasmine-node .",

@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.16.10 7 March 2017
+
+* REVERT: feat(typescript): link `class` docs to inherited class docs	cf8b7444
+
 # 0.16.9 6 March 2017
 
 * feat(typescript): link `class` docs to inherited class docs	cf8b7444
