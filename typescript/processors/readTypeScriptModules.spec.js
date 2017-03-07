@@ -57,28 +57,6 @@ describe('readTypeScriptModules', function() {
 
   });
 
-  describe('inherited symbols', function() {
-
-    it('should add the list of inherited symbols to a class doc', function() {
-      processor.sourceFiles = [ 'inheritedMembers.ts' ];
-      var docs = [];
-
-      processor.$process(docs);
-
-      var childDoc = docs[3];
-      var firstParentDoc = docs[5];
-      var lastParentDoc = docs[1];
-
-      expect(childDoc.inheritedSymbols.length).toBe(1);
-      expect(childDoc.inheritedSymbols[0]).toBe(firstParentDoc.exportSymbol);
-
-      expect(firstParentDoc.inheritedSymbols.length).toBe(1);
-      expect(firstParentDoc.inheritedSymbols[0]).toBe(lastParentDoc.exportSymbol);
-
-      expect(lastParentDoc.inheritedSymbols.length).toBe(0);
-    });
-
-  });
 
   describe('ignoreExportsMatching', function() {
     it('should ignore exports that match items in the `ignoreExportsMatching` property', function() {

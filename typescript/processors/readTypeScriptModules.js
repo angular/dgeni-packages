@@ -3,9 +3,8 @@ var path = require('canonical-path');
 var _ = require('lodash');
 var ts = require('typescript');
 
-module.exports = function readTypeScriptModules(
-  tsParser, modules, getFileInfo, ignoreTypeScriptNamespaces, getExportDocType,
-  getExportAccessibility, getContent, createDocMessage, log, typescriptSymbolMap) {
+module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, ignoreTypeScriptNamespaces,
+                                                getExportDocType, getExportAccessibility, getContent, createDocMessage, log) {
 
   return {
     $runAfter: ['files-read'],
@@ -42,7 +41,6 @@ module.exports = function readTypeScriptModules(
       var filesPaths = expandSourceFiles(this.sourceFiles, basePath);
       var parseInfo = tsParser.parse(filesPaths, this.basePath);
       var moduleSymbols = parseInfo.moduleSymbols;
-      var typeChecker = parseInfo.typeChecker;
 
       // Iterate through each of the modules that were parsed and generate a module doc
       // as well as docs for each module's exports.
@@ -69,7 +67,7 @@ module.exports = function readTypeScriptModules(
           // TODO: find a way of generating docs for them
           if (!resolvedExport.declarations) return;
 
-          var exportDoc = createExportDoc(exportSymbol.name, resolvedExport, moduleDoc, basePath, typeChecker);
+          var exportDoc = createExportDoc(exportSymbol.name, resolvedExport, moduleDoc, basePath, parseInfo.typeChecker);
           log.debug('>>>> EXPORT: ' + exportDoc.name + ' (' + exportDoc.docType + ') from ' + moduleDoc.id);
 
           // Add this export doc to its module doc
@@ -78,12 +76,6 @@ module.exports = function readTypeScriptModules(
 
           exportDoc.members = [];
           exportDoc.statics = [];
-
-          // Store the dgeni doc of the resolved symbol in the typescriptSymbolMap.
-          typescriptSymbolMap.set(resolvedExport, exportDoc);
-
-          // Resolve all inherited symbols and store them inside of the exportDoc object.
-          exportDoc.inheritedSymbols = resolveInheritedSymbols(resolvedExport, typeChecker);
 
           // Generate docs for each of the export's members
           if (resolvedExport.flags & ts.SymbolFlags.HasMembers) {
@@ -95,7 +87,7 @@ module.exports = function readTypeScriptModules(
               }
               log.silly('>>>>>> member: ' + memberName + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
               var memberSymbol = resolvedExport.members[memberName];
-              var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, typeChecker);
+              var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, parseInfo.typeChecker);
 
               // We special case the constructor and sort the other members alphabetically
               if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
@@ -151,42 +143,6 @@ module.exports = function readTypeScriptModules(
     }
   };
 
-  /**
-   * Resolves all inherited class symbols of the specified symbol.
-   * @param {ts.Symbol} symbol ClassDeclaration symbol with members
-   * @param {ts.TypeChecker} typeChecker TypeScript TypeChecker for symbols
-   * @returns {Symbol[]} List of inherited class symbols.
-   **/
-  function resolveInheritedSymbols(symbol, typeChecker) {
-    var declaration = symbol.valueDeclaration || symbol.declarations[0];
-    var symbols = [];
-
-    if (declaration && declaration.heritageClauses) {
-      symbols = declaration.heritageClauses
-        // Filter for extends heritage clauses.
-        .filter(isExtendsHeritage)
-        // Resolve an array of the inherited symbols from the heritage clause.
-        .map(heritage => convertHeritageClauseToSymbols(heritage, typeChecker))
-        // Flatten the arrays of inherited symbols.
-        .reduce((symbols, cur) => symbols.concat(cur), []);
-    }
-
-    return symbols;
-  }
-
-  /**
-   * Converts a heritage clause into a list of symbols
-   * @param {ts.HeritageClause} heritage
-   * @param {ts.TypeChecker} typeChecker
-   * @returns {ts.SymbolTable} List of heritage symbols.
-   **/
-  function convertHeritageClauseToSymbols(heritage, typeChecker) {
-    var heritages = heritage.types.map(expression =>
-      typeChecker.getTypeAtLocation(expression).getSymbol()
-    );
-
-    return heritages.reduce((inheritances, current) => inheritances.concat(current), []);
-  }
 
   function createModuleDoc(moduleSymbol, basePath) {
     var id = moduleSymbol.name.replace(/^"|"$/g, '');
@@ -233,7 +189,7 @@ module.exports = function readTypeScriptModules(
     if (declaration.heritageClauses) {
       declaration.heritageClauses.forEach(function(heritage) {
 
-        if (isExtendsHeritage(heritage)) {
+        if (heritage.token == ts.SyntaxKind.ExtendsKeyword) {
           heritageString += " extends";
           heritage.types.forEach(function(typ, idx) {
             heritageString += (idx > 0 ? ',' : '') + typ.getFullText();
@@ -494,10 +450,6 @@ module.exports = function readTypeScriptModules(
     return location;
   }
 
-  /** Checks if the specified heritage clause is an extends keyword. */
-  function isExtendsHeritage(heritageClause) {
-    return heritageClause.token === ts.SyntaxKind.ExtendsKeyword
-  }
 };
 
 function convertToRegexCollection(items) {
