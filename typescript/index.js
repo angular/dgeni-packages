@@ -14,6 +14,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 .factory(require('./services/tsParser/getContent'))
 
 .factory(require('./services/convertPrivateClassesToInterfaces'))
+.factory(require('./services/typescript-symbol-map'))
 
 .factory('EXPORT_DOC_TYPES', function() {
   return [
@@ -35,6 +36,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 
 // Register the processors
 .processor(require('./processors/readTypeScriptModules'))
+.processor(require('./processors/linkInheritedDocs'))
 
 // Configure ids and paths
 .config(function(computeIdsProcessor, computePathsProcessor, EXPORT_DOC_TYPES) {
