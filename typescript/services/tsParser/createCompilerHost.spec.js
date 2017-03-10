@@ -19,8 +19,15 @@ describe('createCompilerHost', function() {
   });
 
   describe('getSourceFile', function() {
-    it('should return a SourceFile object for a given path, with fileName relative to baseDir', function() {
+    it('should return a SourceFile object for a given path', function() {
       var sourceFile = host.getSourceFile('testSrc.ts');
+      expect(sourceFile.fileName).toEqual('testSrc.ts');
+      expect(sourceFile.pos).toEqual(0);
+      expect(sourceFile.text).toEqual(jasmine.any(String));
+    });
+
+    it('should return a SourceFile object for a given path, with fileName relative to baseDir', function() {
+      var sourceFile = host.getSourceFile(path.resolve(baseDir, 'testSrc.ts'));
       expect(sourceFile.fileName).toEqual('testSrc.ts');
       expect(sourceFile.pos).toEqual(0);
       expect(sourceFile.text).toEqual(jasmine.any(String));
