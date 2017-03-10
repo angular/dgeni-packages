@@ -11,11 +11,12 @@ module.exports = function createCompilerHost(log) {
 
     return {
       getSourceFile: function(fileName, languageVersion, onError) {
-        var text, resolvedPath, resolvedPathWithExt;
+        var text, baseFilePath, resolvedPath, resolvedPathWithExt;
 
         // Strip off the extension and resolve relative to the baseDir
         baseFilePath = fileName.replace(/\.[^.]+$/, '');
         resolvedPath = path.resolve(baseDir, baseFilePath);
+        baseFilePath = path.relative(baseDir, resolvedPath);
 
         // Iterate through each possible extension and return the first source file that is actually found
         for(var i=0; i<extensions.length; i++) {
@@ -58,7 +59,7 @@ module.exports = function createCompilerHost(log) {
         return ts.sys.newLine;
       },
       fileExists: function(fileName) {
-        var text, resolvedPath, resolvedPathWithExt;
+        var text, baseFilePath, resolvedPath, resolvedPathWithExt;
 
         // Strip off the extension and resolve relative to the baseDir
         baseFilePath = fileName.replace(/\.[^.]+$/, '');
