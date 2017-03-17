@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.17.1 17 March 2017
+
+## Bug Fixes
+- **typescript:** ensure all modules have relative filepaths
+  ([434233](https://github.com/angular/angular.js/commit/43423313e246e07a002d2410182d1157b206dbc7))
+
+
 # 0.17.0 17 March 2017
 
 ## Bug Fixes
