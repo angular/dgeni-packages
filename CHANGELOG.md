@@ -1,5 +1,27 @@
 # Changelog
 
+# 0.17.0 17 March 2017
+
+## Bug Fixes
+- **jsdoc:** do not parse for tags within HTML blocks
+  ([451d84](https://github.com/angular/angular.js/commit/451d84a0d0e4bdfd675bced61dd3f2e9cef533a0))
+
+## Breaking Changes
+
+### **jsdoc** due to:
+  - **[451d84](https://github.com/angular/angular.js/commit/451d84a0d0e4bdfd675bced61dd3f2e9cef533a0)**: do not parse for tags within HTML blocks
+
+    Tags inside HTML blocks are no longer parsed by default.
+    If you wish this to enable this then you can modify the
+    `parseTagsProcessor.parserAdapters` array from a config block:
+
+    ```
+    somePackage.config(function(parseTagsProcessor, backtickParserAdapter) {
+      parseTagsProcessor.parserAdapters = [backtickParserAdapter];
+    });
+    ```
+
+
 # 0.16.10 7 March 2017
 
 * REVERT: feat(typescript): link `class` docs to inherited class docs	cf8b7444
