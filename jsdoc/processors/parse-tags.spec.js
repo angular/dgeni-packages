@@ -1,6 +1,19 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
+function MockParserAdapter() {
+}
+MockParserAdapter.prototype = {
+  init: function() {},
+  nextLine: function(line) {
+    if (/<<IGNORE_START>>/.test(line)) { this.ignore = true; }
+    if (/<<IGNORE_END>>/.test(line)) { this.ignore = false; }
+  },
+  parseForTags: function() {
+    return !this.ignore;
+  }
+};
+
 describe("parse-tags processor", function() {
   var processor;
   var tagDefinitions = [
@@ -48,25 +61,58 @@ describe("parse-tags processor", function() {
     );
   });
 
-    it("should cope with tags that have no 'description'", function() {
-      var content = '@id\n@description some description';
-      var doc = { content: content, startingLine: 123 };
-      processor.$process([doc]);
-      expect(doc.tags.tags[0]).toEqual(jasmine.objectContaining({ tagName: 'id', description: '' }));
-      expect(doc.tags.tags[1]).toEqual(jasmine.objectContaining({ tagName: 'description', description: 'some description' }));
-    });
+  it("should cope with tags that have no 'description'", function() {
+    var content = '@id\n@description some description';
+    var doc = { content: content, startingLine: 123 };
+    processor.$process([doc]);
+    expect(doc.tags.tags[0]).toEqual(jasmine.objectContaining({ tagName: 'id', description: '' }));
+    expect(doc.tags.tags[1]).toEqual(jasmine.objectContaining({ tagName: 'description', description: 'some description' }));
+  });
 
-    it("should cope with empty content or no known tags", function() {
-      expect(function() {
-        processor.$process([{ content: '', startingLine: 123 }]);
-      }).not.toThrow();
+  it("should cope with empty content or no known tags", function() {
+    expect(function() {
+      processor.$process([{ content: '', startingLine: 123 }]);
+    }).not.toThrow();
 
-      expect(function() {
-        processor.$process([{ content: '@unknownTag some text', startingLine: 123 }]);
-      }).not.toThrow();
-    });
+    expect(function() {
+      processor.$process([{ content: '@unknownTag some text', startingLine: 123 }]);
+    }).not.toThrow();
+  });
 
 
+  it('should ignore tags if a parser adapter has indicated that the line should not be parsed', function() {
+    processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
+    processor.parserAdapters = [new MockParserAdapter()];
+    var content =
+    '@a some text\n\n' +
+      '<<IGNORE_START>>\n' +
+      '  some code\n' +
+      '  @b not a tag\n' +
+      '<<IGNORE_END>>\n\n' +
+      'more text\n' +
+      '@b is a tag';
+    var doc = { content: content };
+    processor.$process([doc]);
+    expect(doc.tags.getTag('a').description).toEqual('some text\n\n' +
+      '<<IGNORE_START>>\n' +
+      '  some code\n' +
+      '  @b not a tag\n' +
+      '<<IGNORE_END>>\n\n' +
+      'more text'
+    );
+    expect(doc.tags.getTags('b').length).toEqual(1);
+    expect(doc.tags.getTag('b').description).toEqual('is a tag');
+  });
+
+
+  it("should ignore doc if it has no content", function() {
+    expect(function() {
+      processor.$process([{}]);
+    }).not.toThrow();
+  });
+
+
+  describe('legacy standard adapter', function() {
     it("should ignore @tags inside back-ticked code blocks", function() {
       processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
       var content =
@@ -116,11 +162,5 @@ describe("parse-tags processor", function() {
 
       expect(doc.tags.getTags('b').length).toEqual(0);
     });
-
-
-    it("should ignore doc if it has no content", function() {
-      expect(function() {
-        processor.$process([{}]);
-      }).not.toThrow();
-    });
+  });
 });

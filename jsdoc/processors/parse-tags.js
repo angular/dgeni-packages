@@ -7,17 +7,18 @@ var StringMap = require('stringmap');
  * @dgProcessor parseTagsProcessor
  * @description Parse the doc for jsdoc style tags
  */
-module.exports = function parseTagsProcessor(log, createDocMessage) {
+module.exports = function parseTagsProcessor(log, createDocMessage, backTickParserAdapter, htmlBlockParserAdapter) {
   return {
     tagDefinitions: [],
+    parserAdapters: [backTickParserAdapter, htmlBlockParserAdapter],
     $validate: {
-      tagDefinitions: { presence: true }
+      tagDefinitions: { presence: true },
     },
     $runAfter: ['parsing-tags'],
     $runBefore: ['tags-parsed'],
     $process: function(docs) {
 
-      var tagParser = createTagParser(this.tagDefinitions);
+      var tagParser = createTagParser(this.tagDefinitions, this.parserAdapters);
 
       docs.forEach(function(doc) {
         try {
@@ -54,12 +55,12 @@ function createTagDefMap(tagDefinitions) {
 /**
  * Create a new tagParser that can parse a set of jsdoc-style tags from a document
  * @param  {Array} tagDefMap A map of tag definitions keyed on tagName/aliasName.
+ * @param {ParserAdapter[]} A collection of adapters that modify the parsing behaviour
  */
-function createTagParser(tagDefinitions) {
+function createTagParser(tagDefinitions, parserAdapters) {
 
   var END_OF_LINE = /\r?\n/;
   var TAG_MARKER = /^\s*@(\S+)\s*(.*)$/;
-  var CODE_FENCE = /^\s*```(?!.*```)/;
   var tagDefMap = createTagDefMap(tagDefinitions);
 
   /**
@@ -74,25 +75,24 @@ function createTagParser(tagDefinitions) {
     var line, match, tagDef;
     var descriptionLines = [];
     var current;          // The current that that is being extracted
-    var inCode = false;   // Are we inside a fenced, back-ticked, code block
     var tags = new TagCollection();        // Contains all the tags that have been found
 
+    init(lines, tags);
 
     // Extract the description block
     do {
       line = lines[lineNumber];
 
-      if ( CODE_FENCE.test(line) ) {
-        inCode = !inCode;
-      }
+      nextLine(line, lineNumber);
 
-      // We ignore tags if we are in a code block
-      match = TAG_MARKER.exec(line);
-      tagDef = match && tagDefMap.get(match[1]);
-      if ( !inCode && match && ( !tagDef || !tagDef.ignore ) ) {
-        // Only store tags that are unknown or not ignored
-        current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
-        break;
+      if (parseForTags()) {
+        match = TAG_MARKER.exec(line);
+        tagDef = match && tagDefMap.get(match[1]);
+        if ( match && ( !tagDef || !tagDef.ignore ) ) {
+          // Only store tags that are unknown or not ignored
+          current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
+          break;
+        }
       }
 
       lineNumber += 1;
@@ -107,14 +107,11 @@ function createTagParser(tagDefinitions) {
     while(lineNumber < lines.length) {
       line = lines[lineNumber];
 
-      if ( CODE_FENCE.test(line) ) {
-        inCode = !inCode;
-      }
+      nextLine(line, lineNumber);
 
-      // We ignore tags if we are in a code block
       match = TAG_MARKER.exec(line);
       tagDef = match && tagDefMap.get(match[1]);
-      if ( !inCode && match && (!tagDef || !tagDef.ignore) ) {
+      if (parseForTags() && match && (!tagDef || !tagDef.ignore) ) {
         tags.addTag(current);
         current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
       } else {
@@ -129,4 +126,17 @@ function createTagParser(tagDefinitions) {
 
     return tags;
   };
+
+
+  function init(lines, tags) {
+    parserAdapters.forEach(function(adapter) { adapter.init(lines, tags); });
+  }
+
+  function nextLine(line, lineNumber) {
+    parserAdapters.forEach(function(adapter) { adapter.nextLine(line, lineNumber); });
+  }
+
+  function parseForTags() {
+    return parserAdapters.every(function(adapter) { return adapter.parseForTags(); });
+  }
 }
