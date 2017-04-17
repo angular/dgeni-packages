@@ -84,7 +84,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
           })
 
           .forEach(function(link) {
-            var normalizedLink = path.join(webRoot, resolveUrl(linkInfo.path, link, base));
+            var normalizedLink = resolveUrl(linkInfo.path, link, base);
             if ( !_.some(pathVariants, function(pathVariant) {
               return allValidReferences[decodeURIComponent(normalizedLink + pathVariant)];
             }) ) {
