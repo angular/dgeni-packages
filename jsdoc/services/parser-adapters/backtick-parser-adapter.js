@@ -3,7 +3,9 @@
  */
 module.exports = function backTickParserAdapter() {
   return {
-    init: function() {},
+    init: function() {
+      this.inCode = false;
+    },
     nextLine: function(line, lineNumber) {
       const CODE_FENCE = /^\s*```(?!.*```)/;
       if ( CODE_FENCE.test(line) ) {

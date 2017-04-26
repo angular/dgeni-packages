@@ -76,4 +76,29 @@ describe('backTickParserAdapter', function() {
     adapter.nextLine(lines[8], 8);
     expect(adapter.parseForTags()).toBeTruthy();
   });
+
+  it('should reset on each run', () => {
+    const adapter = backTickParserAdapterFactory();
+    const lines = [
+      '@a some text',
+      '```',
+      'missing end tick'
+    ];
+
+    adapter.init && adapter.init(lines, new TagCollection());
+    adapter.nextLine(lines[0], 0);
+    expect(adapter.parseForTags()).toBeTruthy();
+    adapter.nextLine(lines[1], 1);
+    expect(adapter.parseForTags()).toBeFalsy();
+    adapter.nextLine(lines[2], 2);
+    expect(adapter.parseForTags()).toBeFalsy();
+
+    adapter.init && adapter.init(lines, new TagCollection());
+    adapter.nextLine(lines[0], 0);
+    expect(adapter.parseForTags()).toBeTruthy();
+    adapter.nextLine(lines[1], 1);
+    expect(adapter.parseForTags()).toBeFalsy();
+    adapter.nextLine(lines[2], 2);
+    expect(adapter.parseForTags()).toBeFalsy();
+  });
 });
