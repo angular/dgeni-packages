@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.17.2 26 April 2017
+
+## Bug Fixes
+
+- **jsdoc:** reset backTickParserAdapter correctly
+  ([a82ea9ab](https://github.com/angular/dgeni-packages/commit/a82ea9ab24d718d7c90b4d8766f3308e28019fec))
+
+
 # 0.17.1 17 March 2017
 
 ## Bug Fixes
