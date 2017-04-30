@@ -1,5 +1,15 @@
 # Changelog
 
+# 0.18.0 30 April 2017
+
+- fix(typescript): remove `index` from the end of module ids and names
+  ([e6109f57](https://github.com/angular/dgeni-packages/commit/e6109f57266df1edde37071e985d58cda76c1bf1))
+
+## Breaking Changes
+
+  This has a possible breaking change if users were depending upon a module at `/some/folder/index.ts`
+  having a name of `index` and an id of `some/folder/index`.
+
 # 0.17.2 26 April 2017
 
 ## Bug Fixes
