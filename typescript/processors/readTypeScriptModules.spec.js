@@ -14,6 +14,22 @@ describe('readTypeScriptModules', function() {
   });
 
   describe('exportDocs', function() {
+
+    it('should extract all content from the comments', function() {
+      processor.sourceFiles = [ 'commentContent.ts' ];
+      var docs = [];
+      processor.$process(docs);
+      someClassDoc = docs.find(doc => doc.name === 'SomeClass');
+      expect(someClassDoc.content).toEqual('@empty\n');
+
+      fooDoc = docs.find(doc => doc.name === 'foo');
+      expect(fooDoc.content).toEqual('The description\n@tag1\ntag info\n');
+
+      barDoc = docs.find(doc => doc.name === 'bar');
+      expect(barDoc.content).toEqual('@name bar\n@description\ndescription of bar {@inline-tag} more content\n');
+
+    });
+
     it('should provide the original module if the export is re-exported', function() {
       processor.sourceFiles = [ 'publicModule.ts' ];
       var docs = [];
@@ -46,8 +62,7 @@ describe('readTypeScriptModules', function() {
       var docs = [];
       processor.$process(docs);
 
-      var someThingDoc = docs[3];
-      expect(someThingDoc.name).toEqual('SomeThing');
+      var someThingDoc = docs.find(doc => doc.name == 'SomeThing');
       expect(someThingDoc.docType).toEqual('interface');
       expect(someThingDoc.content).toEqual('constant\n');
       expect(someThingDoc.additionalDeclarations).toEqual([
@@ -71,6 +86,28 @@ describe('readTypeScriptModules', function() {
 
   });
 
+  describe('inherited symbols', function() {
+
+    it('should add the list of inherited symbols to a class doc', function() {
+      processor.sourceFiles = [ 'inheritedMembers.ts' ];
+      var docs = [];
+
+      processor.$process(docs);
+
+      const childDoc = docs.find(doc => doc.name === 'Child');
+      const firstParentDoc = docs.find(doc => doc.name === 'FirstParent');
+      const lastParentDoc = docs.find(doc => doc.name === 'LastParent');
+
+      expect(childDoc.inheritedSymbols.length).toBe(1);
+      expect(childDoc.inheritedSymbols[0]).toBe(firstParentDoc.exportSymbol);
+
+      expect(firstParentDoc.inheritedSymbols.length).toBe(1);
+      expect(firstParentDoc.inheritedSymbols[0]).toBe(lastParentDoc.exportSymbol);
+
+      expect(lastParentDoc.inheritedSymbols.length).toBe(0);
+    });
+
+  });
 
   describe('ignoreExportsMatching', function() {
     it('should ignore exports that match items in the `ignoreExportsMatching` property', function() {
