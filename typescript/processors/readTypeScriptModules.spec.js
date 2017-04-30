@@ -55,6 +55,20 @@ describe('readTypeScriptModules', function() {
       ]);
     });
 
+    it('should remove `index` from the end of module ids and names', function() {
+      processor.sourceFiles = [ 'test/folder/index.ts' ];
+      var docs = [];
+      processor.$process(docs);
+
+      var moduleDoc = docs[0];
+      expect(moduleDoc.id).toEqual('test/folder');
+      expect(moduleDoc.name).toEqual('folder');
+
+      var exportDoc = docs[1];
+      expect(exportDoc.id).toEqual('test/folder/TestClass');
+      expect(exportDoc.name).toEqual('TestClass');
+    });
+
   });
 
 
