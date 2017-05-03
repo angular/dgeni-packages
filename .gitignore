@@ -22,3 +22,4 @@ coverage
 .tmp
 
 debug-dump.txt
+.idea/
