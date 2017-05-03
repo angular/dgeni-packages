@@ -1,5 +1,14 @@
 # Changelog
 
+# 0.19.0 3 May 2017
+
+- feat(typescript): upgrade to TypeScript 2.2.1	0f48e866
+
+## Breaking Changes
+
+The upgrade to TypeScript v2 may well break projects that are generating docs
+based on a TypeScript v1 application.
+
 # 0.18.0 30 April 2017
 
 - fix(typescript): remove `index` from the end of module ids and names
