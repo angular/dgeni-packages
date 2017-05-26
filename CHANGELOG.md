@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.19.1 26 May 2017
+
+* fix(typescript): capture static members correctly	0e41fae7
+
+
 # 0.19.0 3 May 2017
 
 - feat(typescript): upgrade to TypeScript 2.2.1	0f48e866
