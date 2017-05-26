@@ -56,6 +56,16 @@ describe('readTypeScriptModules', function() {
       expect(docs.every(function(doc) { return doc.name !== 'privateProperty'; })).toBe(true);
     });
 
+    it('should put static members into the `.statics` property of the export doc', function() {
+      processor.sourceFiles = [ 'staticMembers.ts' ];
+      var docs = [];
+      processor.$process(docs);
+
+      const classDoc = docs.find(doc => doc.docType === 'class');
+      expect(classDoc.statics.length).toEqual(2);
+      expect(classDoc.statics.map(static => static.name)).toEqual(['staticA', 'num']);
+      expect(classDoc.members.length).toEqual(0);
+    });
 
     it('should add additional declarations of a symbol onto the exportDoc', function() {
       processor.sourceFiles = [ 'multipleDeclarations.ts' ];

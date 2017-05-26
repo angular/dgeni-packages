@@ -97,15 +97,22 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
                 if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
                   exportDoc.constructorDoc = memberDoc;
                   docs.push(memberDoc);
-                } else if (!hidePrivateMembers || (memberSymbol.name.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
-                  docs.push(memberDoc);
-                  exportDoc.members.push(memberDoc);
                 } else if (memberSymbol.name === '__call' && memberSymbol.flags & ts.SymbolFlags.Signature) {
                   docs.push(memberDoc);
                   exportDoc.callMember = memberDoc;
                 } else if (memberSymbol.name === '__new' && memberSymbol.flags & ts.SymbolFlags.Signature) {
                   docs.push(memberDoc);
                   exportDoc.newMember = memberDoc;
+                } else {
+                  if (!hidePrivateMembers || (memberSymbol.name.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
+                    docs.push(memberDoc);
+                    if(ts.getCombinedModifierFlags(memberSymbol.valueDeclaration) & ts.ModifierFlags.Static) {
+                      exportDoc.statics.push(memberDoc);
+                      memberDoc.isStatic = true;
+                    } else {
+                      exportDoc.members.push(memberDoc);
+                    }
+                  }
                 }
               });
             }
@@ -127,6 +134,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
               var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, parseInfo.typeChecker);
               memberDoc.isStatic = true;
               docs.push(memberDoc);
+              console.log('static export of export: ' + memberDoc.id + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
               exportDoc.statics.push(memberDoc);
             }
           }
