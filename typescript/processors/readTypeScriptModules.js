@@ -442,9 +442,16 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
   }
 
 
-  // Strip any local renamed imports from the front of types
   function getType(sourceFile, type) {
     var text = getText(sourceFile, type);
+
+    if (type.kind === ts.SyntaxKind.FunctionType) {
+      // the type is a function, so we don't do any further processing
+      return text;
+    }
+
+    // Strip any local renamed imports from the front of types
+    // This approach is a bit naive and doesn't account for more complex types
     while (text.indexOf(".") >= 0) {
       // Keep some namespaced symbols
       if (_.some(ignoreTypeScriptNamespaces, function(regex) { return text.match(regex); })) break;
