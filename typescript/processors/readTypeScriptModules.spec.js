@@ -221,6 +221,20 @@ describe('readTypeScriptModules', function() {
       var functionDoc = _.find(docs, { docType: 'function' });
       expect(functionDoc.returnType).toEqual('angular.IDirective');
     });
+
+    it('should cope with spread operator', function() {
+      processor.sourceFiles = ['spreadParams.ts'];
+      const docs = [];
+      processor.$process(docs);
+      const functionDoc = _.find(docs, { docType: 'function' });
+      expect(functionDoc.parameters).toEqual(['...args: Array<any>']);
+      expect(functionDoc.returnType).toEqual('void');
+
+      const interfaceDoc = _.find(docs, { docType: 'interface' });
+      expect(interfaceDoc.members.length).toEqual(1);
+      expect(interfaceDoc.members[0].parameters).toEqual(['...args: Array<any>']);
+      expect(interfaceDoc.members[0].returnType).toEqual('void');
+    });
   });
 
   describe('source file globbing patterns', function() {
