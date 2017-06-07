@@ -68,6 +68,10 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
           if (!resolvedExport.declarations) return;
 
           var exportDoc = createExportDoc(exportSymbol.name, resolvedExport, moduleDoc, basePath, parseInfo.typeChecker);
+
+          // Ignore exports marked as "@private" in jsDoc content
+          if (hidePrivateMembers && exportDoc.shouldHideExport) return;
+
           log.debug('>>>> EXPORT: ' + exportDoc.name + ' (' + exportDoc.docType + ') from ' + moduleDoc.id);
 
           // Add this export doc to its module doc
@@ -225,6 +229,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       aliasNames.push(moduleDoc.id + '/' + name + typeParamString);
     }
 
+    var content = getContent(declaration);
     var exportDoc = {
       docType: getExportDocType(exportSymbol),
       accessibility: getExportAccessibility(declaration),
@@ -236,10 +241,11 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       decorators: getDecorators(declaration),
       aliases: aliasNames,
       moduleDoc: moduleDoc,
-      content: getContent(declaration),
+      content: content,
       fileInfo: getFileInfo(exportSymbol, basePath),
       location: getLocation(declaration),
-      additionalDeclarations: additionalDeclarations
+      additionalDeclarations: additionalDeclarations,
+      shouldHideExport: checkHideContent(content)
     };
 
     if (exportDoc.docType === 'var' || exportDoc.docType === 'const' || exportDoc.docType === 'let') {
@@ -468,6 +474,13 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       end: ts.getLineAndCharacterOfPosition(sourceFile, declaration.end)
     };
     return location;
+  }
+
+  function checkHideContent(content) {
+    var jsDocContainsPrivate = (content || '').split('\n').some(function(row) {
+      return row.search(/@private|@access private|@internal/) >= 0;
+    });
+    return jsDocContainsPrivate;
   }
 
 };
