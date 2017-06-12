@@ -54,9 +54,11 @@
     "shelljs": "^0.7.0",
     "spdx-license-list": "^2.1.0",
     "stringmap": "^0.2.2",
-    "typescript": "^2.2.1"
+    "typescript": "^2.3.4"
   },
   "devDependencies": {
+    "@types/jasmine": "^2.5.51",
+    "@types/node": "^7.0.29",
     "changez": "^2.1.1",
     "changez-angular": "^2.1.0",
     "istanbul": "^0.2.7",
