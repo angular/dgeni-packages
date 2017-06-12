@@ -1,15 +1,7 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
-var _ = require('lodash');
+import { DocCollection } from 'dgeni';
+import { convertPrivateClassesToInterfaces } from './convertPrivateClassesToInterfaces';
 
-describe('readTypeScriptModules', function() {
-  var dgeni, injector, convertPrivateClassesToInterfaces;
-
-  beforeEach(function() {
-    dgeni = new Dgeni([mockPackage()]);
-    injector = dgeni.configureInjector();
-    convertPrivateClassesToInterfaces = injector.get('convertPrivateClassesToInterfaces');
-  });
+describe('convertPrivateClassesToInterfaces', function() {
 
   it('should convert private class docs to interface docs', function() {
     var docs = [
@@ -24,7 +16,6 @@ describe('readTypeScriptModules', function() {
     expect(docs[0].docType).toEqual('interface');
   });
 
-
   it('should not touch non-private class docs', function() {
     var docs = [
       {
@@ -37,7 +28,6 @@ describe('readTypeScriptModules', function() {
     convertPrivateClassesToInterfaces(docs, false);
     expect(docs[0].docType).toEqual('class');
   });
-
 
   it('should convert the heritage since interfaces use `extends` not `implements`', function() {
     var docs = [
@@ -53,9 +43,8 @@ describe('readTypeScriptModules', function() {
     expect(docs[0].heritage).toEqual('extends parentInterface');
   });
 
-
   it('should add new injectable reference types, if specified, to the passed in collection', function() {
-    var docs = [
+    var docs: DocCollection = [
       {
         docType: 'class',
         name: 'privateClass',
@@ -72,5 +61,4 @@ describe('readTypeScriptModules', function() {
       returnType : 'InjectableReference'
     });
   });
-
 });
