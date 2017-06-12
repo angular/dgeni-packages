@@ -29,7 +29,7 @@ describe("nunjucksTemplateEngine service", function() {
       expect(render).toEqual(jasmine.any(Function));
 
       expect(nunjucks.Environment).toHaveBeenCalledWith(
-        jasmine.any(nunjucks.FileSystemLoader),
+        [jasmine.any(nunjucks.FileSystemLoader)],
         engine.config
       );
     });
@@ -56,6 +56,29 @@ describe("nunjucksTemplateEngine service", function() {
       expect(render).toEqual(jasmine.any(Function));
 
       expect(addExtensionSpy).toHaveBeenCalledWith('dummy', dummyExtension);
+    });
+
+    it("should use other loaders", function() {
+      function CustomLoader() {}
+      CustomLoader.prototype.getSource = function(name) {
+        if (name == "foobar") {
+          return {
+            src: "lorem ipsum ...",
+            path: name
+          }
+        }
+      }
+
+      var customLoader = new CustomLoader();
+      engine.loaders.push(customLoader);
+
+      var render = engine.getRenderer();
+      expect(render).toEqual(jasmine.any(Function));
+
+      expect(nunjucks.Environment).toHaveBeenCalledWith(
+        [customLoader, jasmine.any(nunjucks.FileSystemLoader)],
+        engine.config
+      );
     });
   });
 });
