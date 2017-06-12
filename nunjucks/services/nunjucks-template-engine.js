@@ -16,10 +16,11 @@ module.exports = function templateEngine(templateFinder) {
 
     filters: [],
     tags: [],
+    loaders: [],
 
     getRenderer: function() {
       var loader = new nunjucks.FileSystemLoader(templateFinder.templateFolders, {watch: false, noCache: true});
-      var engine = new nunjucks.Environment(loader, this.config);
+      var engine = new nunjucks.Environment(this.loaders.concat([loader]), this.config);
 
       // Configure nunjucks with the custom filters
       this.filters.forEach(function(filter) {
