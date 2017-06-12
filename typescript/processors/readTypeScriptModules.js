@@ -2,6 +2,7 @@ var glob = require('glob');
 var path = require('canonical-path');
 var _ = require('lodash');
 var ts = require('typescript');
+var util = require('util');
 
 module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, ignoreTypeScriptNamespaces,
                                                 getExportDocType, getExportAccessibility, getContent, createDocMessage, log) {
@@ -82,31 +83,24 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
 
             if (declaration.members) {
               declaration.members.forEach(member => {
-                const memberSymbol = member.symbol;
-                if (!memberSymbol) return;
 
-                const memberName = memberSymbol.name;
-                // FIXME(alexeagle): why do generic type params appear in members?
-                if (memberName === 'T') {
-                  return;
-                }
-                log.silly('>>>>>> member: ' + memberName + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
-                var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, parseInfo.typeChecker);
+                log.silly('>>>>>> member: ' + member.name.text + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
+                var memberDoc = createMemberDoc(member, exportDoc, basePath, parseInfo.typeChecker);
 
                 // We special case the constructor and sort the other members alphabetically
-                if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
+                if (member.flags & ts.SymbolFlags.Constructor) {
                   exportDoc.constructorDoc = memberDoc;
                   docs.push(memberDoc);
-                } else if (memberSymbol.name === '__call' && memberSymbol.flags & ts.SymbolFlags.Signature) {
+                } else if (member.name.text === '__call' && member.symbol.flags & ts.SymbolFlags.Signature) {
                   docs.push(memberDoc);
                   exportDoc.callMember = memberDoc;
-                } else if (memberSymbol.name === '__new' && memberSymbol.flags & ts.SymbolFlags.Signature) {
+                } else if (member.name.text === '__new' && member.symbol.flags & ts.SymbolFlags.Signature) {
                   docs.push(memberDoc);
                   exportDoc.newMember = memberDoc;
                 } else {
-                  if (!hidePrivateMembers || (memberSymbol.name.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
+                  if (!hidePrivateMembers || (member.name.text.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
                     docs.push(memberDoc);
-                    if(ts.getCombinedModifierFlags(memberSymbol.valueDeclaration) & ts.ModifierFlags.Static) {
+                    if(ts.getCombinedModifierFlags(member.symbol) & ts.ModifierFlags.Static) {
                       exportDoc.statics.push(memberDoc);
                       memberDoc.isStatic = true;
                     } else {
@@ -269,22 +263,21 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     return exportDoc;
   }
 
-  function createMemberDoc(memberSymbol, classDoc, basePath, typeChecker) {
-    var declaration = memberSymbol.valueDeclaration || memberSymbol.declarations[0];
+  function createMemberDoc(member, classDoc, basePath, typeChecker) {
     var memberDoc = {
       docType: 'member',
       classDoc: classDoc,
-      name: memberSymbol.name,
-      accessibility: getExportAccessibility(declaration),
-      decorators: getDecorators(declaration),
-      content: getContent(declaration),
-      fileInfo: getFileInfo(memberSymbol, basePath),
-      location: getLocation(declaration)
+      name: member.name.text,
+      accessibility: getExportAccessibility(member),
+      decorators: getDecorators(member),
+      content: getContent(member),
+      fileInfo: getFileInfo(member.symbol, basePath),
+      location: getLocation(member)
     };
 
-    memberDoc.typeParameters = getTypeParameters(typeChecker, memberSymbol);
+    memberDoc.typeParameters = getTypeParameters(typeChecker, member);
 
-    if(memberSymbol.flags & (ts.SymbolFlags.Signature) ) {
+    if(member.flags & (ts.SymbolFlags.Signature) ) {
       memberDoc.parameters = getParameters(typeChecker, declaration);
       memberDoc.returnType = getReturnType(typeChecker, declaration);
       switch(memberDoc.name) {
@@ -297,23 +290,23 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       }
     }
 
-    if (memberSymbol.flags & ts.SymbolFlags.Method) {
+    if (member.flags & ts.SymbolFlags.Method) {
       // NOTE: we use the property name `parameters` here so we don't conflict
       // with the `params` property that will be updated by dgeni reading the
       // `@param` tags from the docs
       memberDoc.parameters = getParameters(typeChecker, declaration);
     }
 
-    if (memberSymbol.flags & ts.SymbolFlags.Constructor) {
+    if (member.flags & ts.SymbolFlags.Constructor) {
       memberDoc.parameters = getParameters(typeChecker, declaration);
       memberDoc.name = 'constructor';
     }
 
-    if(memberSymbol.flags & ts.SymbolFlags.Value) {
+    if(member.flags & ts.SymbolFlags.Value) {
       memberDoc.returnType = getReturnType(typeChecker, declaration);
     }
 
-    if(memberSymbol.flags & ts.SymbolFlags.Optional) {
+    if(member.flags & ts.SymbolFlags.Optional) {
       memberDoc.optional = true;
     }
 
@@ -387,11 +380,10 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     });
   }
 
-  function getTypeParameters(typeChecker, symbol) {
-    var declaration = symbol.valueDeclaration || symbol.declarations[0];
-    var sourceFile = ts.getSourceFileOfNode(declaration);
-    if (!declaration.typeParameters) return;
-    var typeParams = declaration.typeParameters.map(function(type) {
+  function getTypeParameters(typeChecker, member) {
+    var sourceFile = ts.getSourceFileOfNode(member);
+    if (!member.typeParameters) return;
+    var typeParams = member.typeParameters.map(function(type) {
       return getText(sourceFile, type).trim();
     });
     return typeParams;

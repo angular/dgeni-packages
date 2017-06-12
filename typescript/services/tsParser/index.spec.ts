@@ -1,14 +1,13 @@
-var mockPackage = require('../../mocks/mockPackage');
-var Dgeni = require('dgeni');
+import { TsParser } from './index';
 var path = require('canonical-path');
 
 describe('tsParser', function() {
-  var dgeni, injector, parser;
+  let log: any;
+  let parser: TsParser;
 
-  beforeEach(function() {
-    dgeni = new Dgeni([mockPackage()]);
-    injector = dgeni.configureInjector();
-    parser = injector.get('tsParser');
+  beforeEach(() => {
+    log = require('dgeni/lib/mocks/log')(false);
+    parser = new TsParser(log);
   });
 
   it("should parse a TS file", function() {
