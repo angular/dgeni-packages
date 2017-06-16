@@ -2,6 +2,11 @@ import { CompilerOptions, createProgram, Symbol, SymbolFlags, TypeChecker, Progr
 import { CustomCompilerHost } from './CustomCompilerHost';
 const path = require('canonical-path');
 
+export { getExportDocType } from './getExportDocType';
+export { getContent } from './getContent';
+export { getExportAccessibility } from './getExportAccessibility';
+export { getFileInfo } from './getFileInfo';
+
 export interface ModuleSymbols extends Array<ModuleSymbol> {
   typeChecker?: TypeChecker
 }

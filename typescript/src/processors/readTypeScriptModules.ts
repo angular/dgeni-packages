@@ -1,11 +1,18 @@
+import { DocCollection } from 'dgeni';
+import { Node, Symbol, SymbolFlags, getCombinedModifierFlags, ModifierFlags, getLineAndCharacterOfPosition } from 'typescript';
+import { TsParser, getContent, getFileInfo, getExportAccessibility, getExportDocType } from '../services/TsParser';
+import { ModuleDoc } from '../api-doc-types/ModuleDoc';
+import { ExportDoc } from '../api-doc-types/ExportDoc';
+import { Location } from '../api-doc-types/Location';
+
 var glob = require('glob');
 var path = require('canonical-path');
-var _ = require('lodash');
-var ts = require('typescript');
-var util = require('util');
 
-module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, ignoreTypeScriptNamespaces,
-                                                getExportDocType, getExportAccessibility, getContent, createDocMessage, log) {
+module.exports = function readTypeScriptModules(
+                            modules: any,
+                            ignoreTypeScriptNamespaces: RegExp[],
+                            createDocMessage: any,
+                            log: any) {
 
   return {
     $runAfter: ['files-read'],
@@ -30,7 +37,9 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     // We can provide a collection of strings or regexes to ignore exports whose export names match
     ignoreExportsMatching: ['___esModule'],
 
-    $process: function(docs) {
+    $process: function(docs: DocCollection) {
+
+      const tsParser = new TsParser(log);
 
       // Convert ignoreExportsMatching to an array of regexes
       var ignoreExportsMatching = convertToRegexCollection(this.ignoreExportsMatching);
@@ -88,19 +97,19 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
                 var memberDoc = createMemberDoc(member, exportDoc, basePath, parseInfo.typeChecker);
 
                 // We special case the constructor and sort the other members alphabetically
-                if (member.flags & ts.SymbolFlags.Constructor) {
+                if (member.flags & SymbolFlags.Constructor) {
                   exportDoc.constructorDoc = memberDoc;
                   docs.push(memberDoc);
-                } else if (member.name.text === '__call' && member.symbol.flags & ts.SymbolFlags.Signature) {
+                } else if (member.name.text === '__call' && member.symbol.flags & SymbolFlags.Signature) {
                   docs.push(memberDoc);
                   exportDoc.callMember = memberDoc;
-                } else if (member.name.text === '__new' && member.symbol.flags & ts.SymbolFlags.Signature) {
+                } else if (member.name.text === '__new' && member.symbol.flags & SymbolFlags.Signature) {
                   docs.push(memberDoc);
                   exportDoc.newMember = memberDoc;
                 } else {
                   if (!hidePrivateMembers || (member.name.text.charAt(0) !== '_' && memberDoc.accessibility !== 'private')) {
                     docs.push(memberDoc);
-                    if(ts.getCombinedModifierFlags(member.symbol) & ts.ModifierFlags.Static) {
+                    if(getCombinedModifierFlags(member.symbol) & ModifierFlags.Static) {
                       exportDoc.statics.push(memberDoc);
                       memberDoc.isStatic = true;
                     } else {
@@ -120,7 +129,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
               docs.push(memberDoc);
               exportDoc.members.push(memberDoc);
             }
-          } else if (resolvedExport.flags & ts.SymbolFlags.HasExports) {
+          } else if (resolvedExport.flags & SymbolFlags.HasExports) {
             for (var exported in resolvedExport.exports) {
               if (exported === 'prototype') continue;
               if (hidePrivateMembers && exported.charAt(0) === '_') continue;
@@ -154,7 +163,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
   function createModuleDoc(moduleSymbol, basePath) {
     var id = moduleSymbol.name.replace(/^"|"$/g, '').replace(/\/index$/, '');
     var name = id.split('/').pop();
-    var moduleDoc = {
+    var moduleDoc: ModuleDoc = {
       docType: 'module',
       name: name,
       id: id,
@@ -168,15 +177,15 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     return moduleDoc;
   }
 
-  function createExportDoc(name, exportSymbol, moduleDoc, basePath, typeChecker) {
+  function createExportDoc(name, exportSymbol: Symbol, moduleDoc: ModuleDoc, basePath, typeChecker) {
     var typeParamString = '';
     var heritageString = '';
     var typeDefinition = '';
 
-    var declaration = exportSymbol.valueDeclaration || exportSymbol.declarations[0];
+    var declaration: Node = exportSymbol.valueDeclaration || exportSymbol.declarations[0];
     var additionalDeclarations = exportSymbol.declarations.filter(function(d) { return declaration !== d; });
 
-    var sourceFile = ts.getSourceFileOfNode(declaration);
+    var sourceFile = declaration.getSourceFile());
 
     if (declaration.typeParameters) {
       typeParamString = '<' + getText(sourceFile, declaration.typeParameters) + '>';
@@ -219,7 +228,7 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
       aliasNames.push(moduleDoc.id + '/' + name + typeParamString);
     }
 
-    var exportDoc = {
+    var exportDoc: ExportDoc = {
       docType: getExportDocType(exportSymbol),
       accessibility: getExportAccessibility(declaration),
       exportSymbol: exportSymbol,
@@ -453,22 +462,22 @@ module.exports = function readTypeScriptModules(tsParser, modules, getFileInfo, 
     return text;
   }
 
-  function getLocation(declaration) {
-    var sourceFile = ts.getSourceFileOfNode(declaration);
-    var location = {
-      start: ts.getLineAndCharacterOfPosition(sourceFile, declaration.pos),
-      end: ts.getLineAndCharacterOfPosition(sourceFile, declaration.end)
+  function getLocation(declaration: Node) {
+    var sourceFile = declaration.getSourceFile();
+    var location: Location = {
+      start: getLineAndCharacterOfPosition(sourceFile, declaration.pos),
+      end: getLineAndCharacterOfPosition(sourceFile, declaration.end)
     };
     return location;
   }
 
 };
 
-function convertToRegexCollection(items) {
+function convertToRegexCollection(items: Array<string|RegExp>) {
   if (!items) return [];
 
   // Must be an array
-  if (!_.isArray(items)) {
+  if (Array.isArray(items)) {
     items = [items];
   }
 
