@@ -1,0 +1,19 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "no-unused-variable": true,
+        "max-line-length": [200],
+        "quotemark": ["single"],
+        "member-access": ["check-constructor"],
+        "ban-types": [false, ["Symbol"]],
+        "interface-name": [false],
+        "no-var-requires": [false],
+        "arrow-parens": ["ban-single-arg-parens"],
+        "curly": [true, "ignore-same-line"]
+    },
+    "rulesDirectory": []
+}
