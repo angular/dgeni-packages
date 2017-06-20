@@ -4,12 +4,13 @@ const path = require('canonical-path');
 
 describe('FileInfo', () => {
   let parser: TsParser;
+  let basePath: string;
   beforeEach(() => {
     parser = new TsParser(require('dgeni/lib/mocks/log')(false));
+    basePath = path.resolve(__dirname, '../../../mocks');
   });
 
   it('should compute the file path properties from the parsed file', () => {
-    const basePath = path.resolve(__dirname, '../../../mocks');
     const parseInfo = parser.parse(['tsParser/testSrc.ts'], basePath);
 
     const module = parseInfo.moduleSymbols[0];
