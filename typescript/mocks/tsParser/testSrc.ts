@@ -31,4 +31,4 @@ export class MyClass {
 /**
  * An exported function
  */
-export var myFn = (val: number) => return val * 2;
+export let myFn = (val: number) => val * 2;

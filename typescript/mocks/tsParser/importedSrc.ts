@@ -1,1 +1,3 @@
-export var x = 100;
+import { MyClass } from './testSrc';
+
+export const x = 100;
