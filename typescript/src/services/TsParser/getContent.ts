@@ -1,9 +1,11 @@
-import { Node, SyntaxKind, ModuleDeclaration, VariableDeclaration, getTrailingCommentRanges, getLeadingCommentRanges} from 'typescript';
+import { getLeadingCommentRanges, getTrailingCommentRanges, ModuleDeclaration, Node, SyntaxKind, VariableDeclaration } from 'typescript';
 const LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
+const ASTERISK = 42;
+const SLASH = 47;
 
-export function getContent(node: Node) {
+export function getContent(node: Node|undefined) {
 
-  var content = "";
+  let content = "";
 
   if (!node) return content;
 
@@ -27,13 +29,13 @@ export function getContent(node: Node) {
   }
 
   // Get the source file of this node
-  var sourceFile = node.getSourceFile();
+  const sourceFile = node.getSourceFile();
   const commentRanges = getJSDocCommentRanges(node, sourceFile.text);
 
   if (commentRanges) {
     commentRanges.forEach(commentRange => {
       content += sourceFile.text
-          .substring(commentRange.pos+ '/**'.length, commentRange.end - '*/'.length)
+          .substring(commentRange.pos + '/**'.length, commentRange.end - '*/'.length)
           .replace(LEADING_STAR, '')
           .trim();
       if (commentRange.hasTrailingNewLine) {
@@ -42,24 +44,27 @@ export function getContent(node: Node) {
     });
   }
 
-  return content;
+  return content.trim();
 }
 
 function getJSDocCommentRanges(node: Node, text: string) {
-    var commentRanges = (node.kind === 146 /* Parameter */ ||
-        node.kind === 145 /* TypeParameter */ ||
-        node.kind === 186 /* FunctionExpression */ ||
-        node.kind === 187 /* ArrowFunction */) ?
-        concatenate(getTrailingCommentRanges(text, node.pos), getLeadingCommentRanges(text, node.pos)) :
-        getLeadingCommentRanges(text, node.pos);
+    const commentRanges = (
+        node.kind === SyntaxKind.Parameter ||
+        node.kind === SyntaxKind.TypeParameter ||
+        node.kind === SyntaxKind.FunctionExpression ||
+        node.kind === SyntaxKind.ArrowFunction
+      ) ?
+      concatenate(getTrailingCommentRanges(text, node.pos), getLeadingCommentRanges(text, node.pos)) :
+      getLeadingCommentRanges(text, node.pos);
+
     // True if the comment starts with '/**' but not if it is '/**/'
     return commentRanges!.filter(comment => {
-        return text.charCodeAt(comment.pos + 1) === 42 /* asterisk */ &&
-            text.charCodeAt(comment.pos + 2) === 42 /* asterisk */ &&
-            text.charCodeAt(comment.pos + 3) !== 47 /* slash */;
+        return text.charCodeAt(comment.pos + 1) === ASTERISK &&
+            text.charCodeAt(comment.pos + 2) === ASTERISK &&
+            text.charCodeAt(comment.pos + 3) !== SLASH;
     });
 }
 
-function concatenate<T>(array1: Array<T> | undefined, array2: Array<T> | undefined) {
+function concatenate<T>(array1: T[] | undefined, array2: T[] | undefined) {
   return array1 ? array2 ? array1.concat(array2) : array1 : array2;
 }
