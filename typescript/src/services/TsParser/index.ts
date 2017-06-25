@@ -1,20 +1,21 @@
-import { CompilerOptions, createProgram, Symbol, SymbolFlags, TypeChecker, Program } from 'typescript';
+/* tslint:disable:no-bitwise */
+import { CompilerOptions, createProgram, Declaration, Program, Symbol, SymbolFlags, TypeChecker } from 'typescript';
 import { CustomCompilerHost } from './CustomCompilerHost';
+import { FileInfo } from './FileInfo';
 const path = require('canonical-path');
 
 export { getExportDocType } from './getExportDocType';
 export { getContent } from './getContent';
-export { getExportAccessibility } from './getExportAccessibility';
-export { getFileInfo } from './getFileInfo';
+export { getAccessibility } from './getAccessibility';
 
 export interface ModuleSymbols extends Array<ModuleSymbol> {
-  typeChecker?: TypeChecker
+  typeChecker?: TypeChecker;
 }
 export interface ModuleSymbol extends Symbol {
   exportArray: AugmentedSymbol[];
 }
 export interface AugmentedSymbol extends Symbol {
-  resolvedSymbol?: Symbol;
+  resolvedSymbol: Symbol;
 }
 
 export class TsParser {
@@ -28,7 +29,7 @@ export class TsParser {
   // The options for the TS compiler
   options: CompilerOptions = {
     allowNonTsExtensions: true,
-    charset: 'utf8'
+    charset: 'utf8',
   };
 
   constructor(private log: any) {}
@@ -56,20 +57,15 @@ export class TsParser {
       }
     });
 
+    moduleSymbols.forEach(tsModule => {
+      // The type checker has a nice helper function that returns an array of Symbols representing the exports for a given module
+      tsModule.exportArray = typeChecker.getExportsOfModule(tsModule) as AugmentedSymbol[];
 
-    moduleSymbols.forEach(function(tsModule) {
-
-      // The type checker has a nice helper function that returns an array of Symbols
-      // representing the exports for a given module
-      tsModule.exportArray = typeChecker.getExportsOfModule(tsModule);
-
-      // Although 'star' imports (e.g. `export * from 'some/module';) get resolved automatically
-      // by the compiler/binder, it seems that explicit imports (e.g. `export {SomeClass} from 'some/module'`)
-      // do not so we have to do a little work.
-      tsModule.exportArray.forEach(function(moduleExport) {
+      tsModule.exportArray.forEach(moduleExport => {
+        // Although 'star' imports (e.g. `export * from 'some/module';) get resolved automatically by the compiler/binder,
+        // it seems that explicit imports (e.g. `export {SomeClass} from 'some/module'`) do not so we have to do a little work.
         if (moduleExport.flags & SymbolFlags.Alias) {
-          // To maintain the alias information (particularly the alias name)
-          // we just attach the original "resolved" symbol to the alias symbol
+          // To maintain the alias information (particularly the alias name) we just attach the original "resolved" symbol to the alias symbol
           moduleExport.resolvedSymbol = typeChecker.getAliasedSymbol(moduleExport);
         }
       });
@@ -77,11 +73,6 @@ export class TsParser {
 
     moduleSymbols.typeChecker = typeChecker;
 
-    return {
-      moduleSymbols: moduleSymbols,
-      typeChecker: typeChecker,
-      program: program,
-      host: host
-    };
+    return { host, moduleSymbols, program, typeChecker };
   }
 }

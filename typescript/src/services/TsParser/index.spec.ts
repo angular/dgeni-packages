@@ -11,7 +11,7 @@ describe('tsParser', function() {
   });
 
   it("should parse a TS file", function() {
-    var parseInfo = parser.parse(['testSrc.ts'], path.resolve(__dirname, '../../mocks/tsParser'));
+    var parseInfo = parser.parse(['testSrc.ts'], path.resolve(__dirname, '../../../mocks/tsParser'));
     var tsModules = parseInfo.moduleSymbols;
     expect(tsModules.length).toEqual(1);
     expect(tsModules[0].exportArray.length).toEqual(3);

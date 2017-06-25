@@ -1,6 +1,6 @@
-import { sys, getDefaultLibFileName, createSourceFile, CompilerHost, CompilerOptions, ScriptTarget, createCompilerHost, SourceFile, WriteFileCallback} from 'typescript';
-var fs = require('fs');
-var path = require('canonical-path');
+import * as fs from 'fs';
+import { CompilerHost, CompilerOptions, createCompilerHost, createSourceFile, getDefaultLibFileName, ScriptTarget, SourceFile, sys, WriteFileCallback} from 'typescript';
+const path = require('canonical-path');
 
 // We need to provide our own version of CompilerHost because we want to set the
 // base directory and specify what extensions to consider when trying to load a source
@@ -10,7 +10,10 @@ export class CustomCompilerHost implements CompilerHost {
   constructor(private options: any, private baseDir: string, private extensions: string[], private log: any) {}
 
   getSourceFile(fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void): SourceFile {
-    var text, baseFilePath, resolvedPath, resolvedPathWithExt;
+    let text;
+    let baseFilePath;
+    let resolvedPath;
+    let resolvedPathWithExt;
 
     // Strip off the extension and resolve relative to the baseDir
     baseFilePath = fileName.replace(/\.[^.]+$/, '');
@@ -18,19 +21,18 @@ export class CustomCompilerHost implements CompilerHost {
     baseFilePath = path.relative(this.baseDir, resolvedPath);
 
     // Iterate through each possible extension and return the first source file that is actually found
-    for(var i=0; i<this.extensions.length; i++) {
+    for (const extension of this.extensions) {
 
       // Try reading the content from files using each of the given extensions
       try {
-        resolvedPathWithExt = resolvedPath + this.extensions[i];
+        resolvedPathWithExt = resolvedPath + extension;
         this.log.silly('getSourceFile:', resolvedPathWithExt);
         text = fs.readFileSync(resolvedPathWithExt, { encoding: this.options.charset });
         this.log.debug('found source file:', fileName, resolvedPathWithExt);
-        return createSourceFile(baseFilePath + this.extensions[i], text, languageVersion);
-      }
-      catch(e) {
+        return createSourceFile(baseFilePath + extension, text, languageVersion);
+      } catch (e) {
         // Try again if the file simply did not exist, otherwise report the error as a warning
-        if(e.code !== 'ENOENT') {
+        if (e.code !== 'ENOENT') {
           if (onError) onError(e.message);
           this.log.warn('Error reading ' + resolvedPathWithExt + ' : ' + e.message);
         }
@@ -42,13 +44,13 @@ export class CustomCompilerHost implements CompilerHost {
   getDefaultLibFileName(options: CompilerOptions) {
     return path.resolve(path.dirname(sys.getExecutingFilePath()), getDefaultLibFileName(options));
   }
-  writeFile: WriteFileCallback = () => {};
+  writeFile: WriteFileCallback = () => { /* noop */ };
 
   getCurrentDirectory() {
     return this.baseDir;
   }
 
-  getDirectories(path: string) {
+  getDirectories(p: string) {
     return [];
   }
 
@@ -67,22 +69,25 @@ export class CustomCompilerHost implements CompilerHost {
   }
 
   fileExists(fileName: string) {
-    var text, baseFilePath, resolvedPath, resolvedPathWithExt;
+    let baseFilePath;
+    let resolvedPath;
+    let resolvedPathWithExt;
 
     // Strip off the extension and resolve relative to the baseDir
     baseFilePath = fileName.replace(/\.[^.]+$/, '');
     resolvedPath = path.resolve(this.baseDir, baseFilePath);
 
     // Iterate through each possible extension and return the first source file that is actually found
-    for(var i=0; i<this.extensions.length; i++) {
+    for (const extension of this.extensions) {
       // Try reading the content from files using each of the given extensions
-      resolvedPathWithExt = resolvedPath + this.extensions[i];
+      resolvedPathWithExt = resolvedPath + extension;
       if (fs.existsSync(resolvedPathWithExt)) return true;
     }
     return false;
   }
 
   readFile(fileName: string) {
+    /* tslint:disable:no-console */
     console.log('readFile - NOT IMPLEMENTED', fileName);
     return '';
   }
