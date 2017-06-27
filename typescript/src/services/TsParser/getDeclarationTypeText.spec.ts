@@ -8,7 +8,7 @@ describe('getDeclarationTypeText', () => {
   let basePath: string;
   beforeEach(() => {
     parser = new TsParser(require('dgeni/lib/mocks/log')(false));
-    basePath = path.resolve(__dirname, '../../../mocks');
+    basePath = path.resolve(__dirname, '../../mocks');
   });
 
   it('should return a textual representation of the type the declaration', () => {

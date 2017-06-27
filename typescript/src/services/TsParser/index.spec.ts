@@ -1,7 +1,7 @@
 import { TsParser } from './index';
-var path = require('canonical-path');
+const path = require('canonical-path');
 
-describe('tsParser', function() {
+describe('tsParser', () => {
   let log: any;
   let parser: TsParser;
 
@@ -10,11 +10,11 @@ describe('tsParser', function() {
     parser = new TsParser(log);
   });
 
-  it("should parse a TS file", function() {
-    var parseInfo = parser.parse(['testSrc.ts'], path.resolve(__dirname, '../../../mocks/tsParser'));
-    var tsModules = parseInfo.moduleSymbols;
+  it("should parse a TS file", () => {
+    const parseInfo = parser.parse(['testSrc.ts'], path.resolve(__dirname, '../../mocks/tsParser'));
+    const tsModules = parseInfo.moduleSymbols;
     expect(tsModules.length).toEqual(1);
     expect(tsModules[0].exportArray.length).toEqual(3);
-    expect(tsModules[0].exportArray.map(function(i) { return i.name; })).toEqual(['MyClass', 'myFn', 'x']);
+    expect(tsModules[0].exportArray.map(i => i.name)).toEqual(['MyClass', 'myFn', 'x']);
   });
 });

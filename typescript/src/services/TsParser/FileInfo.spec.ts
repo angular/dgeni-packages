@@ -7,7 +7,7 @@ describe('FileInfo', () => {
   let basePath: string;
   beforeEach(() => {
     parser = new TsParser(require('dgeni/lib/mocks/log')(false));
-    basePath = path.resolve(__dirname, '../../../mocks');
+    basePath = path.resolve(__dirname, '../../mocks');
   });
 
   it('should compute the file path properties from the parsed file', () => {

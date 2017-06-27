@@ -5,7 +5,7 @@ const SLASH = 47;
 
 export function getContent(node: Node|undefined) {
 
-  let content = "";
+  let content = '';
 
   if (!node) return content;
 
@@ -58,11 +58,12 @@ function getJSDocCommentRanges(node: Node, text: string) {
       getLeadingCommentRanges(text, node.pos);
 
     // True if the comment starts with '/**' but not if it is '/**/'
-    return commentRanges!.filter(comment => {
-        return text.charCodeAt(comment.pos + 1) === ASTERISK &&
-            text.charCodeAt(comment.pos + 2) === ASTERISK &&
-            text.charCodeAt(comment.pos + 3) !== SLASH;
-    });
+    if (commentRanges) {
+      return commentRanges.filter(comment =>
+        text.charCodeAt(comment.pos + 1) === ASTERISK &&
+        text.charCodeAt(comment.pos + 2) === ASTERISK &&
+        text.charCodeAt(comment.pos + 3) !== SLASH);
+    }
 }
 
 function concatenate<T>(array1: T[] | undefined, array2: T[] | undefined) {

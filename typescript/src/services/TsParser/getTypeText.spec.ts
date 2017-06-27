@@ -8,7 +8,7 @@ describe('getTypeText', () => {
   let basePath: string;
   beforeEach(() => {
     parser = new TsParser(require('dgeni/lib/mocks/log')(false));
-    basePath = path.resolve(__dirname, '../../../mocks');
+    basePath = path.resolve(__dirname, '../../mocks');
   });
 
   it('should return text representation of types', () => {

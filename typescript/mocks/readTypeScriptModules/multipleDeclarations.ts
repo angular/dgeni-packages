@@ -1,9 +1,10 @@
 export interface SomeThingConstructor {
   (name: string): any;
+  x?: number;
 }
 
 /**
- * interface
+ * the interface doc
  */
 export interface SomeThing {
   name: string;
@@ -11,6 +12,6 @@ export interface SomeThing {
 }
 
 /**
- * constant
+ * the constant doc
  */
-export const SomeThing : SomeThingConstructor = (name) => { return { name: name }; };
+export const SomeThing: SomeThingConstructor = (name) => ({ name });

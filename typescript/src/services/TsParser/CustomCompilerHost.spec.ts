@@ -11,7 +11,7 @@ describe('CustomCompilerHost', () => {
 
   beforeEach(() => {
     options = { charset: 'utf8' };
-    baseDir = resolve(__dirname, '../../../mocks/tsParser');
+    baseDir = resolve(__dirname, '../../mocks/tsParser');
     extensions = ['.ts', '.js'];
     log = require('dgeni/lib/mocks/log')(false);
 

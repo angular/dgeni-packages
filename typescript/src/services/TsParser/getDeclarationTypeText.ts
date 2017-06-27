@@ -15,7 +15,7 @@ export function getDeclarationTypeText(declaration: Declaration) {
   const initializer = getInitializer(declaration);
   if (initializer) return initializer.getText();
 
-  return 'any';
+  return '';
 }
 
 function getType(declaration: Declaration) {

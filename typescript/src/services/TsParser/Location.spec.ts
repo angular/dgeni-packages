@@ -7,7 +7,7 @@ describe('Location', () => {
   let basePath: string;
   beforeEach(() => {
     parser = new TsParser(require('dgeni/lib/mocks/log')(false));
-    basePath = path.resolve(__dirname, '../../../mocks');
+    basePath = path.resolve(__dirname, '../../mocks');
   });
 
   it('should contain the start and end line and column of exports', () => {
