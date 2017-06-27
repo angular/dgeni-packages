@@ -4,7 +4,7 @@ import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 
 export class ConstExportDoc extends ExportDoc {
-  docType: 'const';
+  docType = 'const';
   type = getDeclarationTypeText(this.declaration);
 
   constructor(moduleDoc: ModuleDoc, symbol: Symbol, basePath: string) {

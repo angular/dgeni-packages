@@ -15,7 +15,7 @@ describe('readTypeScriptModules', () => {
     dgeni = new Dgeni([mockPackage()]);
     injector = dgeni.configureInjector();
     processor = injector.get('readTypeScriptModules');
-    processor.basePath = path.resolve(__dirname, '../mocks/readTypeScriptModules');
+    processor.basePath = path.resolve(__dirname, '../../mocks/readTypeScriptModules');
   });
 
   describe('exportDocs', () => {
@@ -25,13 +25,13 @@ describe('readTypeScriptModules', () => {
       const docs: DocCollection = [];
       processor.$process(docs);
       const someClassDoc = docs.find(doc => doc.name === 'SomeClass');
-      expect(someClassDoc.content).toEqual('@empty\n');
+      expect(someClassDoc.content).toEqual('@empty');
 
       const fooDoc = docs.find(doc => doc.name === 'foo');
-      expect(fooDoc.content).toEqual('The description\n@tag1\ntag info\n');
+      expect(fooDoc.content).toEqual('The description\n@tag1\ntag info');
 
       const barDoc = docs.find(doc => doc.name === 'bar');
-      expect(barDoc.content).toEqual('@name bar\n@description\ndescription of bar {@inline-tag} more content\n');
+      expect(barDoc.content).toEqual('@name bar\n@description\ndescription of bar {@inline-tag} more content');
 
     });
 
@@ -79,9 +79,9 @@ describe('readTypeScriptModules', () => {
 
       const someThingDoc = docs.find(doc => doc.name === 'SomeThing');
       expect(someThingDoc.docType).toEqual('interface');
-      expect(someThingDoc.content).toEqual('constant\n');
+      expect(someThingDoc.content).toEqual('the interface doc');
       expect(someThingDoc.additionalDeclarations).toEqual([
-        someThingDoc.exportSymbol.declarations[0],
+        someThingDoc.symbol.getDeclarations()[1],
       ]);
     });
 

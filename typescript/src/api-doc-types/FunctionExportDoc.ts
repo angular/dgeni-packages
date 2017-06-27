@@ -3,7 +3,7 @@ import { getParameters } from '../services/TsParser/getParameters';
 import { OverloadableExportDoc } from './OverloadableExportDoc';
 
 export class FunctionExportDoc extends OverloadableExportDoc {
-  docType: 'function';
+  docType = 'function';
   returnType = getDeclarationTypeText(this.declaration);
   parameters = getParameters(this.declaration);
 }

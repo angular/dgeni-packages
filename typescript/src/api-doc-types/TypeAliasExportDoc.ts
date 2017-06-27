@@ -4,7 +4,7 @@ import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 
 export class TypeAliasExportDoc extends ExportDoc {
-  docType: 'type-alias';
+  docType = 'type-alias';
   typeDefinition = getDeclarationTypeText(this.declaration);
 
   constructor(

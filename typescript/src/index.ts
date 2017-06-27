@@ -1,5 +1,6 @@
 /* tslint:disable:only-arrow-functions */
 import { Document, Package } from 'dgeni';
+import { readTypeScriptModules } from './processors/readTypeScriptModules';
 import { convertPrivateClassesToInterfaces } from './services/convertPrivateClassesToInterfaces';
 import { modules } from './services/modules';
 import { TsParser } from './services/TsParser';
@@ -34,7 +35,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 .factory('ignoreTypeScriptNamespaces', function() { return []; })
 
 // Register the processors
-.processor(require('./processors/readTypeScriptModules'))
+.processor(readTypeScriptModules)
 
 // Configure ids and paths
 .config(function(computeIdsProcessor: any, computePathsProcessor: any, EXPORT_DOC_TYPES: string[]) {

@@ -94,15 +94,20 @@ export class ReadTypeScriptModules implements Processor {
 
         switch (getExportDocType(resolvedExport)) {
           case 'class':
-            const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, this.basePath);
+            const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, this.basePath, this.hidePrivateMembers);
+            classDoc.members.forEach(doc => docs.push(doc));
+            classDoc.statics.forEach(doc => docs.push(doc));
+            if (classDoc.constructorDoc) docs.push(classDoc.constructorDoc);
             this.addExportDoc(docs, moduleDoc, classDoc);
             break;
           case 'interface':
             const interfaceDoc = new InterfaceExportDoc(moduleDoc, resolvedExport, this.basePath);
+            interfaceDoc.members.forEach(doc => docs.push(doc));
             this.addExportDoc(docs, moduleDoc, interfaceDoc);
             break;
           case 'enum':
             const enumDoc = new EnumExportDoc(moduleDoc, resolvedExport, this.basePath);
+            enumDoc.members.forEach(doc => docs.push(doc));
             this.addExportDoc(docs, moduleDoc, enumDoc);
             break;
           case 'const':

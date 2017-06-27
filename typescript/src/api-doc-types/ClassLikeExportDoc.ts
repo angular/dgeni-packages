@@ -4,7 +4,7 @@ import { ArrayLiteralExpression, CallExpression, Declaration, Decorator, Express
 import { FileInfo } from "../services/TsParser/FileInfo";
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { getDecorators } from "../services/TsParser/getDecorators";
-import { getTypeParametersString } from '../services/TsParser/getTypeParametersString';
+import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { getTypeText } from '../services/TsParser/getTypeText';
 
 import { ContainerExportDoc } from './ContainerExportDoc';
@@ -20,7 +20,7 @@ import { PropertyMemberDoc } from './PropertyMemberDoc';
 export abstract class ClassLikeExportDoc extends ContainerExportDoc {
   decorators: any[];
   heritage = '';
-  typeParams = '';
+  typeParams = this.computeTypeParams();
 
   constructor(
       moduleDoc: ModuleDoc,
@@ -28,13 +28,25 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       declaration: Declaration,
       basePath: string) {
         super(moduleDoc, symbol, declaration, basePath);
-        this.computeTypeParams();
         this.computeHeritage(declaration);
         getDecorators(this.declaration);
+        this.addAliases();
       }
 
   private computeTypeParams() {
-    this.typeParams = this.symbol.declarations && getTypeParametersString(this.symbol.declarations[0]) || '';
+    if (this.symbol.members) {
+      const typeParams: string[] = [];
+      this.symbol.members.forEach((member, name) => {
+        if (member.getFlags() & SymbolFlags.TypeParameter) {
+          typeParams.push(name);
+        }
+      });
+      if (typeParams.length) return `<${typeParams.join(', ')}>`;
+    }
+    return '';
+  }
+
+  private addAliases() {
     if (this.typeParams) {
       // Make sure duplicate aliases aren't created, so "Ambiguous link" warnings are prevented
       this.aliases.push(this.name + this.typeParams);
@@ -56,30 +68,6 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
     }
   }
 }
-
-  //           for (var exported in resolvedExport.exports) {
-  //             if (exported === 'prototype') continue;
-  //             if (this.hidePrivateMembers && exported.charAt(0) === '_') continue;
-  //             var memberSymbol = resolvedExport.exports[exported];
-  //             var memberDoc = createMemberDoc(memberSymbol, exportDoc, basePath, parseInfo.typeChecker);
-  //             memberDoc.isStatic = true;
-  //             docs.push(memberDoc);
-  //             console.log('static export of export: ' + memberDoc.id + ' from ' + exportDoc.id + ' in ' + moduleDoc.id);
-  //             exportDoc.statics.push(memberDoc);
-  //           }
-
-  //         if (this.sortClassMembers) {
-  //           exportDoc.members.sort((a, b) => {
-  //             if (a.name > b.name) return 1;
-  //             if (a.name < b.name) return -1;
-  //             return 0;
-  //           });
-  //           exportDoc.statics.sort(function(a, b) {
-  //             if (a.name > b.name) return 1;
-  //             if (a.name < b.name) return -1;
-  //             return 0;
-  //           });
-          // }
 
 function getHeritage(declaration: Declaration): HeritageClause[] {
   return (declaration as any).heritageClauses;

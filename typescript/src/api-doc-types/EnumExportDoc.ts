@@ -7,7 +7,7 @@ import { ModuleDoc } from './ModuleDoc';
  * but they cannot have decorators or type parameters
  */
 export class EnumExportDoc extends ContainerExportDoc {
-  docType: 'enum';
+  docType = 'enum';
   additionalDeclarations: Declaration[] = [];
   constructor(
     moduleDoc: ModuleDoc,
@@ -15,5 +15,8 @@ export class EnumExportDoc extends ContainerExportDoc {
     basePath: string) {
     super(moduleDoc, symbol, symbol.valueDeclaration!, basePath);
     this.additionalDeclarations = symbol.getDeclarations().filter(declaration => declaration !== this.declaration);
+    if (symbol.exports) {
+      this.members = this.getMemberDocs(symbol.exports, true, false);
+    }
   }
 }

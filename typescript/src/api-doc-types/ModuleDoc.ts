@@ -10,7 +10,7 @@ import { ExportDoc } from './ExportDoc';
  * which are represented by docs of their own.
  */
 export class ModuleDoc implements ApiDoc {
-  docType: 'module';
+  docType = 'module';
   id = this.symbol.name.replace(/^"|"$/g, '').replace(/\/index$/, '');
   name = this.id.split('/').pop()!;
   declaration = this.symbol.valueDeclaration!;

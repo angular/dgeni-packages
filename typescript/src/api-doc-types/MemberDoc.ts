@@ -13,22 +13,24 @@ import { ContainerExportDoc } from './ContainerExportDoc';
  * This document represents a member of a ClassLikeExportDoc.
  */
 export abstract class MemberDoc implements ApiDoc {
-  docType: 'member';
-  abstract name: string;
-  abstract id: string;
-  abstract aliases: string[];
-  path: string;
-  outputPath: string;
-  content = getContent(this.declaration);
-  fileInfo: FileInfo;
+  readonly docType = 'member';
+  readonly abstract name: string;
+  readonly abstract id: string;
+  readonly abstract aliases: string[];
+  readonly abstract anchor: string;
+  readonly path: string;
+  readonly outputPath: string;
+  readonly content = getContent(this.declaration);
+  readonly fileInfo: FileInfo;
 
-  accessibility = getAccessibility(this.declaration);
-  decorators = getDecorators(this.declaration);
-  type = getDeclarationTypeText(this.declaration);
-  isOptional = this.symbol.flags & SymbolFlags.Optional;
+  readonly accessibility = getAccessibility(this.declaration);
+  readonly decorators = getDecorators(this.declaration);
+  readonly type = getDeclarationTypeText(this.declaration);
+  readonly isOptional = !!(this.symbol.flags & SymbolFlags.Optional);
+  readonly isGetAccessor = !!(this.symbol.flags & SymbolFlags.GetAccessor);
+  readonly isSetAccessor = !!(this.symbol.flags & SymbolFlags.SetAccessor);
 
-  constructor(public containerDoc: ContainerExportDoc, public symbol: Symbol, public declaration: Declaration, basePath: string) {
+  constructor(public containerDoc: ContainerExportDoc, public symbol: Symbol, public declaration: Declaration, public basePath: string, public isStatic: boolean) {
     this.fileInfo = new FileInfo(this.declaration, basePath);
   }
-
 }

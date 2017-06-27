@@ -1,5 +1,6 @@
 import { Declaration, Symbol } from 'typescript';
 import { FileInfo } from '../services/TsParser/FileInfo';
+import { getContent } from '../services/TsParser/getContent';
 import { ApiDoc } from './ApiDoc';
 import { ModuleDoc } from './ModuleDoc';
 
@@ -18,7 +19,7 @@ export abstract class ExportDoc implements ApiDoc {
   id = this.moduleDoc.id + "/" + this.name;
   fileInfo = new FileInfo(this.declaration, this.basePath);
   originalModule = this.fileInfo.projectRelativePath.replace(new RegExp("\." + this.fileInfo.extension + "$"), "");
-  content: string;
+  content = getContent(this.declaration);
   path: string;
   outputPath: string;
 
@@ -26,5 +27,6 @@ export abstract class ExportDoc implements ApiDoc {
       public moduleDoc: ModuleDoc,
       public symbol: Symbol,
       public declaration: Declaration,
-      public basePath: string) {}
+      public basePath: string) {
+      }
 }
