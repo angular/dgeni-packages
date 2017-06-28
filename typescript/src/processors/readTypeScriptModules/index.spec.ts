@@ -79,9 +79,9 @@ describe('readTypeScriptModules', () => {
 
       const someThingDoc = docs.find(doc => doc.name === 'SomeThing');
       expect(someThingDoc.docType).toEqual('interface');
-      expect(someThingDoc.content).toEqual('the interface doc');
+      expect(someThingDoc.content).toEqual('the constant doc');
       expect(someThingDoc.additionalDeclarations).toEqual([
-        someThingDoc.symbol.getDeclarations()[1],
+        someThingDoc.symbol.getDeclarations()[0],
       ]);
     });
 
