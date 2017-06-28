@@ -29,6 +29,8 @@ export abstract class MemberDoc implements ApiDoc {
   readonly isOptional = !!(this.symbol.flags & SymbolFlags.Optional);
   readonly isGetAccessor = !!(this.symbol.flags & SymbolFlags.GetAccessor);
   readonly isSetAccessor = !!(this.symbol.flags & SymbolFlags.SetAccessor);
+  readonly isCallMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__call');
+  readonly isNewMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__new');
 
   constructor(public containerDoc: ContainerExportDoc, public symbol: Symbol, public declaration: Declaration, public basePath: string, public isStatic: boolean) {
     this.fileInfo = new FileInfo(this.declaration, basePath);
