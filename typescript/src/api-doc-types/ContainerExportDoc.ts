@@ -33,15 +33,16 @@ export abstract class ContainerExportDoc extends ExportDoc {
       // Ignore the prototype export
       if (flags & IgnoreMemberFlags) return;
 
-      if (!hidePrivateMembers || (member.name.charAt(0) !== '_' && getAccessibility(member.valueDeclaration) !== 'private')) {
-        for (const declaration of member.getDeclarations()) {
-          if (flags & MethodMemberFlags) {
-              memberDocs.push(new MethodMemberDoc(this, member, declaration, this.basePath, isStatic));
-          } else if (flags & PropertyMemberFlags) {
-            memberDocs.push(new PropertyMemberDoc(this, member, declaration, this.basePath, isStatic));
-          } else {
-            throw new Error(`Unknown member type for member ${member.name}`);
-          }
+      // Ignore private members, if configured to do so
+      if (hidePrivateMembers && getAccessibility(member.valueDeclaration) === 'private') return;
+
+      for (const declaration of member.getDeclarations()) {
+        if (flags & MethodMemberFlags) {
+          memberDocs.push(new MethodMemberDoc(this, member, declaration, this.basePath, isStatic));
+        } else if (flags & PropertyMemberFlags) {
+          memberDocs.push(new PropertyMemberDoc(this, member, declaration, this.basePath, isStatic));
+        } else {
+          throw new Error(`Unknown member type for member ${member.name}`);
         }
       }
     });
