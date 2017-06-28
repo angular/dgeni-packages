@@ -1,4 +1,5 @@
 import { DocCollection } from 'dgeni';
+import { ConstExportDoc } from '../api-doc-types/ConstExportDoc';
 export function convertPrivateClassesToInterfaces(exportDocs: DocCollection, addInjectableReference: boolean) {
 
   exportDocs.forEach(exportDoc => {
@@ -15,12 +16,9 @@ export function convertPrivateClassesToInterfaces(exportDocs: DocCollection, add
 
       if (addInjectableReference) {
         // Add the `declare var SomeClass extends InjectableReference` construct
-        exportDocs.push({
-          docType: 'var',
-          name: exportDoc.name,
-          id: exportDoc.id,
-          returnType: 'InjectableReference'
-        });
+        const constExportDoc = new ConstExportDoc(exportDoc.moduleDoc, exportDoc.symbol, exportDoc.basePath);
+        constExportDoc.type = 'InjectableReference';
+        exportDocs.push(constExportDoc);
       }
     }
   });
