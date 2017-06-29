@@ -1,64 +1,50 @@
 import { DocCollection } from 'dgeni';
+import { ClassExportDoc } from '../api-doc-types/ClassExportDoc';
 import { convertPrivateClassesToInterfaces } from './convertPrivateClassesToInterfaces';
 
-describe('convertPrivateClassesToInterfaces', function() {
+describe('convertPrivateClassesToInterfaces', () => {
+  const basePath = 'a/b/c';
+  const moduleDoc = { id: 'someModule' } as any;
+  const mockDeclaration: any = { getSourceFile: () => ({ fileName: 'x/y/z', text: 'blah blah' }) };
+  const classSymbol: any = {
+    getDeclarations: () => [mockDeclaration],
+    name: 'privateClass',
+    valueDeclaration: mockDeclaration,
+  };
 
-  it('should convert private class docs to interface docs', function() {
-    var docs = [
-      {
-        docType: 'class',
-        name: 'privateClass',
-        id: 'privateClass',
-        constructorDoc: { internal: true }
-      }
-    ];
+  let classDoc: ClassExportDoc;
+  let docs: DocCollection;
+
+  beforeEach(() => {
+    classDoc = new ClassExportDoc(moduleDoc, classSymbol, basePath, true);
+    classDoc.constructorDoc = { internal: true } as any;
+    docs = [classDoc];
+  });
+
+  it('should convert private class docs to interface docs', () => {
     convertPrivateClassesToInterfaces(docs, false);
     expect(docs[0].docType).toEqual('interface');
   });
 
-  it('should not touch non-private class docs', function() {
-    var docs = [
-      {
-        docType: 'class',
-        name: 'privateClass',
-        id: 'privateClass',
-        constructorDoc: { }
-      }
-    ];
+  it('should not touch non-private class docs', () => {
+    classDoc.constructorDoc = {} as any;
     convertPrivateClassesToInterfaces(docs, false);
     expect(docs[0].docType).toEqual('class');
   });
 
-  it('should convert the heritage since interfaces use `extends` not `implements`', function() {
-    var docs = [
-      {
-        docType: 'class',
-        name: 'privateClass',
-        id: 'privateClass',
-        constructorDoc: { internal: true },
-        heritage: 'implements parentInterface'
-      }
-    ];
+  it('should convert the heritage since interfaces use `extends` not `implements`', () => {
+    classDoc.implementsClauses = ['parentInterface'];
     convertPrivateClassesToInterfaces(docs, false);
-    expect(docs[0].heritage).toEqual('extends parentInterface');
+    expect(docs[0].extendsClauses).toEqual(['parentInterface']);
   });
 
-  it('should add new injectable reference types, if specified, to the passed in collection', function() {
-    var docs: DocCollection = [
-      {
-        docType: 'class',
-        name: 'privateClass',
-        id: 'privateClass',
-        constructorDoc: { internal: true },
-        heritage: 'implements parentInterface'
-      }
-    ];
+  it('should add new injectable reference types, if specified, to the passed in collection', () => {
     convertPrivateClassesToInterfaces(docs, true);
-    expect(docs[1]).toEqual({
-      docType : 'var',
-      name : 'privateClass',
-      id : 'privateClass',
-      returnType : 'InjectableReference'
-    });
+    expect(docs[1]).toEqual(jasmine.objectContaining({
+      docType: 'const',
+      id: 'someModule/privateClass',
+      name: 'privateClass',
+      type: 'InjectableReference',
+    }));
   });
 });

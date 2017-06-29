@@ -18,8 +18,9 @@ import { PropertyMemberDoc } from './PropertyMemberDoc';
  * Interfaces and classes are "class-like", in that they can contain members, heritage, type parameters and decorators
  */
 export abstract class ClassLikeExportDoc extends ContainerExportDoc {
-  decorators: any[];
-  heritage = '';
+  decorators = getDecorators(this.declaration);
+  extendsClauses: string[] = [];
+  implementsClauses: string[] = [];
   typeParams = this.computeTypeParams();
 
   constructor(
@@ -28,8 +29,7 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       declaration: Declaration,
       basePath: string) {
         super(moduleDoc, symbol, declaration, basePath);
-        this.computeHeritage(declaration);
-        getDecorators(this.declaration);
+        this.computeHeritage();
         this.addAliases();
       }
 
@@ -54,18 +54,21 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
     }
   }
 
-  private computeHeritage(declaration: Declaration) {
-    const heritageClauses = getHeritage(declaration);
-    if (heritageClauses) {
-      heritageClauses.forEach(heritageClause => {
-        if (heritageClause.token === SyntaxKind.ExtendsKeyword) {
-          this.heritage += ` extends ${heritageClause.types.map(heritageType => getTypeText(heritageType)).join(', ')}`;
-        }
-        if (heritageClause.token === SyntaxKind.ImplementsKeyword) {
-          this.heritage += ` implements ${heritageClause.types.map(heritageType => getTypeText(heritageType)).join(', ')}`;
-        }
-      });
-    }
+  private computeHeritage() {
+    // Collect up all the heritage clauses from each declarartion
+    // (interfaces can have multiple declarations, which are merged, each with their own heritage)
+    this.symbol.getDeclarations().forEach(declaration => {
+      const heritageClauses = getHeritage(declaration);
+      if (heritageClauses) {
+        heritageClauses.forEach(heritageClause => {
+          if (heritageClause.token === SyntaxKind.ExtendsKeyword) {
+            this.extendsClauses = this.extendsClauses.concat(heritageClause.types.map(heritageType => getTypeText(heritageType)));
+          } else {
+            this.implementsClauses = this.implementsClauses.concat(heritageClause.types.map(heritageType => getTypeText(heritageType)));
+          }
+        });
+      }
+    });
   }
 }
 
