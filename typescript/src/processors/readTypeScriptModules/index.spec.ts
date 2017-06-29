@@ -243,10 +243,13 @@ describe('readTypeScriptModules', () => {
       expect(functionDoc.returnType).toEqual('void');
 
       const interfaceDoc = docs.find(doc => doc.docType === 'interface');
-      expect(interfaceDoc.members.length).toEqual(1);
-      expect(interfaceDoc.members[0].parameters).toEqual(['...args: Array<any>']);
-      expect(interfaceDoc.members[0].returnType).toEqual('void');
-    });
+      expect(interfaceDoc.members.length).toEqual(2);
+      const methodDoc = interfaceDoc.members[0];
+      expect(methodDoc.parameters).toEqual(['...args: Array<any>']);
+      expect(methodDoc.returnType).toEqual('void');
+
+      const propertyDoc = interfaceDoc.members[1];
+      expect(propertyDoc.returnType).toEqual('(...args: Array<any>) => void');    });
   });
 
   xdescribe('source file globbing patterns', () => {
