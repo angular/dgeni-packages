@@ -18,7 +18,7 @@ module.exports = function templateEngine(templateFinder) {
     tags: [],
 
     getRenderer: function() {
-      var loader = new nunjucks.FileSystemLoader(templateFinder.templateFolders, {watch: false, noCache: true});
+      var loader = new nunjucks.FileSystemLoader(templateFinder.templateFolders, {throwOnUndefined: true, watch: false, noCache: false});
       var engine = new nunjucks.Environment(loader, this.config);
 
       // Configure nunjucks with the custom filters
