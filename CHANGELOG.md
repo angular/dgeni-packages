@@ -1,5 +1,40 @@
 # Changelog
 
+# 0.20.0-beta.0  29 June 2017
+
+## BREAKING CHANGES
+
+The typescript package has been completely rewritten in TypeScript. One benefit of this is that
+typings should be available for the API doc types in your own projects.
+
+Along the way there are some changes to the properties that are attached to the API docs that are
+generated. Here is a list of the things that might affect you:
+
+* Members starting with `_` are no longer considered private. You should filter them out in a
+custom processor if you do not want them to appear in the docs.
+* API docs that have a type, e.g. functions, constants, type aliases, etc used to have a property called
+`returnType` but that did not make sense for non-functions. This property is renamed to `type`.
+* API docs that have heritage, e.g. classes and interfaces, used to have a property called `heritage`,
+which was a string representation containing both "implements" and "extends" clauses. These have now
+been split into two properties `implementsClauses` and `extendsClauses`, which each contain an array
+of strings.
+
+## Bug Fixes
+- **typescript:**
+  - group overloaded exported functions in a single doc
+  - do not assume that members prefixed with `_` are private
+- **base:** checkAnchorLinks should match URL encoded chars
+
+
+## New Features
+- **typescript:**
+  - provide isCallMember and isNewMember options
+  - split out heritage into extendsClauses and implementsClauses
+
+## Performance Improvements
+- **nunjucks:** upgrade to v3 and enable caching of templates
+
+
 # 0.19.1 26 May 2017
 
 * fix(typescript): capture static members correctly	0e41fae7
@@ -36,19 +71,19 @@ based on a TypeScript v1 application.
 
 ## Bug Fixes
 - **typescript:** ensure all modules have relative filepaths
-  ([434233](https://github.com/angular/angular.js/commit/43423313e246e07a002d2410182d1157b206dbc7))
+  ([434233](https://github.com/angular/dgeni-packages/commit/43423313e246e07a002d2410182d1157b206dbc7))
 
 
 # 0.17.0 17 March 2017
 
 ## Bug Fixes
 - **jsdoc:** do not parse for tags within HTML blocks
-  ([451d84](https://github.com/angular/angular.js/commit/451d84a0d0e4bdfd675bced61dd3f2e9cef533a0))
+  ([451d84](https://github.com/angular/dgeni-packages/commit/451d84a0d0e4bdfd675bced61dd3f2e9cef533a0))
 
 ## Breaking Changes
 
 ### **jsdoc** due to:
-  - **[451d84](https://github.com/angular/angular.js/commit/451d84a0d0e4bdfd675bced61dd3f2e9cef533a0)**: do not parse for tags within HTML blocks
+  - **[451d84](https://github.com/angular/dgeni-packages/commit/451d84a0d0e4bdfd675bced61dd3f2e9cef533a0)**: do not parse for tags within HTML blocks
 
     Tags inside HTML blocks are no longer parsed by default.
     If you wish this to enable this then you can modify the
