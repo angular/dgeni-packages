@@ -182,8 +182,7 @@ describe('readTypeScriptModules', () => {
 
       const fooDocs = docs.filter(doc => doc.name === 'foo');
       expect(fooDocs[0].parameters).toEqual(['str: string']);
-      expect(fooDocs[1].parameters).toEqual(['num: number']);
-      // console.log(fooDocs.map(doc => doc.name));
+      expect(fooDocs[1].parameters).toEqual(['num1: number', 'num2: number']);
     });
   });
 

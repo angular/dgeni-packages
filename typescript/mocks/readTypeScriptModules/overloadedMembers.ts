@@ -1,17 +1,11 @@
 export abstract class TestClass {
   /**
-   * @other foo
    * String foo
+   * @other foo
    */
   abstract foo(str: string);
   /**
    * Number foo
    */
-  abstract foo(num: number);
-
-  // /**
-  //  * General bar
-  //  */
-  // abstract bar(str: string);
-  // abstract bar(num: number);
+  abstract foo(num1: number, num2: number);
 }
