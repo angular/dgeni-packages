@@ -1,9 +1,17 @@
-import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
-import { getParameters } from '../services/TsParser/getParameters';
-import { OverloadableExportDoc } from './OverloadableExportDoc';
+import { Symbol } from 'typescript';
+import { ExportDoc } from './ExportDoc';
+import { ModuleDoc } from './ModuleDoc';
+import { OverloadInfo } from './OverloadInfo';
 
-export class FunctionExportDoc extends OverloadableExportDoc {
+export class FunctionExportDoc extends ExportDoc {
   docType = 'function';
-  returnType = getDeclarationTypeText(this.declaration);
-  parameters = getParameters(this.declaration);
+  overloads = this.symbol.getDeclarations().map(declaration => new OverloadInfo(this, declaration));
+
+  constructor(
+      moduleDoc: ModuleDoc,
+      symbol: Symbol,
+      basePath: string) {
+    // For this container doc, we just use the first given declaration
+    super(moduleDoc, symbol, symbol.getDeclarations()[0], basePath);
+  }
 }

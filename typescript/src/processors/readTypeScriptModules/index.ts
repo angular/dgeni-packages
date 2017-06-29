@@ -119,10 +119,9 @@ export class ReadTypeScriptModules implements Processor {
             this.addExportDoc(docs, moduleDoc, new TypeAliasExportDoc(moduleDoc, resolvedExport, this.basePath));
             break;
           case 'function':
-            // There can be multiple overloads of functions
-            for (const declaration of resolvedExport.getDeclarations()) {
-              this.addExportDoc(docs, moduleDoc, new FunctionExportDoc(moduleDoc, resolvedExport, declaration, this.basePath));
-            }
+            const functionDoc = new FunctionExportDoc(moduleDoc, resolvedExport, this.basePath);
+            this.addExportDoc(docs, moduleDoc, functionDoc);
+            functionDoc.overloads.forEach(doc => docs.push(doc));
             break;
           default:
             this.log.error(`Don't know how to create export document for ${resolvedExport.name}`);
