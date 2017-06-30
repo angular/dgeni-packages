@@ -1,5 +1,5 @@
 import { Declaration, Symbol, SyntaxKind } from 'typescript';
-import { getDeclarationTypeText } from '../services/TSParser/getDeclarationTypeText';
+import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 
