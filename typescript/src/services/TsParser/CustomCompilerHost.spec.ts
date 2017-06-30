@@ -40,6 +40,11 @@ describe('CustomCompilerHost', () => {
       sourceFile = host.getSourceFile('../mockPackage.ts', 0);
       expect(sourceFile.fileName).toEqual('../mockPackage.js');
     });
+
+    it('should cope with folders with names that look like source files', () => {
+      const sourceFile = host.getSourceFile('zone.js', 0);
+      expect(sourceFile.fileName).toEqual('zone.js/index.ts');
+    });
   });
 
   describe('getDefaultLibFileName', () => {

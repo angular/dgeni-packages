@@ -15,8 +15,22 @@ export class CustomCompilerHost implements CompilerHost {
     let resolvedPath;
     let resolvedPathWithExt;
 
+    // let's just try loading the file as-is initially
+    try {
+      resolvedPath = path.resolve(this.baseDir, fileName);
+      text = fs.readFileSync(resolvedPath, { encoding: this.options.charset });
+      this.log.debug('found source file:', fileName);
+      return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
+    } catch (e) {
+      // if it is a folder then try loading the index file of that folder
+      if (e.code === 'EISDIR') {
+        return this.getSourceFile(fileName + '/index', languageVersion, onError);
+      }
+      // otherwise ignore the error and move on to the strategy below...
+    }
+
     // Strip off the extension and resolve relative to the baseDir
-    baseFilePath = fileName.replace(/\.[^.]+$/, '');
+    baseFilePath = fileName.replace(/\.[^.\/]+$/, '');
     resolvedPath = path.resolve(this.baseDir, baseFilePath);
     baseFilePath = path.relative(this.baseDir, resolvedPath);
 
