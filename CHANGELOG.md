@@ -1,12 +1,18 @@
 # Changelog
 
-# 0.20.0-beta.1  30 June 2017
+# 0.20.0-beta.3  30 June 2017
+
+## Bug Fixes
+
+-	**typescript:** compile files in folders that have file-like names
+
+# 0.20.0-beta.2  30 June 2017
 
 ## Bug Fixes
 
 - **typescript:** paths to imports are case sensitive
 
-# 0.20.0-beta.0  29 June 2017
+# 0.20.0-beta.1  29 June 2017
 
 ## BREAKING CHANGES
 
