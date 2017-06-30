@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.20.0-beta.1  30 June 2017
+
+## Bug Fixes
+
+- **typescript:** paths to imports are case sensitive
+
 # 0.20.0-beta.0  29 June 2017
 
 ## BREAKING CHANGES
