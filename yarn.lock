@@ -399,9 +399,9 @@ dependency-graph@~0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/dependency-graph/-/dependency-graph-0.4.1.tgz#302e58218d85c51a97638730dbf9b7d852a19693"
 
-dgeni@^0.4.7:
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/dgeni/-/dgeni-0.4.7.tgz#5070627dd28f88d48006e21f55afb18a9cb8be68"
+dgeni@^0.4.9:
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/dgeni/-/dgeni-0.4.9.tgz#9e42775b1386ca5eb824753ac2cd169d8f61ced1"
   dependencies:
     canonical-path "~0.0.2"
     dependency-graph "~0.4.1"

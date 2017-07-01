@@ -40,7 +40,7 @@
     "canonical-path": "0.0.2",
     "catharsis": "^0.8.1",
     "change-case": "3.0.0",
-    "dgeni": "^0.4.7",
+    "dgeni": "^0.4.9",
     "espree": "^2.2.3",
     "estraverse": "^4.1.0",
     "glob": "^7.0.5",
