@@ -1,5 +1,5 @@
 import {Dgeni, DocCollection} from 'dgeni';
-import {Injector} from 'dgeni/lib/injector';
+import {Injector} from 'dgeni/lib/Injector';
 import {ReadTypeScriptModules} from '.';
 import {ClassExportDoc} from '../../api-doc-types/ClassExportDoc';
 import {ExportDoc} from '../../api-doc-types/ExportDoc';
