@@ -24,7 +24,7 @@ export class CustomCompilerHost implements CompilerHost {
     } catch (e) {
       // if it is a folder then try loading the index file of that folder
       if (e.code === 'EISDIR') {
-        return this.getSourceFile(fileName + '/index', languageVersion, onError);
+        return this.getSourceFile(fileName + '/index.ts', languageVersion, onError);
       }
       // otherwise ignore the error and move on to the strategy below...
     }
