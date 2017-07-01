@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.20.0-beta.1  1 July 2017
+
+## Bug Fixes
+
+- **typescript:**
+  - compile files in folders that have file-like names	ee10b835
+  - paths should be case sensitive	5238302b
+
 # 0.20.0-beta.3  30 June 2017
 
 ## Bug Fixes
