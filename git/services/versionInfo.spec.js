@@ -9,7 +9,7 @@ var versionInfoFactory = rewire('./versionInfo.js');
 
 
 describe("versionInfo", function() {
-  var versionInfo, mockPackage, shellMocks;
+  var versionInfo, mockPackage, shellMocks, ciBuild;
 
   beforeEach(function() {
     mocks.getPreviousVersions.calls.reset();
@@ -41,6 +41,12 @@ describe("versionInfo", function() {
 
     var injector = dgeni.configureInjector();
     versionInfo = injector.get('versionInfo');
+
+    ciBuild = process.env.TRAVIS_BUILD_NUMBER;
+  });
+
+  afterEach(function() {
+    process.env.TRAVIS_BUILD_NUMBER = ciBuild;
   });
 
   describe("currentPackage", function() {
@@ -102,6 +108,13 @@ describe("versionInfo", function() {
 
     describe("with no BUILD_NUMBER", function() {
       it("should have a local prerelease", function() {
+        delete process.env.TRAVIS_BUILD_NUMBER;
+
+        versionInfo = versionInfoFactory(
+          function() {},
+          mocks.packageWithVersion
+        );
+
         expect(versionInfo.currentVersion.prerelease[0]).toBe('local');
       });
     });
