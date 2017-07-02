@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import { CompilerHost, CompilerOptions, sys } from 'typescript';
 import { CustomCompilerHost } from './CustomCompilerHost';
 const { resolve } = require('canonical-path');
@@ -50,6 +51,16 @@ describe('CustomCompilerHost', () => {
   describe('getDefaultLibFileName', () => {
     it('should return a path to the default library', () => {
       expect(host.getDefaultLibFileName(options)).toContain('typescript/lib/lib.d.ts');
+    });
+  });
+
+  describe('fileExists', () => {
+    it('should delegate to fs.existsSync', () => {
+      const mockResult: any = {};
+      spyOn(fs, 'existsSync').and.returnValue(mockResult);
+      const result = host.fileExists('a/b/c.ts');
+      expect(result).toBe(mockResult);
+      expect(fs.existsSync).toHaveBeenCalledWith('a/b/c.ts');
     });
   });
 

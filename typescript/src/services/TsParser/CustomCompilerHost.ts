@@ -83,21 +83,7 @@ export class CustomCompilerHost implements CompilerHost {
   }
 
   fileExists(fileName: string) {
-    let baseFilePath;
-    let resolvedPath;
-    let resolvedPathWithExt;
-
-    // Strip off the extension and resolve relative to the baseDir
-    baseFilePath = fileName.replace(/\.[^.]+$/, '');
-    resolvedPath = path.resolve(this.baseDir, baseFilePath);
-
-    // Iterate through each possible extension and return the first source file that is actually found
-    for (const extension of this.extensions) {
-      // Try reading the content from files using each of the given extensions
-      resolvedPathWithExt = resolvedPath + extension;
-      if (fs.existsSync(resolvedPathWithExt)) return true;
-    }
-    return false;
+    return fs.existsSync(fileName);
   }
 
   readFile(fileName: string) {
