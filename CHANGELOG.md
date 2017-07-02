@@ -1,6 +1,13 @@
 # Changelog
 
-# 0.20.0-beta.1  1 July 2017
+# 0.20.0-beta.5  2 July 2017
+
+## Bug Fixes
+
+- **typescript:** CustomCompilerHost.fileExists should not second guess extensions and base dir	b7b11164
+
+
+# 0.20.0-beta.4  1 July 2017
 
 ## Bug Fixes
 
