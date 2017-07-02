@@ -8,7 +8,8 @@
     "docs": "dgeni ./docs",
     "changelog": "changez -o changes.md",
     "build": "tsc -p typescript",
-    "prepublish": "git clean -xdf typescript && yarn build"
+    "prepublish": "git clean -xdf typescript && yarn build",
+    "watch": "tsc -p typescript -w"
   },
   "engines": {
     "node": ">=6.9.1",
