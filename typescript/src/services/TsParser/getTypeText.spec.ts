@@ -1,5 +1,6 @@
 import { Declaration, Symbol, TypeNode } from 'typescript';
 import { TsParser } from '.';
+import { getDeclarations } from './getDeclarations';
 import { getTypeText } from './getTypeText';
 const path = require('canonical-path');
 
@@ -34,5 +35,5 @@ describe('getTypeText', () => {
 });
 
 function getType(symbol: Symbol) {
-  return (symbol.getDeclarations()[0] as any).type as TypeNode;
+  return (getDeclarations(symbol)[0] as any).type as TypeNode;
 }

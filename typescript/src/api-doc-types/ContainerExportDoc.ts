@@ -1,7 +1,9 @@
 /* tslint:disable:no-bitwise */
 import { Declaration, Map, Symbol, SymbolFlags } from 'typescript';
+import { getDeclarations } from '../services/TsParser';
 import { FileInfo } from "../services/TsParser/FileInfo";
 import { getAccessibility } from "../services/TsParser/getAccessibility";
+
 import { ExportDoc } from './ExportDoc' ;
 import { MemberDoc } from './MemberDoc' ;
 import { MethodMemberDoc } from './MethodMemberDoc';
@@ -36,7 +38,7 @@ export abstract class ContainerExportDoc extends ExportDoc {
       // Ignore private members, if configured to do so
       if (hidePrivateMembers && getAccessibility(member.valueDeclaration) === 'private') return;
 
-      for (const declaration of member.getDeclarations()) {
+      for (const declaration of getDeclarations(member)) {
         if (flags & MethodMemberFlags) {
           memberDocs.push(new MethodMemberDoc(this, member, declaration, this.basePath, isStatic));
         } else if (flags & PropertyMemberFlags) {

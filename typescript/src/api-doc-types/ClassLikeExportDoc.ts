@@ -1,6 +1,7 @@
 /* tslint:disable:no-bitwise */
 import { ArrayLiteralExpression, CallExpression, Declaration, Decorator, Expression, HeritageClause, ObjectLiteralElement, ObjectLiteralExpression, PropertyAssignment, Symbol, SymbolFlags, SyntaxKind } from 'typescript';
 
+import { getDeclarations } from '../services/TsParser';
 import { FileInfo } from "../services/TsParser/FileInfo";
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { getDecorators } from "../services/TsParser/getDecorators";
@@ -57,7 +58,7 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
   private computeHeritage() {
     // Collect up all the heritage clauses from each declarartion
     // (interfaces can have multiple declarations, which are merged, each with their own heritage)
-    this.symbol.getDeclarations().forEach(declaration => {
+    getDeclarations(this.symbol).forEach(declaration => {
       const heritageClauses = getHeritage(declaration);
       if (heritageClauses) {
         heritageClauses.forEach(heritageClause => {

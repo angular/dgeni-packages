@@ -1,4 +1,5 @@
 import { Declaration, Symbol, SyntaxKind } from 'typescript';
+import { getDeclarations } from '../services/TsParser';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
@@ -11,7 +12,7 @@ export class TypeAliasExportDoc extends ExportDoc {
       moduleDoc: ModuleDoc,
       exportSymbol: Symbol,
       basePath: string) {
-    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()), basePath);
+    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(getDeclarations(exportSymbol)), basePath);
   }
 }
 

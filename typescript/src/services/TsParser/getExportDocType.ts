@@ -1,4 +1,6 @@
 import { Node, NodeFlags, Symbol, SymbolFlags } from 'typescript';
+import { getDeclarations } from './getDeclarations';
+
 
 /* tslint:disable:no-bitwise */
 
@@ -37,11 +39,11 @@ export function getExportDocType(symbol: Symbol) {
   throw new Error(`Unknown symbol type:
     symbolName: ${symbol.name}
     symbolType: ${symbol.flags}
-    file: ${symbol.getDeclarations()[0].getSourceFile().fileName}`);
+    file: ${getDeclarations(symbol)[0].getSourceFile().fileName}`);
 }
 
 function getBlockScopedVariableDocType(symbol: Symbol) {
-  let node: Node | undefined = symbol.valueDeclaration || symbol.getDeclarations()[0];
+  let node: Node | undefined = symbol.valueDeclaration || getDeclarations(symbol)[0];
   while (node) {
     if ( node.flags & NodeFlags.Const) {
       return 'const';

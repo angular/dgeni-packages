@@ -1,6 +1,7 @@
 import { MethodDeclaration } from 'typescript';
 import { TsParser } from '.';
 import { getContent } from './getContent';
+import { getDeclarations } from './getDeclarations';
 const path = require('canonical-path');
 
 describe('getContent', () => {
@@ -15,8 +16,8 @@ describe('getContent', () => {
     const parseInfo = parser.parse(['tsParser/getContent.test.ts'], basePath);
     const module = parseInfo.moduleSymbols[0];
 
-    expect(getContent(module.exportArray[0].getDeclarations()[0])).toEqual('Description of TestClass\n@deprecated warning');
-    expect(getContent(module.exportArray[1].getDeclarations()[0])).toEqual('Description of function');
+    expect(getContent(getDeclarations(module.exportArray[0])[0])).toEqual('Description of TestClass\n@deprecated warning');
+    expect(getContent(getDeclarations(module.exportArray[1])[0])).toEqual('Description of function');
   });
 
   it('should get the leading jsdoc comments for class members and their parameters', () => {
