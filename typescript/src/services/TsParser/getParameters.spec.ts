@@ -1,4 +1,5 @@
 import { TsParser } from '.';
+import { getDeclarations } from './getDeclarations';
 import { getParameters } from './getParameters';
 const path = require('canonical-path');
 
@@ -13,7 +14,7 @@ describe('getParameters', () => {
   it('should return the parameters of the function', () => {
     const parseInfo = parser.parse(['tsParser/getParameters.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
-    const params = getParameters(moduleExports[0].getDeclarations()[0]);
+    const params = getParameters(getDeclarations(moduleExports[0])[0]);
     expect(params).toEqual([
       'a: string',
       'b: () => number',

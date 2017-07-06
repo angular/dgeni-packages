@@ -1,7 +1,7 @@
-import { Declaration, ParameterDeclaration } from 'typescript';
+import { Declaration, NamedDeclaration, ParameterDeclaration } from 'typescript';
 import { getDeclarationTypeText } from './getDeclarationTypeText';
 
-export function getParameters(declaration: Declaration) {
+export function getParameters(declaration: NamedDeclaration) {
   const parameters = getParameterDeclarations(declaration);
   if (!parameters) {
     const name = declaration.name ? declaration.name.getText() : 'unknown';

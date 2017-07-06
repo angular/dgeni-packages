@@ -1,5 +1,6 @@
 /* tslint:disable:no-bitwise */
 import { SymbolFlags } from 'typescript';
+import { getDeclarations } from '../services/TsParser';
 import { getParameters } from '../services/TsParser/getParameters';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { MemberDoc } from './MemberDoc';
@@ -23,7 +24,7 @@ export class MethodMemberDoc extends MemberDoc {
     // if the member is a "call" type then it has no name
     const anchorName = this.name.trim() || 'call';
     // if there is more than one declaration then we need to include the param list to distinguish them
-    return encodeURI(this.symbol.getDeclarations().length === 1 ? anchorName : `${anchorName}(${this.parameters.join(', ')})`);
+    return encodeURI(getDeclarations(this.symbol).length === 1 ? anchorName : `${anchorName}(${this.parameters.join(', ')})`);
   }
 
   private computeAliases() {

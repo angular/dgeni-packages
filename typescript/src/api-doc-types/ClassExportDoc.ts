@@ -4,6 +4,7 @@ import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
 import { MemberDoc } from '../api-doc-types/MemberDoc' ;
 import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc' ;
 import { ModuleDoc } from '../api-doc-types/ModuleDoc';
+import { getDeclarations } from '../services/TsParser';
 
 /**
  * Classes are Class-like but also can contain static members
@@ -26,7 +27,7 @@ export class ClassExportDoc extends ClassLikeExportDoc {
       // Get the constructor
       const constructorSymbol = symbol.members.get('__constructor');
       if (constructorSymbol && constructorSymbol.getFlags() & SymbolFlags.Constructor) {
-        this.constructorDoc = new MethodMemberDoc(this, constructorSymbol, constructorSymbol.getDeclarations()[0], this.basePath, false);
+        this.constructorDoc = new MethodMemberDoc(this, constructorSymbol, getDeclarations(constructorSymbol)[0], this.basePath, false);
       }
       // Get the instance members
       this.members = this.getMemberDocs(symbol.members, hidePrivateMembers, false);
