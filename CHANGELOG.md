@@ -1,5 +1,16 @@
 # Changelog
 
+# 0.20.0-rc.1  6 July 2017
+
+## Bug Fixes
+
+- **typescript:** implement the CompilerHost.readFile method	4d667ff2
+
+## Features
+
+- **base:** allow checkAnchorLinks to abort processing	eee3e7b1
+
+
 # 0.20.0-beta.5  2 July 2017
 
 ## Bug Fixes
