@@ -13,6 +13,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
     checkDoc: function(doc) { return doc.path && doc.outputPath && path.extname(doc.outputPath) === '.html'; },
     base: null,
     webRoot: '/',
+    errorOnUnmatchedLinks: false,
     $validate: {
       ignoredLinks: { presence: true },
       pathVariants: { presence: true },
@@ -100,7 +101,12 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
       });
 
       if ( unmatchedLinkCount ) {
-        log.warn(unmatchedLinkCount, 'unmatched links');
+        var errorMessage = unmatchedLinkCount + ' unmatched links';
+        if (this.errorOnUnmatchedLinks) {
+          throw new Error(errorMessage)
+        } else {
+          log.warn(errorMessage);
+        }
       }
     }
   };

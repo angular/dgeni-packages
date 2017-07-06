@@ -27,6 +27,13 @@ describe("checkAnchorLinks", function() {
     checkWarning('foo', 'doc/path.html');
   });
 
+  it('should abort when there is a dangling link and `errorOnUnmatchedLinks` is true', function() {
+    processor.errorOnUnmatchedLinks = true;
+    expect(function() {
+      processor.$process([{ renderedContent: '<a href="foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' }]);
+    }).toThrowError('1 unmatched links');
+  });
+
   it("should not warn when there is a page for a link", function() {
     processor.$process([
       { renderedContent: '<a href="/foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
