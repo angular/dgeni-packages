@@ -88,7 +88,7 @@ export class CustomCompilerHost implements CompilerHost {
 
   readFile(fileName: string) {
     /* tslint:disable:no-console */
-    console.log('readFile - NOT IMPLEMENTED', fileName);
-    return '';
+    this.log.debug('readFile', fileName);
+    return fs.readFileSync(fileName, 'utf-8');
   }
 }

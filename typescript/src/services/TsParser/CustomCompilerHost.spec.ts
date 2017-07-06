@@ -64,6 +64,16 @@ describe('CustomCompilerHost', () => {
     });
   });
 
+  describe('readFile', () => {
+    it('should delegate to fs.readFileSync', () => {
+      const mockResult = 'content of file';
+      spyOn(fs, 'readFileSync').and.returnValue(mockResult);
+      const result = host.readFile('a/b/c.ts');
+      expect(result).toBe(mockResult);
+      expect(fs.readFileSync).toHaveBeenCalledWith('a/b/c.ts', 'utf-8');
+    });
+  });
+
   describe('writeFile', () => {
     it('should do nothing', () => {
       host.writeFile('', '', false);
