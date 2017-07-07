@@ -2,19 +2,33 @@ import { ArrayLiteralExpression, CallExpression, Declaration, Decorator, Express
 
 export type ArgumentInfo = string | string[] | { [key: string]: ArgumentInfo };
 
+export interface ParsedDecorator {
+  argumentInfo?: ArgumentInfo[];
+  arguments?: string[];
+  expression: Decorator;
+  isCallExpression: boolean;
+  name: string;
+}
+
 export function getDecorators(declaration: Declaration) {
   if (declaration.decorators) {
-    return declaration.decorators.map(decorator => {
+    return declaration.decorators.map<ParsedDecorator>(decorator => {
       const callExpression = getCallExpression(decorator);
-      if (!callExpression) {
-        throw new Error(`Expected decorator to be a call expression: ${decorator.getText()}`);
+      if (callExpression) {
+        return {
+          argumentInfo: callExpression.arguments.map(argument => parseArgument(argument)),
+          arguments: callExpression.arguments.map(argument => argument.getText()),
+          expression: decorator as Decorator,
+          isCallExpression: true,
+          name: callExpression.expression.getText(),
+        };
+      } else {
+        return {
+          expression: decorator as Decorator,
+          isCallExpression: false,
+          name: decorator.expression.getText(),
+        };
       }
-      return {
-        argumentInfo: callExpression.arguments.map(argument => parseArgument(argument)),
-        arguments: callExpression.arguments.map(argument => argument.getText()),
-        expression: decorator as Decorator,
-        name: callExpression.expression.getText(),
-      };
     });
   }
 }
