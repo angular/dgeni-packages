@@ -3,7 +3,7 @@ import { ArrayLiteralExpression, CallExpression, Declaration, Decorator, Express
 
 import { FileInfo } from "../services/TsParser/FileInfo";
 import { getAccessibility } from "../services/TsParser/getAccessibility";
-import { getDecorators } from "../services/TsParser/getDecorators";
+import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { getTypeText } from '../services/TsParser/getTypeText';
 

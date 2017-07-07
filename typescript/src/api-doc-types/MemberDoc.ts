@@ -4,7 +4,7 @@ import { FileInfo } from '../services/TsParser/FileInfo';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { getContent } from "../services/TsParser/getContent";
 import { getDeclarationTypeText } from "../services/TsParser/getDeclarationTypeText";
-import { getDecorators } from "../services/TsParser/getDecorators";
+import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
 import { getTypeText } from '../services/TsParser/getTypeText';
 import { ApiDoc } from './ApiDoc';
 import { ContainerExportDoc } from './ContainerExportDoc';
