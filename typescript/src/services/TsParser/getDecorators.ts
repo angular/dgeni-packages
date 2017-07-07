@@ -6,14 +6,11 @@ export function getDecorators(declaration: Declaration) {
   if (declaration.decorators) {
     return declaration.decorators.map(decorator => {
       const callExpression = getCallExpression(decorator);
-      if (!callExpression) {
-        throw new Error(`Expected decorator to be a call expression: ${decorator.getText()}`);
-      }
       return {
-        argumentInfo: callExpression.arguments.map(argument => parseArgument(argument)),
-        arguments: callExpression.arguments.map(argument => argument.getText()),
+        argumentInfo: callExpression && callExpression.arguments.map(argument => parseArgument(argument)),
+        arguments: callExpression && callExpression.arguments.map(argument => argument.getText()),
         expression: decorator as Decorator,
-        name: callExpression.expression.getText(),
+        name: callExpression ? callExpression.expression.getText() : decorator.expression.getText(),
       };
     });
   }
