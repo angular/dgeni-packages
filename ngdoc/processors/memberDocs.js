@@ -34,7 +34,7 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
           var containerDocs = getDocFromAlias(doc.memberof, doc);
 
           if ( containerDocs.length === 0 ) {
-            log.warn(createDocMessage('Missing container document: "'+ doc.memberof + '"', doc));
+            log.warn(createDocMessage(doc.id +' - Missing container document: "'+ doc.memberof + '"', doc));
             return;
           }
 
@@ -42,7 +42,7 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
             // The memberof field was ambiguous, try prepending the module name too
             containerDocs = getDocFromAlias(_.template('${module}.${memberof}')(doc), doc);
             if ( containerDocs.length !== 1 ) {
-              log.warn(createDocMessage('Ambiguous container document reference: '+ doc.memberof));
+              log.warn(createDocMessage(doc.id +' - Ambiguous container document reference: '+ doc.memberof));
               return;
             }
           }
