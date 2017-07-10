@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.20.0-rc.2  10 July 2017
+
+## Bug Fixes
+
+- **typescript:** allow decorators to not be call expressions	e41a392a
+
+
 # 0.20.0-rc.1  6 July 2017
 
 ## Bug Fixes

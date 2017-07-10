@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.20.0-rc.1",
+  "version": "0.20.0-rc.2",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "yarn build && jasmine-node .",
@@ -106,6 +106,7 @@
     "Jerry Orta <jerryorta.dev@gmail.com>",
     "Perry Govier <perrygovier@users.noreply.github.com>",
     "Rod Leviton <rod@rodleviton.com>",
-    "Paul Gschwendtner <paulgschwendtner@gmail.com>"
+    "Paul Gschwendtner <paulgschwendtner@gmail.com>",
+    "Hagen Schulze <hagen.schulze@nextlabel.de>"
   ]
 }
