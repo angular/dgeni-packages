@@ -3,6 +3,9 @@ import {Injector} from 'dgeni/lib/Injector';
 import {ReadTypeScriptModules} from '.';
 import {ClassExportDoc} from '../../api-doc-types/ClassExportDoc';
 import {ExportDoc} from '../../api-doc-types/ExportDoc';
+import {InterfaceExportDoc} from '../../api-doc-types/InterfaceExportDoc';
+import {MethodMemberDoc} from '../../api-doc-types/MethodMemberDoc';
+import {ModuleDoc} from '../../api-doc-types/ModuleDoc';
 const mockPackage = require('../../mocks/mockPackage');
 const path = require('canonical-path');
 
@@ -101,7 +104,7 @@ describe('readTypeScriptModules', () => {
 
   });
 
-  xdescribe('ignoreExportsMatching', () => {
+  describe('ignoreExportsMatching', () => {
     it('should ignore exports that match items in the `ignoreExportsMatching` property', () => {
       processor.sourceFiles = [ 'ignoreExportsMatching.ts'];
       processor.ignoreExportsMatching = [/^_/];
@@ -131,7 +134,7 @@ describe('readTypeScriptModules', () => {
     });
   });
 
-  xdescribe('interfaces', () => {
+  describe('interfaces', () => {
 
     it('should mark optional properties', () => {
       processor.sourceFiles = [ 'interfaces.ts'];
@@ -142,7 +145,7 @@ describe('readTypeScriptModules', () => {
       const exportedInterface = moduleDoc.exports[0];
       const member = exportedInterface.members[0];
       expect(member.name).toEqual('optionalProperty');
-      expect(member.optional).toEqual(true);
+      expect(member.isOptional).toEqual(true);
     });
 
     it('should handle "call" type interfaces', () => {
@@ -150,20 +153,24 @@ describe('readTypeScriptModules', () => {
       const docs: DocCollection = [];
       processor.$process(docs);
 
-      const moduleDoc = docs[0];
-      const exportedInterface = moduleDoc.exports[0];
+      const moduleDoc: ModuleDoc = docs[0];
+      const exportedInterface = moduleDoc.exports[0] as InterfaceExportDoc;
 
-      expect(exportedInterface.callMember).toBeDefined();
-      expect(exportedInterface.callMember.parameters).toEqual(['param: T']);
-      expect(exportedInterface.callMember.returnType).toEqual('U');
-      expect(exportedInterface.callMember.typeParameters).toEqual(['T', 'U extends Findable<T>']);
-      expect(exportedInterface.newMember).toBeDefined();
-      expect(exportedInterface.newMember.parameters).toEqual(['param: number']);
-      expect(exportedInterface.newMember.returnType).toEqual('MyInterface');
+      const callMember = exportedInterface.members.find(member => member.isCallMember)! as MethodMemberDoc;
+
+      expect(callMember).toBeDefined();
+      expect(callMember.parameters).toEqual(['param: T']);
+      expect(callMember.type).toEqual('U');
+      expect(callMember.typeParameters).toEqual('<T, U extends Findable<T>>');
+
+      const newMember = exportedInterface.members.find(member => member.isNewMember)! as MethodMemberDoc;
+      expect(newMember).toBeDefined();
+      expect(newMember.parameters).toEqual(['param: number']);
+      expect(newMember.type).toEqual('MyInterface');
     });
   });
 
-  xdescribe('type aliases', () => {
+  describe('type aliases', () => {
     it('should find the correct type when there are multiple declarations', () => {
       processor.sourceFiles = [ 'type-aliases.ts'];
       const docs: DocCollection = [];
@@ -186,7 +193,7 @@ describe('readTypeScriptModules', () => {
     });
   });
 
-  xdescribe('ordering of members', () => {
+  describe('ordering of members', () => {
     it('should order class members in order of appearance (by default)', () => {
       processor.sourceFiles = ['orderingOfMembers.ts'];
       const docs: DocCollection = [];
@@ -252,7 +259,7 @@ describe('readTypeScriptModules', () => {
       expect(propertyDoc.type).toEqual('(...args: Array<any>) => void');    });
   });
 
-  xdescribe('source file globbing patterns', () => {
+  describe('source file globbing patterns', () => {
     it('should work with include patterns', () => {
       processor.sourceFiles = [
         {
@@ -283,20 +290,25 @@ describe('readTypeScriptModules', () => {
     });
   });
 
-  xdescribe('getReturnType', () => {
+  describe('return types', () => {
     it('should not throw if "declaration.initializer.expression.text" is undefined', () => {
-      processor.sourceFiles = ['getReturnType.ts'];
+      processor.sourceFiles = ['returnTypes.ts'];
       const docs: DocCollection = [];
       expect(() => { processor.$process(docs); }).not.toThrow();
     });
 
-    it('should try get the type from the typeChecker if possible', () => {
-      processor.sourceFiles = ['getReturnType.ts'];
+    it('should return the text of the type if initialized', () => {
+      processor.sourceFiles = ['returnTypes.ts'];
       const docs: DocCollection = [];
       processor.$process(docs);
 
-      const overriddenSomePropDoc = docs.pop();
-      expect(overriddenSomePropDoc.returnType).toEqual('any');
+      const propDocs = docs.filter(doc => doc.name === 'someProp');
+      expect(propDocs[0].type).toEqual('{\n' +
+        '    foo: \'bar\',\n' +
+        '  }');
+      expect(propDocs[1].type).toEqual('Object.assign(this.someProp, {\n' +
+        '    bar: \'baz\'\n' +
+        '  })');
     });
   });
 });
