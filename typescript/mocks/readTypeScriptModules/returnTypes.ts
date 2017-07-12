@@ -1,3 +1,4 @@
+/* tslint:disable */
 export class Parent {
   someProp = {
     foo: 'bar',
