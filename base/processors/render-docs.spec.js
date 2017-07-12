@@ -3,24 +3,25 @@ var Dgeni = require('dgeni');
 
 var processor, renderSpy, findTemplateSpy;
 
-beforeEach(function() {
+describe("render-docs", function() {
 
-  var testPackage = mockPackage().factory('templateFinder', function() {
-    var finderSpy = createSpy('findTemplate').and.returnValue('SOME TEMPLATE');
-    return {
-      getFinder: function() { return finderSpy; }
-    };
+  beforeEach(function() {
+
+    var testPackage = mockPackage().factory('templateFinder', function() {
+      var finderSpy = jasmine.createSpy('findTemplate').and.returnValue('SOME TEMPLATE');
+      return {
+        getFinder: function() { return finderSpy; }
+      };
+    });
+
+    var dgeni = new Dgeni([testPackage]);
+    var injector = dgeni.configureInjector();
+    findTemplateSpy = injector.get('templateFinder').getFinder();
+    renderSpy = injector.get('templateEngine').getRenderer();
+
+    processor = injector.get('renderDocsProcessor');
   });
 
-  var dgeni = new Dgeni([testPackage]);
-  var injector = dgeni.configureInjector();
-  findTemplateSpy = injector.get('templateFinder').getFinder();
-  renderSpy = injector.get('templateEngine').getRenderer();
-
-  processor = injector.get('renderDocsProcessor');
-});
-
-describe("render-docs", function() {
 
   it("should call the templateFinder for each doc", function() {
     var doc1 = {}, doc2 = {}, docs = [ doc1, doc2 ];
