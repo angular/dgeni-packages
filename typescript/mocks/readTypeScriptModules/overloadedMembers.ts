@@ -1,11 +1,18 @@
-export abstract class TestClass {
+export class TestClass {
   /**
    * String foo
    * @other foo
    */
-  abstract foo(str: string);
+  foo(str: string): number;
   /**
    * Number foo
    */
-  abstract foo(num1: number, num2: number);
+  foo(num1: number, num2: number): number;
+
+  /**
+   * Actual implementation
+   */
+  foo(num1: number|string, num2?: number) {
+    return 100;
+  }
 }

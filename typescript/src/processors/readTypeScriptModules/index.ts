@@ -13,6 +13,8 @@ import { EnumExportDoc } from '../../api-doc-types/EnumExportDoc';
 import { ExportDoc } from '../../api-doc-types/ExportDoc';
 import { FunctionExportDoc } from '../../api-doc-types/FunctionExportDoc';
 import { InterfaceExportDoc } from '../../api-doc-types/InterfaceExportDoc';
+import { MemberDoc } from '../../api-doc-types/MemberDoc';
+import { MethodMemberDoc } from '../../api-doc-types/MethodMemberDoc';
 import { ModuleDoc } from '../../api-doc-types/ModuleDoc';
 import { TypeAliasExportDoc } from '../../api-doc-types/TypeAliasExportDoc';
 
@@ -96,14 +98,14 @@ export class ReadTypeScriptModules implements Processor {
         switch (getExportDocType(resolvedExport)) {
           case 'class':
             const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, this.basePath, this.hidePrivateMembers, this.namespacesToInclude);
-            classDoc.members.forEach(doc => docs.push(doc));
-            classDoc.statics.forEach(doc => docs.push(doc));
-            if (classDoc.constructorDoc) docs.push(classDoc.constructorDoc);
+            this.addMemberDocs(docs, classDoc.members);
+            this.addMemberDocs(docs, classDoc.statics);
+            if (classDoc.constructorDoc) this.addMemberDocs(docs, [classDoc.constructorDoc]);
             this.addExportDoc(docs, moduleDoc, classDoc);
             break;
           case 'interface':
             const interfaceDoc = new InterfaceExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude);
-            interfaceDoc.members.forEach(doc => docs.push(doc));
+            this.addMemberDocs(docs, interfaceDoc.members);
             this.addExportDoc(docs, moduleDoc, interfaceDoc);
             break;
           case 'enum':
@@ -135,6 +137,13 @@ export class ReadTypeScriptModules implements Processor {
       this.log.debug('>>>> EXPORT: ' + exportDoc.name + ' (' + exportDoc.docType + ') from ' + moduleDoc.id);
       moduleDoc.exports.push(exportDoc);
       docs.push(exportDoc);
+    }
+
+    private addMemberDocs(docs: DocCollection, members: MemberDoc[]) {
+      members.forEach(member => {
+        docs.push(member);
+        if (member instanceof MethodMemberDoc) member.overloads.forEach(overloadDoc => docs.push(overloadDoc));
+      });
     }
   }
 
