@@ -27,6 +27,7 @@ export abstract class ExportDoc implements ApiDoc {
       public moduleDoc: ModuleDoc,
       public symbol: Symbol,
       public declaration: Declaration,
-      public basePath: string) {
+      public basePath: string,
+      public namespacesToInclude: string[]) {
       }
 }

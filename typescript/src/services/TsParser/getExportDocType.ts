@@ -33,6 +33,9 @@ export function getExportDocType(symbol: Symbol) {
   if (symbol.flags & SymbolFlags.ValueModule) {
     return 'value-module';
   }
+  if (symbol.flags & SymbolFlags.NamespaceModule) {
+    return 'namespace';
+  }
 
   throw new Error(`Unknown symbol type:
     symbolName: ${symbol.name}

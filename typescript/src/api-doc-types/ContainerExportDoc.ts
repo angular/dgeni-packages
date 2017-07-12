@@ -38,9 +38,9 @@ export abstract class ContainerExportDoc extends ExportDoc {
 
       for (const declaration of member.getDeclarations()) {
         if (flags & MethodMemberFlags) {
-          memberDocs.push(new MethodMemberDoc(this, member, declaration, this.basePath, isStatic));
+          memberDocs.push(new MethodMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude, isStatic));
         } else if (flags & PropertyMemberFlags) {
-          memberDocs.push(new PropertyMemberDoc(this, member, declaration, this.basePath, isStatic));
+          memberDocs.push(new PropertyMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude,, isStatic));
         } else {
           throw new Error(`Unknown member type for member ${member.name}`);
         }

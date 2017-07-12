@@ -18,8 +18,8 @@ import { TypeAliasExportDoc } from '../../api-doc-types/TypeAliasExportDoc';
 
 import { expandSourceFiles, SourcePattern } from './SourcePattern';
 
-export function readTypeScriptModules(tsParser: TsParser, modules: any, createDocMessage: any, log: any) {
-  return new ReadTypeScriptModules(tsParser, modules, createDocMessage, log);
+export function readTypeScriptModules(tsParser: TsParser, modules: any, namespacesToInclude: string[], createDocMessage: any, log: any) {
+  return new ReadTypeScriptModules(tsParser, modules, namespacesToInclude, createDocMessage, log);
 }
 
 export class ReadTypeScriptModules implements Processor {
@@ -49,6 +49,7 @@ export class ReadTypeScriptModules implements Processor {
     constructor(
       private tsParser: TsParser,
       private modules: any,
+      private namespacesToInclude: string[],
       private createDocMessage: any,
       private log: any) {}
 
@@ -94,32 +95,32 @@ export class ReadTypeScriptModules implements Processor {
 
         switch (getExportDocType(resolvedExport)) {
           case 'class':
-            const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, this.basePath, this.hidePrivateMembers);
+            const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, this.basePath, this.hidePrivateMembers, this.namespacesToInclude);
             classDoc.members.forEach(doc => docs.push(doc));
             classDoc.statics.forEach(doc => docs.push(doc));
             if (classDoc.constructorDoc) docs.push(classDoc.constructorDoc);
             this.addExportDoc(docs, moduleDoc, classDoc);
             break;
           case 'interface':
-            const interfaceDoc = new InterfaceExportDoc(moduleDoc, resolvedExport, this.basePath);
+            const interfaceDoc = new InterfaceExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude);
             interfaceDoc.members.forEach(doc => docs.push(doc));
             this.addExportDoc(docs, moduleDoc, interfaceDoc);
             break;
           case 'enum':
-            const enumDoc = new EnumExportDoc(moduleDoc, resolvedExport, this.basePath);
+            const enumDoc = new EnumExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude);
             enumDoc.members.forEach(doc => docs.push(doc));
             this.addExportDoc(docs, moduleDoc, enumDoc);
             break;
           case 'const':
           case 'let':
           case 'var':
-            this.addExportDoc(docs, moduleDoc, new ConstExportDoc(moduleDoc, resolvedExport, this.basePath));
+            this.addExportDoc(docs, moduleDoc, new ConstExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude));
             break;
           case 'type-alias':
-            this.addExportDoc(docs, moduleDoc, new TypeAliasExportDoc(moduleDoc, resolvedExport, this.basePath));
+            this.addExportDoc(docs, moduleDoc, new TypeAliasExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude));
             break;
           case 'function':
-            const functionDoc = new FunctionExportDoc(moduleDoc, resolvedExport, this.basePath);
+            const functionDoc = new FunctionExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude);
             this.addExportDoc(docs, moduleDoc, functionDoc);
             functionDoc.overloads.forEach(doc => docs.push(doc));
             break;

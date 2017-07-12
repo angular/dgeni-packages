@@ -1,10 +1,10 @@
 import { Declaration, Expression, SyntaxKind, TypeNode, TypeParameterDeclaration } from 'typescript';
 import { getTypeText } from './getTypeText';
 
-export function getDeclarationTypeText(declaration: Declaration) {
+export function getDeclarationTypeText(declaration: Declaration, namespacesToInclude: string[]) {
   // if the declaration has an explicit type then use that
   const type = getType(declaration);
-  if (type) return getTypeText(type);
+  if (type) return getTypeText(type, namespacesToInclude);
 
   // if the declaration is a type parameter then just use its textual value
   if (declaration.kind === SyntaxKind.TypeParameter ) {

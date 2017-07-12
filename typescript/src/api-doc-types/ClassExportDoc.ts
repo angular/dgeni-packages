@@ -17,8 +17,9 @@ export class ClassExportDoc extends ClassLikeExportDoc {
     moduleDoc: ModuleDoc,
     symbol: Symbol,
     basePath: string,
-    hidePrivateMembers: boolean) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath);
+    hidePrivateMembers: boolean,
+    namespacesToInclude: string[]) {
+    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath, namespacesToInclude);
     if (symbol.exports) {
       this.statics = this.getMemberDocs(symbol.exports, hidePrivateMembers, true);
     }
@@ -26,7 +27,7 @@ export class ClassExportDoc extends ClassLikeExportDoc {
       // Get the constructor
       const constructorSymbol = symbol.members.get('__constructor');
       if (constructorSymbol && constructorSymbol.getFlags() & SymbolFlags.Constructor) {
-        this.constructorDoc = new MethodMemberDoc(this, constructorSymbol, constructorSymbol.getDeclarations()[0], this.basePath, false);
+        this.constructorDoc = new MethodMemberDoc(this, constructorSymbol, constructorSymbol.getDeclarations()[0], this.basePath, this.namespacesToInclude, false);
       }
       // Get the instance members
       this.members = this.getMemberDocs(symbol.members, hidePrivateMembers, false);

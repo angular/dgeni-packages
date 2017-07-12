@@ -5,12 +5,22 @@ import { getTypeParametersText } from '../services/TsParser/getTypeParametersTex
 import { MemberDoc } from './MemberDoc';
 
 export class MethodMemberDoc extends MemberDoc {
-  readonly parameters = getParameters(this.declaration);
+  readonly parameters = getParameters(this.declaration, this.namespacesToInclude);
   readonly name = this.computeName();
   readonly anchor = this.computeAnchor();
   readonly id = `${this.containerDoc.id}.${this.anchor})`;
   readonly aliases = this.computeAliases();
-  readonly typeParameters = getTypeParametersText(this.declaration);
+  readonly typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
+
+  constructor(
+    containerDoc: ContainerExportDoc,
+    symbol: Symbol,
+    declaration: Declaration,
+    basePath: string,
+    namespacesToInclude: string[],
+    isStatic: boolean) {
+    super(containerDoc, symbol, declaration, basePath, namespacesToInclude, isStatic);
+  }
 
   private computeName() {
     return this.symbol.name === '__new' ? 'new ' :

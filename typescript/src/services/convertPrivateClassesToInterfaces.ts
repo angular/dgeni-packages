@@ -16,7 +16,7 @@ export function convertPrivateClassesToInterfaces(exportDocs: DocCollection, add
 
       if (addInjectableReference) {
         // Add the `declare var SomeClass extends InjectableReference` construct
-        const constExportDoc = new ConstExportDoc(exportDoc.moduleDoc, exportDoc.symbol, exportDoc.basePath);
+        const constExportDoc = new ConstExportDoc(exportDoc.moduleDoc, exportDoc.symbol, exportDoc.basePath, exportDoc.namespacedToInclude);
         constExportDoc.type = 'InjectableReference';
         exportDocs.push(constExportDoc);
       }

@@ -16,7 +16,7 @@ describe('convertPrivateClassesToInterfaces', () => {
   let docs: DocCollection;
 
   beforeEach(() => {
-    classDoc = new ClassExportDoc(moduleDoc, classSymbol, basePath, true);
+    classDoc = new ClassExportDoc(moduleDoc, classSymbol, basePath, true, []);
     classDoc.constructorDoc = { internal: true } as any;
     docs = [classDoc];
   });

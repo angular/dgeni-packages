@@ -12,8 +12,9 @@ export class InterfaceExportDoc extends ClassLikeExportDoc {
   constructor(
     moduleDoc: ModuleDoc,
     symbol: Symbol,
-    basePath: string) {
-      super(moduleDoc, symbol, symbol.valueDeclaration || symbol.getDeclarations()[0]!, basePath);
+    basePath: string,
+    namespacesToInclude: string[]) {
+      super(moduleDoc, symbol, symbol.valueDeclaration || symbol.getDeclarations()[0]!, basePath, namespacesToInclude);
       if (symbol.members) this.members = this.getMemberDocs(symbol.members, true, false);
       this.additionalDeclarations = symbol.getDeclarations().filter(declaration => declaration !== this.declaration);
     }
