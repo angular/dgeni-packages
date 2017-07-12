@@ -215,23 +215,23 @@ describe('readTypeScriptModules', () => {
     });
   });
 
-  xdescribe('strip namespaces', () => {
+  describe('strip namespaces', () => {
     it('should strip namespaces in return types', () => {
       processor.sourceFiles = ['stripNamespaces.ts'];
       const docs: DocCollection = [];
       processor.$process(docs);
       const functionDoc = docs.find(doc => doc.docType === 'function');
-      expect(functionDoc.returnType).toEqual('IDirective');
+      expect(functionDoc.type).toEqual('IDirective');
     });
 
     it('should not strip ignored namespaces in return types', () => {
-      const ignoreTypeScriptNamespaces = injector.get('ignoreTypeScriptNamespaces');
-      ignoreTypeScriptNamespaces.push(/angular/);
+      const namespacesToInclude = injector.get('namespacesToInclude');
+      namespacesToInclude.push('angular');
       processor.sourceFiles = ['stripNamespaces.ts'];
       const docs: DocCollection = [];
       processor.$process(docs);
       const functionDoc = docs.find(doc => doc.docType === 'function');
-      expect(functionDoc.returnType).toEqual('angular.IDirective');
+      expect(functionDoc.type).toEqual('angular.IDirective');
     });
 
     it('should cope with spread operator', () => {
@@ -240,16 +240,16 @@ describe('readTypeScriptModules', () => {
       processor.$process(docs);
       const functionDoc = docs.find(doc => doc.docType === 'function');
       expect(functionDoc.parameters).toEqual(['...args: Array<any>']);
-      expect(functionDoc.returnType).toEqual('void');
+      expect(functionDoc.type).toEqual('void');
 
       const interfaceDoc = docs.find(doc => doc.docType === 'interface');
       expect(interfaceDoc.members.length).toEqual(2);
       const methodDoc = interfaceDoc.members[0];
       expect(methodDoc.parameters).toEqual(['...args: Array<any>']);
-      expect(methodDoc.returnType).toEqual('void');
+      expect(methodDoc.type).toEqual('void');
 
       const propertyDoc = interfaceDoc.members[1];
-      expect(propertyDoc.returnType).toEqual('(...args: Array<any>) => void');    });
+      expect(propertyDoc.type).toEqual('(...args: Array<any>) => void');    });
   });
 
   xdescribe('source file globbing patterns', () => {

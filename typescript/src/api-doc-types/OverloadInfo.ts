@@ -10,11 +10,11 @@ import { FunctionExportDoc } from './FunctionExportDoc';
  */
 export class OverloadInfo extends ExportDoc {
   docType = 'function-overload';
-  parameters = getParameters(this.declaration);
-  type = getDeclarationTypeText(this.declaration);
+  parameters = getParameters(this.declaration, this.namespacesToInclude);
+  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
   constructor(public functionDoc: FunctionExportDoc, declaration: Declaration) {
-    super(functionDoc.moduleDoc, functionDoc.symbol, declaration, functionDoc.basePath);
+    super(functionDoc.moduleDoc, functionDoc.symbol, declaration, functionDoc.basePath, functionDoc.namespacesToInclude);
     // Give this overload doc a more specific id and aliases than it's container doc
     const paramString = `(${this.parameters.join(', ')})`;
     this.id += paramString;

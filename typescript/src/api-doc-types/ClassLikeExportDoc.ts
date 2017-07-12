@@ -27,8 +27,9 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       moduleDoc: ModuleDoc,
       symbol: Symbol,
       declaration: Declaration,
-      basePath: string) {
-        super(moduleDoc, symbol, declaration, basePath);
+      basePath: string,
+      namespacesToInclude: string[]) {
+        super(moduleDoc, symbol, declaration, basePath, namespacesToInclude);
         this.computeHeritage();
         this.addAliases();
       }
@@ -62,9 +63,9 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       if (heritageClauses) {
         heritageClauses.forEach(heritageClause => {
           if (heritageClause.token === SyntaxKind.ExtendsKeyword) {
-            this.extendsClauses = this.extendsClauses.concat(heritageClause.types.map(heritageType => getTypeText(heritageType)));
+            this.extendsClauses = this.extendsClauses.concat(heritageClause.types.map(heritageType => getTypeText(heritageType, this.namespacesToInclude)));
           } else {
-            this.implementsClauses = this.implementsClauses.concat(heritageClause.types.map(heritageType => getTypeText(heritageType)));
+            this.implementsClauses = this.implementsClauses.concat(heritageClause.types.map(heritageType => getTypeText(heritageType, this.namespacesToInclude)));
           }
         });
       }

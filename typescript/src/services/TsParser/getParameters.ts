@@ -1,7 +1,7 @@
 import { Declaration, ParameterDeclaration } from 'typescript';
 import { getDeclarationTypeText } from './getDeclarationTypeText';
 
-export function getParameters(declaration: Declaration) {
+export function getParameters(declaration: Declaration, namespacesToInclude: string[]) {
   const parameters = getParameterDeclarations(declaration);
   if (!parameters) {
     const name = declaration.name ? declaration.name.getText() : 'unknown';
@@ -19,7 +19,7 @@ export function getParameters(declaration: Declaration) {
 
     paramText += (!parameter.type && parameter.initializer) ? ' = ' : ': ';
 
-    paramText += getDeclarationTypeText(parameter);
+    paramText += getDeclarationTypeText(parameter, namespacesToInclude);
 
     return paramText.trim();
   });

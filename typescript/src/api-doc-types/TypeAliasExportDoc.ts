@@ -5,13 +5,14 @@ import { ModuleDoc } from './ModuleDoc';
 
 export class TypeAliasExportDoc extends ExportDoc {
   docType = 'type-alias';
-  typeDefinition = getDeclarationTypeText(this.declaration);
+  typeDefinition = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
   constructor(
       moduleDoc: ModuleDoc,
       exportSymbol: Symbol,
-      basePath: string) {
-    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()), basePath);
+      basePath: string,
+      namespacesToInclude: string[]) {
+    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()), basePath, namespacesToInclude);
   }
 }
 
