@@ -42,7 +42,7 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
             // The memberof field was ambiguous, try prepending the module name too
             containerDocs = getDocFromAlias(_.template('${module}.${memberof}')(doc), doc);
             if ( containerDocs.length !== 1 ) {
-              log.warn(createDocMessage('Ambiguous container document reference: '+ doc.memberof));
+              log.warn(createDocMessage('Ambiguous container document reference: '+ doc.memberof, doc));
               return;
             }
           }
