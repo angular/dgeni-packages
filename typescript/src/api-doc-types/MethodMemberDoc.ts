@@ -2,6 +2,7 @@
 import { SymbolFlags } from 'typescript';
 import { getParameters } from '../services/TsParser/getParameters';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
+import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
 
 export class MethodMemberDoc extends MemberDoc {
