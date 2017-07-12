@@ -182,14 +182,19 @@ describe('readTypeScriptModules', () => {
   });
 
   describe('overloaded members', () => {
-    it('should create member docs for each overload', () => {
+    it('should create a member doc for the "real" member, which includes an overloads property', () => {
       processor.sourceFiles = [ 'overloadedMembers.ts'];
       const docs: DocCollection = [];
       processor.$process(docs);
 
       const fooDocs = docs.filter(doc => doc.name === 'foo');
-      expect(fooDocs[0].parameters).toEqual(['str: string']);
-      expect(fooDocs[1].parameters).toEqual(['num1: number', 'num2: number']);
+      const foo: MethodMemberDoc = fooDocs[0];
+      expect(foo.parameters).toEqual(['num1: number|string', 'num2?: number']);
+      const overloads = foo.overloads;
+      expect(overloads.map(overload => overload.parameters)).toEqual([
+        ['str: string'],
+        ['num1: number', 'num2: number'],
+      ]);
     });
   });
 

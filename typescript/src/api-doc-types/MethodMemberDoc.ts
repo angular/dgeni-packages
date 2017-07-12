@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { SymbolFlags } from 'typescript';
+import { Declaration, Symbol, SymbolFlags } from 'typescript';
 import { getParameters } from '../services/TsParser/getParameters';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { ContainerExportDoc } from './ContainerExportDoc';
@@ -19,7 +19,8 @@ export class MethodMemberDoc extends MemberDoc {
     declaration: Declaration,
     basePath: string,
     namespacesToInclude: string[],
-    isStatic: boolean) {
+    isStatic: boolean,
+    public overloads: MethodMemberDoc[] = []) {
     super(containerDoc, symbol, declaration, basePath, namespacesToInclude, isStatic);
   }
 

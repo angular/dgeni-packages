@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Map, Symbol, SymbolFlags } from 'typescript';
+import { FunctionLikeDeclaration, Map, Symbol, SymbolFlags } from 'typescript';
 import { FileInfo } from "../services/TsParser/FileInfo";
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { ExportDoc } from './ExportDoc' ;
@@ -14,7 +14,7 @@ const MethodMemberFlags = SymbolFlags.Method |
                           SymbolFlags.Accessor;
 const PropertyMemberFlags = SymbolFlags.Property | SymbolFlags.EnumMember;
 
-const IgnoreMemberFlags = SymbolFlags.Prototype | SymbolFlags.TypeParameter | SymbolFlags.Constructor;
+const MembersToIgnoreFlags = SymbolFlags.Prototype | SymbolFlags.TypeParameter | SymbolFlags.Constructor;
 
 /**
  * This document represents things that contain members such as classes, enums and interfaces.
@@ -31,20 +31,32 @@ export abstract class ContainerExportDoc extends ExportDoc {
       const flags = member.getFlags();
 
       // Ignore the prototype export
-      if (flags & IgnoreMemberFlags) return;
+      if (flags & MembersToIgnoreFlags) return;
 
       // Ignore private members, if configured to do so
       if (hidePrivateMembers && getAccessibility(member.valueDeclaration) === 'private') return;
 
+      const overloads: MethodMemberDoc[] = [];
+      let memberDoc: MemberDoc|null = null;
+
       for (const declaration of member.getDeclarations()) {
         if (flags & MethodMemberFlags) {
-          memberDocs.push(new MethodMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude, isStatic));
+          if ((declaration as FunctionLikeDeclaration).body) {
+            // This is the "real" declaration of the method
+            memberDoc = new MethodMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude, isStatic, overloads);
+          } else {
+            // This is an overload signature of the method
+            overloads.push(new MethodMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude, isStatic, overloads));
+          }
         } else if (flags & PropertyMemberFlags) {
-          memberDocs.push(new PropertyMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude,, isStatic));
+          memberDoc = new PropertyMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude, isStatic);
         } else {
           throw new Error(`Unknown member type for member ${member.name}`);
         }
       }
+      // If there is no member doc then we are in an interface or abstract class and we just take the first overload
+      // as the primary one.
+      memberDocs.push(memberDoc || overloads[0]);
     });
     return memberDocs;
   }
