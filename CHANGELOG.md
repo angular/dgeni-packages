@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.20.0-rc.5  13 July 2017
+
+## Bug Fixes
+
+**typescript:** remove duplicate overload from abstract API doc members	f2c481d1
+**ngdoc:** pass doc object to createDocMessage	fe98a849	Nick Horvath
+
+
 # 0.20.0-rc.4  13 July 2017
 
 ## Bug Fixes
