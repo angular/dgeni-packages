@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.20.0-rc.4  13 July 2017
+
+## Bug Fixes
+
+**typescript:** support startingLine and endingLine properties	32698f30
+
+
 # 0.20.0-rc.3  12 July 2017
 
 ## Features
