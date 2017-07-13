@@ -16,10 +16,12 @@ export class ModuleDoc implements ApiDoc {
   declaration = this.symbol.valueDeclaration!;
   aliases = [this.id, this.name];
   exports: ExportDoc[] = [];
+  fileInfo = new FileInfo(this.declaration, this.basePath);
+  startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
+  endingLine = this.fileInfo.location.end.line;
   path: string;
   outputPath: string;
   content: string;
-  fileInfo = new FileInfo(this.declaration, this.basePath);
 
   constructor(public symbol: ModuleSymbol, private basePath: string) {}
 }

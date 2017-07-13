@@ -13,24 +13,26 @@ import { ContainerExportDoc } from './ContainerExportDoc';
  * This document represents a member of a ClassLikeExportDoc.
  */
 export abstract class MemberDoc implements ApiDoc {
-  readonly docType = 'member';
-  readonly abstract name: string;
-  readonly abstract id: string;
-  readonly abstract aliases: string[];
-  readonly abstract anchor: string;
-  readonly path: string;
-  readonly outputPath: string;
-  readonly content = getContent(this.declaration);
-  readonly fileInfo: FileInfo;
+  docType = 'member';
+  abstract name: string;
+  abstract id: string;
+  abstract aliases: string[];
+  abstract anchor: string;
+  path: string;
+  outputPath: string;
+  content = getContent(this.declaration);
+  fileInfo = new FileInfo(this.declaration, this.basePath);
+  startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
+  endingLine = this.fileInfo.location.end.line;
 
-  readonly accessibility = getAccessibility(this.declaration);
-  readonly decorators = getDecorators(this.declaration);
-  readonly type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
-  readonly isOptional = !!(this.symbol.flags & SymbolFlags.Optional);
-  readonly isGetAccessor = !!(this.symbol.flags & SymbolFlags.GetAccessor);
-  readonly isSetAccessor = !!(this.symbol.flags & SymbolFlags.SetAccessor);
-  readonly isCallMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__call');
-  readonly isNewMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__new');
+  accessibility = getAccessibility(this.declaration);
+  decorators = getDecorators(this.declaration);
+  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+  isOptional = !!(this.symbol.flags & SymbolFlags.Optional);
+  isGetAccessor = !!(this.symbol.flags & SymbolFlags.GetAccessor);
+  isSetAccessor = !!(this.symbol.flags & SymbolFlags.SetAccessor);
+  isCallMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__call');
+  isNewMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__new');
 
   constructor(
       public containerDoc: ContainerExportDoc,
@@ -39,6 +41,5 @@ export abstract class MemberDoc implements ApiDoc {
       public basePath: string,
       public namespacesToInclude: string[],
       public isStatic: boolean) {
-    this.fileInfo = new FileInfo(this.declaration, basePath);
   }
 }

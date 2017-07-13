@@ -35,7 +35,23 @@ describe('readTypeScriptModules', () => {
 
       const barDoc = docs.find(doc => doc.name === 'bar');
       expect(barDoc.content).toEqual('@name bar\n@description\ndescription of bar {@inline-tag} more content');
+    });
 
+    it('should extract the starting and ending lines from the comments', () => {
+      processor.sourceFiles = [ 'commentContent.ts' ];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+      const someClassDoc = docs.find(doc => doc.name === 'SomeClass') as ClassExportDoc;
+      expect(someClassDoc.startingLine).toEqual(0);
+      expect(someClassDoc.endingLine).toEqual(17);
+
+      const fooDoc = docs.find(doc => doc.name === 'foo');
+      expect(fooDoc.startingLine).toEqual(4);
+      expect(fooDoc.endingLine).toEqual(9);
+
+      const barDoc = docs.find(doc => doc.name === 'bar');
+      expect(barDoc.startingLine).toEqual(10);
+      expect(barDoc.endingLine).toEqual(16);
     });
 
     it('should provide the original module if the export is re-exported', () => {

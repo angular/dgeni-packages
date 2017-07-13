@@ -13,4 +13,6 @@ export interface ApiDoc {
   symbol: Symbol;
   declaration: Declaration;
   fileInfo: FileInfo;
+  startingLine: number;
+  endingLine: number;
 }

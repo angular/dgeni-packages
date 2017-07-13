@@ -18,6 +18,8 @@ export abstract class ExportDoc implements ApiDoc {
   aliases = [this.name, this.moduleDoc.id + "/" + this.name];
   id = this.moduleDoc.id + "/" + this.name;
   fileInfo = new FileInfo(this.declaration, this.basePath);
+  startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
+  endingLine = this.fileInfo.location.end.line;
   originalModule = this.fileInfo.projectRelativePath.replace(new RegExp("\." + this.fileInfo.extension + "$"), "");
   content = getContent(this.declaration);
   path: string;
