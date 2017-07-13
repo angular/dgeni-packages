@@ -203,14 +203,25 @@ describe('readTypeScriptModules', () => {
       const docs: DocCollection = [];
       processor.$process(docs);
 
-      const fooDocs = docs.filter(doc => doc.name === 'foo');
-      const foo: MethodMemberDoc = fooDocs[0];
+      const foo: MethodMemberDoc = docs.find(doc => doc.name === 'foo');
       expect(foo.parameters).toEqual(['num1: number|string', 'num2?: number']);
       const overloads = foo.overloads;
       expect(overloads.map(overload => overload.parameters)).toEqual([
         ['str: string'],
         ['num1: number', 'num2: number'],
       ]);
+    });
+
+    it('should use the first declaration as the member doc if no overload has a body', () => {
+      processor.sourceFiles = [ 'overloadedMembers.ts'];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+
+      const bar: MethodMemberDoc = docs.find(doc => doc.name === 'bar');
+      expect(bar.overloads.length).toEqual(1);
+
+      expect(bar.parameters).toEqual(['str: string']);
+      expect(bar.overloads[0].parameters).toEqual([]);
     });
   });
 

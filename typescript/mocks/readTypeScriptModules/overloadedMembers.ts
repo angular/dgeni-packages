@@ -1,4 +1,4 @@
-export class TestClass {
+export abstract class TestClass {
   /**
    * String foo
    * @other foo
@@ -15,4 +15,7 @@ export class TestClass {
   foo(num1: number|string, num2?: number) {
     return 100;
   }
+
+  abstract bar(str: string): number;
+  abstract bar(): string;
 }

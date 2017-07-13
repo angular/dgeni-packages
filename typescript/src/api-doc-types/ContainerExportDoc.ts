@@ -56,7 +56,7 @@ export abstract class ContainerExportDoc extends ExportDoc {
       }
       // If there is no member doc then we are in an interface or abstract class and we just take the first overload
       // as the primary one.
-      memberDocs.push(memberDoc || overloads[0]);
+      memberDocs.push(memberDoc || overloads.shift()!);
     });
     return memberDocs;
   }
