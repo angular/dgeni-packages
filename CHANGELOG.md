@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.20.0-rc.6  14 July 2017
+
+## Bug Fixes
+
+**typescript:** add type parameters to function export docs	c2c29270
+
+
 # 0.20.0-rc.5  13 July 2017
 
 ## Bug Fixes

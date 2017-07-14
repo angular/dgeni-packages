@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.20.0-rc.5",
+  "version": "0.20.0-rc.6",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "yarn build && node test.js",
