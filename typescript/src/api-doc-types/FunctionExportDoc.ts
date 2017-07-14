@@ -1,6 +1,7 @@
 import { Declaration, Symbol } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { getParameters } from '../services/TsParser/getParameters';
+import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 import { OverloadInfo } from './OverloadInfo';
@@ -10,6 +11,7 @@ export class FunctionExportDoc extends ExportDoc {
   overloads = this.symbol.getDeclarations()
     .filter(declaration => declaration !== this.declaration)
     .map(declaration => new OverloadInfo(this, declaration));
+  typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
   parameters = getParameters(this.declaration, this.namespacesToInclude);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 

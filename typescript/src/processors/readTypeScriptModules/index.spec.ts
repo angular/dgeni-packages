@@ -197,6 +197,17 @@ describe('readTypeScriptModules', () => {
     });
   });
 
+  describe('exported functions', () => {
+    it('should include type parameters', () => {
+      processor.sourceFiles = [ 'functions.ts'];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+      const functionDoc = docs.find(doc => doc.name === 'foo');
+      expect(functionDoc.docType).toEqual('function');
+      expect(functionDoc.typeParameters).toEqual('<T, R>');
+    });
+  });
+
   describe('overloaded members', () => {
     it('should create a member doc for the "real" member, which includes an overloads property', () => {
       processor.sourceFiles = [ 'overloadedMembers.ts'];
