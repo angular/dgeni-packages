@@ -133,7 +133,6 @@ function matchFileReader(fileReaders, file) {
 
 /**
  * Resolve the relative include/exclude paths in the sourceInfo object,
- * @private
  */
 function normalizeSourceInfo(basePath, sourceInfo) {
 
