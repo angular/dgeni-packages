@@ -1,5 +1,6 @@
 import { DocCollection } from 'dgeni';
 import { ClassExportDoc } from '../api-doc-types/ClassExportDoc';
+import { FileInfo } from './TsParser/FileInfo';
 import { convertPrivateClassesToInterfaces } from './convertPrivateClassesToInterfaces';
 
 describe('convertPrivateClassesToInterfaces', () => {
@@ -16,6 +17,8 @@ describe('convertPrivateClassesToInterfaces', () => {
   let docs: DocCollection;
 
   beforeEach(() => {
+    spyOn(FileInfo.prototype, 'getRealFilePath').and.callFake((filePath: string) => filePath);
+
     classDoc = new ClassExportDoc(moduleDoc, classSymbol, basePath, true, []);
     classDoc.constructorDoc = { internal: true } as any;
     docs = [classDoc];
