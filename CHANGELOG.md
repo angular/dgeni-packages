@@ -1,5 +1,67 @@
 # Changelog
 
+# 0.20.0 27 July 2017
+
+This is the full release of 0.20.0 - the list of changes below includes all the beta and release candidate changes.
+
+## Features
+
+- **base:** allow checkAnchorLinks to abort processing	eee3e7b1
+- **typescript:**
+  - group function/method overloads together	2155b5ac
+  - provide isCallMember and isNewMember options
+  - split out heritage into extendsClauses and implementsClauses
+  - add `realFilePath`/`realProjectRelativePath` to `FileInfo`	c7d1b54c
+
+## Performance Improvements
+- **nunjucks:** upgrade to v3 and enable caching of templates
+
+## Bug Fixes
+
+- **ngdoc:** pass doc object to createDocMessage	fe98a849	Nick Horvath
+- **typescript:**
+  - add type parameters to function export docs	c2c29270
+  - remove duplicate overload from abstract API doc members	f2c481d1
+  - support startingLine and endingLine properties	32698f30
+  - include specified namespaces in types	dbe99f7b
+  - allow decorators to not be call expressions	e41a392a
+  - implement the CompilerHost.readFile method	4d667ff2
+  - CustomCompilerHost.fileExists should not second guess extensions and base dir	b7b11164
+  - compile files in folders that have file-like names	ee10b835
+  - paths should be case sensitive	5238302b
+  -	compile files in folders that have file-like names
+  - paths to imports are case sensitive
+  - group overloaded exported functions in a single doc
+  - do not assume that members prefixed with `_` are private
+- **base:** checkAnchorLinks should match URL encoded chars
+
+## Breaking Changes
+
+Previously to 0.20.0 the service where you registered namespaces not to strip
+was called `ignoreTypeScriptNamespaces` and took an array of regular expressions.
+
+Now this service is called `namespacesToInclude`, which better reflects its
+purpose. Also it is now an array of strings, since there was little benefit in it
+being a regular expression.
+
+<hr>
+
+The typescript package has been completely rewritten in TypeScript. One benefit of this is that
+typings should be available for the API doc types in your own projects.
+
+Along the way there are some changes to the properties that are attached to the API docs that are
+generated. Here is a list of the things that might affect you:
+
+* Members starting with `_` are no longer considered private. You should filter them out in a
+custom processor if you do not want them to appear in the docs.
+* API docs that have a type, e.g. functions, constants, type aliases, etc used to have a property called
+`returnType` but that did not make sense for non-functions. This property is renamed to `type`.
+* API docs that have heritage, e.g. classes and interfaces, used to have a property called `heritage`,
+which was a string representation containing both "implements" and "extends" clauses. These have now
+been split into two properties `implementsClauses` and `extendsClauses`, which each contain an array
+of strings.
+
+
 # 0.20.0-rc.6  14 July 2017
 
 ## Bug Fixes
