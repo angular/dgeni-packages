@@ -59,9 +59,9 @@ Here is an example of some standard template patterns:
 ```js
 templateFinder.templatePatterns = [
   '${ doc.template }',
-  '${doc.area}/${ doc.id }.${ doc.docType }.template.html',
-  '${doc.area}/${ doc.id }.template.html',
-  '${doc.area}/${ doc.docType }.template.html',
+  '${ doc.area }/${ doc.id }.${ doc.docType }.template.html',
+  '${ doc.area }/${ doc.id }.template.html',
+  '${ doc.area }/${ doc.docType }.template.html',
   '${ doc.id }.${ doc.docType }.template.html',
   '${ doc.id }.template.html',
   '${ doc.docType }.template.html'
@@ -205,7 +205,7 @@ The `ngdoc` Package depends upon the `jsdoc` and `nunjucks` packages. It provide
 non-API documents written in files with `.ngdoc` extension; it also computes additional properties specific
 to Angular related code.
 
-## File Readers
+### File Readers
 
 * `ngdoc` - can pull a single document from an ngdoc content file.
 
