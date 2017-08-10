@@ -1,4 +1,4 @@
-var sortByDependency = require('dgeni/lib/util/dependency-sort');
+var sortByDependency = require('dgeni/lib/util/dependency-sort').sortByDependency;
 
 module.exports = function computeProcessorPipeline() {
   return {

@@ -16,7 +16,7 @@ module.exports = function wireUpServicesToPackages() {
       });
 
       docs.forEach(function(doc) {
-        if(doc.docType === 'dgService') {
+        if(doc.docType === 'dgService' || doc.docType === 'dgProcessor') {
           doc.name = doc.name || doc.codeName;
           doc.packageDoc = services[doc.name];
           doc.packageDoc.services.push(doc);
