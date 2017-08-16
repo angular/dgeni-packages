@@ -8,6 +8,7 @@ module.exports = [
   require('./memberof'),
   require('./param'),
   require('./property'),
+  require('./propertyof'),
   require('./returns'),
   require('./type'),
   require('./requires'),
