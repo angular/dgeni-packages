@@ -1,5 +1,15 @@
 # Changelog
 
+# 0.20.1 16 August 2017
+
+## Features
+* **jsdoc**: add propertyof jsdoc tag	6712e544
+
+## Fixes
+
+* **dgeni**: ensure that dgeni self documenting config works	8052e9e6
+
+
 # 0.20.0 27 July 2017
 
 This is the full release of 0.20.0 - the list of changes below includes all the beta and release candidate changes.
