@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Symbol, SymbolFlags } from 'typescript';
+import { Declaration, Symbol, SymbolFlags, TypeChecker } from 'typescript';
 import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
 import { MemberDoc } from '../api-doc-types/MemberDoc' ;
 import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc' ;
@@ -17,9 +17,10 @@ export class ClassExportDoc extends ClassLikeExportDoc {
     moduleDoc: ModuleDoc,
     symbol: Symbol,
     basePath: string,
+    typeChecker: TypeChecker,
     hidePrivateMembers: boolean,
     namespacesToInclude: string[]) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath, namespacesToInclude);
+    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath, typeChecker, namespacesToInclude);
     if (symbol.exports) {
       this.statics = this.getMemberDocs(symbol.exports, hidePrivateMembers, true);
     }

@@ -1,5 +1,6 @@
 import {Dgeni, DocCollection} from 'dgeni';
 import {Injector} from 'dgeni/lib/Injector';
+import { Symbol } from 'typescript';
 import {ReadTypeScriptModules} from '.';
 import {ClassExportDoc} from '../../api-doc-types/ClassExportDoc';
 import {ExportDoc} from '../../api-doc-types/ExportDoc';
@@ -118,6 +119,17 @@ describe('readTypeScriptModules', () => {
       expect(exportDoc.name).toEqual('TestClass');
     });
 
+    it('should add each exportDoc to the exportSymbolsToDocsMap', () => {
+      processor.sourceFiles = [ 'returnTypes.ts' ];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+
+      const map = injector.get('exportSymbolsToDocsMap') as Map<Symbol, ExportDoc>;
+      expect(map.size).toEqual(2);
+      map.forEach((doc, symbol) => {
+        expect(doc.symbol).toBe(symbol);
+      });
+    });
   });
 
   describe('ignoreExportsMatching', () => {

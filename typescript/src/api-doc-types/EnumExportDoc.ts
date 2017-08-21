@@ -1,4 +1,4 @@
-import { Declaration, Symbol } from 'typescript';
+import { Declaration, Symbol, TypeChecker } from 'typescript';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 
@@ -13,9 +13,10 @@ export class EnumExportDoc extends ContainerExportDoc {
     moduleDoc: ModuleDoc,
     symbol: Symbol,
     basePath: string,
+    typeChecker: TypeChecker,
     namespacesToInclude: string[],
   ) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath, namespacesToInclude);
+    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath, typeChecker, namespacesToInclude);
     this.additionalDeclarations = symbol.getDeclarations().filter(declaration => declaration !== this.declaration);
     if (symbol.exports) {
       this.members = this.getMemberDocs(symbol.exports, true, false);
