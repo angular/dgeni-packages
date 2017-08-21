@@ -20,8 +20,14 @@ import { TypeAliasExportDoc } from '../../api-doc-types/TypeAliasExportDoc';
 
 import { expandSourceFiles, SourcePattern } from './SourcePattern';
 
-export function readTypeScriptModules(tsParser: TsParser, modules: any, namespacesToInclude: string[], createDocMessage: any, log: any) {
-  return new ReadTypeScriptModules(tsParser, modules, namespacesToInclude, createDocMessage, log);
+export function readTypeScriptModules(
+                  tsParser: TsParser,
+                  modules: any,
+                  namespacesToInclude: string[],
+                  exportSymbolsToDocsMap: Map<Symbol, ExportDoc>,
+                  createDocMessage: any,
+                  log: any) {
+  return new ReadTypeScriptModules(tsParser, modules, namespacesToInclude, exportSymbolsToDocsMap, createDocMessage, log);
 }
 
 export class ReadTypeScriptModules implements Processor {
@@ -52,6 +58,7 @@ export class ReadTypeScriptModules implements Processor {
       private tsParser: TsParser,
       private modules: any,
       private namespacesToInclude: string[],
+      private exportSymbolsToDocsMap: Map<Symbol, ExportDoc>,
       private createDocMessage: any,
       private log: any) {}
 
@@ -73,11 +80,11 @@ export class ReadTypeScriptModules implements Processor {
         const moduleDoc = new ModuleDoc(moduleSymbol, basePath);
         this.modules[moduleDoc.id] = moduleDoc;
         docs.push(moduleDoc);
-        this.addExportDocs(docs, moduleDoc);
+        this.addExportDocs(docs, moduleDoc, moduleSymbols.typeChecker!);
       });
     }
 
-    private addExportDocs(docs: DocCollection, moduleDoc: ModuleDoc) {
+    private addExportDocs(docs: DocCollection, moduleDoc: ModuleDoc, typeChecker: TypeChecker) {
       // Iterate through this module's exports and generate a doc for each
       moduleDoc.symbol.exportArray.forEach(exportSymbol => {
 
@@ -97,32 +104,32 @@ export class ReadTypeScriptModules implements Processor {
 
         switch (getExportDocType(resolvedExport)) {
           case 'class':
-            const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, this.basePath, this.hidePrivateMembers, this.namespacesToInclude);
+            const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, this.basePath, typeChecker, this.hidePrivateMembers, this.namespacesToInclude);
             this.addMemberDocs(docs, classDoc.members);
             this.addMemberDocs(docs, classDoc.statics);
             if (classDoc.constructorDoc) this.addMemberDocs(docs, [classDoc.constructorDoc]);
             this.addExportDoc(docs, moduleDoc, classDoc);
             break;
           case 'interface':
-            const interfaceDoc = new InterfaceExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude);
+            const interfaceDoc = new InterfaceExportDoc(moduleDoc, resolvedExport, this.basePath, typeChecker, this.namespacesToInclude);
             this.addMemberDocs(docs, interfaceDoc.members);
             this.addExportDoc(docs, moduleDoc, interfaceDoc);
             break;
           case 'enum':
-            const enumDoc = new EnumExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude);
+            const enumDoc = new EnumExportDoc(moduleDoc, resolvedExport, this.basePath, typeChecker, this.namespacesToInclude);
             enumDoc.members.forEach(doc => docs.push(doc));
             this.addExportDoc(docs, moduleDoc, enumDoc);
             break;
           case 'const':
           case 'let':
           case 'var':
-            this.addExportDoc(docs, moduleDoc, new ConstExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude));
+            this.addExportDoc(docs, moduleDoc, new ConstExportDoc(moduleDoc, resolvedExport, this.basePath, typeChecker, this.namespacesToInclude));
             break;
           case 'type-alias':
-            this.addExportDoc(docs, moduleDoc, new TypeAliasExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude));
+            this.addExportDoc(docs, moduleDoc, new TypeAliasExportDoc(moduleDoc, resolvedExport, this.basePath, typeChecker, this.namespacesToInclude));
             break;
           case 'function':
-            const functionDoc = new FunctionExportDoc(moduleDoc, resolvedExport, this.basePath, this.namespacesToInclude);
+            const functionDoc = new FunctionExportDoc(moduleDoc, resolvedExport, this.basePath, typeChecker, this.namespacesToInclude);
             this.addExportDoc(docs, moduleDoc, functionDoc);
             functionDoc.overloads.forEach(doc => docs.push(doc));
             break;
@@ -137,6 +144,7 @@ export class ReadTypeScriptModules implements Processor {
       this.log.debug('>>>> EXPORT: ' + exportDoc.name + ' (' + exportDoc.docType + ') from ' + moduleDoc.id);
       moduleDoc.exports.push(exportDoc);
       docs.push(exportDoc);
+      this.exportSymbolsToDocsMap.set(exportDoc.symbol, exportDoc);
     }
 
     private addMemberDocs(docs: DocCollection, members: MemberDoc[]) {

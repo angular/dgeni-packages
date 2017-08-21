@@ -1,4 +1,4 @@
-import { Declaration, Symbol, SyntaxKind } from 'typescript';
+import { Declaration, Symbol, SyntaxKind, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
@@ -11,8 +11,9 @@ export class TypeAliasExportDoc extends ExportDoc {
       moduleDoc: ModuleDoc,
       exportSymbol: Symbol,
       basePath: string,
+      typeChecker: TypeChecker,
       namespacesToInclude: string[]) {
-    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()), basePath, namespacesToInclude);
+    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()), basePath, typeChecker, namespacesToInclude);
   }
 }
 
