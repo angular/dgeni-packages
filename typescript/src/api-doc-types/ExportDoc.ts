@@ -1,4 +1,4 @@
-import { Declaration, Symbol } from 'typescript';
+import { Declaration, Symbol, TypeChecker } from 'typescript';
 import { FileInfo } from '../services/TsParser/FileInfo';
 import { getContent } from '../services/TsParser/getContent';
 import { ApiDoc } from './ApiDoc';
@@ -30,6 +30,7 @@ export abstract class ExportDoc implements ApiDoc {
       public symbol: Symbol,
       public declaration: Declaration,
       public basePath: string,
+      public typeChecker: TypeChecker,
       public namespacesToInclude: string[]) {
       }
 }

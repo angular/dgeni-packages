@@ -1,7 +1,9 @@
 /* tslint:disable:only-arrow-functions */
 import { Document, Package } from 'dgeni';
+import { linkInheritedDocs } from './processors/linkInheritedDocs';
 import { readTypeScriptModules } from './processors/readTypeScriptModules';
 import { convertPrivateClassesToInterfaces } from './services/convertPrivateClassesToInterfaces';
+import { exportSymbolsToDocsMap } from './services/exportSymbolsToDocsMap';
 import { modules } from './services/modules';
 import { namespacesToInclude } from './services/namespacesToInclude';
 import { TsParser } from './services/TsParser';
@@ -13,6 +15,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 
 // Register the services and file readers
 .factory(modules)
+.factory(exportSymbolsToDocsMap)
 .factory(namespacesToInclude)
 .factory('tsParser', function(log) { return new TsParser(log); })
 
@@ -32,9 +35,9 @@ module.exports = new Package('typescript', [require('../jsdoc')])
   ];
 })
 
-
 // Register the processors
 .processor(readTypeScriptModules)
+.processor(linkInheritedDocs)
 
 // Configure ids and paths
 .config(function(computeIdsProcessor: any, computePathsProcessor: any, EXPORT_DOC_TYPES: string[]) {

@@ -1,7 +1,8 @@
 import { DocCollection } from 'dgeni';
 import { ClassExportDoc } from '../api-doc-types/ClassExportDoc';
-import { FileInfo } from './TsParser/FileInfo';
+import { HeritageInfo } from '../api-doc-types/ClassLikeExportDoc';
 import { convertPrivateClassesToInterfaces } from './convertPrivateClassesToInterfaces';
+import { FileInfo } from './TsParser/FileInfo';
 
 describe('convertPrivateClassesToInterfaces', () => {
   const basePath = 'a/b/c';
@@ -19,7 +20,7 @@ describe('convertPrivateClassesToInterfaces', () => {
   beforeEach(() => {
     spyOn(FileInfo.prototype, 'getRealFilePath').and.callFake((filePath: string) => filePath);
 
-    classDoc = new ClassExportDoc(moduleDoc, classSymbol, basePath, true, []);
+    classDoc = new ClassExportDoc(moduleDoc, classSymbol, basePath, null as any, true, []);
     classDoc.constructorDoc = { internal: true } as any;
     docs = [classDoc];
   });
@@ -36,9 +37,10 @@ describe('convertPrivateClassesToInterfaces', () => {
   });
 
   it('should convert the heritage since interfaces use `extends` not `implements`', () => {
-    classDoc.implementsClauses = ['parentInterface'];
+    const heritage = new HeritageInfo({} as any, '');
+    classDoc.implementsClauses = [heritage];
     convertPrivateClassesToInterfaces(docs, false);
-    expect(docs[0].extendsClauses).toEqual(['parentInterface']);
+    expect(docs[0].extendsClauses).toEqual([heritage]);
   });
 
   it('should add new injectable reference types, if specified, to the passed in collection', () => {
