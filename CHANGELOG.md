@@ -1,5 +1,40 @@
 # Changelog
 
+# 0.21.0 4 September 2017
+
+* feat(typescript): reference `extands` and `implements` ancestor info	d7c29603
+
+## BREAKING CHANGES:
+
+Previously, the `doc.implementsClauses` and `doc.extendsClauses` were arrays
+of strings, describing the text of the clause.
+
+Now, these properties are of type `HeritageInfo`:
+
+```typescript
+class HeritageInfo {
+  symbol: Symbol | undefined;
+  doc: ClassLikeExportDoc | undefined;
+  type: ExpressionWithTypeArguments;
+  text: string;
+}
+```
+
+where the `text` property holds the value that was previously provided.
+
+You need to change your code/templates to access the text of the heritage
+clause from:
+
+```
+{% for clause in doc.extendsClauses %}{$ clause $}{% endfor %}
+```
+
+to:
+
+```
+{% for clause in doc.extendsClauses %}{$ clause.text $}{% endfor %}
+```
+
 # 0.20.1 16 August 2017
 
 ## Features
