@@ -78,4 +78,9 @@ describe("resolveUrl", function() {
   //   expect(resolveUrl('currentFile.html', '/absolutePath/', ''))
   //     .toEqual('absolutePath');
   // });
+
+  it('should encode any \' in the path', function() {
+    expect(resolveUrl('currentFile.html', '/abc\'def.html', ''))
+      .toEqual('/abc%27def.html');
+  });
 });

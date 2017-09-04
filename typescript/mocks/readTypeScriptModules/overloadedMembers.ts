@@ -1,4 +1,9 @@
 export abstract class TestClass {
+  constructor(x: string, y: number);
+  constructor(x: string, y: string, z: number);
+  constructor(x: string, y: number|string, z?: number) {
+    // do nothing
+  }
   /**
    * String foo
    * @other foo

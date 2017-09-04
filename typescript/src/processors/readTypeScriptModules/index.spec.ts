@@ -248,6 +248,22 @@ describe('readTypeScriptModules', () => {
     });
   });
 
+  describe('overloaded constructors', () => {
+    it('should create a member doc for the "real" constructor, which includes an overloads property', () => {
+      processor.sourceFiles = [ 'overloadedMembers.ts'];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+
+      const foo: MethodMemberDoc = docs.find(doc => doc.name === 'constructor');
+      expect(foo.parameters).toEqual(['x: string', 'y: number|string', 'z?: number']);
+      const overloads = foo.overloads;
+      expect(overloads.map(overload => overload.parameters)).toEqual([
+        ['x: string', 'y: number'],
+        ['x: string', 'y: string', 'z: number'],
+      ]);
+    });
+  });
+
   describe('ordering of members', () => {
     it('should order class members in order of appearance (by default)', () => {
       processor.sourceFiles = ['orderingOfMembers.ts'];

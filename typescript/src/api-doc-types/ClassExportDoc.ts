@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Symbol, SymbolFlags, TypeChecker } from 'typescript';
+import { Declaration, FunctionLikeDeclaration, Symbol, SymbolFlags, TypeChecker } from 'typescript';
 import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
 import { MemberDoc } from '../api-doc-types/MemberDoc' ;
 import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc' ;
@@ -28,10 +28,25 @@ export class ClassExportDoc extends ClassLikeExportDoc {
       // Get the constructor
       const constructorSymbol = symbol.members.get('__constructor');
       if (constructorSymbol && constructorSymbol.getFlags() & SymbolFlags.Constructor) {
-        this.constructorDoc = new MethodMemberDoc(this, constructorSymbol, constructorSymbol.getDeclarations()[0], this.basePath, this.namespacesToInclude, false);
+        this.constructorDoc = this.getConstructorDoc(constructorSymbol);
       }
       // Get the instance members
       this.members = this.getMemberDocs(symbol.members, hidePrivateMembers, false);
     }
+  }
+
+  private getConstructorDoc(constructorSymbol: Symbol) {
+    let constructorDoc: MethodMemberDoc|null = null;
+    const overloads: MethodMemberDoc[] = [];
+    constructorSymbol.getDeclarations()!.forEach(declaration => {
+      if ((declaration as FunctionLikeDeclaration).body) {
+        // This is the "real" declaration of the method
+        constructorDoc = new MethodMemberDoc(this, constructorSymbol, declaration, this.basePath, this.namespacesToInclude, false, overloads);
+      } else {
+        // This is an overload signature of the method
+        overloads.push(new MethodMemberDoc(this, constructorSymbol, declaration, this.basePath, this.namespacesToInclude, false, overloads));
+      }
+    });
+    return constructorDoc || overloads.shift();
   }
 }
