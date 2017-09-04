@@ -1,4 +1,4 @@
-import { Declaration, Symbol, TypeChecker } from 'typescript';
+import { Declaration, SignatureDeclaration, Symbol, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { getParameters } from '../services/TsParser/getParameters';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
@@ -8,11 +8,11 @@ import { OverloadInfo } from './OverloadInfo';
 
 export class FunctionExportDoc extends ExportDoc {
   docType = 'function';
-  overloads = this.symbol.getDeclarations()
+  overloads = this.symbol.getDeclarations()!
     .filter(declaration => declaration !== this.declaration)
     .map(declaration => new OverloadInfo(this, declaration, this.typeChecker));
   typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
-  parameters = getParameters(this.declaration, this.namespacesToInclude);
+  parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
   constructor(
@@ -21,7 +21,7 @@ export class FunctionExportDoc extends ExportDoc {
       basePath: string,
       typeChecker: TypeChecker,
       namespacesToInclude: string[]) {
-    super(moduleDoc, symbol, findRealDeclaration(symbol.getDeclarations()), basePath, typeChecker, namespacesToInclude);
+    super(moduleDoc, symbol, findRealDeclaration(symbol.getDeclarations()!), basePath, typeChecker, namespacesToInclude);
   }
 
 }

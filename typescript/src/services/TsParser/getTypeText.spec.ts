@@ -41,5 +41,5 @@ describe('getTypeText', () => {
 });
 
 function getType(symbol: Symbol) {
-  return (symbol.getDeclarations()[0] as any).type as TypeNode;
+  return (symbol.getDeclarations()![0] as any).type as TypeNode;
 }

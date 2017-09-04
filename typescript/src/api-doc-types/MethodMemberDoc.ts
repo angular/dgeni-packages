@@ -1,12 +1,12 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Symbol, SymbolFlags } from 'typescript';
+import { Declaration, SignatureDeclaration, Symbol, SymbolFlags } from 'typescript';
 import { getParameters } from '../services/TsParser/getParameters';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
 
 export class MethodMemberDoc extends MemberDoc {
-  readonly parameters = getParameters(this.declaration, this.namespacesToInclude);
+  readonly parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   readonly name = this.computeName();
   readonly anchor = this.computeAnchor();
   readonly id = `${this.containerDoc.id}.${this.anchor})`;
@@ -35,7 +35,7 @@ export class MethodMemberDoc extends MemberDoc {
     // if the member is a "call" type then it has no name
     const anchorName = this.name.trim() || 'call';
     // if there is more than one declaration then we need to include the param list to distinguish them
-    return encodeURI(this.symbol.getDeclarations().length === 1 ? anchorName : `${anchorName}(${this.parameters.join(', ')})`);
+    return encodeURI(this.symbol.getDeclarations()!.length === 1 ? anchorName : `${anchorName}(${this.parameters.join(', ')})`);
   }
 
   private computeAliases() {

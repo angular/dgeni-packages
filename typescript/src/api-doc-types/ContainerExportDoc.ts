@@ -39,7 +39,7 @@ export abstract class ContainerExportDoc extends ExportDoc {
       const overloads: MethodMemberDoc[] = [];
       let memberDoc: MemberDoc|null = null;
 
-      for (const declaration of member.getDeclarations()) {
+      for (const declaration of member.getDeclarations()!) {
         if (flags & MethodMemberFlags) {
           if ((declaration as FunctionLikeDeclaration).body) {
             // This is the "real" declaration of the method

@@ -16,11 +16,11 @@ describe('getDecoratorSpec', () => {
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
     const testClass = moduleExports[0];
 
-    const testMethodDeclaration = testClass.members!.get('method')!.getDeclarations()[0];
+    const testMethodDeclaration = testClass.members!.get('method')!.getDeclarations()![0];
     const testParameters = (testMethodDeclaration as any).parameters;
 
-    const classDecorators = getDecorators(testClass.getDeclarations()[0])!;
-    const propertyDecorators = getDecorators(testClass.members!.get('property')!.getDeclarations()[0])!;
+    const classDecorators = getDecorators(testClass.getDeclarations()![0])!;
+    const propertyDecorators = getDecorators(testClass.members!.get('property')!.getDeclarations()![0])!;
     const methodDecorators = getDecorators(testMethodDeclaration)!;
 
     testDecorator(classDecorators[0], 'classDecorator');

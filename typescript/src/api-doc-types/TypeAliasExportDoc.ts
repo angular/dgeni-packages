@@ -13,7 +13,7 @@ export class TypeAliasExportDoc extends ExportDoc {
       basePath: string,
       typeChecker: TypeChecker,
       namespacesToInclude: string[]) {
-    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()), basePath, typeChecker, namespacesToInclude);
+    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()!), basePath, typeChecker, namespacesToInclude);
   }
 }
 

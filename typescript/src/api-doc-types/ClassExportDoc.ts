@@ -11,7 +11,7 @@ import { ModuleDoc } from '../api-doc-types/ModuleDoc';
  */
 export class ClassExportDoc extends ClassLikeExportDoc {
   docType = 'class';
-  constructorDoc: MemberDoc;
+  constructorDoc: MethodMemberDoc|undefined;
   statics: MemberDoc[] = [];
   constructor(
     moduleDoc: ModuleDoc,

@@ -66,7 +66,7 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
   private computeHeritageClauses() {
     // Collect up all the heritage clauses from each declaration
     // (interfaces can have multiple declarations, which are merged, each with their own heritage)
-    this.symbol.getDeclarations().forEach(declaration => {
+    this.symbol.getDeclarations()!.forEach(declaration => {
       getHeritage(declaration).forEach(clause => {
       // Now process these clauses to find each "extends" and "implements" clause
         if (clause.token === SyntaxKind.ExtendsKeyword) {

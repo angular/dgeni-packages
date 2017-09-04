@@ -40,11 +40,11 @@ export function getExportDocType(symbol: Symbol) {
   throw new Error(`Unknown symbol type:
     symbolName: ${symbol.name}
     symbolType: ${symbol.flags}
-    file: ${symbol.getDeclarations()[0].getSourceFile().fileName}`);
+    file: ${symbol.getDeclarations()![0].getSourceFile().fileName}`);
 }
 
 function getBlockScopedVariableDocType(symbol: Symbol) {
-  let node: Node | undefined = symbol.valueDeclaration || symbol.getDeclarations()[0];
+  let node: Node | undefined = symbol.valueDeclaration || symbol.getDeclarations()![0];
   while (node) {
     if ( node.flags & NodeFlags.Const) {
       return 'const';
