@@ -1,8 +1,19 @@
 # Changelog
 
+# 0.21.1 4 September 2017
+
+## Features
+
+* **typescript**: support overloaded constructors	ca69213d
+
+## Bug Fixes
+
+* **typescript**: fix possibly null references	463ef5cf
+
 # 0.21.0 4 September 2017
 
-* feat(typescript): reference `extands` and `implements` ancestor info	d7c29603
+## Features
+* **typescript**: reference `extands` and `implements` ancestor info	d7c29603
 
 ## BREAKING CHANGES:
 
