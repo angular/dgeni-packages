@@ -42,7 +42,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
         if ( checkDoc(doc) ) {
 
           // Make the path to the doc relative to the webRoot
-          var docPath = path.join(webRoot, resolveUrl(base, doc.path, base));
+          var docPath = path.resolve(webRoot, resolveUrl(base, doc.path, base));
 
           // Parse out all link hrefs, names and ids
           linkInfo = extractLinks(doc.renderedContent);
@@ -85,7 +85,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
           })
 
           .forEach(function(link) {
-            var normalizedLink = path.join(webRoot, resolveUrl(linkInfo.path, link, base));
+            var normalizedLink = path.resolve(webRoot, resolveUrl(linkInfo.path, link, base));
             if ( !_.some(pathVariants, function(pathVariant) {
               return allValidReferences[normalizedLink + pathVariant];
             }) ) {
