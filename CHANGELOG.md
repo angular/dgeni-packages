@@ -1,5 +1,15 @@
 # Changelog
 
+# 0.21.2 11 September 2017
+
+## Fixes
+
+* **typescript**: do not render comments in decorator arguments	7cfd8021
+
+## Chores
+
+* upgrade to TypeScript 2.4	1d64fcc7
+
 # 0.21.1 4 September 2017
 
 ## Features
