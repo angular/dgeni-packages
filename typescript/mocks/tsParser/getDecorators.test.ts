@@ -1,7 +1,7 @@
 function classDecorator(target: any) {
   // do nothing
 }
-function classDecoratorFactory(foo: string, bar: string) {
+function classDecoratorFactory(foo: string, bar: string, x: Object) {
   return classDecorator;
 }
 function propertyDecorator(target: any, propertyKey: string) {
@@ -27,13 +27,16 @@ function paramDecoratorFactory(foo: string, bar: string) {
  * A class "decorated" class
  */
 @classDecorator
-@classDecoratorFactory('foo', 'bar')
+@classDecoratorFactory('foo', 'bar', {
+  // some comment that should be ignored
+  value: 'xxx',
+})
 export class TestClass<T> {
   /**
    * Some property
    */
   @propertyDecorator
-  @propertyDecoratorFactory('foo', 'bar')
+  @propertyDecoratorFactory('foo', /* ignore me */ 'bar')
   property: string;
   /**
    * Some method

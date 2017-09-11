@@ -1,4 +1,4 @@
-import { ArrayLiteralExpression, CallExpression, Declaration, Decorator, Expression, ObjectLiteralElement, ObjectLiteralExpression, PropertyAssignment, SyntaxKind } from 'typescript';
+import { ArrayLiteralExpression, CallExpression, createPrinter, Declaration, Decorator, EmitHint, Expression, ObjectLiteralElement, ObjectLiteralExpression, PropertyAssignment, SyntaxKind } from 'typescript';
 
 export type ArgumentInfo = string | string[] | { [key: string]: ArgumentInfo };
 
@@ -15,9 +15,10 @@ export function getDecorators(declaration: Declaration) {
     return declaration.decorators.map<ParsedDecorator>(decorator => {
       const callExpression = getCallExpression(decorator);
       if (callExpression) {
+        const printer = createPrinter({ removeComments: true });
         return {
           argumentInfo: callExpression.arguments.map(argument => parseArgument(argument)),
-          arguments: callExpression.arguments.map(argument => argument.getText()),
+          arguments: callExpression.arguments.map(argument => printer.printNode(EmitHint.Expression, argument, declaration.getSourceFile())),
           expression: decorator as Decorator,
           isCallExpression: true,
           name: callExpression.expression.getText(),

@@ -1,50 +1,80 @@
-import { SignatureDeclaration } from 'typescript';
-import { TsParser } from '.';
+import { Declaration, SignatureDeclaration } from 'typescript';
+import { AugmentedSymbol, TsParser } from '.';
 import { getDecorators, ParsedDecorator } from './getDecorators';
 const path = require('canonical-path');
 
 describe('getDecoratorSpec', () => {
   let parser: TsParser;
   let basePath: string;
+  let testClass: AugmentedSymbol;
+  let testMethodDeclaration: Declaration;
+  let testParameters: Declaration[];
+
   beforeEach(() => {
     parser = new TsParser(require('dgeni/lib/mocks/log')(false));
     basePath = path.resolve(__dirname, '../../mocks');
-  });
-
-  it('should return the decorators of the declarations', () => {
     const parseInfo = parser.parse(['tsParser/getDecorators.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
-    const testClass = moduleExports[0];
+    testClass = moduleExports[0];
+    testMethodDeclaration = testClass.members!.get('method')!.getDeclarations()![0];
+    testParameters = (testMethodDeclaration as any).parameters;
+  });
 
-    const testMethodDeclaration = testClass.members!.get('method')!.getDeclarations()![0];
-    const testParameters = (testMethodDeclaration as any).parameters;
-
+  it('should return the decorators of a class declaration', () => {
     const classDecorators = getDecorators(testClass.getDeclarations()![0])!;
+
+    const classDecorator = classDecorators[0];
+    expect(classDecorator.expression).toBeDefined();
+    expect(classDecorator.name).toEqual('classDecorator');
+    expect(classDecorator.isCallExpression).toBeFalsy();
+
+    const classDecoratorFactory = classDecorators[1];
+    expect(classDecoratorFactory.expression).toBeDefined();
+    expect(classDecoratorFactory.name).toEqual('classDecoratorFactory');
+    expect(classDecoratorFactory.isCallExpression).toBeTruthy();
+    expect(classDecoratorFactory.argumentInfo).toEqual(["'foo'", "'bar'", { value: "'xxx'"}]);
+    expect(classDecoratorFactory.arguments).toEqual(["'foo'", "'bar'", '{\n    value: \'xxx\'\n}']);
+  });
+
+  it('should return the decorators of a property declaration', () => {
     const propertyDecorators = getDecorators(testClass.members!.get('property')!.getDeclarations()![0])!;
+    const propertyDecorator = propertyDecorators[0];
+    expect(propertyDecorator.expression).toBeDefined();
+    expect(propertyDecorator.name).toEqual('propertyDecorator');
+    expect(propertyDecorator.isCallExpression).toBeFalsy();
+
+    const propertyDecoratorFactory = propertyDecorators[1];
+    expect(propertyDecoratorFactory.expression).toBeDefined();
+    expect(propertyDecoratorFactory.name).toEqual('propertyDecoratorFactory');
+    expect(propertyDecoratorFactory.isCallExpression).toBeTruthy();
+    expect(propertyDecoratorFactory.argumentInfo).toEqual(["'foo'", "'bar'"]);
+    expect(propertyDecoratorFactory.arguments).toEqual(["'foo'", "'bar'"]);
+  });
+
+  it('should return the decorators of a method declaration', () => {
     const methodDecorators = getDecorators(testMethodDeclaration)!;
+    const methodDecorator = methodDecorators[0];
+    expect(methodDecorator.expression).toBeDefined();
+    expect(methodDecorator.name).toEqual('methodDecorator');
 
-    testDecorator(classDecorators[0], 'classDecorator');
-    testDecorator(classDecorators[1], 'classDecoratorFactory', true);
+    const methodDecoratorFactory = methodDecorators[1];
+    expect(methodDecoratorFactory.expression).toBeDefined();
+    expect(methodDecoratorFactory.name).toEqual('methodDecoratorFactory');
+    expect(methodDecoratorFactory.isCallExpression).toBeTruthy();
+    expect(methodDecoratorFactory.argumentInfo).toEqual(["'foo'", "'bar'"]);
+    expect(methodDecoratorFactory.arguments).toEqual(["'foo'", "'bar'"]);
+  });
 
-    testDecorator(propertyDecorators[0], 'propertyDecorator');
-    testDecorator(propertyDecorators[1], 'propertyDecoratorFactory', true);
+  it('should return the decorators of a parameter declaration', () => {
+    const paramDecorator = getDecorators(testParameters[0])![0];
+    expect(paramDecorator.expression).toBeDefined();
+    expect(paramDecorator.name).toEqual('paramDecorator');
 
-    testDecorator(methodDecorators[0], 'methodDecorator');
-    testDecorator(methodDecorators[1], 'methodDecoratorFactory', true);
-
-    testDecorator(getDecorators(testParameters[0])![0], 'paramDecorator');
-    testDecorator(getDecorators(testParameters[1])![0], 'paramDecoratorFactory', true);
+    const paramDecoratorFactory = getDecorators(testParameters[1])![0];
+    expect(paramDecoratorFactory.expression).toBeDefined();
+    expect(paramDecoratorFactory.name).toEqual('paramDecoratorFactory');
+    expect(paramDecoratorFactory.isCallExpression).toBeTruthy();
+    expect(paramDecoratorFactory.argumentInfo).toEqual(["'foo'", "'bar'"]);
+    expect(paramDecoratorFactory.arguments).toEqual(["'foo'", "'bar'"]);
   });
 });
-
-function testDecorator(decorator: ParsedDecorator, name: string, isDecoratorFactory?: boolean) {
-  expect(decorator.expression).toBeDefined();
-  expect(decorator.name).toEqual(name);
-  if (isDecoratorFactory) {
-    expect(decorator.isCallExpression).toBeTruthy();
-    expect(decorator.argumentInfo).toEqual(["'foo'", "'bar'"]);
-    expect(decorator.arguments).toEqual(["'foo'", "'bar'"]);
-  } else {
-    expect(decorator.isCallExpression).toBeFalsy();
-  }
-}
