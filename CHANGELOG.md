@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.21.3 22 September 2017
+
+## Features
+
+* **typescript**: track descendants of inherited classes	b64e8519
+
 # 0.21.2 11 September 2017
 
 ## Fixes
