@@ -28,6 +28,7 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
   decorators = getDecorators(this.declaration);
   extendsClauses: HeritageInfo[] = [];
   implementsClauses: HeritageInfo[] = [];
+  descendants: ClassLikeExportDoc[] = [];
   typeParams = this.computeTypeParams();
 
   constructor(

@@ -36,6 +36,10 @@ describe('linkInheritedDocs', () => {
     expect(childDoc.extendsClauses.map(clause => clause.doc)).toEqual([firstParentDoc]);
     expect(firstParentDoc.extendsClauses.map(clause => clause.doc)).toEqual([lastParentDoc]);
     expect(lastParentDoc.extendsClauses.map(clause => clause.doc)).toEqual([]);
+
+    expect(lastParentDoc.descendants).toEqual([firstParentDoc]);
+    expect(firstParentDoc.descendants).toEqual([childDoc]);
+    expect(childDoc.descendants).toEqual([]);
   });
 
   it('should properly resolve members in inherited docs', () => {

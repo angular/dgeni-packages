@@ -33,6 +33,7 @@ export class LinkInheritedDocs implements Processor {
     private updateHeritageInfo(doc: ClassLikeExportDoc, clause: HeritageInfo) {
       clause.symbol = doc.typeChecker.getTypeFromTypeNode(clause.type).getSymbol();
       clause.doc = clause.symbol && this.exportSymbolsToDocsMap.get(clause.symbol);
+      if (clause.doc) clause.doc.descendants.push(doc);
     }
 
     private reportErrors(doc: ClassLikeExportDoc, clauses: HeritageInfo[]) {
