@@ -207,6 +207,15 @@ describe('readTypeScriptModules', () => {
       expect(typeAliasDoc.docType).toEqual('type-alias');
       expect(typeAliasDoc.typeDefinition).toEqual('X<any>');
     });
+
+    it('should include type parameters', () => {
+      processor.sourceFiles = [ 'type-aliases.ts'];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+      const typeAliasDoc = docs.find(doc => doc.name === 'Parameterized');
+      expect(typeAliasDoc.docType).toEqual('type-alias');
+      expect(typeAliasDoc.typeParameters).toEqual('<T, R>');
+    });
   });
 
   describe('exported functions', () => {
