@@ -229,76 +229,100 @@ describe('readTypeScriptModules', () => {
     });
   });
 
-  describe('overloaded members', () => {
-    it('should create a member doc for the "real" member, which includes an overloads property', () => {
-      processor.sourceFiles = [ 'overloadedMembers.ts'];
-      const docs: DocCollection = [];
-      processor.$process(docs);
+  describe('members', () => {
+    describe('overloaded members', () => {
+      it('should create a member doc for the "real" member, which includes an overloads property', () => {
+        processor.sourceFiles = [ 'overloadedMembers.ts'];
+        const docs: DocCollection = [];
+        processor.$process(docs);
 
-      const foo: MethodMemberDoc = docs.find(doc => doc.name === 'foo');
-      expect(foo.parameters).toEqual(['num1: number|string', 'num2?: number']);
-      const overloads = foo.overloads;
-      expect(overloads.map(overload => overload.parameters)).toEqual([
-        ['str: string'],
-        ['num1: number', 'num2: number'],
-      ]);
+        const foo: MethodMemberDoc = docs.find(doc => doc.name === 'foo');
+        expect(foo.parameters).toEqual(['num1: number|string', 'num2?: number']);
+        const overloads = foo.overloads;
+        expect(overloads.map(overload => overload.parameters)).toEqual([
+          ['str: string'],
+          ['num1: number', 'num2: number'],
+        ]);
+      });
+
+      it('should use the first declaration as the member doc if no overload has a body', () => {
+        processor.sourceFiles = [ 'overloadedMembers.ts'];
+        const docs: DocCollection = [];
+        processor.$process(docs);
+
+        const bar: MethodMemberDoc = docs.find(doc => doc.name === 'bar');
+        expect(bar.overloads.length).toEqual(1);
+
+        expect(bar.parameters).toEqual(['str: string']);
+        expect(bar.overloads[0].parameters).toEqual([]);
+      });
     });
 
-    it('should use the first declaration as the member doc if no overload has a body', () => {
-      processor.sourceFiles = [ 'overloadedMembers.ts'];
-      const docs: DocCollection = [];
-      processor.$process(docs);
+    describe('overloaded constructors', () => {
+      it('should create a member doc for the "real" constructor, which includes an overloads property', () => {
+        processor.sourceFiles = [ 'overloadedMembers.ts'];
+        const docs: DocCollection = [];
+        processor.$process(docs);
 
-      const bar: MethodMemberDoc = docs.find(doc => doc.name === 'bar');
-      expect(bar.overloads.length).toEqual(1);
-
-      expect(bar.parameters).toEqual(['str: string']);
-      expect(bar.overloads[0].parameters).toEqual([]);
-    });
-  });
-
-  describe('overloaded constructors', () => {
-    it('should create a member doc for the "real" constructor, which includes an overloads property', () => {
-      processor.sourceFiles = [ 'overloadedMembers.ts'];
-      const docs: DocCollection = [];
-      processor.$process(docs);
-
-      const foo: MethodMemberDoc = docs.find(doc => doc.name === 'constructor');
-      expect(foo.parameters).toEqual(['x: string', 'y: number|string', 'z?: number']);
-      const overloads = foo.overloads;
-      expect(overloads.map(overload => overload.parameters)).toEqual([
-        ['x: string', 'y: number'],
-        ['x: string', 'y: string', 'z: number'],
-      ]);
-    });
-  });
-
-  describe('ordering of members', () => {
-    it('should order class members in order of appearance (by default)', () => {
-      processor.sourceFiles = ['orderingOfMembers.ts'];
-      const docs: DocCollection = [];
-      processor.$process(docs);
-      const classDoc = docs.find(doc => doc.docType === 'class');
-      expect(classDoc.docType).toEqual('class');
-      expect(getNames(classDoc.members)).toEqual([
-        'firstItem',
-        'otherMethod',
-        'doStuff',
-      ]);
+        const foo: MethodMemberDoc = docs.find(doc => doc.name === 'constructor');
+        expect(foo.parameters).toEqual(['x: string', 'y: number|string', 'z?: number']);
+        const overloads = foo.overloads;
+        expect(overloads.map(overload => overload.parameters)).toEqual([
+          ['x: string', 'y: number'],
+          ['x: string', 'y: string', 'z: number'],
+        ]);
+      });
     });
 
-    it('should not order class members if not sortClassMembers is false', () => {
-      processor.sourceFiles = ['orderingOfMembers.ts'];
-      processor.sortClassMembers = false;
-      const docs: DocCollection = [];
-      processor.$process(docs);
-      const classDoc = docs.find(doc => doc.docType === 'class');
-      expect(classDoc.docType).toEqual('class');
-      expect(getNames(classDoc.members)).toEqual([
-        'firstItem',
-        'otherMethod',
-        'doStuff',
-      ]);
+    describe('ordering of members', () => {
+      it('should order class members in order of appearance (by default)', () => {
+        processor.sourceFiles = ['orderingOfMembers.ts'];
+        const docs: DocCollection = [];
+        processor.$process(docs);
+        const classDoc = docs.find(doc => doc.docType === 'class');
+        expect(classDoc.docType).toEqual('class');
+        expect(getNames(classDoc.members)).toEqual([
+          'firstItem',
+          'otherMethod',
+          'doStuff',
+        ]);
+      });
+
+      it('should not order class members if not sortClassMembers is false', () => {
+        processor.sourceFiles = ['orderingOfMembers.ts'];
+        processor.sortClassMembers = false;
+        const docs: DocCollection = [];
+        processor.$process(docs);
+        const classDoc = docs.find(doc => doc.docType === 'class');
+        expect(classDoc.docType).toEqual('class');
+        expect(getNames(classDoc.members)).toEqual([
+          'firstItem',
+          'otherMethod',
+          'doStuff',
+        ]);
+      });
+    });
+
+    describe('return types', () => {
+      it('should not throw if "declaration.initializer.expression.text" is undefined', () => {
+        processor.sourceFiles = ['returnTypes.ts'];
+        const docs: DocCollection = [];
+        expect(() => { processor.$process(docs); }).not.toThrow();
+      });
+
+      it('should return the text of the type if initialized', () => {
+        processor.sourceFiles = ['returnTypes.ts'];
+        const docs: DocCollection = [];
+        processor.$process(docs);
+
+        const propDocs = docs.filter(doc => doc.name === 'someProp');
+        expect(propDocs[0].type).toEqual('{\n' +
+          '    foo: \'bar\',\n' +
+          '  }');
+        expect(propDocs[1].type).toEqual('Object.assign(this.someProp, {\n' +
+          '    bar: \'baz\'\n' +
+          '  })');
+      });
     });
   });
 
@@ -367,28 +391,6 @@ describe('readTypeScriptModules', () => {
 
       const moduleDoc = docs[0];
       expect(moduleDoc.name).toEqual('privateModule');
-    });
-  });
-
-  describe('return types', () => {
-    it('should not throw if "declaration.initializer.expression.text" is undefined', () => {
-      processor.sourceFiles = ['returnTypes.ts'];
-      const docs: DocCollection = [];
-      expect(() => { processor.$process(docs); }).not.toThrow();
-    });
-
-    it('should return the text of the type if initialized', () => {
-      processor.sourceFiles = ['returnTypes.ts'];
-      const docs: DocCollection = [];
-      processor.$process(docs);
-
-      const propDocs = docs.filter(doc => doc.name === 'someProp');
-      expect(propDocs[0].type).toEqual('{\n' +
-        '    foo: \'bar\',\n' +
-        '  }');
-      expect(propDocs[1].type).toEqual('Object.assign(this.someProp, {\n' +
-        '    bar: \'baz\'\n' +
-        '  })');
     });
   });
 });
