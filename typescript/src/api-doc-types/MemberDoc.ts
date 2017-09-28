@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Decorator, Symbol, SymbolFlags } from 'typescript';
+import { Declaration, Decorator, Symbol, SymbolFlags, SyntaxKind } from 'typescript';
 import { FileInfo } from '../services/TsParser/FileInfo';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { getContent } from "../services/TsParser/getContent";
@@ -33,6 +33,7 @@ export abstract class MemberDoc implements ApiDoc {
   isSetAccessor = !!(this.symbol.flags & SymbolFlags.SetAccessor);
   isCallMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__call');
   isNewMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__new');
+  isReadonly = this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword);
 
   constructor(
       public containerDoc: ContainerExportDoc,

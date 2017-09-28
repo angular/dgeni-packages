@@ -324,6 +324,18 @@ describe('readTypeScriptModules', () => {
           '  })');
       });
     });
+
+    describe('member modifiers', () => {
+      it('should set the readOnly flag on readonly members', () => {
+        processor.sourceFiles = ['memberModifiers.ts'];
+        const docs: DocCollection = [];
+        processor.$process(docs);
+        const simpleProp = docs.filter(doc => doc.name === 'foo')[0];
+        expect(simpleProp.isReadonly).toBeFalsy();
+        const readonlyProp = docs.filter(doc => doc.name === 'bar')[0];
+        expect(readonlyProp.isReadonly).toBeTruthy();
+      });
+    });
   });
 
   describe('strip namespaces', () => {
