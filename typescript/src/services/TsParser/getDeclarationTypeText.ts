@@ -12,16 +12,14 @@ export function getDeclarationTypeText(declaration: Declaration, namespacesToInc
   }
 
   // if the declaration is being initialized then use the initialization value
-  const initializer = getInitializer(declaration);
-  if (initializer) return initializer.getText();
-
-  return '';
+  return getInitializerText(declaration);
 }
 
 function getType(declaration: Declaration) {
   return (declaration as any).type as TypeNode;
 }
 
-function getInitializer(declaration: Declaration) {
-  return (declaration as any).initializer as Expression;
+export function getInitializerText(declaration: Declaration) {
+  const initializer = (declaration as any).initializer as Expression;
+  return initializer ? initializer.getText() : '';
 }
