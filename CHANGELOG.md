@@ -1,5 +1,17 @@
 # Changelog
 
+# 0.21.4 28 September 2017
+
+## Features
+* **typescript**:
+  - add isReadonly flag to member docs	62bc5333
+  - include typeParameters in type-alias docs	51d81496
+
+## Fixes
+
+* **typescript**: show both type and initializer on parameters	d677e72a
+
+
 # 0.21.3 22 September 2017
 
 ## Features
