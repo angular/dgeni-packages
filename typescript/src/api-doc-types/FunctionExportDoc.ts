@@ -1,17 +1,15 @@
 import { Declaration, SignatureDeclaration, Symbol, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { getParameters } from '../services/TsParser/getParameters';
-import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
-import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 import { OverloadInfo } from './OverloadInfo';
+import { ParameterizedExportDoc } from './ParameterizedExportDoc';
 
-export class FunctionExportDoc extends ExportDoc {
+export class FunctionExportDoc extends ParameterizedExportDoc {
   docType = 'function';
   overloads = this.symbol.getDeclarations()!
     .filter(declaration => declaration !== this.declaration)
     .map(declaration => new OverloadInfo(this, declaration, this.typeChecker));
-  typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
   parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
