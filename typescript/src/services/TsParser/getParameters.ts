@@ -1,5 +1,6 @@
 import { Declaration, ParameterDeclaration, SignatureDeclaration } from 'typescript';
-import { getDeclarationTypeText } from './getDeclarationTypeText';
+import { getInitializerText } from './getDeclarationTypeText';
+import { getTypeText } from './getTypeText';
 
 export function getParameters(declaration: SignatureDeclaration, namespacesToInclude: string[]) {
   const parameters = getParameterDeclarations(declaration);
@@ -17,9 +18,15 @@ export function getParameters(declaration: SignatureDeclaration, namespacesToInc
 
     if (parameter.questionToken) paramText += '?';
 
-    paramText += (!parameter.type && parameter.initializer) ? ' = ' : ': ';
+    const type = parameter.type;
+    if (type) {
+      paramText += ': ' + getTypeText(type, namespacesToInclude);
+    }
 
-    paramText += getDeclarationTypeText(parameter, namespacesToInclude);
+    const initializer = getInitializerText(parameter);
+    if (initializer) {
+      paramText += ' = ' + initializer;
+    }
 
     return paramText.trim();
   });
