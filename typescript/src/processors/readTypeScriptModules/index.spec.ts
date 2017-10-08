@@ -2,11 +2,13 @@ import {Dgeni, DocCollection} from 'dgeni';
 import {Injector} from 'dgeni/lib/Injector';
 import { Symbol } from 'typescript';
 import {ReadTypeScriptModules} from '.';
+import {AccessorInfoDoc} from '../../api-doc-types/AccessorInfoDoc';
 import {ClassExportDoc} from '../../api-doc-types/ClassExportDoc';
 import {ExportDoc} from '../../api-doc-types/ExportDoc';
 import {InterfaceExportDoc} from '../../api-doc-types/InterfaceExportDoc';
 import {MethodMemberDoc} from '../../api-doc-types/MethodMemberDoc';
 import {ModuleDoc} from '../../api-doc-types/ModuleDoc';
+import {PropertyMemberDoc} from '../../api-doc-types/PropertyMemberDoc';
 const mockPackage = require('../../mocks/mockPackage');
 const path = require('canonical-path');
 
@@ -334,6 +336,113 @@ describe('readTypeScriptModules', () => {
         expect(simpleProp.isReadonly).toBeFalsy();
         const readonlyProp = docs.filter(doc => doc.name === 'bar')[0];
         expect(readonlyProp.isReadonly).toBeTruthy();
+      });
+    });
+
+    describe('getters and setters', () => {
+      let docs: DocCollection;
+      let foo1: PropertyMemberDoc;
+      let foo1Getter: AccessorInfoDoc;
+      let foo1Setter: AccessorInfoDoc;
+      let foo2: PropertyMemberDoc;
+      let foo2Getter: AccessorInfoDoc;
+      let foo2Setter: AccessorInfoDoc;
+      let bar: PropertyMemberDoc;
+      let barGetter: AccessorInfoDoc;
+      let barSetter: AccessorInfoDoc;
+      let qux: PropertyMemberDoc;
+      let quxGetter: AccessorInfoDoc;
+      let quxSetter: AccessorInfoDoc;
+      let noType: PropertyMemberDoc;
+      let noTypeGetter: AccessorInfoDoc;
+      let noTypeSetter: AccessorInfoDoc;
+
+      beforeEach(() => {
+        processor.sourceFiles = ['gettersAndSetters.ts'];
+        docs = [];
+        processor.$process(docs);
+
+        foo1 = docs.find(doc => doc.name === 'foo1');
+        foo2 = docs.find(doc => doc.name === 'foo2');
+        bar = docs.find(doc => doc.name === 'bar');
+        qux = docs.find(doc => doc.name === 'qux');
+        noType = docs.find(doc => doc.name === 'noType');
+
+        foo1Getter = docs.find(doc => doc.name === 'foo1:get');
+        foo1Setter = docs.find(doc => doc.name === 'foo1:set');
+
+        foo2Getter = docs.find(doc => doc.name === 'foo2:get');
+        foo2Setter = docs.find(doc => doc.name === 'foo2:set');
+
+        barGetter = docs.find(doc => doc.name === 'bar:get');
+        barSetter = docs.find(doc => doc.name === 'bar:set');
+
+        quxGetter = docs.find(doc => doc.name === 'qux:get');
+        quxSetter = docs.find(doc => doc.name === 'qux:set');
+
+        noTypeGetter = docs.find(doc => doc.name === 'noType:get');
+        noTypeSetter = docs.find(doc => doc.name === 'noType:set');
+      });
+
+      it('should create a property member doc for property that has accessors', () => {
+        expect(foo1).toBeDefined();
+        expect(foo1.docType).toBe('member');
+        expect(foo2).toBeDefined();
+        expect(foo2.docType).toBe('member');
+        expect(bar).toBeDefined();
+        expect(bar.docType).toBe('member');
+        expect(qux).toBeDefined();
+        expect(qux.docType).toBe('member');
+      });
+
+      it('should create a doc for each accessor of a property', () => {
+        expect(foo1Getter).toBeDefined();
+        expect(foo1Getter.docType).toBe('get-accessor-info');
+        expect(foo1Getter.content).toEqual('');
+        expect(foo1Setter).toBeDefined();
+        expect(foo1Setter.docType).toBe('set-accessor-info');
+        expect(foo1Setter.content).toEqual('foo1 setter');
+        expect(foo2Getter).toBeDefined();
+        expect(foo2Getter.docType).toBe('get-accessor-info');
+        expect(foo2Getter.content).toEqual('foo2 getter');
+        expect(foo2Setter).toBeDefined();
+        expect(foo2Setter.docType).toBe('set-accessor-info');
+        expect(foo2Setter.content).toEqual('');
+        expect(barGetter).toBeDefined();
+        expect(barGetter.docType).toBe('get-accessor-info');
+        expect(barGetter.content).toEqual('bar getter');
+        expect(barSetter).toBeUndefined();
+        expect(quxGetter).toBeUndefined();
+        expect(quxSetter).toBeDefined();
+        expect(quxSetter.docType).toBe('set-accessor-info');
+        expect(quxSetter.content).toEqual('qux setter');
+      });
+
+      it('should compute the type of the property from its accessors', () => {
+        expect(foo1.type).toEqual('string');
+        expect(foo2.type).toEqual('string');
+        expect(bar.type).toEqual('number');
+        expect(qux.type).toEqual('object');
+        expect(noType.type).toEqual('string');
+      });
+
+      it('should compute the content of the property from its accessors', () => {
+        expect(foo1.content).toEqual('foo1 setter');
+        expect(foo2.content).toEqual('foo2 getter');
+        expect(bar.content).toEqual('bar getter');
+        expect(qux.content).toEqual('qux setter');
+        expect(noType.content).toEqual('This has no explicit getter return type');
+      });
+
+      it('should attach each accessor doc to its property doc', () => {
+        expect(foo1.getAccessor).toBe(foo1Getter);
+        expect(foo1.setAccessor).toBe(foo1Setter);
+        expect(foo2.getAccessor).toBe(foo2Getter);
+        expect(foo2.setAccessor).toBe(foo2Setter);
+        expect(bar.getAccessor).toBe(barGetter);
+        expect(bar.setAccessor).toBe(null);
+        expect(qux.getAccessor).toBe(null);
+        expect(qux.setAccessor).toBe(quxSetter);
       });
     });
   });
