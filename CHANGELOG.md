@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.21.5 8 October 2017
+
+## Fixes
+* **typescript**: handle property accessors correctly	75fafcf7
+
+
 # 0.21.4 28 September 2017
 
 ## Features
