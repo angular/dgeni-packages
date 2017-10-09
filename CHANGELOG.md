@@ -1,15 +1,17 @@
 # Changelog
 
+# 0.21.6 9 October 2017
+
+## Reverts
+* **typescript**: handle property accessors correctly	a4be78add
+
+This change introduced a breaking change, which is that there are new docTypes
+"get-accessor-info" and "set-accessor-info", which need templates.
+
 # 0.21.5 8 October 2017
 
 ## Fixes
 * **typescript**: handle property accessors correctly	75fafcf7
-
-## Notes
-
-Be aware that this version has a "kind of" breaking change, which is that there
-are new docTypes "get-accessor-info" and "set-accessor-info", which need templates.
-
 
 # 0.21.4 28 September 2017
 
