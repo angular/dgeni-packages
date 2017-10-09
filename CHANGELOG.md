@@ -5,6 +5,11 @@
 ## Fixes
 * **typescript**: handle property accessors correctly	75fafcf7
 
+## Notes
+
+Be aware that this version has a "kind of" breaking change, which is that there
+are new docTypes "get-accessor-info" and "set-accessor-info", which need templates.
+
 
 # 0.21.4 28 September 2017
 
