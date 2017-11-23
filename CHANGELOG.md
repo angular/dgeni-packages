@@ -1,8 +1,14 @@
 # Changelog
+# 0.22.1 23 November 2017
+
+## Fixes
+
+* **typescript**: remove comments from re-rendered code	0be17b9a
 
 # 0.22.0 9 October 2017
 
 ## Fixes
+
 * **typescript**: handle property accessors correctly	f72b69e5f
 
 ## BREAKING CHANGE
@@ -13,6 +19,7 @@ To support the handling of get and set accessors, there are new docTypes
 # 0.21.6 9 October 2017
 
 ## Reverts
+
 * **typescript**: handle property accessors correctly	a4be78add
 
 This change introduced a breaking change, which is that there are new docTypes
@@ -21,11 +28,13 @@ This change introduced a breaking change, which is that there are new docTypes
 # 0.21.5 8 October 2017
 
 ## Fixes
+
 * **typescript**: handle property accessors correctly	75fafcf7
 
 # 0.21.4 28 September 2017
 
 ## Features
+
 * **typescript**:
   - add isReadonly flag to member docs	62bc5333
   - include typeParameters in type-alias docs	51d81496
