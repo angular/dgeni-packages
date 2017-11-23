@@ -239,7 +239,7 @@ describe('readTypeScriptModules', () => {
         processor.$process(docs);
 
         const foo: MethodMemberDoc = docs.find(doc => doc.name === 'foo');
-        expect(foo.parameters).toEqual(['num1: number|string', 'num2?: number']);
+        expect(foo.parameters).toEqual(['num1: number | string', 'num2?: number']);
         const overloads = foo.overloads;
         expect(overloads.map(overload => overload.parameters)).toEqual([
           ['str: string'],
@@ -267,7 +267,7 @@ describe('readTypeScriptModules', () => {
         processor.$process(docs);
 
         const foo: MethodMemberDoc = docs.find(doc => doc.name === 'constructor');
-        expect(foo.parameters).toEqual(['x: string', 'y: number|string', 'z?: number']);
+        expect(foo.parameters).toEqual(['x: string', 'y: number | string', 'z?: number']);
         const overloads = foo.overloads;
         expect(overloads.map(overload => overload.parameters)).toEqual([
           ['x: string', 'y: number'],
@@ -318,12 +318,16 @@ describe('readTypeScriptModules', () => {
         processor.$process(docs);
 
         const propDocs = docs.filter(doc => doc.name === 'someProp');
-        expect(propDocs[0].type).toEqual('{\n' +
-          '    foo: \'bar\',\n' +
-          '  }');
-        expect(propDocs[1].type).toEqual('Object.assign(this.someProp, {\n' +
-          '    bar: \'baz\'\n' +
-          '  })');
+        expect(propDocs[0].type).toEqual([
+          '{',
+          '    foo: \'bar\'',
+          '}',
+        ].join('\n'));
+        expect(propDocs[1].type).toEqual([
+          'Object.assign(this.someProp, {',
+          '    bar: \'baz\'',
+          '})',
+        ].join('\n'));
       });
     });
 

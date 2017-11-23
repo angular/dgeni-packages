@@ -20,7 +20,12 @@ describe('getTypeText', () => {
     expect(getTypeText(getType(moduleExports[3]), [])).toEqual('number');
     expect(getTypeText(getType(moduleExports[4]), [])).toEqual('TestType');
     expect(getTypeText(getType(moduleExports[5]), [])).toEqual('TestClass | string');
-    expect(getTypeText(getType(moduleExports[6]), [])).toEqual('{ x: number, y: string }');
+    expect(getTypeText(getType(moduleExports[6]), [])).toEqual([
+      '{',
+      '    x: number;',
+      '    y: string;',
+      '}',
+    ].join('\n'));
     expect(getTypeText(getType(moduleExports[7]), [])).toEqual('Array<string>');
     expect(getTypeText(getType(moduleExports[8]), [])).toEqual('Array<T>');
   });
@@ -37,6 +42,19 @@ describe('getTypeText', () => {
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
     expect(getTypeText(getType(moduleExports[9]), ['angular'])).toEqual('angular.IDirective');
     expect(getTypeText(getType(moduleExports[10]), ['angular'])).toEqual('Array<angular.IDirective>');
+  });
+
+  it('should remove comments from the rendered text', () => {
+    const parseInfo = parser.parse(['tsParser/getTypeText.test.ts'], basePath);
+    const moduleExports = parseInfo.moduleSymbols[0].exportArray;
+    expect(getTypeText(getType(moduleExports[12]), [])).toEqual([
+      '{',
+      '    a: number;',
+      '    b: string;',
+      '} & {',
+      '    a: string;',
+      '}',
+    ].join('\n'));
   });
 });
 

@@ -1,13 +1,14 @@
-import { EntityName, Identifier, SyntaxKind, TypeNode, TypeReferenceNode } from 'typescript';
+import { createPrinter, EntityName, Identifier, SyntaxKind, TypeNode, TypeReferenceNode } from 'typescript';
+import { nodeToString } from './nodeToString';
 
 export function getTypeText(type: TypeNode, namespacesToInclude: string[]): string {
-    if (type.kind === SyntaxKind.TypeReference) {
-      // we have a type reference, so recurse down to find the unqualified name
-      return getTypeReferenceText(type as TypeReferenceNode, namespacesToInclude);
-    } else {
-      // we have a straightforward type
-      return type.getText();
-    }
+  if (type.kind === SyntaxKind.TypeReference) {
+    // we have a type reference, so recurse down to find the unqualified name
+    return getTypeReferenceText(type as TypeReferenceNode, namespacesToInclude);
+  } else {
+    // we have a straightforward type
+    return nodeToString(type);
+  }
 }
 
 function getTypeReferenceText(typeRef: TypeReferenceNode, namespacesToInclude: string[]): string {
@@ -23,12 +24,12 @@ function getTypeReferenceText(typeRef: TypeReferenceNode, namespacesToInclude: s
 function getUnqualifiedName(name: EntityName, namespacesToInclude: string[]): string {
   const nameParts: string[] = [];
   while (name.kind === SyntaxKind.QualifiedName) {
-    const qualification = name.left.getText();
+    const qualification = nodeToString(name.left);
     if (namespacesToInclude.indexOf(qualification) !== -1) {
       nameParts.push(qualification);
     }
     name = name.right;
   }
-  nameParts.push(name.getText());
+  nameParts.push(nodeToString(name));
   return nameParts.join('.');
 }

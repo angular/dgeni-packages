@@ -1,4 +1,5 @@
 import { ArrayLiteralExpression, CallExpression, createPrinter, Declaration, Decorator, EmitHint, Expression, ObjectLiteralElement, ObjectLiteralExpression, PropertyAssignment, SyntaxKind } from 'typescript';
+import { nodeToString } from './nodeToString';
 
 export type ArgumentInfo = string | string[] | { [key: string]: ArgumentInfo };
 
@@ -21,13 +22,13 @@ export function getDecorators(declaration: Declaration) {
           arguments: callExpression.arguments.map(argument => printer.printNode(EmitHint.Expression, argument, declaration.getSourceFile())),
           expression: decorator as Decorator,
           isCallExpression: true,
-          name: callExpression.expression.getText(),
+          name: nodeToString(callExpression.expression),
         };
       } else {
         return {
           expression: decorator as Decorator,
           isCallExpression: false,
-          name: decorator.expression.getText(),
+          name: nodeToString(decorator.expression),
         };
       }
     });
@@ -44,7 +45,7 @@ function parseProperties(properties: ObjectLiteralElement[]) {
   const result: ArgumentInfo = {};
   properties.forEach(property => {
     if (property.kind === SyntaxKind.PropertyAssignment) {
-      result[property.name!.getText()] = parseArgument((property as PropertyAssignment).initializer);
+      result[nodeToString(property.name!)] = parseArgument((property as PropertyAssignment).initializer);
     }
   });
   return result;
@@ -55,7 +56,7 @@ function parseArgument(argument: Expression): ArgumentInfo {
     return parseProperties((argument as ObjectLiteralExpression).properties);
   }
   if (argument.kind === SyntaxKind.ArrayLiteralExpression) {
-    return (argument as ArrayLiteralExpression).elements.map(element => element.getText());
+    return (argument as ArrayLiteralExpression).elements.map(element => nodeToString(element));
   }
-  return argument.getText();
+  return nodeToString(argument);
 }

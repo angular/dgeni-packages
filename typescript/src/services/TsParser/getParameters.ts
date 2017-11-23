@@ -1,11 +1,12 @@
 import { Declaration, ParameterDeclaration, SignatureDeclaration } from 'typescript';
-import { getInitializerText } from './getDeclarationTypeText';
+import { getInitializer } from './getDeclarationTypeText';
 import { getTypeText } from './getTypeText';
+import { nodeToString } from './nodeToString';
 
 export function getParameters(declaration: SignatureDeclaration, namespacesToInclude: string[]) {
   const parameters = getParameterDeclarations(declaration);
   if (!parameters) {
-    const name = declaration.name ? declaration.name.getText() : 'unknown';
+    const name = declaration.name ? nodeToString(declaration.name) : 'unknown';
     throw new Error(`Missing declaration parameters for "${name}" in ${declaration.getSourceFile().fileName} at line ${declaration.getStart()}`);
   }
 
@@ -14,7 +15,7 @@ export function getParameters(declaration: SignatureDeclaration, namespacesToInc
 
     if (parameter.dotDotDotToken) paramText += '...';
 
-    paramText += parameter.name.getText();
+    paramText += nodeToString(parameter.name);
 
     if (parameter.questionToken) paramText += '?';
 
@@ -23,9 +24,9 @@ export function getParameters(declaration: SignatureDeclaration, namespacesToInc
       paramText += ': ' + getTypeText(type, namespacesToInclude);
     }
 
-    const initializer = getInitializerText(parameter);
+    const initializer = getInitializer(parameter);
     if (initializer) {
-      paramText += ' = ' + initializer;
+      paramText += ' = ' + nodeToString(initializer);
     }
 
     return paramText.trim();

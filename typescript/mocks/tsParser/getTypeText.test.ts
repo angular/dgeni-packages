@@ -23,3 +23,12 @@ export function function2(): Array<angular.IDirective> {
 export namespace angular {
   export interface IDirective { name: string; }
 }
+
+export type TestType2 = {
+  a: number; // line comment
+  /* block comment before */
+  b: string;
+  /* block comment after */
+} & {
+  a: string;
+};
