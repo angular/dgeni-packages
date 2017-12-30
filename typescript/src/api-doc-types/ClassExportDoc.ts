@@ -15,11 +15,13 @@ export class ClassExportDoc extends ClassLikeExportDoc {
   statics: MemberDoc[] = [];
   constructor(
     moduleDoc: ModuleDoc,
-    symbol: Symbol) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!);
+    symbol: Symbol,
+    aliasSymbol?: Symbol) {
+    super(moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
     if (symbol.exports) {
       this.statics = this.getMemberDocs(symbol.exports, moduleDoc.hidePrivateMembers, true);
     }
+
     if (symbol.members) {
       // Get the constructor
       const constructorSymbol = symbol.members.get('__constructor');

@@ -9,8 +9,9 @@ export class TypeAliasExportDoc extends ParameterizedExportDoc {
 
   constructor(
     moduleDoc: ModuleDoc,
-    exportSymbol: Symbol) {
-    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()!));
+    exportSymbol: Symbol,
+    aliasSymbol?: Symbol) {
+    super(moduleDoc, exportSymbol, getTypeAliasDeclaration(exportSymbol.getDeclarations()!), aliasSymbol);
   }
 }
 

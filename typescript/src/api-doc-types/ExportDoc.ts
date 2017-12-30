@@ -14,7 +14,7 @@ export abstract class ExportDoc implements ApiDoc {
   // Concrete implementations will provide the docType string
   abstract docType: string;
 
-  name = this.symbol.name;
+  name = this.aliasSymbol ? this.aliasSymbol.name : this.symbol.name;
   aliases = [this.name, this.moduleDoc.id + "/" + this.name];
   id = this.moduleDoc.id + "/" + this.name;
   basePath = this.moduleDoc.basePath;
@@ -31,6 +31,6 @@ export abstract class ExportDoc implements ApiDoc {
   constructor(
       public moduleDoc: ModuleDoc,
       public symbol: Symbol,
-      public declaration: Declaration) {
-      }
+      public declaration: Declaration,
+      public aliasSymbol?: Symbol) { }
 }

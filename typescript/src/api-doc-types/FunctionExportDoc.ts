@@ -17,8 +17,9 @@ export class FunctionExportDoc extends ParameterizedExportDoc implements Paramet
 
   constructor(
       public containerDoc: ModuleDoc,
-      symbol: Symbol) {
-    super(containerDoc, symbol, findRealDeclaration(symbol.getDeclarations()!));
+      symbol: Symbol,
+      aliasSymbol?: Symbol) {
+    super(containerDoc, symbol, findRealDeclaration(symbol.getDeclarations()!), aliasSymbol);
   }
 
 }
