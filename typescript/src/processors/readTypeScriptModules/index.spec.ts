@@ -202,6 +202,48 @@ describe('readTypeScriptModules', () => {
     });
   });
 
+  describe('export aliases', () => {
+
+    function getProcessedDocs() {
+      const docs: DocCollection = [];
+      processor.sourceFiles = ['exportAliases.ts'];
+      processor.$process(docs);
+      const [originalExport, aliasedExport] = docs.filter(doc => doc.docType === 'class') as ClassExportDoc[];
+      return {originalExport, aliasedExport};
+    }
+
+    it('should properly name the aliased export', () => {
+      const {originalExport, aliasedExport} = getProcessedDocs();
+
+      expect(originalExport.name).toEqual('OriginalExport');
+      expect(originalExport.symbol.name).toEqual('OriginalExport');
+
+      expect(aliasedExport.name).toEqual('AliasedExport');
+      expect(aliasedExport.symbol.name).toEqual('OriginalExport');
+    });
+
+    it('should have the proper aliases resolved', () => {
+      const {originalExport, aliasedExport} = getProcessedDocs();
+
+      expect(originalExport.aliases).toEqual(['OriginalExport', 'exportAliases/OriginalExport']);
+      expect(aliasedExport.aliases).toEqual(['AliasedExport', 'exportAliases/AliasedExport']);
+    });
+
+    it('should expose the alias symbol', () => {
+      const {originalExport, aliasedExport} = getProcessedDocs();
+
+      expect(originalExport.aliasSymbol).toBeUndefined();
+      expect(aliasedExport.aliasSymbol).toBeDefined();
+    });
+
+    it('should expose the original symbols members', () => {
+      const {originalExport, aliasedExport} = getProcessedDocs();
+
+      expect(originalExport.members.map(memberDoc => memberDoc.id)).toEqual(['exportAliases/OriginalExport.sayHello']);
+      expect(aliasedExport.members.map(memberDoc => memberDoc.id)).toEqual(['exportAliases/AliasedExport.sayHello']);
+    });
+  });
+
   describe('type aliases', () => {
     it('should find the correct type when there are multiple declarations', () => {
       processor.sourceFiles = [ 'type-aliases.ts'];

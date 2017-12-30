@@ -34,8 +34,9 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
   constructor(
       moduleDoc: ModuleDoc,
       symbol: Symbol,
-      declaration: Declaration) {
-        super(moduleDoc, symbol, declaration);
+      declaration: Declaration,
+      aliasSymbol?: Symbol) {
+        super(moduleDoc, symbol, declaration, aliasSymbol);
         this.computeHeritageClauses();
         this.addAliases();
       }

@@ -7,7 +7,7 @@ export class ConstExportDoc extends ExportDoc {
   docType = 'const';
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
-  constructor(moduleDoc: ModuleDoc, symbol: Symbol) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!);
+  constructor(moduleDoc: ModuleDoc, symbol: Symbol, aliasSymbol?: Symbol) {
+    super(moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
   }
 }

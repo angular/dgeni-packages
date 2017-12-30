@@ -11,8 +11,9 @@ export class EnumExportDoc extends ContainerExportDoc {
   additionalDeclarations: Declaration[] = [];
   constructor(
     moduleDoc: ModuleDoc,
-    symbol: Symbol) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!);
+    symbol: Symbol,
+    aliasSymbol?: Symbol) {
+    super(moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
     this.additionalDeclarations = symbol.getDeclarations()!.filter(declaration => declaration !== this.declaration);
     if (symbol.exports) {
       this.members = this.getMemberDocs(symbol.exports, true, false);
