@@ -8,6 +8,6 @@ module.exports = function ExportDefaultDeclarationNodeMatcherFactory (codeNameSe
    * @returns {String|Null} code name from node
    */
   return function ExportDefaultDeclarationNodeMatcher (node) {
-    return codeNameService.find(node.right) || codeNameService.find(node.left) || null;
+    return codeNameService.find(node.right) || null;
   }
 };

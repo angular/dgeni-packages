@@ -1,7 +1,7 @@
 var matcherFactory = require('./export-named-declaration');
 
 describe('ExportNamedDeclaration matcher', function() {
-
+  
   var matcher, codeNameServiceMock;
 
   beforeEach(function() {
@@ -15,7 +15,6 @@ describe('ExportNamedDeclaration matcher', function() {
 
   it("should start search for right", function () {
     var expr = {
-      left: 'left',
       right: 'right'
     };
 
@@ -26,31 +25,16 @@ describe('ExportNamedDeclaration matcher', function() {
     expect(codeNameServiceMock.find).toHaveBeenCalledWith(expr.right);
   });
 
-  it("should continue search with left", function () {
+  it("should return null for empty right", function () {
     codeNameServiceMock.value = null;
     var expr = {
-      left: 'test',
-      right: null
-    };
-
-    spyOn(codeNameServiceMock, 'find').and.callThrough();
-
-    expect(matcher(expr)).toEqual(expr.left);
-    expect(codeNameServiceMock.find.calls.count()).toEqual(2);
-    expect(codeNameServiceMock.find.calls.allArgs()).toEqual([[null],[expr.left]]);
-  });
-
-  it("should return null for empty left and right", function () {
-    codeNameServiceMock.value = null;
-    var expr = {
-      left: null,
       right: null
     };
 
     spyOn(codeNameServiceMock, 'find').and.callThrough();
 
     expect(matcher(expr)).toBeNull();
-    expect(codeNameServiceMock.find.calls.count()).toEqual(2);
-    expect(codeNameServiceMock.find.calls.allArgs()).toEqual([[null],[null]]);
+    expect(codeNameServiceMock.find.calls.count()).toEqual(1);
+    expect(codeNameServiceMock.find.calls.allArgs()).toEqual([[null]]);
   });
 });
