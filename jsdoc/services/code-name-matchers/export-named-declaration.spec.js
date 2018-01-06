@@ -1,7 +1,7 @@
-var matcherFactory = require('./export-default-declaration');
+var matcherFactory = require('./export-named-declaration');
 
-describe('ExportDefaultDeclaration matcher', function() {
-
+describe('ExportNamedDeclaration matcher', function() {
+  
   var matcher, codeNameServiceMock;
 
   beforeEach(function() {

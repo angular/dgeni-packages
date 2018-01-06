@@ -1,13 +1,13 @@
 /**
- * @dgService ExportDefaultDeclarationNodeMatcher
+ * @dgService ExportNamedDeclarationNodeMatcher
  * @returns {String|Null} code name from node
  */
-module.exports = function ExportDefaultDeclarationNodeMatcherFactory (codeNameService) {
+module.exports = function ExportNamedDeclarationNodeMatcherFactory (codeNameService) {
   /**
    * @param {Node} node AST node to process
    * @returns {String|Null} code name from node
    */
-  return function ExportDefaultDeclarationNodeMatcher (node) {
+  return function ExportNamedDeclarationNodeMatcher (node) {
     return codeNameService.find(node.right) || null;
   }
 };

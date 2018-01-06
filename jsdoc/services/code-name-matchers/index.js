@@ -5,6 +5,7 @@ module.exports = [
   require('./call-expression.js'),
   require('./class-declaration.js'),
   require('./export-default-declaration.js'),
+  require('./export-named-declaration.js'),
   require('./expression-statement.js'),
   require('./function-declaration.js'),
   require('./function-expression.js'),
