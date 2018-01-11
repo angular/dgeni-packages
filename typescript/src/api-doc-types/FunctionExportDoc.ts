@@ -3,9 +3,10 @@ import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeT
 import { getParameters } from '../services/TsParser/getParameters';
 import { ModuleDoc } from './ModuleDoc';
 import { OverloadInfo } from './OverloadInfo';
+import { ParameterContainer } from './ParameterContainer';
 import { ParameterizedExportDoc } from './ParameterizedExportDoc';
 
-export class FunctionExportDoc extends ParameterizedExportDoc {
+export class FunctionExportDoc extends ParameterizedExportDoc implements ParameterContainer {
   docType = 'function';
   overloads = this.symbol.getDeclarations()!
     .filter(declaration => declaration !== this.declaration)

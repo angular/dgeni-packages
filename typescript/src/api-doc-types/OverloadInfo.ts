@@ -4,12 +4,13 @@ import { getParameters } from '../services/TsParser/getParameters';
 import { ExportDoc } from './ExportDoc';
 import { FunctionExportDoc } from './FunctionExportDoc';
 import { ModuleDoc } from './ModuleDoc';
+import { ParameterContainer } from './ParameterContainer';
 
 /**
  * This represents a single overload of an exported function.
  * There will be a FunctionExportDoc that contains these overloads
  */
-export class OverloadInfo extends ExportDoc {
+export class OverloadInfo extends ExportDoc implements ParameterContainer {
   docType = 'function-overload';
   parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);

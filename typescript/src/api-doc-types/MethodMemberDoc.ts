@@ -6,8 +6,9 @@ import { encodeAnchor } from '../utils/encodeAnchor';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
 import { ModuleDoc } from './ModuleDoc';
+import { ParameterContainer } from './ParameterContainer';
 
-export class MethodMemberDoc extends MemberDoc {
+export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
   readonly parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   readonly name = this.computeName();
   readonly anchor = this.computeAnchor();
