@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Decorator, Symbol, SymbolFlags, SyntaxKind } from 'typescript';
+import { Declaration, Decorator, Symbol, SymbolFlags, SyntaxKind, TypeChecker } from 'typescript';
 import { FileInfo } from '../services/TsParser/FileInfo';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { getContent } from "../services/TsParser/getContent";
@@ -21,9 +21,12 @@ export abstract class MemberDoc implements ApiDoc {
   path: string;
   outputPath: string;
   content = getContent(this.declaration);
+  basePath = this.containerDoc.basePath;
+  namespacesToInclude = this.containerDoc.namespacesToInclude;
   fileInfo = new FileInfo(this.declaration, this.basePath);
   startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
+  typeChecker = this.containerDoc.typeChecker;
 
   accessibility = getAccessibility(this.declaration);
   decorators = getDecorators(this.declaration);
@@ -39,8 +42,6 @@ export abstract class MemberDoc implements ApiDoc {
       public containerDoc: ContainerExportDoc,
       public symbol: Symbol,
       public declaration: Declaration,
-      public basePath: string,
-      public namespacesToInclude: string[],
       public isStatic: boolean) {
   }
 }

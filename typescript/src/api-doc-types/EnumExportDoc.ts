@@ -11,12 +11,8 @@ export class EnumExportDoc extends ContainerExportDoc {
   additionalDeclarations: Declaration[] = [];
   constructor(
     moduleDoc: ModuleDoc,
-    symbol: Symbol,
-    basePath: string,
-    typeChecker: TypeChecker,
-    namespacesToInclude: string[],
-  ) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath, typeChecker, namespacesToInclude);
+    symbol: Symbol) {
+    super(moduleDoc, symbol, symbol.valueDeclaration!);
     this.additionalDeclarations = symbol.getDeclarations()!.filter(declaration => declaration !== this.declaration);
     if (symbol.exports) {
       this.members = this.getMemberDocs(symbol.exports, true, false);

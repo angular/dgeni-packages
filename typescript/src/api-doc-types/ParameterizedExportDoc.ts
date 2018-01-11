@@ -12,10 +12,7 @@ export abstract class ParameterizedExportDoc extends ExportDoc {
   constructor(
       moduleDoc: ModuleDoc,
       symbol: Symbol,
-      declaration: Declaration,
-      basePath: string,
-      typeChecker: TypeChecker,
-      namespacesToInclude: string[]) {
-    super(moduleDoc, symbol, declaration, basePath, typeChecker, namespacesToInclude);
+      declaration: Declaration) {
+    super(moduleDoc, symbol, declaration);
   }
 }

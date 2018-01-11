@@ -20,15 +20,13 @@ export class PropertyMemberDoc extends MemberDoc {
     declaration: Declaration | null,
     getAccessorDeclaration: GetAccessorDeclaration | null,
     setAccessorDeclaration: SetAccessorDeclaration | null,
-    basePath: string,
-    namespacesToInclude: string[],
     isStatic: boolean,
   ) {
-    super(containerDoc, symbol, (declaration || getAccessorDeclaration || setAccessorDeclaration)!, basePath, namespacesToInclude, isStatic);
+    super(containerDoc, symbol, (declaration || getAccessorDeclaration || setAccessorDeclaration)!, isStatic);
 
     // If this property has accessors then compute the type based on that instead
-    this.getAccessor = getAccessorDeclaration && new AccessorInfoDoc('get', this, getAccessorDeclaration, basePath, namespacesToInclude);
-    this.setAccessor = setAccessorDeclaration && new AccessorInfoDoc('set', this, setAccessorDeclaration, basePath, namespacesToInclude);
+    this.getAccessor = getAccessorDeclaration && new AccessorInfoDoc('get', this, getAccessorDeclaration);
+    this.setAccessor = setAccessorDeclaration && new AccessorInfoDoc('set', this, setAccessorDeclaration);
     this.type = this.type || this.setAccessor && this.setAccessor.parameters[0].split(/:\s?/)[1] || '';
     this.content = this.content || this.setAccessor && this.setAccessor.content || '';
   }

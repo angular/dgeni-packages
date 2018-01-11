@@ -9,17 +9,14 @@ export class FunctionExportDoc extends ParameterizedExportDoc {
   docType = 'function';
   overloads = this.symbol.getDeclarations()!
     .filter(declaration => declaration !== this.declaration)
-    .map(declaration => new OverloadInfo(this, declaration, this.typeChecker));
+    .map(declaration => new OverloadInfo(this, declaration));
   parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
   constructor(
-      moduleDoc: ModuleDoc,
-      symbol: Symbol,
-      basePath: string,
-      typeChecker: TypeChecker,
-      namespacesToInclude: string[]) {
-    super(moduleDoc, symbol, findRealDeclaration(symbol.getDeclarations()!), basePath, typeChecker, namespacesToInclude);
+      public containerDoc: ModuleDoc,
+      symbol: Symbol) {
+    super(containerDoc, symbol, findRealDeclaration(symbol.getDeclarations()!));
   }
 
 }

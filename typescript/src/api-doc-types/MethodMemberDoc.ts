@@ -5,6 +5,7 @@ import { getTypeParametersText } from '../services/TsParser/getTypeParametersTex
 import { encodeAnchor } from '../utils/encodeAnchor';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
+import { ModuleDoc } from './ModuleDoc';
 
 export class MethodMemberDoc extends MemberDoc {
   readonly parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
@@ -13,16 +14,15 @@ export class MethodMemberDoc extends MemberDoc {
   readonly id = `${this.containerDoc.id}.${this.anchor})`;
   readonly aliases = this.computeAliases();
   readonly typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
+  readonly moduleDoc: ModuleDoc;
 
   constructor(
     containerDoc: ContainerExportDoc,
     symbol: Symbol,
     declaration: Declaration,
-    basePath: string,
-    namespacesToInclude: string[],
     isStatic: boolean,
     public overloads: MethodMemberDoc[] = []) {
-    super(containerDoc, symbol, declaration, basePath, namespacesToInclude, isStatic);
+    super(containerDoc, symbol, declaration, isStatic);
   }
 
   private computeName() {

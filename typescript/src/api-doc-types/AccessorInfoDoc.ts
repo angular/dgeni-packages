@@ -16,7 +16,7 @@ export class AccessorInfoDoc extends MethodMemberDoc {
   aliases = this.propertyDoc.aliases.map(alias => `${alias}:${this.accessorType}`);
   anchor = encodeAnchor(this.name);
 
-  constructor(public accessorType: 'get'|'set', public propertyDoc: PropertyMemberDoc, declaration: Declaration, basePath: string, namespacesToInclude: string[]) {
-    super(propertyDoc.containerDoc, propertyDoc.symbol, declaration, basePath, namespacesToInclude, false);
+  constructor(public accessorType: 'get'|'set', public propertyDoc: PropertyMemberDoc, declaration: Declaration) {
+    super(propertyDoc.containerDoc, propertyDoc.symbol, declaration, false);
   }
 }

@@ -6,7 +6,7 @@ import { FileInfo } from './TsParser/FileInfo';
 
 describe('convertPrivateClassesToInterfaces', () => {
   const basePath = 'a/b/c';
-  const moduleDoc = { id: 'someModule' } as any;
+  const moduleDoc = { id: 'someModule', basePath } as any;
   const mockDeclaration: any = { getSourceFile: () => ({ fileName: 'x/y/z', text: 'blah blah' }) };
   const classSymbol: any = {
     getDeclarations: () => [mockDeclaration],
@@ -20,7 +20,7 @@ describe('convertPrivateClassesToInterfaces', () => {
   beforeEach(() => {
     spyOn(FileInfo.prototype, 'getRealFilePath').and.callFake((filePath: string) => filePath);
 
-    classDoc = new ClassExportDoc(moduleDoc, classSymbol, basePath, null as any, true, []);
+    classDoc = new ClassExportDoc(moduleDoc, classSymbol);
     classDoc.constructorDoc = { internal: true } as any;
     docs = [classDoc];
   });

@@ -3,6 +3,7 @@ import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeT
 import { getParameters } from '../services/TsParser/getParameters';
 import { ExportDoc } from './ExportDoc';
 import { FunctionExportDoc } from './FunctionExportDoc';
+import { ModuleDoc } from './ModuleDoc';
 
 /**
  * This represents a single overload of an exported function.
@@ -12,9 +13,10 @@ export class OverloadInfo extends ExportDoc {
   docType = 'function-overload';
   parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+  containerDoc: ModuleDoc = this.functionDoc.containerDoc;
 
-  constructor(public functionDoc: FunctionExportDoc, declaration: Declaration, typeChecker: TypeChecker) {
-    super(functionDoc.moduleDoc, functionDoc.symbol, declaration, functionDoc.basePath, typeChecker, functionDoc.namespacesToInclude);
+  constructor(public functionDoc: FunctionExportDoc, declaration: Declaration) {
+    super(functionDoc.moduleDoc, functionDoc.symbol, declaration);
     // Give this overload doc a more specific id and aliases than it's container doc
     const paramString = `(${this.parameters.join(', ')})`;
     this.id += paramString;

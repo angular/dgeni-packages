@@ -50,13 +50,13 @@ export abstract class ContainerExportDoc extends ExportDoc {
             setAccessorDeclaration = declaration as SetAccessorDeclaration;
           } else if ((declaration as FunctionLikeDeclaration).body) {
             // This is the "real" declaration of the method
-            memberDoc = new MethodMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude, isStatic, overloads);
+            memberDoc = new MethodMemberDoc(this, member, declaration, isStatic, overloads);
           } else {
             // This is an overload signature of the method
-            overloads.push(new MethodMemberDoc(this, member, declaration, this.basePath, this.namespacesToInclude, isStatic, overloads));
+            overloads.push(new MethodMemberDoc(this, member, declaration, isStatic, overloads));
           }
         } else if (flags & PropertyMemberFlags) {
-          memberDoc = new PropertyMemberDoc(this, member, declaration, null, null, this.basePath, this.namespacesToInclude, isStatic);
+          memberDoc = new PropertyMemberDoc(this, member, declaration, null, null, isStatic);
         } else {
           throw new Error(`Unknown member type for member ${member.name}`);
         }
@@ -64,7 +64,7 @@ export abstract class ContainerExportDoc extends ExportDoc {
 
       // If at least one of the declarations was an accessor then the whole member is a property.
       if (getAccessorDeclaration || setAccessorDeclaration) {
-        memberDoc = new PropertyMemberDoc(this, member, null, getAccessorDeclaration, setAccessorDeclaration, this.basePath, this.namespacesToInclude, false);
+        memberDoc = new PropertyMemberDoc(this, member, null, getAccessorDeclaration, setAccessorDeclaration, false);
       }
 
       // If there is no member doc then we are in an interface or abstract class and we just take the first overload

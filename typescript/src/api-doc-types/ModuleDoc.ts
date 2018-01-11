@@ -1,4 +1,4 @@
-import { Declaration } from 'typescript';
+import { Declaration, TypeChecker } from 'typescript';
 import { ModuleSymbol } from '../services/TsParser';
 import { FileInfo } from '../services/TsParser/FileInfo';
 
@@ -23,5 +23,5 @@ export class ModuleDoc implements ApiDoc {
   outputPath: string;
   content: string;
 
-  constructor(public symbol: ModuleSymbol, private basePath: string) {}
+  constructor(public symbol: ModuleSymbol, public basePath: string, public namespacesToInclude: string[], public hidePrivateMembers: boolean, public typeChecker: TypeChecker) {}
 }

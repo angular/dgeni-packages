@@ -15,14 +15,10 @@ export class ClassExportDoc extends ClassLikeExportDoc {
   statics: MemberDoc[] = [];
   constructor(
     moduleDoc: ModuleDoc,
-    symbol: Symbol,
-    basePath: string,
-    typeChecker: TypeChecker,
-    hidePrivateMembers: boolean,
-    namespacesToInclude: string[]) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, basePath, typeChecker, namespacesToInclude);
+    symbol: Symbol) {
+    super(moduleDoc, symbol, symbol.valueDeclaration!);
     if (symbol.exports) {
-      this.statics = this.getMemberDocs(symbol.exports, hidePrivateMembers, true);
+      this.statics = this.getMemberDocs(symbol.exports, moduleDoc.hidePrivateMembers, true);
     }
     if (symbol.members) {
       // Get the constructor
@@ -31,7 +27,7 @@ export class ClassExportDoc extends ClassLikeExportDoc {
         this.constructorDoc = this.getConstructorDoc(constructorSymbol);
       }
       // Get the instance members
-      this.members = this.getMemberDocs(symbol.members, hidePrivateMembers, false);
+      this.members = this.getMemberDocs(symbol.members, moduleDoc.hidePrivateMembers, false);
     }
   }
 
@@ -41,10 +37,10 @@ export class ClassExportDoc extends ClassLikeExportDoc {
     constructorSymbol.getDeclarations()!.forEach(declaration => {
       if ((declaration as FunctionLikeDeclaration).body) {
         // This is the "real" declaration of the method
-        constructorDoc = new MethodMemberDoc(this, constructorSymbol, declaration, this.basePath, this.namespacesToInclude, false, overloads);
+        constructorDoc = new MethodMemberDoc(this, constructorSymbol, declaration, false, overloads);
       } else {
         // This is an overload signature of the method
-        overloads.push(new MethodMemberDoc(this, constructorSymbol, declaration, this.basePath, this.namespacesToInclude, false, overloads));
+        overloads.push(new MethodMemberDoc(this, constructorSymbol, declaration, false, overloads));
       }
     });
     return constructorDoc || overloads.shift();

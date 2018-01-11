@@ -17,6 +17,7 @@ export abstract class ExportDoc implements ApiDoc {
   name = this.symbol.name;
   aliases = [this.name, this.moduleDoc.id + "/" + this.name];
   id = this.moduleDoc.id + "/" + this.name;
+  basePath = this.moduleDoc.basePath;
   fileInfo = new FileInfo(this.declaration, this.basePath);
   startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
@@ -24,13 +25,12 @@ export abstract class ExportDoc implements ApiDoc {
   content = getContent(this.declaration);
   path: string;
   outputPath: string;
+  namespacesToInclude = this.moduleDoc.namespacesToInclude;
+  typeChecker = this.moduleDoc.typeChecker;
 
   constructor(
       public moduleDoc: ModuleDoc,
       public symbol: Symbol,
-      public declaration: Declaration,
-      public basePath: string,
-      public typeChecker: TypeChecker,
-      public namespacesToInclude: string[]) {
+      public declaration: Declaration) {
       }
 }
