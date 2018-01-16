@@ -5,9 +5,11 @@ import {ReadTypeScriptModules} from '.';
 import {AccessorInfoDoc} from '../../api-doc-types/AccessorInfoDoc';
 import {ClassExportDoc} from '../../api-doc-types/ClassExportDoc';
 import {ExportDoc} from '../../api-doc-types/ExportDoc';
+import {FunctionExportDoc} from '../../api-doc-types/FunctionExportDoc';
 import {InterfaceExportDoc} from '../../api-doc-types/InterfaceExportDoc';
 import {MethodMemberDoc} from '../../api-doc-types/MethodMemberDoc';
 import {ModuleDoc} from '../../api-doc-types/ModuleDoc';
+import {ParameterDoc} from '../../api-doc-types/ParameterDoc';
 import {PropertyMemberDoc} from '../../api-doc-types/PropertyMemberDoc';
 const mockPackage = require('../../mocks/mockPackage');
 const path = require('canonical-path');
@@ -449,6 +451,28 @@ describe('readTypeScriptModules', () => {
         expect(qux.setAccessor).toBe(quxSetter);
       });
     });
+
+    describe('method parameters', () => {
+      it('should process method parameters', () => {
+        processor.sourceFiles = ['methodParameters.ts'];
+        const docs: DocCollection = [];
+        processor.$process(docs);
+        const param1: ParameterDoc = docs.find(doc => doc.name === 'param1');
+        expect(param1.docType).toEqual('parameter');
+        expect(param1.id).toEqual('methodParameters/TestClass.method1~param1');
+        expect(param1.content).toEqual('description of param1');
+        expect(param1.type).toEqual('number');
+
+        const param2: ParameterDoc = docs.find(doc => doc.name === 'param2');
+        expect(param2.docType).toEqual('parameter');
+        expect(param2.id).toEqual('methodParameters/TestClass.method1~param2');
+        expect(param2.content).toEqual('description of param2');
+        expect(param2.type).toEqual('string');
+
+        const method1: MethodMemberDoc = docs.find(doc => doc.name === 'method1')!;
+        expect(method1.parameterDocs).toEqual([param1, param2]);
+      });
+    });
   });
 
   describe('strip namespaces', () => {
@@ -474,13 +498,13 @@ describe('readTypeScriptModules', () => {
       processor.sourceFiles = ['spreadParams.ts'];
       const docs: DocCollection = [];
       processor.$process(docs);
-      const functionDoc = docs.find(doc => doc.docType === 'function');
+      const functionDoc: FunctionExportDoc = docs.find(doc => doc.docType === 'function');
       expect(functionDoc.parameters).toEqual(['...args: Array<any>']);
       expect(functionDoc.type).toEqual('void');
 
       const interfaceDoc = docs.find(doc => doc.docType === 'interface');
       expect(interfaceDoc.members.length).toEqual(2);
-      const methodDoc = interfaceDoc.members[0];
+      const methodDoc: MethodMemberDoc = interfaceDoc.members[0];
       expect(methodDoc.parameters).toEqual(['...args: Array<any>']);
       expect(methodDoc.type).toEqual('void');
 

@@ -1,21 +1,21 @@
 /* tslint:disable:no-bitwise */
 import { Declaration, SignatureDeclaration, Symbol, SymbolFlags } from 'typescript';
-import { getParameters } from '../services/TsParser/getParameters';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { encodeAnchor } from '../utils/encodeAnchor';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
 import { ModuleDoc } from './ModuleDoc';
-import { ParameterContainer } from './ParameterContainer';
+import { getParameters, ParameterContainer } from './ParameterContainer';
+import { ParameterDoc } from './ParameterDoc';
 
 export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
-  readonly parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
   readonly name = this.computeName();
+  readonly parameterDocs = getParameters(this);
+  readonly parameters = this.parameterDocs.map(p => p.paramText);
   readonly anchor = this.computeAnchor();
-  readonly id = `${this.containerDoc.id}.${this.anchor})`;
+  readonly id = `${this.containerDoc.id}.${this.anchor}`;
   readonly aliases = this.computeAliases();
   readonly typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
-  readonly moduleDoc: ModuleDoc;
 
   constructor(
     containerDoc: ContainerExportDoc,
@@ -24,6 +24,11 @@ export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
     isStatic: boolean,
     public overloads: MethodMemberDoc[] = []) {
     super(containerDoc, symbol, declaration, isStatic);
+    // fix up parameter ids and aliases, now that we have computed the id for this doc
+    this.parameterDocs.forEach(param => {
+      param.id = `${this.id}~${param.name}`;
+      param.aliases = this.aliases.map(alias => `${alias}~${param.name}`);
+    });
   }
 
   private computeName() {

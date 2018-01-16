@@ -58,6 +58,14 @@ module.exports = new Package('typescript', [require('../jsdoc')])
     },
   });
 
+  computePathsProcessor.pathTemplates.push({
+    docTypes: ['parameter'],
+    pathTemplate: '${callableDoc.path}#${name}',
+    getOutputPath() {
+      // These docs are not written to their own file, instead they are part of their callable doc
+    },
+  });
+
   const MODULES_DOCS_PATH = 'partials/modules';
 
   computePathsProcessor.pathTemplates.push({

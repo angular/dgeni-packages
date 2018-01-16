@@ -1,10 +1,10 @@
 import { Declaration, SignatureDeclaration, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
-import { getParameters } from '../services/TsParser/getParameters';
 import { ExportDoc } from './ExportDoc';
 import { FunctionExportDoc } from './FunctionExportDoc';
 import { ModuleDoc } from './ModuleDoc';
-import { ParameterContainer } from './ParameterContainer';
+import { getParameters, ParameterContainer } from './ParameterContainer';
+import { ParameterDoc } from './ParameterDoc';
 
 /**
  * This represents a single overload of an exported function.
@@ -12,7 +12,8 @@ import { ParameterContainer } from './ParameterContainer';
  */
 export class OverloadInfo extends ExportDoc implements ParameterContainer {
   docType = 'function-overload';
-  parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
+  readonly parameterDocs = getParameters(this);
+  readonly parameters = this.parameterDocs.map(p => p.paramText);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
   containerDoc: ModuleDoc = this.functionDoc.containerDoc;
 

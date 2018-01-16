@@ -1,9 +1,9 @@
 import { Declaration, SignatureDeclaration, Symbol, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
-import { getParameters } from '../services/TsParser/getParameters';
 import { ModuleDoc } from './ModuleDoc';
 import { OverloadInfo } from './OverloadInfo';
-import { ParameterContainer } from './ParameterContainer';
+import { getParameters, ParameterContainer } from './ParameterContainer';
+import { ParameterDoc } from './ParameterDoc';
 import { ParameterizedExportDoc } from './ParameterizedExportDoc';
 
 export class FunctionExportDoc extends ParameterizedExportDoc implements ParameterContainer {
@@ -11,7 +11,8 @@ export class FunctionExportDoc extends ParameterizedExportDoc implements Paramet
   overloads = this.symbol.getDeclarations()!
     .filter(declaration => declaration !== this.declaration)
     .map(declaration => new OverloadInfo(this, declaration));
-  parameters = getParameters(this.declaration as SignatureDeclaration, this.namespacesToInclude);
+  readonly parameterDocs = getParameters(this);
+  readonly parameters = this.parameterDocs.map(p => p.paramText);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
   constructor(

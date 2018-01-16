@@ -8,6 +8,7 @@ import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorato
 import { getTypeText } from '../services/TsParser/getTypeText';
 import { ApiDoc } from './ApiDoc';
 import { ContainerExportDoc } from './ContainerExportDoc';
+import { ModuleDoc } from './ModuleDoc';
 
 /**
  * This document represents a member of a ClassLikeExportDoc.
@@ -27,6 +28,7 @@ export abstract class MemberDoc implements ApiDoc {
   startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
   typeChecker = this.containerDoc.typeChecker;
+  moduleDoc = this.containerDoc.moduleDoc;
 
   accessibility = getAccessibility(this.declaration);
   decorators = getDecorators(this.declaration);

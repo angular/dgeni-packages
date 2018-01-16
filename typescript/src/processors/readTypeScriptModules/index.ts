@@ -16,6 +16,7 @@ import { InterfaceExportDoc } from '../../api-doc-types/InterfaceExportDoc';
 import { MemberDoc } from '../../api-doc-types/MemberDoc';
 import { MethodMemberDoc } from '../../api-doc-types/MethodMemberDoc';
 import { ModuleDoc } from '../../api-doc-types/ModuleDoc';
+import { ParameterDoc } from '../../api-doc-types/ParameterDoc';
 import { PropertyMemberDoc } from '../../api-doc-types/PropertyMemberDoc';
 import { TypeAliasExportDoc } from '../../api-doc-types/TypeAliasExportDoc';
 
@@ -132,7 +133,11 @@ export class ReadTypeScriptModules implements Processor {
           case 'function':
             const functionDoc = new FunctionExportDoc(moduleDoc, resolvedExport);
             this.addExportDoc(docs, moduleDoc, functionDoc);
-            functionDoc.overloads.forEach(doc => docs.push(doc));
+            this.addParamDocs(docs, functionDoc.parameterDocs);
+            functionDoc.overloads.forEach(overloadDoc => {
+              docs.push(overloadDoc);
+              this.addParamDocs(docs, overloadDoc.parameterDocs);
+            });
             break;
           default:
             this.log.error(`Don't know how to create export document for ${resolvedExport.name}`);
@@ -151,12 +156,25 @@ export class ReadTypeScriptModules implements Processor {
     private addMemberDocs(docs: DocCollection, members: MemberDoc[]) {
       members.forEach(member => {
         docs.push(member);
-        if (member instanceof MethodMemberDoc) member.overloads.forEach(overloadDoc => docs.push(overloadDoc));
+        if (member instanceof MethodMemberDoc) {
+          this.addParamDocs(docs, member.parameterDocs);
+          member.overloads.forEach(overloadDoc => {
+            docs.push(overloadDoc);
+            this.addParamDocs(docs, overloadDoc.parameterDocs);
+          });
+        }
         if (member instanceof PropertyMemberDoc) {
           if (member.getAccessor) docs.push(member.getAccessor);
-          if (member.setAccessor) docs.push(member.setAccessor);
+          if (member.setAccessor) {
+            docs.push(member.setAccessor);
+            this.addParamDocs(docs, member.setAccessor.parameterDocs);
+          }
         }
       });
+    }
+
+    private addParamDocs(docs: DocCollection, parameters: ParameterDoc[]) {
+      parameters.forEach(parameter => docs.push(parameter));
     }
   }
 

@@ -1,6 +1,5 @@
 import { Declaration, SignatureDeclaration, Symbol, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
-import { getParameters } from '../services/TsParser/getParameters';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';

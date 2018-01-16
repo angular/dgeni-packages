@@ -1,6 +1,5 @@
 import { Declaration, SignatureDeclaration, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
-import { getParameters } from '../services/TsParser/getParameters';
 import { encodeAnchor } from '../utils/encodeAnchor';
 import { MethodMemberDoc } from './MethodMemberDoc';
 import { PropertyMemberDoc } from './PropertyMemberDoc';

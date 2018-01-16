@@ -1,6 +1,5 @@
 import { Declaration, GetAccessorDeclaration, SetAccessorDeclaration, SignatureDeclaration, Symbol, SyntaxKind } from 'typescript';
 import { getDeclarationTypeText } from "../services/TsParser/getDeclarationTypeText";
-import { getParameters } from '../services/TsParser/getParameters';
 import { encodeAnchor } from '../utils/encodeAnchor';
 import { AccessorInfoDoc } from './AccessorInfoDoc';
 import { ContainerExportDoc } from './ContainerExportDoc';
@@ -27,7 +26,7 @@ export class PropertyMemberDoc extends MemberDoc {
     // If this property has accessors then compute the type based on that instead
     this.getAccessor = getAccessorDeclaration && new AccessorInfoDoc('get', this, getAccessorDeclaration);
     this.setAccessor = setAccessorDeclaration && new AccessorInfoDoc('set', this, setAccessorDeclaration);
-    this.type = this.type || this.setAccessor && this.setAccessor.parameters[0].split(/:\s?/)[1] || '';
+    this.type = this.type || this.setAccessor && this.setAccessor.parameterDocs[0].type || '';
     this.content = this.content || this.setAccessor && this.setAccessor.content || '';
   }
 }
