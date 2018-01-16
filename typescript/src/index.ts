@@ -1,6 +1,7 @@
 /* tslint:disable:only-arrow-functions */
 import { Document, Package } from 'dgeni';
 import { linkInheritedDocs } from './processors/linkInheritedDocs';
+import { mergeParameterInfo } from './processors/mergeParameterInfo';
 import { readTypeScriptModules } from './processors/readTypeScriptModules';
 import { convertPrivateClassesToInterfaces } from './services/convertPrivateClassesToInterfaces';
 import { exportSymbolsToDocsMap } from './services/exportSymbolsToDocsMap';
@@ -38,6 +39,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 // Register the processors
 .processor(readTypeScriptModules)
 .processor(linkInheritedDocs)
+.processor(mergeParameterInfo)
 
 // Configure ids and paths
 .config(function(computeIdsProcessor: any, computePathsProcessor: any, EXPORT_DOC_TYPES: string[]) {

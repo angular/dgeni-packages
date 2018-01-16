@@ -5,6 +5,11 @@ import { ModuleDoc } from './ModuleDoc';
 import { OverloadInfo } from './OverloadInfo';
 import { ParameterDoc } from './ParameterDoc';
 
+export interface ParamTag {
+  name: string;
+  description: string;
+}
+
 /**
  * Docs that represent exported functions or methods.
  */
@@ -21,6 +26,7 @@ export interface ParameterContainer {
   basePath: string;
   namespacesToInclude: string[];
   typeChecker: TypeChecker;
+  params?: ParamTag[];
 }
 
 export function getParameters(callableDoc: ParameterContainer) {
