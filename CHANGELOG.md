@@ -1,4 +1,32 @@
 # Changelog
+
+# 0.23.0 17 January 2018
+
+## Fixes
+
+* **typescript**:
+  - show proper name for aliased exports	f7034143
+
+## Features
+
+* **jsdoc**:
+  - improve support for named exports in the codeName service	45c28b61
+* **typescript**:
+  - merge `@param` descriptions into `ParameterDoc`s	af7f5213
+  - process parameters as docs	4d04d8f9
+  - move helpers to ModuleDoc to simplify API doc constructors	a776355c
+
+## BREAKING CHANGE
+
+The constructor signatures for API API docs have changed. You no longer need to pass
+the `basePath`, `namespacesToInclude` or `typeChecker` to any API doc constructor
+except for the `ModuleDoc`. All API docs now get hold of these values from their
+containing `ModuleDoc`.
+
+Generally this should not affect users of dgeni-packages since it is not expected
+that API doc classes should be instantiated directly.
+
+
 # 0.22.1 23 November 2017
 
 ## Fixes
