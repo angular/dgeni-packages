@@ -120,4 +120,32 @@ describe("checkAnchorLinks", function() {
     ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
+
+  it('should support webRoot configuration option', () => {
+    processor.webRoot = '/a/b/c';
+    processor.$process([
+      { renderedContent: '<a href="/a/b/c/foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
+      { renderedContent: '<a href="foo"></a>', outputPath: '/a/b/c/path2.html', path: '/a/b/c/path2' },
+      { renderedContent: 'CONTENT OF FOO', outputPath: 'foo.html', path: 'foo' }
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
+
+  it('should support base configuration option', () => {
+    processor.base = '/';
+    processor.$process([
+      { renderedContent: '<a href="foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
+      { renderedContent: '<a href="foo"></a>', outputPath: '/a/b/c/path2.html', path: '/a/b/c/path2' },
+      { renderedContent: 'CONTENT OF FOO', outputPath: 'foo.html', path: 'foo' }
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
+
+  it('should support relative url paths', () => {
+    processor.$process([
+      { renderedContent: '<a href="bar"></a>', outputPath: 'foo.html', path: 'foo' },
+      { renderedContent: 'CONTENT OF BAR', outputPath: 'bar.html', path: 'bar' }
+    ]);
+    expect(mockLog.warn).not.toHaveBeenCalled();
+  });
 });
