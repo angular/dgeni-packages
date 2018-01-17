@@ -26,15 +26,20 @@ describe('ExportDefaultDeclaration matcher', function() {
   });
 
   it("should return null for empty right", function () {
-    codeNameServiceMock.value = null;
-    var expr = {
-      right: null
-    };
-
     spyOn(codeNameServiceMock, 'find').and.callThrough();
 
-    expect(matcher(expr)).toBeNull();
-    expect(codeNameServiceMock.find.calls.count()).toEqual(1);
-    expect(codeNameServiceMock.find.calls.allArgs()).toEqual([[null]]);
+    expect(matcher({})).toBeNull();
+    expect(codeNameServiceMock.find).toHaveBeenCalledTimes(1);
+    expect(codeNameServiceMock.find).toHaveBeenCalledWith(undefined);
+
+    codeNameServiceMock.find.calls.reset();
+    expect(matcher({ right: null })).toBeNull();
+    expect(codeNameServiceMock.find).toHaveBeenCalledTimes(1);
+    expect(codeNameServiceMock.find).toHaveBeenCalledWith(null);
+
+    codeNameServiceMock.find.calls.reset();
+    expect(matcher({ right: '' })).toBeNull();
+    expect(codeNameServiceMock.find).toHaveBeenCalledTimes(1);
+    expect(codeNameServiceMock.find).toHaveBeenCalledWith('');
   });
 });
