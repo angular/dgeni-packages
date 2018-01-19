@@ -46,15 +46,15 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 
   computeIdsProcessor.idTemplates.push({
     docTypes: ['member'],
-    idTemplate: '${classDoc.id}.${name}',
+    idTemplate: '${containerDoc.id}.${name}',
     getAliases(doc: Document) {
-      return doc.classDoc.aliases.map((alias: string) => alias + '.' + doc.name);
+      return doc.containerDoc.aliases.map((alias: string) => alias + '.' + doc.name);
     },
   });
 
   computePathsProcessor.pathTemplates.push({
     docTypes: ['member'],
-    pathTemplate: '${classDoc.path}#${name}',
+    pathTemplate: '${containerDoc.path}#${name}',
     getOutputPath() {
       // These docs are not written to their own file, instead they are part of their class doc
     },
@@ -62,7 +62,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 
   computePathsProcessor.pathTemplates.push({
     docTypes: ['parameter'],
-    pathTemplate: '${callableDoc.path}#${name}',
+    pathTemplate: '${container.path}#${name}',
     getOutputPath() {
       // These docs are not written to their own file, instead they are part of their callable doc
     },
