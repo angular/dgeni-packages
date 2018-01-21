@@ -20,12 +20,23 @@ export class PropertyMemberDoc extends MemberDoc {
     setAccessorDeclaration: SetAccessorDeclaration | null,
     isStatic: boolean,
   ) {
+    // For accessors, the declaration parameter will be null, and therefore the getter declaration
+    // will be used for most of the things (e.g. determination of the type). If the getter doesn't 
+    // have a type or description, the setter will be checked manually later in this constructor.
     super(containerDoc, symbol, (declaration || getAccessorDeclaration || setAccessorDeclaration)!, isStatic);
 
     // If this property has accessors then compute the type based on that instead
     this.getAccessor = getAccessorDeclaration && new AccessorInfoDoc('get', this, getAccessorDeclaration);
     this.setAccessor = setAccessorDeclaration && new AccessorInfoDoc('set', this, setAccessorDeclaration);
-    this.type = this.type || this.setAccessor && this.setAccessor.parameterDocs[0].type || '';
-    this.content = this.content || this.setAccessor && this.setAccessor.content || '';
+
+    // As mentioned before, by default the get accessor declaration will be passed to the superclass,
+    // to determine information about the property. With that approach, it can happen that a few 
+    // things are not declared on the getter, but on the setter. In that case, if there is a
+    // setter, we add the missing information by looking at the setter info document.
+    if (this.setAccessor) {
+      this.type = this.type || this.setAccessor.parameterDocs[0].type || '';
+      this.content = this.content || this.setAccessor.content || '';
+      this.decorators = this.decorators || this.setAccessor.decorators;
+    }
   }
 }

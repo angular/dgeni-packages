@@ -17,4 +17,13 @@ export class Test {
   get noType() { return 'x'; }
   /** So we get it from the setter instead */
   set noType(value: string) { /**/ }
+
+  /** Description of myProperty. */
+  @SomeDecorator()
+  set decoratorProp(value: string) {}
+  get decoratorProp() { return 'Hello'; }
+}
+
+export function SomeDecorator() {
+  return (target: any, args: any) => {}
 }

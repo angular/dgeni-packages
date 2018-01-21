@@ -404,6 +404,9 @@ describe('readTypeScriptModules', () => {
       let noType: PropertyMemberDoc;
       let noTypeGetter: AccessorInfoDoc;
       let noTypeSetter: AccessorInfoDoc;
+      let decoratorProp: PropertyMemberDoc;
+      let decoratorPropGetter: AccessorInfoDoc;
+      let decoratorPropSetter: AccessorInfoDoc;
 
       beforeEach(() => {
         processor.sourceFiles = ['gettersAndSetters.ts'];
@@ -415,6 +418,7 @@ describe('readTypeScriptModules', () => {
         bar = docs.find(doc => doc.name === 'bar');
         qux = docs.find(doc => doc.name === 'qux');
         noType = docs.find(doc => doc.name === 'noType');
+        decoratorProp = docs.find(doc => doc.name === 'decoratorProp');
 
         foo1Getter = docs.find(doc => doc.name === 'foo1:get');
         foo1Setter = docs.find(doc => doc.name === 'foo1:set');
@@ -430,6 +434,9 @@ describe('readTypeScriptModules', () => {
 
         noTypeGetter = docs.find(doc => doc.name === 'noType:get');
         noTypeSetter = docs.find(doc => doc.name === 'noType:set');
+
+        decoratorPropGetter = docs.find(doc => doc.name === 'decoratorProp:get');
+        decoratorPropSetter = docs.find(doc => doc.name === 'decoratorProp:set');
       });
 
       it('should create a property member doc for property that has accessors', () => {
@@ -491,6 +498,20 @@ describe('readTypeScriptModules', () => {
         expect(bar.setAccessor).toBe(null);
         expect(qux.getAccessor).toBe(null);
         expect(qux.setAccessor).toBe(quxSetter);
+      });
+
+      describe('if getter is missing information', () => {
+        it('should add decorators of the setter to the property doc', () => {
+          expect(decoratorProp.decorators![0].name).toBe('SomeDecorator');
+        });
+
+        it('should add description of the setter to the property doc', () => {
+          expect(decoratorProp.content).toBe('Description of myProperty.');
+        });
+
+        it('should add type of the setter to the property doc', () => {
+          expect(decoratorProp.type).toBe('string');
+        });
       });
     });
 
