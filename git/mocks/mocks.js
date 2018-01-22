@@ -19,6 +19,15 @@ var packageWithBranchVersion = {
   }
 }
 
+var packageWithVersionHttp = {
+  "name": "dgeni-packages",
+  "version": "0.10.13",
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:9999/owner-http/repo-http"
+  }
+}
+
 var mockVersionInfo = {
   currentVersion: 'currentVersion',
   previousVersions: 'previousVersions',
@@ -77,6 +86,7 @@ module.exports = {
   gitRepoInfo: mockGitRepoInfo,
   packageWithBranchVersion: packageWithBranchVersion,
   packageWithVersion: packageWithVersion,
+  packageWithVersionHttp: packageWithVersionHttp,
   versionInfo: mockVersionInfo,
   mockGitCatFile: mockGitCatFile,
   mockGitCatFileBadFormat: mockGitCatFileBadFormat,
