@@ -22,6 +22,7 @@ export class ModuleDoc implements ApiDoc {
   path: string;
   outputPath: string;
   content: string;
+  importFrom?: string;
 
   constructor(public symbol: ModuleSymbol, public basePath: string, public namespacesToInclude: string[], public hidePrivateMembers: boolean, public typeChecker: TypeChecker) {}
 }

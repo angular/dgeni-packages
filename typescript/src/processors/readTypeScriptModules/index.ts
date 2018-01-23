@@ -2,7 +2,7 @@ const path = require('canonical-path');
 import { DocCollection, Processor } from 'dgeni';
 import { getCombinedModifierFlags, getLineAndCharacterOfPosition, ModifierFlags, Node, SourceFile, Symbol, SymbolFlags, TypeChecker } from 'typescript';
 
-import { getContent, getExportDocType, ModuleSymbols, TsParser } from '../../services/TsParser';
+import { getContent, getExportDocType, ModuleSymbols, resolveModulePath, TsParser } from '../../services/TsParser';
 import { Location } from '../../services/TsParser/Location';
 
 import { ApiDoc } from '../../api-doc-types/ApiDoc';
@@ -80,6 +80,7 @@ export class ReadTypeScriptModules implements Processor {
       moduleSymbols.forEach(moduleSymbol => {
         // Create a doc for this module and add it to the module lookup collection and the docs collection
         const moduleDoc = new ModuleDoc(moduleSymbol, basePath, this.namespacesToInclude, this.hidePrivateMembers, moduleSymbols.typeChecker!);
+        moduleDoc.importFrom = resolveModulePath(moduleSymbol, this.tsParser.options);
         this.modules[moduleDoc.id] = moduleDoc;
         docs.push(moduleDoc);
         this.addExportDocs(docs, moduleDoc);

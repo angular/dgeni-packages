@@ -7,6 +7,7 @@ const path = require('canonical-path');
 export { getExportDocType } from './getExportDocType';
 export { getContent } from './getContent';
 export { getAccessibility } from './getAccessibility';
+export { resolveModulePath } from './resolveModulePath';
 
 export interface ModuleSymbols extends Array<ModuleSymbol> {
   typeChecker?: TypeChecker;
