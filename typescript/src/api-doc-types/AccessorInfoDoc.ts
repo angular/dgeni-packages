@@ -1,6 +1,5 @@
 import { Declaration, SignatureDeclaration, TypeChecker } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
-import { encodeAnchor } from '../utils/encodeAnchor';
 import { MethodMemberDoc } from './MethodMemberDoc';
 import { PropertyMemberDoc } from './PropertyMemberDoc';
 
@@ -13,7 +12,7 @@ export class AccessorInfoDoc extends MethodMemberDoc {
   name = `${this.propertyDoc.name}:${this.accessorType}`;
   id = `${this.propertyDoc.id}:${this.accessorType}`;
   aliases = this.propertyDoc.aliases.map(alias => `${alias}:${this.accessorType}`);
-  anchor = encodeAnchor(this.name);
+  anchor = this.name;
 
   constructor(public accessorType: 'get'|'set', public propertyDoc: PropertyMemberDoc, declaration: Declaration) {
     super(propertyDoc.containerDoc, propertyDoc.symbol, declaration, false);

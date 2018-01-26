@@ -1,7 +1,6 @@
 /* tslint:disable:no-bitwise */
 import { Declaration, SignatureDeclaration, Symbol, SymbolFlags } from 'typescript';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
-import { encodeAnchor } from '../utils/encodeAnchor';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
 import { ModuleDoc } from './ModuleDoc';
@@ -41,8 +40,9 @@ export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
   private computeAnchor() {
     // if the member is a "call" type then it has no name
     const anchorName = this.name.trim() || 'call';
-    // if there is more than one declaration then we need to include the param list to distinguish them
-    return encodeAnchor(this.symbol.getDeclarations()!.length === 1 ? anchorName : `${anchorName}(${this.parameters.join(', ')})`);
+    const overloadIndex = this.symbol.getDeclarations()!.indexOf(this.declaration);
+    // if there is more than one declaration then we need to distinguish them
+    return `${anchorName}${overloadIndex > 0 ? `_${overloadIndex}` : ''}()`;
   }
 
   private computeAliases() {

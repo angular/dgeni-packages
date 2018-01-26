@@ -239,8 +239,8 @@ describe('readTypeScriptModules', () => {
     it('should expose the original symbols members', () => {
       const {originalExport, aliasedExport} = getProcessedDocs();
 
-      expect(originalExport.members.map(memberDoc => memberDoc.id)).toEqual(['exportAliases/OriginalExport.sayHello']);
-      expect(aliasedExport.members.map(memberDoc => memberDoc.id)).toEqual(['exportAliases/AliasedExport.sayHello']);
+      expect(originalExport.members.map(memberDoc => memberDoc.id)).toEqual(['exportAliases/OriginalExport.sayHello()']);
+      expect(aliasedExport.members.map(memberDoc => memberDoc.id)).toEqual(['exportAliases/AliasedExport.sayHello()']);
     });
   });
 
@@ -501,13 +501,13 @@ describe('readTypeScriptModules', () => {
         processor.$process(docs);
         const param1: ParameterDoc = docs.find(doc => doc.name === 'param1');
         expect(param1.docType).toEqual('parameter');
-        expect(param1.id).toEqual('methodParameters/TestClass.method1~param1');
+        expect(param1.id).toEqual('methodParameters/TestClass.method1()~param1');
         expect(param1.content).toEqual('description of param1');
         expect(param1.type).toEqual('number');
 
         const param2: ParameterDoc = docs.find(doc => doc.name === 'param2');
         expect(param2.docType).toEqual('parameter');
-        expect(param2.id).toEqual('methodParameters/TestClass.method1~param2');
+        expect(param2.id).toEqual('methodParameters/TestClass.method1()~param2');
         expect(param2.content).toEqual('description of param2');
         expect(param2.type).toEqual('string');
 
