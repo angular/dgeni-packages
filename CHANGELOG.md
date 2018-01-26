@@ -1,5 +1,21 @@
 # Changelog
 
+# 0.24.0 26 January 2018
+
+## Fixes
+* **typescript**: align default path and id templates	0ff52e2b
+* **typescript**: do not encode anchors for member API docs	7cad9780
+* **base**: checkAnchorLinksProcessor now copes with encoded chars	f7f6f589
+
+## BREAKING CHANGE
+
+Anchors to member API docs, whch are accessed via `doc.anchor` are no
+longer URL encoded. You should do this in your template if that is required.
+
+* Before: `<a href="{$ doc.anchor $}">...</a>`
+* After: `<a href="{$ doc.anchor | urlencode $}">...</a>`
+
+
 # 0.23.0 17 January 2018
 
 ## Fixes
