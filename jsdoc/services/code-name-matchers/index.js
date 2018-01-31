@@ -9,6 +9,7 @@ module.exports = [
   require('./function-declaration.js'),
   require('./function-expression.js'),
   require('./identifier.js'),
+  require('./import-declaration'),
   require('./literal.js'),
   require('./member-expression.js'),
   require('./method-definition.js'),
