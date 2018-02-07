@@ -1,6 +1,6 @@
 var transformFactory = require('./extract-type');
 
-fdescribe("extract-type transform", function() {
+describe("extract-type transform", function() {
 
   var transform;
 
