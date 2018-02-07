@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.24.1 7 February 2018
+
+## Fixes
+* **jsdoc**: braces in the description are not jsdoc types	35763aafa
+* **typescript**: fallback to decorators from set accessor	3a4e56855
+* **jsdoc**: handle import statements in code name matching	5db8fc90f
+
+
 # 0.24.0 26 January 2018
 
 ## Fixes
