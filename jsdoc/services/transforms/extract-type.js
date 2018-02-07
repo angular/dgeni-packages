@@ -2,7 +2,7 @@
 // See https://github.com/jsdoc3/jsdoc/blob/c9b0237c12144cfa48abe5fccd73ba2a1d46553a/lib/jsdoc/tag/type.js
 
 var catharsis = require('catharsis');
-var TYPE_EXPRESSION_START = /\{[^@]/;
+var TYPE_EXPRESSION_START = /^\s*\{[^@]/;
 
 /**
  * Extract a type expression from the tag text.
@@ -14,11 +14,13 @@ module.exports =  function extractTypeTransform() {
   return function(doc, tag, value) {
     var start, position, count, length, expression;
 
-    start = value.search(TYPE_EXPRESSION_START);
-    length = value.length;
-    if (start !== -1) {
+    var match = TYPE_EXPRESSION_START.exec(value);
+    if (match) {
+      length = value.length;
+      // the start is the beginning of the `{`
+      start = match[0].length - 2;
       // advance to the first character in the type expression
-      position = start + 1;
+      position = match[0].length - 1;
       count = 1;
 
       while (position < length) {
@@ -53,6 +55,7 @@ module.exports =  function extractTypeTransform() {
         }
         tag.description = (value.substring(0, start) + value.substring(position+1)).trim();
       } catch(x) {
+        console.log(tag);
         throw new Error('Error parsing the jsdoc type expression "{' + tag.typeExpression + '}"', x);
       }
 
