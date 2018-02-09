@@ -11,7 +11,6 @@ describe("extract-type transform", function() {
   });
 
   it("should extract the type from the description", function() {
-    debugger;
     value = ' {string} paramName - Some description  \n Some more description';
     value = transform(doc, tag, value);
 
