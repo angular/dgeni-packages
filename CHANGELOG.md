@@ -1,5 +1,18 @@
 # Changelog
 
+# 0.24.2 24 Febrary 2018
+
+## Features
+* **typescript**:
+  - expose `isOptional` information on ParameterDocs  39ad2feb
+  - create `BaseApiDoc` class                         9586f881
+
+## Fixes
+* **typescript**:
+  - `ParameterDoc` is a type of `BaseApiDoc`, not `ExportDoc` d00b3ed2
+  - only use unix style line endings when rendering code      ef1f83c9
+
+
 # 0.24.1 7 February 2018
 
 ## Fixes
