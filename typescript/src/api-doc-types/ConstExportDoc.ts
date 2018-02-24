@@ -1,4 +1,4 @@
-import { Symbol, TypeChecker } from 'typescript';
+import { Symbol } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';

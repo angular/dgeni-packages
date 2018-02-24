@@ -1,4 +1,4 @@
-import { Declaration, Symbol, TypeChecker } from 'typescript';
+import { Declaration, Symbol } from 'typescript';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 

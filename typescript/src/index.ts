@@ -9,8 +9,6 @@ import { modules } from './services/modules';
 import { namespacesToInclude } from './services/namespacesToInclude';
 import { TsParser } from './services/TsParser';
 
-const path = require('canonical-path');
-
 // Define the dgeni package for generating the docs
 module.exports = new Package('typescript', [require('../jsdoc')])
 

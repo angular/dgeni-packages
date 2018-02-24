@@ -13,7 +13,7 @@ export class ModuleDoc implements ApiDoc {
   docType = 'module';
   id = this.symbol.name.replace(/^"|"$/g, '').replace(/\/index$/, '');
   name = this.id.split('/').pop()!;
-  declaration = this.symbol.valueDeclaration!;
+  declaration: Declaration = this.symbol.valueDeclaration!;
   aliases = [this.id, this.name];
   exports: ExportDoc[] = [];
   fileInfo = new FileInfo(this.declaration, this.basePath);

@@ -1,19 +1,11 @@
 /* tslint:disable:no-bitwise */
 /* tslint:disable:max-classes-per-file */
-import { ArrayLiteralExpression, CallExpression, Declaration, Decorator, Expression, ExpressionWithTypeArguments, HeritageClause, ObjectLiteralElement, ObjectLiteralExpression, PropertyAssignment, Symbol, SymbolFlags, SyntaxKind, TypeChecker } from 'typescript';
-
-import { FileInfo } from "../services/TsParser/FileInfo";
-import { getAccessibility } from "../services/TsParser/getAccessibility";
+import { Declaration, ExpressionWithTypeArguments, HeritageClause, Symbol, SymbolFlags, SyntaxKind } from 'typescript';
 import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
-import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { getTypeText } from '../services/TsParser/getTypeText';
 
 import { ContainerExportDoc } from './ContainerExportDoc';
-import { ExportDoc } from './ExportDoc';
-import { MemberDoc } from './MemberDoc';
-import { MethodMemberDoc } from './MethodMemberDoc';
 import { ModuleDoc } from './ModuleDoc';
-import { PropertyMemberDoc } from './PropertyMemberDoc';
 
 export class HeritageInfo {
   symbol: Symbol | undefined;
@@ -25,7 +17,7 @@ export class HeritageInfo {
  * Interfaces and classes are "class-like", in that they can contain members, heritage, type parameters and decorators
  */
 export abstract class ClassLikeExportDoc extends ContainerExportDoc {
-  decorators = getDecorators(this.declaration);
+  decorators: ParsedDecorator[] | undefined = getDecorators(this.declaration);
   extendsClauses: HeritageInfo[] = [];
   implementsClauses: HeritageInfo[] = [];
   descendants: ClassLikeExportDoc[] = [];

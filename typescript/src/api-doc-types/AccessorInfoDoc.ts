@@ -1,5 +1,4 @@
-import { Declaration, SignatureDeclaration, TypeChecker } from 'typescript';
-import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
+import { Declaration } from 'typescript';
 import { MethodMemberDoc } from './MethodMemberDoc';
 import { PropertyMemberDoc } from './PropertyMemberDoc';
 

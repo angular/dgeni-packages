@@ -1,5 +1,4 @@
-import { Declaration, GetAccessorDeclaration, SetAccessorDeclaration, SignatureDeclaration, Symbol, SyntaxKind } from 'typescript';
-import { getDeclarationTypeText } from "../services/TsParser/getDeclarationTypeText";
+import { Declaration, GetAccessorDeclaration, SetAccessorDeclaration, Symbol } from 'typescript';
 import { AccessorInfoDoc } from './AccessorInfoDoc';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
@@ -12,16 +11,15 @@ export class PropertyMemberDoc extends MemberDoc {
   getAccessor: AccessorInfoDoc | null;
   setAccessor: AccessorInfoDoc | null;
 
-  constructor(
-    containerDoc: ContainerExportDoc,
-    symbol: Symbol,
-    declaration: Declaration | null,
-    getAccessorDeclaration: GetAccessorDeclaration | null,
-    setAccessorDeclaration: SetAccessorDeclaration | null,
-    isStatic: boolean,
-  ) {
+  constructor(containerDoc: ContainerExportDoc,
+              symbol: Symbol,
+              declaration: Declaration | null,
+              getAccessorDeclaration: GetAccessorDeclaration | null,
+              setAccessorDeclaration: SetAccessorDeclaration | null,
+              isStatic: boolean) {
+
     // For accessors, the declaration parameter will be null, and therefore the getter declaration
-    // will be used for most of the things (e.g. determination of the type). If the getter doesn't 
+    // will be used for most of the things (e.g. determination of the type). If the getter doesn't
     // have a type or description, the setter will be checked manually later in this constructor.
     super(containerDoc, symbol, (declaration || getAccessorDeclaration || setAccessorDeclaration)!, isStatic);
 
@@ -30,7 +28,7 @@ export class PropertyMemberDoc extends MemberDoc {
     this.setAccessor = setAccessorDeclaration && new AccessorInfoDoc('set', this, setAccessorDeclaration);
 
     // As mentioned before, by default the get accessor declaration will be passed to the superclass,
-    // to determine information about the property. With that approach, it can happen that a few 
+    // to determine information about the property. With that approach, it can happen that a few
     // things are not declared on the getter, but on the setter. In that case, if there is a
     // setter, we add the missing information by looking at the setter info document.
     if (this.setAccessor) {

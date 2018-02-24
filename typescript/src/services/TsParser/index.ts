@@ -1,7 +1,8 @@
 /* tslint:disable:no-bitwise */
 import { CompilerOptions, createProgram, NewLineKind, Program, Symbol, SymbolFlags, TypeChecker } from 'typescript';
 import { CustomCompilerHost } from './CustomCompilerHost';
-import { FileInfo } from './FileInfo';
+
+// This import lacks type definitions.
 const path = require('canonical-path');
 
 export { getExportDocType } from './getExportDocType';
@@ -40,7 +41,7 @@ export class TsParser {
     // "Compile" a program from the given module filenames, to get hold of a
     // typeChecker that can be used to interrogate the modules, exports and so on.
     const host = new CustomCompilerHost(this.options, baseDir, this.extensions, this.log);
-    const program = createProgram(fileNames, this.options, host);
+    const program: Program = createProgram(fileNames, this.options, host);
     const typeChecker = program.getTypeChecker();
 
     // Create an array of module symbols for each file we were given

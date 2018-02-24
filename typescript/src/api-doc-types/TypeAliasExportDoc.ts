@@ -1,4 +1,4 @@
-import { Declaration, Symbol, SyntaxKind, TypeAliasDeclaration, TypeChecker } from 'typescript';
+import { Declaration, Symbol, SyntaxKind } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { ModuleDoc } from './ModuleDoc';
 import { ParameterizedExportDoc } from './ParameterizedExportDoc';
