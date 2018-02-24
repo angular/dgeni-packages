@@ -1,10 +1,9 @@
-import { createPrinter, EmitHint, Node } from 'typescript';
-
-const printer = createPrinter({ removeComments: true });
+import { EmitHint, Node } from 'typescript';
+import { lineFeedPrinter } from './LineFeedPrinter';
 
 /**
  * Use a preconfigured TypeScript "printer" to render the text of a node, without comments.
  */
 export function nodeToString(typeNode: Node) {
-  return printer.printNode(EmitHint.Unspecified, typeNode, typeNode.getSourceFile());
+  return lineFeedPrinter.printNode(EmitHint.Unspecified, typeNode, typeNode.getSourceFile());
 }

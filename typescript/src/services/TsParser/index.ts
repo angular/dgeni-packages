@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { CompilerOptions, createProgram, Declaration, Program, Symbol, SymbolFlags, TypeChecker } from 'typescript';
+import { CompilerOptions, createProgram, NewLineKind, Program, Symbol, SymbolFlags, TypeChecker } from 'typescript';
 import { CustomCompilerHost } from './CustomCompilerHost';
 import { FileInfo } from './FileInfo';
 const path = require('canonical-path');
@@ -30,6 +30,7 @@ export class TsParser {
   options: CompilerOptions = {
     allowNonTsExtensions: true,
     charset: 'utf8',
+    newLine: NewLineKind.LineFeed,
   };
 
   constructor(private log: any) {}
