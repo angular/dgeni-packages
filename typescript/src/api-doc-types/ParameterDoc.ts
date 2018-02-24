@@ -1,4 +1,4 @@
-import { Declaration, ParameterDeclaration, Symbol } from 'typescript';
+import { Declaration, ParameterDeclaration, Symbol, SymbolFlags } from 'typescript';
 import { getDeclarationTypeText, getInitializer } from '../services/TsParser/getDeclarationTypeText';
 import { getTypeText } from '../services/TsParser/getTypeText';
 import { nodeToString } from '../services/TsParser/nodeToString';
@@ -13,12 +13,13 @@ import { ParameterContainer } from './ParameterContainer';
 export class ParameterDoc extends BaseApiDoc {
   docType = 'parameter';
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
-  paramText = getParamText(this.declaration as ParameterDeclaration, this.namespacesToInclude);
+  paramText = getParamText(this.declaration, this.namespacesToInclude);
+  isOptional = !!(this.declaration.questionToken);
   description = this.content;
 
   constructor(public container: ParameterContainer,
               public symbol: Symbol,
-              public declaration: Declaration) {
+              public declaration: ParameterDeclaration) {
     super(container.moduleDoc, symbol, declaration);
 
     this.id = `${this.container.id}~${this.name}`;

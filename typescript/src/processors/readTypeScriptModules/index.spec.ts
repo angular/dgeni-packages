@@ -525,12 +525,14 @@ describe('readTypeScriptModules', () => {
         expect(param1.id).toEqual('methodParameters/TestClass.method1()~param1');
         expect(param1.content).toEqual('description of param1');
         expect(param1.type).toEqual('number');
+        expect(param1.isOptional).toBe(false);
 
         const param2: ParameterDoc = docs.find(doc => doc.name === 'param2');
         expect(param2.docType).toEqual('parameter');
         expect(param2.id).toEqual('methodParameters/TestClass.method1()~param2');
         expect(param2.content).toEqual('description of param2');
         expect(param2.type).toEqual('string');
+        expect(param2.isOptional).toBe(true);
 
         const method1: MethodMemberDoc = docs.find(doc => doc.name === 'method1')!;
         expect(method1.parameterDocs).toEqual([param1, param2]);

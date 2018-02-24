@@ -1,4 +1,4 @@
-import { Declaration, SignatureDeclaration, TypeChecker } from 'typescript';
+import { Declaration,ParameterDeclaration, SignatureDeclaration, TypeChecker } from 'typescript';
 import { nodeToString } from '../services/TsParser/nodeToString';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
@@ -38,6 +38,6 @@ export function getParameters(callableDoc: ParameterContainer) {
   }
 
   return signature.getParameters().map(parameter => {
-    return new ParameterDoc(callableDoc, parameter, parameter.valueDeclaration!)
+    return new ParameterDoc(callableDoc, parameter, parameter.valueDeclaration as ParameterDeclaration)
   });
 }
