@@ -151,7 +151,7 @@ describe('readTypeScriptModules', () => {
       ]);
     });
 
-    it('should only ignore `___esModule` exports by default', () => {
+    it('should only ignore `__esModule` exports by default', () => {
       processor.sourceFiles = [ 'ignoreExportsMatching.ts'];
       const docs: DocCollection = [];
       processor.$process(docs);

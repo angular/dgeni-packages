@@ -1,6 +1,6 @@
 /* tslint:disable:no-bitwise */
 /* tslint:disable:max-classes-per-file */
-import { Declaration, ExpressionWithTypeArguments, HeritageClause, Symbol, SymbolFlags, SyntaxKind } from 'typescript';
+import { Declaration, ExpressionWithTypeArguments, HeritageClause, Symbol, SymbolFlags, SyntaxKind, unescapeLeadingUnderscores } from 'typescript';
 import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
 import { getTypeText } from '../services/TsParser/getTypeText';
 
@@ -38,7 +38,7 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       const typeParams: string[] = [];
       this.symbol.members.forEach((member, name) => {
         if (member.getFlags() & SymbolFlags.TypeParameter) {
-          typeParams.push(name);
+          typeParams.push(unescapeLeadingUnderscores(name));
         }
       });
       if (typeParams.length) return `<${typeParams.join(', ')}>`;

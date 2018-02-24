@@ -21,29 +21,29 @@ describe('CustomCompilerHost', () => {
 
   describe('getSourceFile', () => {
     it('should return a SourceFile object for a given path', () => {
-      const sourceFile = host.getSourceFile('testSrc.ts', 0);
+      const sourceFile = host.getSourceFile('testSrc.ts', 0)!;
       expect(sourceFile.fileName).toEqual('testSrc.ts');
       expect(sourceFile.pos).toEqual(0);
       expect(sourceFile.text).toEqual(jasmine.any(String));
     });
 
     it('should return a SourceFile object for a given path, with fileName relative to baseDir', () => {
-      const sourceFile = host.getSourceFile(resolve(baseDir, 'testSrc.ts'), 0);
+      const sourceFile = host.getSourceFile(resolve(baseDir, 'testSrc.ts'), 0)!;
       expect(sourceFile.fileName).toEqual('testSrc.ts');
       expect(sourceFile.pos).toEqual(0);
       expect(sourceFile.text).toEqual(jasmine.any(String));
     });
 
     it('should try each of the configured extensions and update the filename to the correct extension', () => {
-      let sourceFile = host.getSourceFile('testSrc.js', 0);
+      let sourceFile = host.getSourceFile('testSrc.js', 0)!;
       expect(sourceFile.fileName).toEqual('testSrc.ts');
 
-      sourceFile = host.getSourceFile('../mockPackage.ts', 0);
+      sourceFile = host.getSourceFile('../mockPackage.ts', 0)!;
       expect(sourceFile.fileName).toEqual('../mockPackage.js');
     });
 
     it('should cope with folders with names that look like source files', () => {
-      const sourceFile = host.getSourceFile('zone.js', 0);
+      const sourceFile = host.getSourceFile('zone.js', 0)!;
       expect(sourceFile.fileName).toEqual('zone.js/index.ts');
     });
   });
@@ -76,7 +76,7 @@ describe('CustomCompilerHost', () => {
 
   describe('writeFile', () => {
     it('should do nothing', () => {
-      host.writeFile('', '', false);
+      host.writeFile('', '', false, undefined, []);
     });
   });
 

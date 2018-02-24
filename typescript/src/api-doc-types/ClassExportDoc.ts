@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { FunctionLikeDeclaration, Symbol, SymbolFlags } from 'typescript';
+import { FunctionLikeDeclaration, InternalSymbolName, Symbol, SymbolFlags } from 'typescript';
 import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
 import { MemberDoc } from '../api-doc-types/MemberDoc';
 import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc';
@@ -24,7 +24,7 @@ export class ClassExportDoc extends ClassLikeExportDoc {
 
     if (symbol.members) {
       // Get the constructor
-      const constructorSymbol = symbol.members.get('__constructor');
+      const constructorSymbol = symbol.members.get(InternalSymbolName.Constructor);
       if (constructorSymbol && constructorSymbol.getFlags() & SymbolFlags.Constructor) {
         this.constructorDoc = this.getConstructorDoc(constructorSymbol);
       }
