@@ -1,12 +1,10 @@
 import { DocCollection, Document, Processor } from 'dgeni';
-import { Symbol, SymbolFlags, SyntaxKind } from 'typescript';
+import { Symbol } from 'typescript';
 import { ClassLikeExportDoc, HeritageInfo } from '../api-doc-types/ClassLikeExportDoc';
 
 export function linkInheritedDocs(exportSymbolsToDocsMap: Map<Symbol, ClassLikeExportDoc>, createDocMessage: any, log: any) {
   return new LinkInheritedDocs(exportSymbolsToDocsMap, createDocMessage, log);
 }
-
-type HeritageSyntaxKind = SyntaxKind.ExtendsKeyword | SyntaxKind.ImplementsKeyword;
 
 export class LinkInheritedDocs implements Processor {
     $runAfter = ['readTypeScriptModules'];

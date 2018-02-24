@@ -1,13 +1,6 @@
-const path = require('canonical-path');
 import { DocCollection, Processor } from 'dgeni';
-import { getCombinedModifierFlags, getLineAndCharacterOfPosition, ModifierFlags, Node, SourceFile, Symbol, SymbolFlags, TypeChecker } from 'typescript';
-
-import { getContent, getExportDocType, ModuleSymbols, TsParser } from '../../services/TsParser';
-import { Location } from '../../services/TsParser/Location';
-
-import { ApiDoc } from '../../api-doc-types/ApiDoc';
+import { Symbol } from 'typescript';
 import { ClassExportDoc } from '../../api-doc-types/ClassExportDoc';
-import { ClassLikeExportDoc } from '../../api-doc-types/ClassLikeExportDoc';
 import { ConstExportDoc } from '../../api-doc-types/ConstExportDoc';
 import { EnumExportDoc } from '../../api-doc-types/EnumExportDoc';
 import { ExportDoc } from '../../api-doc-types/ExportDoc';
@@ -20,7 +13,11 @@ import { ParameterDoc } from '../../api-doc-types/ParameterDoc';
 import { PropertyMemberDoc } from '../../api-doc-types/PropertyMemberDoc';
 import { TypeAliasExportDoc } from '../../api-doc-types/TypeAliasExportDoc';
 
+import { getExportDocType, ModuleSymbols, TsParser } from '../../services/TsParser';
 import { expandSourceFiles, SourcePattern } from './SourcePattern';
+
+// This import lacks type definitions.
+const path = require('canonical-path');
 
 export function readTypeScriptModules(
                   tsParser: TsParser,

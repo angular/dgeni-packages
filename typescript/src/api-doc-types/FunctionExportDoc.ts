@@ -1,4 +1,4 @@
-import { Declaration, SignatureDeclaration, Symbol, TypeChecker } from 'typescript';
+import { Declaration, Symbol } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { ModuleDoc } from './ModuleDoc';
 import { OverloadInfo } from './OverloadInfo';
@@ -8,12 +8,15 @@ import { ParameterizedExportDoc } from './ParameterizedExportDoc';
 
 export class FunctionExportDoc extends ParameterizedExportDoc implements ParameterContainer {
   docType = 'function';
+
+  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+
   overloads = this.symbol.getDeclarations()!
     .filter(declaration => declaration !== this.declaration)
     .map(declaration => new OverloadInfo(this, declaration));
-  readonly parameterDocs = getParameters(this);
+
+  readonly parameterDocs: ParameterDoc[] = getParameters(this);
   readonly parameters = this.parameterDocs.map(p => p.paramText);
-  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
 
   constructor(
       public containerDoc: ModuleDoc,
@@ -25,6 +28,7 @@ export class FunctionExportDoc extends ParameterizedExportDoc implements Paramet
 }
 
 function findRealDeclaration(declarations: Declaration[]) {
-  // For this container doc, we use the declaration that has a body or just the first given declaration
+  // For this container doc, we use the declaration that has a body or just the first given
+  // declaration
   return declarations.find(declaration => !!(declaration as any).body) || declarations[0];
 }

@@ -1,12 +1,17 @@
 /* tslint:disable:no-bitwise */
-import { FunctionLikeDeclaration, GetAccessorDeclaration, Map, SetAccessorDeclaration, Symbol, SymbolFlags, SyntaxKind } from 'typescript';
-import { FileInfo } from "../services/TsParser/FileInfo";
+import {
+    FunctionLikeDeclaration,
+    GetAccessorDeclaration,
+    Map,
+    SetAccessorDeclaration,
+    Symbol,
+    SymbolFlags,
+    SyntaxKind,
+} from 'typescript';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
-import { AccessorInfoDoc } from './AccessorInfoDoc';
-import { ExportDoc } from './ExportDoc' ;
-import { MemberDoc } from './MemberDoc' ;
+import { ExportDoc } from './ExportDoc';
+import { MemberDoc } from './MemberDoc';
 import { MethodMemberDoc } from './MethodMemberDoc';
-import { ModuleDoc } from './ModuleDoc';
 import { PropertyMemberDoc } from './PropertyMemberDoc';
 
 const MethodMemberFlags = SymbolFlags.Method |

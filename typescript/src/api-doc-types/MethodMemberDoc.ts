@@ -1,15 +1,14 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, SignatureDeclaration, Symbol, SymbolFlags } from 'typescript';
+import { Declaration, Symbol } from 'typescript';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
-import { ModuleDoc } from './ModuleDoc';
 import { getParameters, ParameterContainer } from './ParameterContainer';
 import { ParameterDoc } from './ParameterDoc';
 
 export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
   readonly name = this.computeName();
-  readonly parameterDocs = getParameters(this);
+  readonly parameterDocs: ParameterDoc[] = getParameters(this);
   readonly parameters = this.parameterDocs.map(p => p.paramText);
   readonly anchor = this.computeAnchor();
   readonly id = `${this.containerDoc.id}.${this.anchor}`;

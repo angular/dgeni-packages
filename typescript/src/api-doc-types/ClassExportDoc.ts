@@ -1,8 +1,8 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, FunctionLikeDeclaration, Symbol, SymbolFlags, TypeChecker } from 'typescript';
+import { FunctionLikeDeclaration, Symbol, SymbolFlags } from 'typescript';
 import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
-import { MemberDoc } from '../api-doc-types/MemberDoc' ;
-import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc' ;
+import { MemberDoc } from '../api-doc-types/MemberDoc';
+import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc';
 import { ModuleDoc } from '../api-doc-types/ModuleDoc';
 
 /**

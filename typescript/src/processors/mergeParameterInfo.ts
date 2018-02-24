@@ -1,4 +1,4 @@
-import { DocCollection, Document, Processor } from 'dgeni';
+import { DocCollection, Processor } from 'dgeni';
 import { ParameterDoc } from '../api-doc-types/ParameterDoc';
 
 /**

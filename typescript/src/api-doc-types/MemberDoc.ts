@@ -1,11 +1,10 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Decorator, Symbol, SymbolFlags, SyntaxKind, TypeChecker } from 'typescript';
+import { Declaration, Symbol, SymbolFlags, SyntaxKind, TypeChecker } from 'typescript';
 import { FileInfo } from '../services/TsParser/FileInfo';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { getContent } from "../services/TsParser/getContent";
 import { getDeclarationTypeText } from "../services/TsParser/getDeclarationTypeText";
 import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
-import { getTypeText } from '../services/TsParser/getTypeText';
 import { ApiDoc } from './ApiDoc';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
@@ -15,10 +14,12 @@ import { ModuleDoc } from './ModuleDoc';
  */
 export abstract class MemberDoc implements ApiDoc {
   docType = 'member';
+
   abstract name: string;
   abstract id: string;
   abstract aliases: string[];
   abstract anchor: string;
+
   path: string;
   outputPath: string;
   content = getContent(this.declaration);
@@ -27,11 +28,11 @@ export abstract class MemberDoc implements ApiDoc {
   fileInfo = new FileInfo(this.declaration, this.basePath);
   startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
-  typeChecker = this.containerDoc.typeChecker;
-  moduleDoc = this.containerDoc.moduleDoc;
+  typeChecker: TypeChecker = this.containerDoc.typeChecker;
+  moduleDoc: ModuleDoc = this.containerDoc.moduleDoc;
 
   accessibility = getAccessibility(this.declaration);
-  decorators = getDecorators(this.declaration);
+  decorators: ParsedDecorator[] | undefined = getDecorators(this.declaration);
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
   isOptional = !!(this.symbol.flags & SymbolFlags.Optional);
   isGetAccessor = !!(this.symbol.flags & SymbolFlags.GetAccessor);

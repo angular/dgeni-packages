@@ -1,8 +1,7 @@
-import { Declaration, Signature, SignatureDeclaration, TypeChecker } from 'typescript';
+import { Declaration, SignatureDeclaration, TypeChecker } from 'typescript';
 import { nodeToString } from '../services/TsParser/nodeToString';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
-import { OverloadInfo } from './OverloadInfo';
 import { ParameterDoc } from './ParameterDoc';
 
 export interface ParamTag {
@@ -38,5 +37,7 @@ export function getParameters(callableDoc: ParameterContainer) {
     throw new Error(`Invalid call signature for "${name}" in ${declaration.getSourceFile().fileName} at line ${declaration.getStart()}`);
   }
 
-  return signature.getParameters().map(parameter => new ParameterDoc(callableDoc, parameter, parameter.valueDeclaration!));
+  return signature.getParameters().map(parameter => {
+    return new ParameterDoc(callableDoc, parameter, parameter.valueDeclaration!)
+  });
 }

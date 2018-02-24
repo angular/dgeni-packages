@@ -1,6 +1,5 @@
-import { Declaration, Map, Symbol, TypeChecker } from 'typescript';
+import { Declaration, Symbol } from 'typescript';
 import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
-import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc';
 import { ModuleDoc } from '../api-doc-types/ModuleDoc';
 
 /**
