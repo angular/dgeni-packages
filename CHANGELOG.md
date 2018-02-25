@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.24.3 25 February 2018
+
+## Features
+
+* **typescript**: expose `defaultValue` information on ParameterDocs	ba8f57fa
+
+
 # 0.24.2 24 Febrary 2018
 
 ## Features
