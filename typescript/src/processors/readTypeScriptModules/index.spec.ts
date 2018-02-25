@@ -520,22 +520,32 @@ describe('readTypeScriptModules', () => {
         processor.sourceFiles = ['methodParameters.ts'];
         const docs: DocCollection = [];
         processor.$process(docs);
-        const param1: ParameterDoc = docs.find(doc => doc.name === 'param1');
+        const param1: ParameterDoc = docs.find(doc => doc.name === 'param1' && doc.container.name === 'method1');
         expect(param1.docType).toEqual('parameter');
         expect(param1.id).toEqual('methodParameters/TestClass.method1()~param1');
         expect(param1.content).toEqual('description of param1');
         expect(param1.type).toEqual('number');
         expect(param1.isOptional).toBe(false);
+        expect(param1.defaultValue).toBeUndefined();
 
-        const param2: ParameterDoc = docs.find(doc => doc.name === 'param2');
+        const param2: ParameterDoc = docs.find(doc => doc.name === 'param2' && doc.container.name === 'method1');
         expect(param2.docType).toEqual('parameter');
         expect(param2.id).toEqual('methodParameters/TestClass.method1()~param2');
         expect(param2.content).toEqual('description of param2');
         expect(param2.type).toEqual('string');
         expect(param2.isOptional).toBe(true);
+        expect(param2.defaultValue).toBeUndefined();
+
+        const param3: ParameterDoc = docs.find(doc => doc.name === 'param3' && doc.container.name === 'method1');
+        expect(param3.docType).toEqual('parameter');
+        expect(param3.id).toEqual('methodParameters/TestClass.method1()~param3');
+        expect(param3.content).toEqual('description of param3');
+        expect(param3.type).toEqual('object');
+        expect(param3.isOptional).toBe(false);
+        expect(param3.defaultValue).toBe('{}');
 
         const method1: MethodMemberDoc = docs.find(doc => doc.name === 'method1')!;
-        expect(method1.parameterDocs).toEqual([param1, param2]);
+        expect(method1.parameterDocs).toEqual([param1, param2, param3]);
       });
     });
   });

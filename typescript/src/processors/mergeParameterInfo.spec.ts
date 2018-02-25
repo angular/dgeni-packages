@@ -36,12 +36,12 @@ describe('mergeParameterInfo', () => {
     extractTagsProcessor.$process(docsArray);
     mergeParameterInfoProcessor.$process(docsArray);
 
-    const param3: ParameterDoc = docsArray.find(doc => doc.name === 'param3');
+    const param3: ParameterDoc = docsArray.find(doc => doc.name === 'param3' && doc.container.name === 'method2');
     expect(param3.id).toEqual('methodParameters/TestClass.method2()~param3');
     expect(param3.description).toEqual('description of param3');
     expect(param3.type).toEqual('string');
 
-    const param4: ParameterDoc = docsArray.find(doc => doc.name === 'param4');
+    const param4: ParameterDoc = docsArray.find(doc => doc.name === 'param4' && doc.container.name === 'method2');
     expect(param4.id).toEqual('methodParameters/TestClass.method2()~param4');
     expect(param4.description).toEqual('description of param4');
     expect(param4.type).toEqual('number');

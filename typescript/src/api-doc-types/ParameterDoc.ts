@@ -13,8 +13,10 @@ import { ParameterContainer } from './ParameterContainer';
 export class ParameterDoc extends BaseApiDoc {
   docType = 'parameter';
   type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
-  paramText = getParamText(this.declaration, this.namespacesToInclude);
   isOptional = !!(this.declaration.questionToken);
+  isRestParam = !!(this.declaration.dotDotDotToken);
+  defaultValue = this.declaration.initializer && nodeToString(this.declaration.initializer);
+  paramText = this.getParamText();
   description = this.content;
 
   constructor(public container: ParameterContainer,
@@ -25,26 +27,14 @@ export class ParameterDoc extends BaseApiDoc {
     this.id = `${this.container.id}~${this.name}`;
     this.aliases = (this.container.aliases || []).map(alias => `${alias}~${this.name}`);
   }
-}
 
-function getParamText(parameter: ParameterDeclaration, namespacesToInclude: string[]) {
-  let paramText = '';
-
-  if (parameter.dotDotDotToken) paramText += '...';
-
-  paramText += nodeToString(parameter.name);
-
-  if (parameter.questionToken) paramText += '?';
-
-  const type = parameter.type;
-  if (type) {
-    paramText += ': ' + getTypeText(type, namespacesToInclude);
+  getParamText() {
+    let paramText = '';
+    if (this.isRestParam) paramText += '...';
+    paramText += this.name;
+    if (this.isOptional) paramText += '?';
+    if (this.type) paramText += ': ' + this.type;
+    if (this.defaultValue) paramText += ' = ' + this.defaultValue;
+    return paramText.trim();
   }
-
-  const initializer = getInitializer(parameter);
-  if (initializer) {
-    paramText += ' = ' + nodeToString(initializer);
-  }
-
-  return paramText.trim();
 }
