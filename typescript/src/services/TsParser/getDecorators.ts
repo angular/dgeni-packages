@@ -5,7 +5,9 @@ import {
     Decorator,
     EmitHint,
     Expression,
+    NodeArray,
     ObjectLiteralElement,
+    ObjectLiteralElementLike,
     ObjectLiteralExpression,
     PropertyAssignment,
     SyntaxKind
@@ -53,7 +55,7 @@ function getCallExpression(decorator: Decorator) {
   }
 }
 
-function parseProperties(properties: ObjectLiteralElement[]) {
+function parseProperties(properties: NodeArray<ObjectLiteralElementLike>) {
   const result: ArgumentInfo = {};
   properties.forEach(property => {
     if (property.kind === SyntaxKind.PropertyAssignment) {

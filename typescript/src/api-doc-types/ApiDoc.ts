@@ -8,9 +8,9 @@ export interface ApiDoc {
   name: string;
   id: string;
   aliases: string[];
-  path: string;
-  outputPath: string;
-  content: string;
+  path: string|undefined;
+  outputPath: string|undefined;
+  content: string|undefined;
   symbol: Symbol;
   declaration: Declaration;
   fileInfo: FileInfo;
@@ -32,8 +32,8 @@ export abstract class BaseApiDoc implements ApiDoc {
     (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
   content = getContent(this.declaration);
-  path: string;
-  outputPath: string;
+  path: string|undefined;
+  outputPath: string|undefined;
 
   originalModule = this.fileInfo.projectRelativePath
     .replace(new RegExp("\." + this.fileInfo.extension + "$"), "");

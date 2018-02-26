@@ -50,8 +50,8 @@ export class ReadTypeScriptModules implements Processor {
     // We leave class members sorted in order of declaration
     sortClassMembers = false;
     // We can provide a collection of strings or regexes to ignore exports whose export names match
-    ignoreExportsMatching: Array<string|RegExp> = ['___esModule'];
-    ignoreExportsRegexes: RegExp[];
+    ignoreExportsMatching: Array<string|RegExp> = ['__esModule'];
+    ignoreExportsRegexes: RegExp[] = [];
 
     constructor(
       private tsParser: TsParser,

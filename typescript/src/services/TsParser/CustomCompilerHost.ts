@@ -7,7 +7,7 @@ const path = require('canonical-path');
 // file
 export class CustomCompilerHost implements CompilerHost {
 
-  constructor(private options: any, private baseDir: string, private extensions: string[], private log: any) {}
+  constructor(private options: CompilerOptions, private baseDir: string, private extensions: string[], private log: any) {}
 
   getSourceFile(fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void): SourceFile {
     let text;
@@ -18,7 +18,7 @@ export class CustomCompilerHost implements CompilerHost {
     // let's just try loading the file as-is initially
     try {
       resolvedPath = path.resolve(this.baseDir, fileName);
-      text = fs.readFileSync(resolvedPath, { encoding: this.options.charset });
+      text = fs.readFileSync(resolvedPath, { encoding: this.options.charset! });
       this.log.debug('found source file:', fileName);
       return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
     } catch (e) {
@@ -41,7 +41,7 @@ export class CustomCompilerHost implements CompilerHost {
       try {
         resolvedPathWithExt = resolvedPath + extension;
         this.log.silly('getSourceFile:', resolvedPathWithExt);
-        text = fs.readFileSync(resolvedPathWithExt, { encoding: this.options.charset });
+        text = fs.readFileSync(resolvedPathWithExt, { encoding: this.options.charset! });
         this.log.debug('found source file:', fileName, resolvedPathWithExt);
         return createSourceFile(baseFilePath + extension, text, languageVersion);
       } catch (e) {
