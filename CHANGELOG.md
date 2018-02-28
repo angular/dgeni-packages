@@ -1,5 +1,23 @@
 # Changelog
 
+# 0.25.0 28 February 2018
+
+## Fixes
+
+* **typescript**:
+  - remove `namespacesToInclude` feature  6a893df3
+  - give `path` and `outputPath` initial values c5f3049f
+
+## Breaking Change
+
+The `namespacesToInclude` service has been removed from
+the package. Now when rendering types full qualified names are
+always rendered and no namespaces are stripped.
+
+If you relied on this then you should implement a processor to
+search for these rendered types and strip them.
+
+
 # 0.24.3 25 February 2018
 
 ## Features
