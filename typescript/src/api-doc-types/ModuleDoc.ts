@@ -19,9 +19,9 @@ export class ModuleDoc implements ApiDoc {
   fileInfo = new FileInfo(this.declaration, this.basePath);
   startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
-  path: string;
-  outputPath: string;
-  content: string;
+  path: string = '';
+  outputPath: string = '';
+  content: string = '';
 
   constructor(public symbol: ModuleSymbol, public basePath: string, public namespacesToInclude: string[], public hidePrivateMembers: boolean, public typeChecker: TypeChecker) {}
 }

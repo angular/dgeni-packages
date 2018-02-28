@@ -32,8 +32,8 @@ export abstract class BaseApiDoc implements ApiDoc {
     (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
   content = getContent(this.declaration);
-  path: string;
-  outputPath: string;
+  path: string = '';
+  outputPath: string = '';
 
   originalModule = this.fileInfo.projectRelativePath
     .replace(new RegExp("\." + this.fileInfo.extension + "$"), "");

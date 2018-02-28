@@ -20,8 +20,8 @@ export abstract class MemberDoc implements ApiDoc {
   abstract aliases: string[];
   abstract anchor: string;
 
-  path: string;
-  outputPath: string;
+  path: string = '';
+  outputPath: string = '';
   content = getContent(this.declaration);
   basePath = this.containerDoc.basePath;
   namespacesToInclude = this.containerDoc.namespacesToInclude;
