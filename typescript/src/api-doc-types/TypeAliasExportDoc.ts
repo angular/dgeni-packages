@@ -5,7 +5,7 @@ import { ParameterizedExportDoc } from './ParameterizedExportDoc';
 
 export class TypeAliasExportDoc extends ParameterizedExportDoc {
   docType = 'type-alias';
-  typeDefinition = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+  typeDefinition = getDeclarationTypeText(this.declaration);
 
   constructor(
     moduleDoc: ModuleDoc,

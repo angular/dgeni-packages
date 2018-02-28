@@ -2,10 +2,10 @@ import { Declaration, Node, SyntaxKind, TypeNode, TypeParameterDeclaration } fro
 import { getTypeText } from './getTypeText';
 import { nodeToString } from './nodeToString';
 
-export function getDeclarationTypeText(declaration: Declaration, namespacesToInclude: string[]) {
+export function getDeclarationTypeText(declaration: Declaration) {
   // if the declaration has an explicit type then use that
   const type = getType(declaration);
-  if (type) return getTypeText(type, namespacesToInclude);
+  if (type) return getTypeText(type);
 
   // if the declaration is a type parameter then just use its textual value
   if (declaration.kind === SyntaxKind.TypeParameter ) {

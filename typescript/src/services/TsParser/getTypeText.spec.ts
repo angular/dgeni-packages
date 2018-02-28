@@ -15,39 +15,25 @@ describe('getTypeText', () => {
     const parseInfo = parser.parse(['tsParser/getTypeText.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
 
-    expect(getTypeText(getType(moduleExports[1]), [])).toEqual('TestClass');
-    expect(getTypeText(getType(moduleExports[2]), [])).toEqual('string');
-    expect(getTypeText(getType(moduleExports[3]), [])).toEqual('number');
-    expect(getTypeText(getType(moduleExports[4]), [])).toEqual('TestType');
-    expect(getTypeText(getType(moduleExports[5]), [])).toEqual('TestClass | string');
-    expect(getTypeText(getType(moduleExports[6]), [])).toEqual([
+    expect(getTypeText(getType(moduleExports[1]))).toEqual('TestClass');
+    expect(getTypeText(getType(moduleExports[2]))).toEqual('string');
+    expect(getTypeText(getType(moduleExports[3]))).toEqual('number');
+    expect(getTypeText(getType(moduleExports[4]))).toEqual('TestType');
+    expect(getTypeText(getType(moduleExports[5]))).toEqual('TestClass | string');
+    expect(getTypeText(getType(moduleExports[6]))).toEqual([
       '{',
       '    x: number;',
       '    y: string;',
       '}',
     ].join('\n'));
-    expect(getTypeText(getType(moduleExports[7]), [])).toEqual('Array<string>');
-    expect(getTypeText(getType(moduleExports[8]), [])).toEqual('Array<T>');
-  });
-
-  it('should strip namespaces from types and their type parameters', () => {
-    const parseInfo = parser.parse(['tsParser/getTypeText.test.ts'], basePath);
-    const moduleExports = parseInfo.moduleSymbols[0].exportArray;
-    expect(getTypeText(getType(moduleExports[9]), [])).toEqual('IDirective');
-    expect(getTypeText(getType(moduleExports[10]), [])).toEqual('Array<IDirective>');
-  });
-
-  it('should not strip namespaces that are marked as wanted', () => {
-    const parseInfo = parser.parse(['tsParser/getTypeText.test.ts'], basePath);
-    const moduleExports = parseInfo.moduleSymbols[0].exportArray;
-    expect(getTypeText(getType(moduleExports[9]), ['angular'])).toEqual('angular.IDirective');
-    expect(getTypeText(getType(moduleExports[10]), ['angular'])).toEqual('Array<angular.IDirective>');
+    expect(getTypeText(getType(moduleExports[7]))).toEqual('Array<string>');
+    expect(getTypeText(getType(moduleExports[8]))).toEqual('Array<T>');
   });
 
   it('should remove comments from the rendered text', () => {
     const parseInfo = parser.parse(['tsParser/getTypeText.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
-    expect(getTypeText(getType(moduleExports[12]), [])).toEqual([
+    expect(getTypeText(getType(moduleExports[12]))).toEqual([
       '{',
       '    a: number;',
       '    b: string;',

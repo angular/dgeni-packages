@@ -9,7 +9,7 @@ import { ParameterizedExportDoc } from './ParameterizedExportDoc';
 export class FunctionExportDoc extends ParameterizedExportDoc implements ParameterContainer {
   docType = 'function';
 
-  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+  type = getDeclarationTypeText(this.declaration);
 
   overloads = this.symbol.getDeclarations()!
     .filter(declaration => declaration !== this.declaration)

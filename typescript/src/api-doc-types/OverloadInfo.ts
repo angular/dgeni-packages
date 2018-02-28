@@ -16,7 +16,7 @@ export class OverloadInfo extends BaseApiDoc implements ParameterContainer {
   readonly parameterDocs: ParameterDoc[] = getParameters(this);
   readonly parameters = this.parameterDocs.map(p => p.paramText);
 
-  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+  type = getDeclarationTypeText(this.declaration);
   containerDoc: ModuleDoc = this.functionDoc.containerDoc;
 
   constructor(public functionDoc: FunctionExportDoc, declaration: Declaration) {

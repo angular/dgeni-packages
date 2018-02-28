@@ -12,7 +12,7 @@ import { ParameterContainer } from './ParameterContainer';
  */
 export class ParameterDoc extends BaseApiDoc {
   docType = 'parameter';
-  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+  type = getDeclarationTypeText(this.declaration);
   isOptional = !!(this.declaration.questionToken);
   isRestParam = !!(this.declaration.dotDotDotToken);
   defaultValue = this.declaration.initializer && nodeToString(this.declaration.initializer);

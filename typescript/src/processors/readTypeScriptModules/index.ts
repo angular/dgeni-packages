@@ -22,11 +22,10 @@ const path = require('canonical-path');
 export function readTypeScriptModules(
                   tsParser: TsParser,
                   modules: any,
-                  namespacesToInclude: string[],
                   exportSymbolsToDocsMap: Map<Symbol, ExportDoc>,
                   createDocMessage: any,
                   log: any) {
-  return new ReadTypeScriptModules(tsParser, modules, namespacesToInclude, exportSymbolsToDocsMap, createDocMessage, log);
+  return new ReadTypeScriptModules(tsParser, modules, exportSymbolsToDocsMap, createDocMessage, log);
 }
 
 export class ReadTypeScriptModules implements Processor {
@@ -51,12 +50,11 @@ export class ReadTypeScriptModules implements Processor {
     sortClassMembers = false;
     // We can provide a collection of strings or regexes to ignore exports whose export names match
     ignoreExportsMatching: Array<string|RegExp> = ['___esModule'];
-    ignoreExportsRegexes: RegExp[];
+    ignoreExportsRegexes: RegExp[] = [];
 
     constructor(
       private tsParser: TsParser,
       private modules: any,
-      private namespacesToInclude: string[],
       private exportSymbolsToDocsMap: Map<Symbol, ExportDoc>,
       private createDocMessage: any,
       private log: any) {}
@@ -76,7 +74,7 @@ export class ReadTypeScriptModules implements Processor {
       // Iterate through each of the modules to generate module docs, export docs and member docs.
       moduleSymbols.forEach(moduleSymbol => {
         // Create a doc for this module and add it to the module lookup collection and the docs collection
-        const moduleDoc = new ModuleDoc(moduleSymbol, basePath, this.namespacesToInclude, this.hidePrivateMembers, moduleSymbols.typeChecker!);
+        const moduleDoc = new ModuleDoc(moduleSymbol, basePath, this.hidePrivateMembers, moduleSymbols.typeChecker!);
         this.modules[moduleDoc.id] = moduleDoc;
         docs.push(moduleDoc);
         this.addExportDocs(docs, moduleDoc);

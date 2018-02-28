@@ -13,7 +13,7 @@ export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
   readonly anchor = this.computeAnchor();
   readonly id = `${this.containerDoc.id}.${this.anchor}`;
   readonly aliases = this.computeAliases();
-  readonly typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
+  readonly typeParameters = getTypeParametersText(this.declaration);
 
   constructor(
     containerDoc: ContainerExportDoc,

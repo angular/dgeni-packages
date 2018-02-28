@@ -23,7 +23,6 @@ export interface ParameterContainer {
   moduleDoc: ModuleDoc;
   declaration: Declaration;
   basePath: string;
-  namespacesToInclude: string[];
   typeChecker: TypeChecker;
   params?: ParamTag[];
 }

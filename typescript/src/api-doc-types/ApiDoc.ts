@@ -37,7 +37,6 @@ export abstract class BaseApiDoc implements ApiDoc {
 
   originalModule = this.fileInfo.projectRelativePath
     .replace(new RegExp("\." + this.fileInfo.extension + "$"), "");
-  namespacesToInclude = this.moduleDoc.namespacesToInclude;
   typeChecker: TypeChecker = this.moduleDoc.typeChecker;
 
   constructor(public moduleDoc: ModuleDoc,

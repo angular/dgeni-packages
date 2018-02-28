@@ -4,7 +4,7 @@ import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 
 export abstract class ParameterizedExportDoc extends ExportDoc {
-  typeParameters = getTypeParametersText(this.declaration, this.namespacesToInclude);
+  typeParameters = getTypeParametersText(this.declaration);
 
   constructor(moduleDoc: ModuleDoc,
               symbol: Symbol,

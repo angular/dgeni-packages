@@ -550,18 +550,8 @@ describe('readTypeScriptModules', () => {
     });
   });
 
-  describe('strip namespaces', () => {
-    it('should strip namespaces in return types', () => {
-      processor.sourceFiles = ['stripNamespaces.ts'];
-      const docs: DocCollection = [];
-      processor.$process(docs);
-      const functionDoc = docs.find(doc => doc.docType === 'function');
-      expect(functionDoc.type).toEqual('IDirective');
-    });
-
-    it('should not strip ignored namespaces in return types', () => {
-      const namespacesToInclude = injector.get('namespacesToInclude');
-      namespacesToInclude.push('angular');
+  describe('namespaces', () => {
+    it('should not strip namespaces in return types', () => {
       processor.sourceFiles = ['stripNamespaces.ts'];
       const docs: DocCollection = [];
       processor.$process(docs);

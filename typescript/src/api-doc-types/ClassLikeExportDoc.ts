@@ -62,10 +62,10 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       // Now process these clauses to find each "extends" and "implements" clause
         if (clause.token === SyntaxKind.ExtendsKeyword) {
           this.extendsClauses = this.extendsClauses.concat(
-            clause.types.map(heritageType => new HeritageInfo(heritageType, getTypeText(heritageType, this.namespacesToInclude))));
+            clause.types.map(heritageType => new HeritageInfo(heritageType, getTypeText(heritageType))));
         } else {
           this.implementsClauses = this.implementsClauses.concat(
-            clause.types.map(heritageType => new HeritageInfo(heritageType, getTypeText(heritageType, this.namespacesToInclude))));
+            clause.types.map(heritageType => new HeritageInfo(heritageType, getTypeText(heritageType))));
         }
       });
     });

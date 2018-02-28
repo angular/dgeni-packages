@@ -24,7 +24,6 @@ export abstract class MemberDoc implements ApiDoc {
   outputPath: string = '';
   content = getContent(this.declaration);
   basePath = this.containerDoc.basePath;
-  namespacesToInclude = this.containerDoc.namespacesToInclude;
   fileInfo = new FileInfo(this.declaration, this.basePath);
   startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
@@ -33,7 +32,7 @@ export abstract class MemberDoc implements ApiDoc {
 
   accessibility = getAccessibility(this.declaration);
   decorators: ParsedDecorator[] | undefined = getDecorators(this.declaration);
-  type = getDeclarationTypeText(this.declaration, this.namespacesToInclude);
+  type = getDeclarationTypeText(this.declaration);
   isOptional = !!(this.symbol.flags & SymbolFlags.Optional);
   isGetAccessor = !!(this.symbol.flags & SymbolFlags.GetAccessor);
   isSetAccessor = !!(this.symbol.flags & SymbolFlags.SetAccessor);
