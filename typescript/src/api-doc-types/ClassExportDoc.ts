@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { FunctionLikeDeclaration, InternalSymbolName, Symbol, SymbolFlags } from 'typescript';
+import { FunctionLikeDeclaration, InternalSymbolName, Symbol, SymbolFlags, SyntaxKind } from 'typescript';
 import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
 import { MemberDoc } from '../api-doc-types/MemberDoc';
 import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc';
@@ -13,6 +13,8 @@ export class ClassExportDoc extends ClassLikeExportDoc {
   docType = 'class';
   constructorDoc: MethodMemberDoc|undefined;
   statics: MemberDoc[] = [];
+  isAbstract = this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.AbstractKeyword);
+
   constructor(
     moduleDoc: ModuleDoc,
     symbol: Symbol,

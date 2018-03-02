@@ -39,6 +39,7 @@ export abstract class MemberDoc implements ApiDoc {
   isCallMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__call');
   isNewMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__new');
   isReadonly = !!this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword);
+  isAbstract = !!this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.AbstractKeyword);
   isStatic = !!this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.StaticKeyword);
 
   constructor(
