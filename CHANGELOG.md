@@ -1,5 +1,27 @@
 # Changelog
 
+# 0.26.0 2 March 2018
+
+## Features
+
+* **typescript**:
+ - add `isAbstract` properties to classes and members	315b6ceb
+ - use TypeScript v2.7 to parse the TS source files	85ffe3a0
+
+## BREAKING CHANGES:
+
+The new version of TypeScript has better handling for specially named members such
+as `__constructor` and `__call`. To support this the TypeScript API introduced a new
+type `__String` for holding escaped versions of these strings.
+
+This makes is much safer in case a member name collided, but it also introduces a
+breaking change to the TypeScript AST public interface.
+
+This will not affect developers using the `typescript` package unless they are trying
+to interact with the TS AST directly, or they were expected to interact with escaped forms
+of special names, such as `__esModule`, which is `___esModule` in its escaped form.
+
+
 # 0.25.0 28 February 2018
 
 ## Fixes
