@@ -1,3 +1,4 @@
+import { __String } from 'typescript';
 import { TsParser } from '.';
 import { getAccessibility } from './getAccessibility';
 const path = require('canonical-path');
@@ -16,13 +17,13 @@ describe('getAccessibility', () => {
     const module = parseInfo.moduleSymbols[0];
     const testClassMembers = module.exportArray[0].members!;
 
-    const xee = testClassMembers.get('xee')!;
+    const xee = testClassMembers.get('xee' as __String)!;
     expect(getAccessibility(xee.declarations![0])).toEqual('public');
-    const yuu = testClassMembers.get('yuu')!;
+    const yuu = testClassMembers.get('yuu' as __String)!;
     expect(getAccessibility(yuu.declarations![0])).toEqual('public');
-    const bar = testClassMembers.get('bar')!;
+    const bar = testClassMembers.get('bar' as __String)!;
     expect(getAccessibility(bar.declarations![0])).toEqual('protected');
-    const foo = testClassMembers.get('foo')!;
+    const foo = testClassMembers.get('foo' as __String)!;
     expect(getAccessibility(foo.declarations![0])).toEqual('private');
   });
 });

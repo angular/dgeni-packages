@@ -1,4 +1,4 @@
-import { SignatureDeclaration } from 'typescript';
+import { __String, SignatureDeclaration } from 'typescript';
 import { TsParser } from '.';
 import { getDeclarationTypeText } from './getDeclarationTypeText';
 const path = require('canonical-path');
@@ -23,7 +23,7 @@ describe('getDeclarationTypeText', () => {
     expect(getDeclarationTypeText(testFunction.typeParameters![0])).toEqual('T');
 
     const testClass = moduleExports[2];
-    expect(getDeclarationTypeText(testClass.members!.get('property')!.getDeclarations()![0])).toEqual('T[]');
-    expect(getDeclarationTypeText(testClass.members!.get('method')!.getDeclarations()![0])).toEqual('T');
+    expect(getDeclarationTypeText(testClass.members!.get('property' as __String)!.getDeclarations()![0])).toEqual('T[]');
+    expect(getDeclarationTypeText(testClass.members!.get('method'as __String)!.getDeclarations()![0])).toEqual('T');
   });
 });

@@ -1,4 +1,4 @@
-import { Declaration, SignatureDeclaration } from 'typescript';
+import { __String, Declaration, SignatureDeclaration } from 'typescript';
 import { AugmentedSymbol, TsParser } from '.';
 import { getDecorators, ParsedDecorator } from './getDecorators';
 const path = require('canonical-path');
@@ -16,7 +16,7 @@ describe('getDecoratorSpec', () => {
     const parseInfo = parser.parse(['tsParser/getDecorators.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
     testClass = moduleExports[0];
-    testMethodDeclaration = testClass.members!.get('method')!.getDeclarations()![0];
+    testMethodDeclaration = testClass.members!.get('method' as __String)!.getDeclarations()![0];
     testParameters = (testMethodDeclaration as any).parameters;
   });
 
@@ -37,7 +37,7 @@ describe('getDecoratorSpec', () => {
   });
 
   it('should return the decorators of a property declaration', () => {
-    const propertyDecorators = getDecorators(testClass.members!.get('property')!.getDeclarations()![0])!;
+    const propertyDecorators = getDecorators(testClass.members!.get('property' as __String)!.getDeclarations()![0])!;
     const propertyDecorator = propertyDecorators[0];
     expect(propertyDecorator.expression).toBeDefined();
     expect(propertyDecorator.name).toEqual('propertyDecorator');

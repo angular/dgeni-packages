@@ -7,6 +7,7 @@ import {
     Symbol,
     SymbolFlags,
     SyntaxKind,
+    UnderscoreEscapedMap
 } from 'typescript';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { ExportDoc } from './ExportDoc';
@@ -31,7 +32,7 @@ const MembersToIgnoreFlags = SymbolFlags.Prototype | SymbolFlags.TypeParameter |
 export abstract class ContainerExportDoc extends ExportDoc {
   members: MemberDoc[] = [];
 
-  protected getMemberDocs(members: Map<Symbol>, hidePrivateMembers: boolean, isStatic: boolean) {
+  protected getMemberDocs(members: UnderscoreEscapedMap<Symbol>, hidePrivateMembers: boolean, isStatic: boolean) {
     const memberDocs: MemberDoc[] = [];
     members.forEach(member => {
       const flags = member.getFlags();

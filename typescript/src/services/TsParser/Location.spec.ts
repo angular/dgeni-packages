@@ -1,5 +1,6 @@
 import { TsParser } from '.';
 import { Location } from './Location';
+import { __String } from 'typescript';
 const path = require('canonical-path');
 
 describe('Location', () => {
@@ -28,11 +29,11 @@ describe('Location', () => {
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
 
     const testClass = moduleExports[0];
-    const property1Location = new Location(testClass.members!.get('property1')!.declarations![0]);
+    const property1Location = new Location(testClass.members!.get('property1' as __String)!.declarations![0]);
     expect(property1Location.start).toEqual({line: 3, character: 24});
     expect(property1Location.end).toEqual({line: 7, character: 20});
 
-    const method1Location = new Location(testClass.members!.get('method1')!.declarations![0]);
+    const method1Location = new Location(testClass.members!.get('method1' as __String)!.declarations![0]);
     expect(method1Location.start).toEqual({line: 7, character: 20});
     expect(method1Location.end).toEqual({line: 13, character: 3});
   });

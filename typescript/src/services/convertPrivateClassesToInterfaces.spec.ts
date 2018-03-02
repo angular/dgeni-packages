@@ -1,3 +1,4 @@
+import { createSourceFile, ScriptTarget } from 'typescript';
 import { DocCollection } from 'dgeni';
 import { ClassExportDoc } from '../api-doc-types/ClassExportDoc';
 import { HeritageInfo } from '../api-doc-types/ClassLikeExportDoc';
@@ -7,7 +8,7 @@ import { FileInfo } from './TsParser/FileInfo';
 describe('convertPrivateClassesToInterfaces', () => {
   const basePath = 'a/b/c';
   const moduleDoc = { id: 'someModule', basePath } as any;
-  const mockDeclaration: any = { getSourceFile: () => ({ fileName: 'x/y/z', text: 'blah blah' }) };
+  const mockDeclaration: any = { getSourceFile: () => createSourceFile('x/y/z', 'blah blah', ScriptTarget.ES5), pos: 0, end: 0 };
   const classSymbol: any = {
     getDeclarations: () => [mockDeclaration],
     name: 'privateClass',
