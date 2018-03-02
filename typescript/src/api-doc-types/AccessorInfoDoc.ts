@@ -14,6 +14,6 @@ export class AccessorInfoDoc extends MethodMemberDoc {
   anchor = this.name;
 
   constructor(public accessorType: 'get'|'set', public propertyDoc: PropertyMemberDoc, declaration: Declaration) {
-    super(propertyDoc.containerDoc, propertyDoc.symbol, declaration, false);
+    super(propertyDoc.containerDoc, propertyDoc.symbol, declaration);
   }
 }

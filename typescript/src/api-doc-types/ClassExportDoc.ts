@@ -19,7 +19,7 @@ export class ClassExportDoc extends ClassLikeExportDoc {
     aliasSymbol?: Symbol) {
     super(moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
     if (symbol.exports) {
-      this.statics = this.getMemberDocs(symbol.exports, moduleDoc.hidePrivateMembers, true);
+      this.statics = this.getMemberDocs(symbol.exports, moduleDoc.hidePrivateMembers);
     }
 
     if (symbol.members) {
@@ -29,7 +29,7 @@ export class ClassExportDoc extends ClassLikeExportDoc {
         this.constructorDoc = this.getConstructorDoc(constructorSymbol);
       }
       // Get the instance members
-      this.members = this.getMemberDocs(symbol.members, moduleDoc.hidePrivateMembers, false);
+      this.members = this.getMemberDocs(symbol.members, moduleDoc.hidePrivateMembers);
     }
   }
 
@@ -39,10 +39,10 @@ export class ClassExportDoc extends ClassLikeExportDoc {
     constructorSymbol.getDeclarations()!.forEach(declaration => {
       if ((declaration as FunctionLikeDeclaration).body) {
         // This is the "real" declaration of the method
-        constructorDoc = new MethodMemberDoc(this, constructorSymbol, declaration, false, overloads);
+        constructorDoc = new MethodMemberDoc(this, constructorSymbol, declaration, overloads);
       } else {
         // This is an overload signature of the method
-        overloads.push(new MethodMemberDoc(this, constructorSymbol, declaration, false, overloads));
+        overloads.push(new MethodMemberDoc(this, constructorSymbol, declaration, overloads));
       }
     });
     return constructorDoc || overloads.shift();

@@ -15,13 +15,12 @@ export class PropertyMemberDoc extends MemberDoc {
               symbol: Symbol,
               declaration: Declaration | null,
               getAccessorDeclaration: GetAccessorDeclaration | null,
-              setAccessorDeclaration: SetAccessorDeclaration | null,
-              isStatic: boolean) {
+              setAccessorDeclaration: SetAccessorDeclaration | null) {
 
     // For accessors, the declaration parameter will be null, and therefore the getter declaration
     // will be used for most of the things (e.g. determination of the type). If the getter doesn't
     // have a type or description, the setter will be checked manually later in this constructor.
-    super(containerDoc, symbol, (declaration || getAccessorDeclaration || setAccessorDeclaration)!, isStatic);
+    super(containerDoc, symbol, (declaration || getAccessorDeclaration || setAccessorDeclaration)!);
 
     // If this property has accessors then compute the type based on that instead
     this.getAccessor = getAccessorDeclaration && new AccessorInfoDoc('get', this, getAccessorDeclaration);

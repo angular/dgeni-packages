@@ -19,9 +19,8 @@ export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
     containerDoc: ContainerExportDoc,
     symbol: Symbol,
     declaration: Declaration,
-    isStatic: boolean,
     public overloads: MethodMemberDoc[] = []) {
-    super(containerDoc, symbol, declaration, isStatic);
+    super(containerDoc, symbol, declaration);
     // fix up parameter ids and aliases, now that we have computed the id for this doc
     this.parameterDocs.forEach(param => {
       param.id = `${this.id}~${param.name}`;

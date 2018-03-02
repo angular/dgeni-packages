@@ -13,7 +13,7 @@ export class InterfaceExportDoc extends ClassLikeExportDoc {
     symbol: Symbol,
     aliasSymbol?: Symbol) {
       super(moduleDoc, symbol, symbol.valueDeclaration || symbol.getDeclarations()![0]!, aliasSymbol);
-      if (symbol.members) this.members = this.getMemberDocs(symbol.members, true, false);
+      if (symbol.members) this.members = this.getMemberDocs(symbol.members, true);
       this.additionalDeclarations = symbol.getDeclarations()!.filter(declaration => declaration !== this.declaration);
     }
 }

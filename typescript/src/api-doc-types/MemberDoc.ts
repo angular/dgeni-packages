@@ -38,12 +38,12 @@ export abstract class MemberDoc implements ApiDoc {
   isSetAccessor = !!(this.symbol.flags & SymbolFlags.SetAccessor);
   isCallMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__call');
   isNewMember = !!(this.symbol.flags & SymbolFlags.Signature && this.symbol.name === '__new');
-  isReadonly = this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword);
+  isReadonly = !!this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.ReadonlyKeyword);
+  isStatic = !!this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.StaticKeyword);
 
   constructor(
       public containerDoc: ContainerExportDoc,
       public symbol: Symbol,
-      public declaration: Declaration,
-      public isStatic: boolean) {
+      public declaration: Declaration) {
   }
 }

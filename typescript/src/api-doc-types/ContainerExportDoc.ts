@@ -32,7 +32,7 @@ const MembersToIgnoreFlags = SymbolFlags.Prototype | SymbolFlags.TypeParameter |
 export abstract class ContainerExportDoc extends ExportDoc {
   members: MemberDoc[] = [];
 
-  protected getMemberDocs(members: UnderscoreEscapedMap<Symbol>, hidePrivateMembers: boolean, isStatic: boolean) {
+  protected getMemberDocs(members: UnderscoreEscapedMap<Symbol>, hidePrivateMembers: boolean) {
     const memberDocs: MemberDoc[] = [];
     members.forEach(member => {
       const flags = member.getFlags();
@@ -56,13 +56,13 @@ export abstract class ContainerExportDoc extends ExportDoc {
             setAccessorDeclaration = declaration as SetAccessorDeclaration;
           } else if ((declaration as FunctionLikeDeclaration).body) {
             // This is the "real" declaration of the method
-            memberDoc = new MethodMemberDoc(this, member, declaration, isStatic, overloads);
+            memberDoc = new MethodMemberDoc(this, member, declaration, overloads);
           } else {
             // This is an overload signature of the method
-            overloads.push(new MethodMemberDoc(this, member, declaration, isStatic, overloads));
+            overloads.push(new MethodMemberDoc(this, member, declaration, overloads));
           }
         } else if (flags & PropertyMemberFlags) {
-          memberDoc = new PropertyMemberDoc(this, member, declaration, null, null, isStatic);
+          memberDoc = new PropertyMemberDoc(this, member, declaration, null, null);
         } else {
           throw new Error(`Unknown member type for member ${member.name}`);
         }
@@ -70,7 +70,7 @@ export abstract class ContainerExportDoc extends ExportDoc {
 
       // If at least one of the declarations was an accessor then the whole member is a property.
       if (getAccessorDeclaration || setAccessorDeclaration) {
-        memberDoc = new PropertyMemberDoc(this, member, null, getAccessorDeclaration, setAccessorDeclaration, false);
+        memberDoc = new PropertyMemberDoc(this, member, null, getAccessorDeclaration, setAccessorDeclaration);
       }
 
       // If there is no member doc then we are in an interface or abstract class and we just take the first overload
