@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.26.1 11 May 2018
+
+## Fixes
+
+* **typescript**:
+ - correctly compute the type of "const" docs	 17078928
+
+
 # 0.26.0 2 March 2018
 
 ## Features
