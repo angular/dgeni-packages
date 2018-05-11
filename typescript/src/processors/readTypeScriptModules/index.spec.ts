@@ -275,6 +275,23 @@ describe('readTypeScriptModules', () => {
     });
   });
 
+  describe('exported consts', () => {
+    it('should extract a text form of the type of the constant', () => {
+      processor.sourceFiles = [ 'consts.ts'];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+      const constDocs = docs.filter(doc => doc.docType === 'const');
+      expect(constDocs[0].name).toEqual('X');
+      expect(constDocs[0].type).toEqual('"x"');
+      expect(constDocs[1].name).toEqual('fun');
+      expect(constDocs[1].type).toEqual('(foo: string) => boolean');
+      expect(constDocs[2].name).toEqual('OBJ');
+      expect(constDocs[2].type).toEqual('{ prop1: boolean; prop2: string; }');
+      expect(constDocs[3].name).toEqual('INSTANCE');
+      expect(constDocs[3].type).toEqual('CLASS<string>');
+    });
+  });
+
   describe('members', () => {
     describe('overloaded members', () => {
       it('should create a member doc for the "real" member, which includes an overloads property', () => {
