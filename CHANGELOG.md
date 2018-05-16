@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.26.2 16 May 2018
+
+## Features
+
+* **typescript**:
+ - include simple name in aliases of members  1d952fd5
+
+
 # 0.26.1 11 May 2018
 
 ## Fixes
