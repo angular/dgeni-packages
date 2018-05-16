@@ -565,6 +565,48 @@ describe('readTypeScriptModules', () => {
         expect(method1.parameterDocs).toEqual([param1, param2, param3]);
       });
     });
+
+    describe('aliases', () => {
+      let docs: DocCollection;
+      let fn: MethodMemberDoc;
+      let foo: MethodMemberDoc;
+      let foo1: MethodMemberDoc;
+      let foo2: MethodMemberDoc;
+      let bar: PropertyMemberDoc;
+
+      beforeEach(() => {
+        processor.sourceFiles = [ 'memberAliases.ts'];
+        docs = [];
+        processor.$process(docs);
+        fn = docs.find(doc => doc.name === 'fn');
+        [foo2, foo, foo1] = docs.filter(doc => doc.name === 'foo');
+        bar = docs.find(doc => doc.name === 'bar');
+      });
+
+      it('should include a simple name', () => {
+        expect(fn.aliases).toContain('fn()');
+        expect(foo.aliases).toContain('foo()');
+        expect(bar.aliases).toContain('bar');
+      });
+
+      it('should include the container', () => {
+        expect(fn.aliases).toContain('MyClass.fn()');
+        expect(foo.aliases).toContain('MyClass.foo()');
+        expect(bar.aliases).toContain('MyClass.bar');
+      });
+
+      it('should include the container and module', () => {
+        expect(fn.aliases).toContain('memberAliases/MyClass.fn()');
+        expect(foo.aliases).toContain('memberAliases/MyClass.foo()');
+        expect(bar.aliases).toContain('memberAliases/MyClass.bar');
+      });
+
+      it('should distinguish method overloads', () => {
+        expect(foo.aliases).toContain('MyClass.foo()');
+        expect(foo1.aliases).toContain('MyClass.foo_1()');
+        expect(foo2.aliases).toContain('MyClass.foo_2()');
+      });
+    });
   });
 
   describe('namespaces', () => {

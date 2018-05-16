@@ -7,7 +7,7 @@ export class PropertyMemberDoc extends MemberDoc {
   name = this.symbol.name;
   anchor = this.name;
   id = `${this.containerDoc.id}.${this.name}`;
-  aliases = this.containerDoc.aliases.map(alias => `${alias}.${this.name}` );
+  aliases = [this.name].concat(this.containerDoc.aliases.map(alias => `${alias}.${this.name}`));
   getAccessor: AccessorInfoDoc | null;
   setAccessor: AccessorInfoDoc | null;
 

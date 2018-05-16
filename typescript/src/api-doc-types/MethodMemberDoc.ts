@@ -44,7 +44,7 @@ export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
   }
 
   private computeAliases() {
-    const aliases: string[] = [];
+    const aliases: string[] = [this.anchor];
     this.containerDoc.aliases.forEach(alias => {
       aliases.push(`${alias}.${this.anchor}`);
     });
