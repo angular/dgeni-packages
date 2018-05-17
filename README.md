@@ -113,7 +113,7 @@ to render the documents into text, such as HTML or JS, based on templates.
 
 ## `jsdoc` Package
 
-### File Readers:
+### File Readers
 
 * `jsdoc` - can read documents from jsdoc style comments in source code files.
 
@@ -366,7 +366,7 @@ of the example
 
 ## `typescript` Package
 
-### File Readers:
+### File Readers
 
 * at the moment we are not using a filereader but the `readTypeScriptModules` processor to read our modules.
 
