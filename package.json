@@ -1,6 +1,6 @@
 {
   "name": "dgeni-packages",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "yarn build && node test.js",
@@ -113,6 +113,7 @@
     "Georgios Kalpakas <kalpakas.g@gmail.com>",
     "Jicheng Li <deemstone@gmail.com>",
     "Christoffer Hasselberg <stofolus@gmail.com>",
-    "David Herges <dherges@users.noreply.github.com>"
+    "David Herges <dherges@users.noreply.github.com>",
+    "Greg Magolan <gmagolan@gmail.com>"
   ]
 }

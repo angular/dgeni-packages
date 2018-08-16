@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.26.3 16 August 2018
+
+## Fixes
+
+* **typescript**:
+ - handle special case for triple slash reference types directives	b22dab5b
+
+
 # 0.26.2 16 May 2018
 
 ## Features
