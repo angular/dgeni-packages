@@ -46,6 +46,11 @@ describe('CustomCompilerHost', () => {
       const sourceFile = host.getSourceFile('zone.js', 0)!;
       expect(sourceFile.fileName).toEqual('zone.js/index.ts');
     });
+
+    it('should cope with "invalid" relative references to node_modules, which are actually outside the baseDir', () => {
+      const sourceFile = host.getSourceFile('node_modules/@types/jasmine/index.d.ts', 0)!;
+      expect(sourceFile.fileName).toEqual('../../../node_modules/@types/jasmine/index.d.ts');
+    });
   });
 
   describe('getDefaultLibFileName', () => {
