@@ -29,6 +29,27 @@ export class CustomCompilerHost implements CompilerHost {
       // otherwise ignore the error and move on to the strategy below...
     }
 
+    // Special case for `/// <reference types="x">` directives.
+    // Typescript does not fully resolve these before calling getSourceFile
+    // so fileName ends up looking like `node_modules/@types/x/index.d.ts`.
+    // In the case that node_modules is below the baseDir, we look
+    // for ../node_modules/@types/x/index.d.ts, ../..node_modules/@types/x/index.d.ts, etc...
+    if (fileName.startsWith(path.join('node_modules','@types')) && fileName.endsWith('index.d.ts')) {
+      const baseDirDepth = this.baseDir.split(path.sep).length;
+      let maybe = path.join('..', fileName);
+      for (let i=0; i<baseDirDepth; ++i) {
+        try {
+          resolvedPath = path.resolve(this.baseDir, maybe);
+          text = fs.readFileSync(resolvedPath, { encoding: this.options.charset! });
+          this.log.debug('found source file:', fileName);
+          return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
+        } catch (e) {
+          // ignore the error and move on to the next maybe...
+        }
+        maybe = path.join('..', maybe);
+      }
+    }
+
     // Strip off the extension and resolve relative to the baseDir
     baseFilePath = fileName.replace(/\.[^.\/]+$/, '');
     resolvedPath = path.resolve(this.baseDir, baseFilePath);
