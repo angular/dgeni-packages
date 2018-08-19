@@ -34,10 +34,12 @@ export class CustomCompilerHost implements CompilerHost {
     // so fileName ends up looking like `node_modules/@types/x/index.d.ts`.
     // In the case that node_modules is below the baseDir, we look
     // for ../node_modules/@types/x/index.d.ts, ../..node_modules/@types/x/index.d.ts, etc...
-    if (fileName.startsWith(path.join('node_modules','@types')) && fileName.endsWith('index.d.ts')) {
-      const baseDirDepth = this.baseDir.split(path.sep).length;
+    if (fileName.startsWith(path.join('node_modules', '@types')) && fileName.endsWith('index.d.ts')) {
+      // The base directory path is already posix normalized through TypeScript. In order to
+      // properly determine the depth of the base dir, the delimiter is always a forward slash.
+      const baseDirDepth = this.baseDir.split('/').length;
       let maybe = path.join('..', fileName);
-      for (let i=0; i<baseDirDepth; ++i) {
+      for (let i = 0; i < baseDirDepth; ++i) {
         try {
           resolvedPath = path.resolve(this.baseDir, maybe);
           text = fs.readFileSync(resolvedPath, { encoding: this.options.charset! });
