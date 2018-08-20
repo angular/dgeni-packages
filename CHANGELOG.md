@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.26.4 20 August 2018
+
+## Fixes
+
+* **typescript**: invalid path delimiter for triple slash type directives in windows	  9964b0a1
+
 # 0.26.3 16 August 2018
 
 ## Fixes
