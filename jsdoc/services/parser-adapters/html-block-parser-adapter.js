@@ -1,19 +1,21 @@
-const TAG_REGEXP = /^<([a-zA-Z]+)\b[\s\S]*?>/;
+const TAG_REGEXP = /^<([a-z-A-Z]+)\b[^>]*>/;
+const VOID_TAGS = [ 'area', 'base', 'basefont', 'bgsound', 'br', 'col', 'command', 'embed', 'frame', 'hr', 'image', 'img', 'input', 'isindex', 'keygen', 'link', 'menuitem', 'meta', 'nextid', 'param', 'source', 'track', 'wbr' ];
 /**
  * A ParserAdapter adapter that ignores tags between HTML blocks that would be ignored by markdown
  * See https://daringfireball.net/projects/markdown/syntax#html
  */
 module.exports = function htmlBlockParserAdapter() {
   return {
-    init: function(lines) {
+    voidTags: VOID_TAGS,
+    init(lines) {
       this.lines = lines;
       this.tagDepth = 0;
       this.currentTag = null;
     },
-    nextLine: function(line, lineNumber) {
+    nextLine(line, lineNumber) {
       if (this.tagDepth === 0 && this.lines[lineNumber - 1] === '') {
         const m = TAG_REGEXP.exec(line);
-        if (m) {
+        if (m && this.voidTags.indexOf(m[1]) === -1) {
           this.currentTag = m[1];
         }
       }
@@ -24,7 +26,7 @@ module.exports = function htmlBlockParserAdapter() {
         this.currentTag = null;
       }
     },
-    parseForTags: function() {
+    parseForTags() {
       return !this.currentTag;
     }
   };
