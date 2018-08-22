@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.26.5 21 August 2018
+
+## Fixes
+
+* **jsdoc**: support void/self-closing/custom HTML tags	   2407ee68
+
 # 0.26.4 20 August 2018
 
 ## Fixes
