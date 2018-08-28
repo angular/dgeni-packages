@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.26.6 28 August 2018
+
+## Features
+
+* **typescript**: add option to disable leading comment concatenation	bd748bb2
+
 # 0.26.5 21 August 2018
 
 ## Fixes
