@@ -1,8 +1,9 @@
-import { createSourceFile, ScriptTarget } from 'typescript';
 import { DocCollection } from 'dgeni';
+import { createSourceFile, ScriptTarget } from 'typescript';
 import { ClassExportDoc } from '../api-doc-types/ClassExportDoc';
 import { HeritageInfo } from '../api-doc-types/ClassLikeExportDoc';
 import { convertPrivateClassesToInterfaces } from './convertPrivateClassesToInterfaces';
+import { Host } from './ts-host/host';
 import { FileInfo } from './TsParser/FileInfo';
 
 describe('convertPrivateClassesToInterfaces', () => {
@@ -21,7 +22,7 @@ describe('convertPrivateClassesToInterfaces', () => {
   beforeEach(() => {
     spyOn(FileInfo.prototype, 'getRealFilePath').and.callFake((filePath: string) => filePath);
 
-    classDoc = new ClassExportDoc(moduleDoc, classSymbol);
+    classDoc = new ClassExportDoc(new Host(), moduleDoc, classSymbol);
     classDoc.constructorDoc = { internal: true } as any;
     docs = [classDoc];
   });

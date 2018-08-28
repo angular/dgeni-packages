@@ -1,5 +1,5 @@
-import { Symbol, Type, TypeFormatFlags, VariableDeclaration } from 'typescript';
-import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
+import { Symbol, VariableDeclaration } from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { ExportDoc } from './ExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 
@@ -8,8 +8,11 @@ export class ConstExportDoc extends ExportDoc {
   variableDeclaration = this.declaration as VariableDeclaration;
   type =  this.getTypeString();
 
-  constructor(moduleDoc: ModuleDoc, symbol: Symbol, aliasSymbol?: Symbol) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
+  constructor(host: Host,
+              moduleDoc: ModuleDoc,
+              symbol: Symbol,
+              aliasSymbol?: Symbol) {
+    super(host, moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
   }
 
   private getTypeString() {

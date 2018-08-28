@@ -1,9 +1,24 @@
-import { getLeadingCommentRanges, getTrailingCommentRanges, ModuleDeclaration, Node, SyntaxKind, VariableDeclaration } from 'typescript';
+import {
+  CommentRange,
+  getLeadingCommentRanges,
+  getTrailingCommentRanges,
+  ModuleDeclaration,
+  Node,
+  SyntaxKind,
+} from 'typescript';
+
 const LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 const ASTERISK = 42;
 const SLASH = 47;
 
-export function getContent(node: Node|undefined) {
+const syntaxKindsWithTrailingComments = [
+  SyntaxKind.Parameter,
+  SyntaxKind.TypeParameter,
+  SyntaxKind.FunctionExpression,
+  SyntaxKind.ArrowFunction,
+];
+
+export function getContent(node: Node | undefined, concatLeadingComments = true) {
 
   let content = '';
 
@@ -30,7 +45,7 @@ export function getContent(node: Node|undefined) {
 
   // Get the source file of this node
   const sourceFile = node.getSourceFile();
-  const commentRanges = getJSDocCommentRanges(node, sourceFile.text);
+  const commentRanges = getJSDocCommentRanges(node, sourceFile.text, concatLeadingComments);
 
   if (commentRanges) {
     commentRanges.forEach(commentRange => {
@@ -47,15 +62,20 @@ export function getContent(node: Node|undefined) {
   return content.trim();
 }
 
-function getJSDocCommentRanges(node: Node, text: string) {
-    const commentRanges = (
-        node.kind === SyntaxKind.Parameter ||
-        node.kind === SyntaxKind.TypeParameter ||
-        node.kind === SyntaxKind.FunctionExpression ||
-        node.kind === SyntaxKind.ArrowFunction
-      ) ?
-      concatenate(getTrailingCommentRanges(text, node.pos), getLeadingCommentRanges(text, node.pos)) :
-      getLeadingCommentRanges(text, node.pos);
+function getJSDocCommentRanges(node: Node, text: string, concatLeadingComments: boolean) {
+    const commentRanges: CommentRange[] = [];
+    const leadingCommentRanges = getLeadingCommentRanges(text, node.pos) || [];
+    const trailingCommentRanges = getTrailingCommentRanges(text, node.pos) || [];
+
+    if (syntaxKindsWithTrailingComments.includes(node.kind)) {
+      commentRanges.push(...trailingCommentRanges);
+    }
+
+    if (concatLeadingComments) {
+      commentRanges.push(...leadingCommentRanges);
+    } else {
+      commentRanges.push(leadingCommentRanges[leadingCommentRanges.length - 1]);
+    }
 
     // True if the comment starts with '/**' but not if it is '/**/'
     if (commentRanges) {
@@ -64,8 +84,4 @@ function getJSDocCommentRanges(node: Node, text: string) {
         text.charCodeAt(comment.pos + 2) === ASTERISK &&
         text.charCodeAt(comment.pos + 3) !== SLASH);
     }
-}
-
-function concatenate<T>(array1: T[] | undefined, array2: T[] | undefined) {
-  return array1 ? array2 ? array1.concat(array2) : array1 : array2;
 }

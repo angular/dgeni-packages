@@ -1,4 +1,5 @@
 import { Declaration, Symbol } from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { ModuleDoc } from './ModuleDoc';
 import { OverloadInfo } from './OverloadInfo';
@@ -18,11 +19,13 @@ export class FunctionExportDoc extends ParameterizedExportDoc implements Paramet
   readonly parameterDocs: ParameterDoc[] = getParameters(this);
   readonly parameters = this.parameterDocs.map(p => p.paramText);
 
-  constructor(
-      public containerDoc: ModuleDoc,
-      symbol: Symbol,
-      aliasSymbol?: Symbol) {
-    super(containerDoc, symbol, findRealDeclaration(symbol.getDeclarations()!), aliasSymbol);
+  constructor(host: Host,
+              public containerDoc: ModuleDoc,
+              symbol: Symbol,
+              aliasSymbol?: Symbol) {
+
+    super(host, containerDoc, symbol, findRealDeclaration(symbol.getDeclarations()!),
+        aliasSymbol);
   }
 
 }

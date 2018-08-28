@@ -1,8 +1,8 @@
 /* tslint:disable:no-bitwise */
 import { Declaration, Symbol, SymbolFlags, SyntaxKind, TypeChecker } from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { FileInfo } from '../services/TsParser/FileInfo';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
-import { getContent } from "../services/TsParser/getContent";
 import { getDeclarationTypeText } from "../services/TsParser/getDeclarationTypeText";
 import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
 import { ApiDoc } from './ApiDoc';
@@ -22,7 +22,7 @@ export abstract class MemberDoc implements ApiDoc {
 
   path: string = '';
   outputPath: string = '';
-  content = getContent(this.declaration);
+  content = this.host.getContent(this.declaration);
   basePath = this.containerDoc.basePath;
   fileInfo = new FileInfo(this.declaration, this.basePath);
   startingLine = this.fileInfo.location.start.line + (this.fileInfo.location.start.character ? 1 : 0);
@@ -43,6 +43,7 @@ export abstract class MemberDoc implements ApiDoc {
   isStatic = !!this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.StaticKeyword);
 
   constructor(
+      public host: Host,
       public containerDoc: ContainerExportDoc,
       public symbol: Symbol,
       public declaration: Declaration) {

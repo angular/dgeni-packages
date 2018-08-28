@@ -1,4 +1,5 @@
 import { Declaration } from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { MethodMemberDoc } from './MethodMemberDoc';
 import { PropertyMemberDoc } from './PropertyMemberDoc';
 
@@ -13,7 +14,10 @@ export class AccessorInfoDoc extends MethodMemberDoc {
   aliases = this.propertyDoc.aliases.map(alias => `${alias}:${this.accessorType}`);
   anchor = this.name;
 
-  constructor(public accessorType: 'get'|'set', public propertyDoc: PropertyMemberDoc, declaration: Declaration) {
-    super(propertyDoc.containerDoc, propertyDoc.symbol, declaration);
+  constructor(host: Host,
+              public accessorType: 'get'|'set',
+              public propertyDoc: PropertyMemberDoc,
+              declaration: Declaration) {
+    super(host, propertyDoc.containerDoc, propertyDoc.symbol, declaration);
   }
 }

@@ -1,4 +1,5 @@
 import { Declaration, Symbol } from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 
@@ -9,11 +10,12 @@ import { ModuleDoc } from './ModuleDoc';
 export class EnumExportDoc extends ContainerExportDoc {
   docType = 'enum';
   additionalDeclarations: Declaration[] = [];
-  constructor(
-    moduleDoc: ModuleDoc,
-    symbol: Symbol,
-    aliasSymbol?: Symbol) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
+  constructor(host: Host,
+              moduleDoc: ModuleDoc,
+              symbol: Symbol,
+              aliasSymbol?: Symbol) {
+    super(host, moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
+
     this.additionalDeclarations = symbol.getDeclarations()!.filter(declaration => declaration !== this.declaration);
     if (symbol.exports) {
       this.members = this.getMemberDocs(symbol.exports, true);

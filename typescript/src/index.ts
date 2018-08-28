@@ -6,6 +6,7 @@ import { readTypeScriptModules } from './processors/readTypeScriptModules';
 import { convertPrivateClassesToInterfaces } from './services/convertPrivateClassesToInterfaces';
 import { exportSymbolsToDocsMap } from './services/exportSymbolsToDocsMap';
 import { modules } from './services/modules';
+import { Host } from './services/ts-host/host';
 import { TsParser } from './services/TsParser';
 
 // Define the dgeni package for generating the docs
@@ -14,6 +15,7 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 // Register the services and file readers
 .factory(modules)
 .factory(exportSymbolsToDocsMap)
+.factory('tsHost', () => new Host())
 .factory('tsParser', function(log) { return new TsParser(log); })
 
 .factory('convertPrivateClassesToInterfaces', function() { return convertPrivateClassesToInterfaces; })

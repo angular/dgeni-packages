@@ -12,6 +12,7 @@ import { ModuleDoc } from '../../api-doc-types/ModuleDoc';
 import { ParameterDoc } from '../../api-doc-types/ParameterDoc';
 import { PropertyMemberDoc } from '../../api-doc-types/PropertyMemberDoc';
 import { TypeAliasExportDoc } from '../../api-doc-types/TypeAliasExportDoc';
+import {Host} from '../../services/ts-host/host';
 
 import { getExportDocType, ModuleSymbols, TsParser } from '../../services/TsParser';
 import { expandSourceFiles, SourcePattern } from './SourcePattern';
@@ -21,11 +22,13 @@ const path = require('canonical-path');
 
 export function readTypeScriptModules(
                   tsParser: TsParser,
+                  tsHost: Host,
                   modules: any,
                   exportSymbolsToDocsMap: Map<Symbol, ExportDoc>,
                   createDocMessage: any,
                   log: any) {
-  return new ReadTypeScriptModules(tsParser, modules, exportSymbolsToDocsMap, createDocMessage, log);
+  return new ReadTypeScriptModules(tsParser, tsHost, modules, exportSymbolsToDocsMap,
+      createDocMessage, log);
 }
 
 export class ReadTypeScriptModules implements Processor {
@@ -54,6 +57,7 @@ export class ReadTypeScriptModules implements Processor {
 
     constructor(
       private tsParser: TsParser,
+      private host: Host,
       private modules: any,
       private exportSymbolsToDocsMap: Map<Symbol, ExportDoc>,
       private createDocMessage: any,
@@ -104,32 +108,32 @@ export class ReadTypeScriptModules implements Processor {
 
         switch (getExportDocType(resolvedExport)) {
           case 'class':
-            const classDoc = new ClassExportDoc(moduleDoc, resolvedExport, aliasSymbol);
+            const classDoc = new ClassExportDoc(this.host, moduleDoc, resolvedExport, aliasSymbol);
             this.addMemberDocs(docs, classDoc.members);
             this.addMemberDocs(docs, classDoc.statics);
             if (classDoc.constructorDoc) this.addMemberDocs(docs, [classDoc.constructorDoc]);
             this.addExportDoc(docs, moduleDoc, classDoc);
             break;
           case 'interface':
-            const interfaceDoc = new InterfaceExportDoc(moduleDoc, resolvedExport, aliasSymbol);
+            const interfaceDoc = new InterfaceExportDoc(this.host, moduleDoc, resolvedExport, aliasSymbol);
             this.addMemberDocs(docs, interfaceDoc.members);
             this.addExportDoc(docs, moduleDoc, interfaceDoc);
             break;
           case 'enum':
-            const enumDoc = new EnumExportDoc(moduleDoc, resolvedExport, aliasSymbol);
+            const enumDoc = new EnumExportDoc(this.host, moduleDoc, resolvedExport, aliasSymbol);
             enumDoc.members.forEach(doc => docs.push(doc));
             this.addExportDoc(docs, moduleDoc, enumDoc);
             break;
           case 'const':
           case 'let':
           case 'var':
-            this.addExportDoc(docs, moduleDoc, new ConstExportDoc(moduleDoc, resolvedExport, aliasSymbol));
+            this.addExportDoc(docs, moduleDoc, new ConstExportDoc(this.host, moduleDoc, resolvedExport, aliasSymbol));
             break;
           case 'type-alias':
-            this.addExportDoc(docs, moduleDoc, new TypeAliasExportDoc(moduleDoc, resolvedExport, aliasSymbol));
+            this.addExportDoc(docs, moduleDoc, new TypeAliasExportDoc(this.host, moduleDoc, resolvedExport, aliasSymbol));
             break;
           case 'function':
-            const functionDoc = new FunctionExportDoc(moduleDoc, resolvedExport, aliasSymbol);
+            const functionDoc = new FunctionExportDoc(this.host, moduleDoc, resolvedExport, aliasSymbol);
             this.addExportDoc(docs, moduleDoc, functionDoc);
             this.addParamDocs(docs, functionDoc.parameterDocs);
             functionDoc.overloads.forEach(overloadDoc => {
@@ -174,7 +178,7 @@ export class ReadTypeScriptModules implements Processor {
     private addParamDocs(docs: DocCollection, parameters: ParameterDoc[]) {
       parameters.forEach(parameter => docs.push(parameter));
     }
-  }
+}
 
 function convertToRegexCollection(items: Array<string|RegExp>|string|RegExp): RegExp[] {
   if (!items) return [];
