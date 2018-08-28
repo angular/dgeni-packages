@@ -73,7 +73,7 @@ function getJSDocCommentRanges(node: Node, text: string, concatLeadingComments: 
 
     if (concatLeadingComments) {
       commentRanges.push(...leadingCommentRanges);
-    } else {
+    } else if (leadingCommentRanges.length) {
       commentRanges.push(leadingCommentRanges[leadingCommentRanges.length - 1]);
     }
 
