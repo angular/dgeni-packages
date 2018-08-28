@@ -1,6 +1,15 @@
 /* tslint:disable:no-bitwise */
 /* tslint:disable:max-classes-per-file */
-import { Declaration, ExpressionWithTypeArguments, HeritageClause, Symbol, SymbolFlags, SyntaxKind, symbolName } from 'typescript';
+import {
+  Declaration,
+  ExpressionWithTypeArguments,
+  HeritageClause,
+  Symbol,
+  SymbolFlags,
+  symbolName,
+  SyntaxKind,
+} from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
 import { getTypeText } from '../services/TsParser/getTypeText';
 
@@ -23,15 +32,15 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
   descendants: ClassLikeExportDoc[] = [];
   typeParams = this.computeTypeParams();
 
-  constructor(
-      moduleDoc: ModuleDoc,
-      symbol: Symbol,
-      declaration: Declaration,
-      aliasSymbol?: Symbol) {
-        super(moduleDoc, symbol, declaration, aliasSymbol);
-        this.computeHeritageClauses();
-        this.addAliases();
-      }
+  constructor(host: Host, moduleDoc: ModuleDoc,
+              symbol: Symbol,
+              declaration: Declaration,
+              aliasSymbol?: Symbol) {
+    super(host, moduleDoc, symbol, declaration, aliasSymbol);
+
+    this.computeHeritageClauses();
+    this.addAliases();
+  }
 
   private computeTypeParams() {
     if (this.symbol.members) {

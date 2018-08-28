@@ -1,5 +1,6 @@
 /* tslint:disable:no-bitwise */
 import { Declaration, Symbol } from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { MemberDoc } from './MemberDoc';
@@ -15,12 +16,14 @@ export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
   readonly aliases = this.computeAliases();
   readonly typeParameters = getTypeParametersText(this.declaration);
 
-  constructor(
-    containerDoc: ContainerExportDoc,
-    symbol: Symbol,
-    declaration: Declaration,
-    public overloads: MethodMemberDoc[] = []) {
-    super(containerDoc, symbol, declaration);
+  constructor(host: Host,
+              containerDoc: ContainerExportDoc,
+              symbol: Symbol,
+              declaration: Declaration,
+              public overloads: MethodMemberDoc[] = []) {
+
+    super(host, containerDoc, symbol, declaration);
+
     // fix up parameter ids and aliases, now that we have computed the id for this doc
     this.parameterDocs.forEach(param => {
       param.id = `${this.id}~${param.name}`;

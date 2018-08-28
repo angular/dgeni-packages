@@ -1,6 +1,5 @@
-import { Declaration, ParameterDeclaration, Symbol, SymbolFlags } from 'typescript';
-import { getDeclarationTypeText, getInitializer } from '../services/TsParser/getDeclarationTypeText';
-import { getTypeText } from '../services/TsParser/getTypeText';
+import { ParameterDeclaration, Symbol } from 'typescript';
+import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { nodeToString } from '../services/TsParser/nodeToString';
 import { BaseApiDoc } from './ApiDoc';
 import { ParameterContainer } from './ParameterContainer';
@@ -22,7 +21,7 @@ export class ParameterDoc extends BaseApiDoc {
   constructor(public container: ParameterContainer,
               public symbol: Symbol,
               public declaration: ParameterDeclaration) {
-    super(container.moduleDoc, symbol, declaration);
+    super(container.host, container.moduleDoc, symbol, declaration);
 
     this.id = `${this.container.id}~${this.name}`;
     this.aliases = (this.container.aliases || []).map(alias => `${alias}~${this.name}`);

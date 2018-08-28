@@ -1,10 +1,10 @@
 import { Declaration } from 'typescript';
 import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
+import { BaseApiDoc } from './ApiDoc';
 import { FunctionExportDoc } from './FunctionExportDoc';
 import { ModuleDoc } from './ModuleDoc';
 import { getParameters, ParameterContainer } from './ParameterContainer';
 import { ParameterDoc } from './ParameterDoc';
-import { BaseApiDoc } from './ApiDoc';
 
 /**
  * This represents a single overload of an exported function.
@@ -20,7 +20,8 @@ export class OverloadInfo extends BaseApiDoc implements ParameterContainer {
   containerDoc: ModuleDoc = this.functionDoc.containerDoc;
 
   constructor(public functionDoc: FunctionExportDoc, declaration: Declaration) {
-    super(functionDoc.moduleDoc, functionDoc.symbol, declaration);
+    super(functionDoc.host, functionDoc.moduleDoc, functionDoc.symbol, declaration);
+
     // Give this overload doc a more specific id and aliases than it's container doc
     const paramString = `(${this.parameters.join(', ')})`;
     this.id += paramString;

@@ -29,4 +29,19 @@ describe('getContent', () => {
     expect(getContent(method)).toEqual('Some method');
     expect(getContent(method.parameters[0])).toEqual('param 1');
   });
+
+  it('should properly concatenate multiple leading comments', () => {
+    const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
+    const module = parseInfo.moduleSymbols[0];
+
+    expect(getContent(module.exportArray[0].getDeclarations()![0])).toEqual('Not a license comment.\nThis is a test function');
+  });
+
+  it('should be able to disable leading comments concatenation', () => {
+    const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
+    const module = parseInfo.moduleSymbols[0];
+
+    expect(getContent(module.exportArray[0].getDeclarations()![0], false))
+        .toEqual('This is a test function');
+  });
 });

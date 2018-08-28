@@ -1,4 +1,5 @@
 import { Declaration, Symbol, TypeChecker } from 'typescript';
+import { Host } from '../services/ts-host/host';
 import { FileInfo } from '../services/TsParser/FileInfo';
 import { getContent } from '../services/TsParser/getContent';
 import { ModuleDoc } from './ModuleDoc';
@@ -31,7 +32,7 @@ export abstract class BaseApiDoc implements ApiDoc {
   startingLine = this.fileInfo.location.start.line +
     (this.fileInfo.location.start.character ? 1 : 0);
   endingLine = this.fileInfo.location.end.line;
-  content = getContent(this.declaration);
+  content = this.host.getContent(this.declaration);
   path: string = '';
   outputPath: string = '';
 
@@ -39,8 +40,10 @@ export abstract class BaseApiDoc implements ApiDoc {
     .replace(new RegExp("\." + this.fileInfo.extension + "$"), "");
   typeChecker: TypeChecker = this.moduleDoc.typeChecker;
 
-  constructor(public moduleDoc: ModuleDoc,
+  constructor(public host: Host,
+              public moduleDoc: ModuleDoc,
               public symbol: Symbol,
               public declaration: Declaration,
-              public aliasSymbol?: Symbol) {}
+              public aliasSymbol?: Symbol) {
+  }
 }

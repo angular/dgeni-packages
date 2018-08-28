@@ -23,5 +23,8 @@ export class ModuleDoc implements ApiDoc {
   outputPath: string = '';
   content: string = '';
 
-  constructor(public symbol: ModuleSymbol, public basePath: string, public hidePrivateMembers: boolean, public typeChecker: TypeChecker) {}
+  constructor(public symbol: ModuleSymbol,
+              public basePath: string,
+              public hidePrivateMembers: boolean,
+              public typeChecker: TypeChecker) {}
 }

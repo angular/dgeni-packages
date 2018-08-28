@@ -1,13 +1,12 @@
 /* tslint:disable:no-bitwise */
 import {
-    FunctionLikeDeclaration,
-    GetAccessorDeclaration,
-    Map,
-    SetAccessorDeclaration,
-    Symbol,
-    SymbolFlags,
-    SyntaxKind,
-    UnderscoreEscapedMap
+  FunctionLikeDeclaration,
+  GetAccessorDeclaration,
+  SetAccessorDeclaration,
+  Symbol,
+  SymbolFlags,
+  SyntaxKind,
+  UnderscoreEscapedMap,
 } from 'typescript';
 import { getAccessibility } from "../services/TsParser/getAccessibility";
 import { ExportDoc } from './ExportDoc';
@@ -56,13 +55,13 @@ export abstract class ContainerExportDoc extends ExportDoc {
             setAccessorDeclaration = declaration as SetAccessorDeclaration;
           } else if ((declaration as FunctionLikeDeclaration).body) {
             // This is the "real" declaration of the method
-            memberDoc = new MethodMemberDoc(this, member, declaration, overloads);
+            memberDoc = new MethodMemberDoc(this.host, this, member, declaration, overloads);
           } else {
             // This is an overload signature of the method
-            overloads.push(new MethodMemberDoc(this, member, declaration, overloads));
+            overloads.push(new MethodMemberDoc(this.host, this, member, declaration, overloads));
           }
         } else if (flags & PropertyMemberFlags) {
-          memberDoc = new PropertyMemberDoc(this, member, declaration, null, null);
+          memberDoc = new PropertyMemberDoc(this.host, this, member, declaration, null, null);
         } else {
           throw new Error(`Unknown member type for member ${member.name}`);
         }
@@ -70,7 +69,8 @@ export abstract class ContainerExportDoc extends ExportDoc {
 
       // If at least one of the declarations was an accessor then the whole member is a property.
       if (getAccessorDeclaration || setAccessorDeclaration) {
-        memberDoc = new PropertyMemberDoc(this, member, null, getAccessorDeclaration, setAccessorDeclaration);
+        memberDoc = new PropertyMemberDoc(this.host, this, member, null, getAccessorDeclaration,
+            setAccessorDeclaration);
       }
 
       // If there is no member doc then we are in an interface or abstract class and we just take the first overload

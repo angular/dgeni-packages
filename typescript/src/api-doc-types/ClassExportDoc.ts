@@ -4,6 +4,7 @@ import { ClassLikeExportDoc } from '../api-doc-types/ClassLikeExportDoc';
 import { MemberDoc } from '../api-doc-types/MemberDoc';
 import { MethodMemberDoc } from '../api-doc-types/MethodMemberDoc';
 import { ModuleDoc } from '../api-doc-types/ModuleDoc';
+import { Host } from '../services/ts-host/host';
 
 /**
  * Classes are Class-like but also can contain static members
@@ -15,11 +16,12 @@ export class ClassExportDoc extends ClassLikeExportDoc {
   statics: MemberDoc[] = [];
   isAbstract = this.declaration.modifiers && this.declaration.modifiers.some(modifier => modifier.kind === SyntaxKind.AbstractKeyword);
 
-  constructor(
-    moduleDoc: ModuleDoc,
-    symbol: Symbol,
-    aliasSymbol?: Symbol) {
-    super(moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
+  constructor(host: Host,
+              moduleDoc: ModuleDoc,
+              symbol: Symbol,
+              aliasSymbol?: Symbol) {
+    super(host, moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
+
     if (symbol.exports) {
       this.statics = this.getMemberDocs(symbol.exports, moduleDoc.hidePrivateMembers);
     }
@@ -41,10 +43,10 @@ export class ClassExportDoc extends ClassLikeExportDoc {
     constructorSymbol.getDeclarations()!.forEach(declaration => {
       if ((declaration as FunctionLikeDeclaration).body) {
         // This is the "real" declaration of the method
-        constructorDoc = new MethodMemberDoc(this, constructorSymbol, declaration, overloads);
+        constructorDoc = new MethodMemberDoc(this.host, this, constructorSymbol, declaration, overloads);
       } else {
         // This is an overload signature of the method
-        overloads.push(new MethodMemberDoc(this, constructorSymbol, declaration, overloads));
+        overloads.push(new MethodMemberDoc(this.host, this, constructorSymbol, declaration, overloads));
       }
     });
     return constructorDoc || overloads.shift();
