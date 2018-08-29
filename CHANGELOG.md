@@ -1,5 +1,12 @@
 # Changelog
 
+
+# 0.26.7 29 August 2018
+
+## Fixes
+
+* **typescript**: do not throw if node does not have any comment  8f6cb87
+
 # 0.26.6 28 August 2018
 
 ## Features
