@@ -15,15 +15,22 @@ describe('getDeclarationTypeText', () => {
     const parseInfo = parser.parse(['tsParser/getDeclarationTypeText.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
 
-    expect(getDeclarationTypeText(moduleExports[0].getDeclarations()![0])).toEqual('42');
+    expect(getDeclarationTypeText(getExport('testConst').getDeclarations()![0])).toEqual('42');
 
-    const testFunction = moduleExports[1].getDeclarations()![0] as SignatureDeclaration;
+    const testFunction = getExport('testFunction').getDeclarations()![0] as SignatureDeclaration;
     expect(getDeclarationTypeText(testFunction)).toEqual('number');
     expect(getDeclarationTypeText(testFunction.parameters[0])).toEqual('T[]');
     expect(getDeclarationTypeText(testFunction.typeParameters![0])).toEqual('T');
 
-    const testClass = moduleExports[2];
-    expect(getDeclarationTypeText(testClass.members!.get('property' as __String)!.getDeclarations()![0])).toEqual('T[]');
+    const testClass = getExport('TestClass');
+    expect(getDeclarationTypeText(testClass.members!.get('prop1' as __String)!.getDeclarations()![0])).toEqual('T[]');
+    expect(getDeclarationTypeText(testClass.members!.get('prop2' as __String)!.getDeclarations()![0])).toEqual('OtherClass<T>');
+    expect(getDeclarationTypeText(testClass.members!.get('prop3' as __String)!.getDeclarations()![0])).toEqual('OtherClass<T, T>');
     expect(getDeclarationTypeText(testClass.members!.get('method'as __String)!.getDeclarations()![0])).toEqual('T');
+
+    function getExport(name: string) {
+      return moduleExports.find(e => e.name === name)!;
+    }
   });
 });
+
