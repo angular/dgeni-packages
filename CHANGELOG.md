@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.26.8 31 August 2018
+
+## Features
+
+* **typescript**: improve declaration type text rendering	da3323f7
 
 # 0.26.7 29 August 2018
 
