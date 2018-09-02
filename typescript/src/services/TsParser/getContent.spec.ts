@@ -37,19 +37,38 @@ describe('getContent', () => {
     expect(getContent(module.exportArray[0].getDeclarations()![0])).toEqual('Not a license comment.\nThis is a test function');
   });
 
-  it('should be able to disable leading comments concatenation', () => {
-    const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
-    const module = parseInfo.moduleSymbols[0];
+  describe('leading comments concatenation disabled', () => {
 
-    expect(getContent(module.exportArray[0].getDeclarations()![0], false))
+    it('should be able to disable concatenation', () => {
+      const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
+      const module = parseInfo.moduleSymbols[0];
+
+      expect(getContent(module.exportArray[0].getDeclarations()![0], false))
         .toEqual('This is a test function');
-  });
+    });
 
-  it('should not throw if node does not have any leading comment', () => {
-    const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
-    const module = parseInfo.moduleSymbols[0];
+    it('should not throw if node does not have any leading comment', () => {
+      const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
+      const module = parseInfo.moduleSymbols[0];
 
-    expect(() => getContent(module.exportArray[1].getDeclarations()![0], false))
+      expect(() => getContent(module.exportArray[1].getDeclarations()![0], false))
         .not.toThrow();
+    });
+
+    it('should skip leading single-line comments', () => {
+      const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
+      const module = parseInfo.moduleSymbols[0];
+
+      expect(getContent(module.exportArray[2].getDeclarations()![0], false))
+        .toEqual('This is the real comment.');
+    });
+
+    it('should skip leading non-js multi line comments', () => {
+      const parseInfo = parser.parse(['tsParser/multipleLeadingComments.ts'], basePath);
+      const module = parseInfo.moduleSymbols[0];
+
+      expect(getContent(module.exportArray[3].getDeclarations()![0], false))
+        .toEqual('First real comment.');
+    });
   });
 });
