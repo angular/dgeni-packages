@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.26.9 2 September 2018
+
+## Fixes
+
+* **typescript**: empty node description if first leading comment is single line trivia   5c8c4ac
+
+
 # 0.26.8 31 August 2018
 
 ## Features
