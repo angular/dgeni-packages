@@ -45,43 +45,47 @@ export function getContent(node: Node | undefined, concatLeadingComments = true)
 
   // Get the source file of this node
   const sourceFile = node.getSourceFile();
-  const commentRanges = getJSDocCommentRanges(node, sourceFile.text, concatLeadingComments);
+  const {leading, trailing} = getJSDocCommentRanges(node, sourceFile.text);
+  const commentRanges = [];
 
-  if (commentRanges) {
-    commentRanges.forEach(commentRange => {
-      content += sourceFile.text
-          .substring(commentRange.pos + '/**'.length, commentRange.end - '*/'.length)
-          .replace(LEADING_STAR, '')
-          .trim();
-      if (commentRange.hasTrailingNewLine) {
-        content += '\n';
-      }
-    });
+  if (concatLeadingComments) {
+    commentRanges.push(...leading);
+  } else if (leading.length) {
+    commentRanges.push(leading[leading.length - 1]);
   }
+
+  if (syntaxKindsWithTrailingComments.includes(node.kind)) {
+    commentRanges.push(...trailing);
+  }
+
+  commentRanges.forEach(commentRange => {
+    content += sourceFile.text
+        .substring(commentRange.pos + '/**'.length, commentRange.end - '*/'.length)
+        .replace(LEADING_STAR, '')
+        .trim();
+    if (commentRange.hasTrailingNewLine) {
+      content += '\n';
+    }
+  });
 
   return content.trim();
 }
 
-function getJSDocCommentRanges(node: Node, text: string, concatLeadingComments: boolean) {
-    const commentRanges: CommentRange[] = [];
-    const leadingCommentRanges = getLeadingCommentRanges(text, node.pos) || [];
-    const trailingCommentRanges = getTrailingCommentRanges(text, node.pos) || [];
+function getJSDocCommentRanges(node: Node, text: string) {
+  const leading = (getLeadingCommentRanges(text, node.pos) || [])
+    .filter(range => isJSDocCommentRange(text, range));
 
-    if (syntaxKindsWithTrailingComments.includes(node.kind)) {
-      commentRanges.push(...trailingCommentRanges);
-    }
+  const trailing = (getTrailingCommentRanges(text, node.pos) || [])
+    .filter(range => isJSDocCommentRange(text, range));
 
-    if (concatLeadingComments) {
-      commentRanges.push(...leadingCommentRanges);
-    } else if (leadingCommentRanges.length) {
-      commentRanges.push(leadingCommentRanges[leadingCommentRanges.length - 1]);
-    }
+  return {leading, trailing};
+}
 
-    // True if the comment starts with '/**' but not if it is '/**/'
-    if (commentRanges) {
-      return commentRanges.filter(comment =>
-        text.charCodeAt(comment.pos + 1) === ASTERISK &&
-        text.charCodeAt(comment.pos + 2) === ASTERISK &&
-        text.charCodeAt(comment.pos + 3) !== SLASH);
-    }
+/** Whether the specified comment range refers to a JSDoc comment. */
+function isJSDocCommentRange(text: string, range: CommentRange): boolean {
+  // Multi line comments are not always JSDoc comments. e.g. /* abc */ or /**/.
+  return range.kind === SyntaxKind.MultiLineCommentTrivia &&
+    text.charCodeAt(range.pos + 1) === ASTERISK &&
+    text.charCodeAt(range.pos + 2) === ASTERISK &&
+    text.charCodeAt(range.pos + 3) !== SLASH;
 }
