@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.26.10 21 September 2018
+
+## Fixes
+
+* **nunjucks**: disable autoescape for marked tag	067f74c5
+
+
 # 0.26.9 2 September 2018
 
 ## Fixes
