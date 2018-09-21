@@ -1,5 +1,6 @@
 var Dgeni = require('dgeni');
 var mockPackage = require('../../mocks/mockPackage');
+var nunjucks = require('nunjucks');
 
 describe("marked custom tag extension", function() {
   var extension;
@@ -58,6 +59,15 @@ describe("marked custom tag extension", function() {
       expect(tag.args[0]).toEqual(extension);
       expect(tag.args[1]).toEqual('process');
       expect(tag.args[3]).toEqual(['some content']);
+    });
+  });
+
+  describe('(when used with nunjucks)', () => {
+    it('should not escape the output of the tag, even if nunjucks is configured to escape output', () => {
+      var engine = new nunjucks.Environment(null, {autoescape: true});
+      engine.addExtension('marked', extension);
+      const renderedContent = engine.renderString('{% marked %}some `inline code`{% endmarked %}', {});
+      expect(renderedContent).toEqual('<p>some <code>inline code</code></p>\n');
     });
   });
 });
