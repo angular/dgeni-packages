@@ -15,11 +15,15 @@ export class ConstExportDoc extends ExportDoc {
     super(host, moduleDoc, symbol, symbol.valueDeclaration!, aliasSymbol);
   }
 
-  private getTypeString() {
-    if (this.variableDeclaration.type) {
-      return this.typeChecker.typeToString(this.typeChecker.getTypeFromTypeNode(this.variableDeclaration.type));
-    } else if (this.variableDeclaration.initializer) {
-      return this.typeChecker.typeToString(this.typeChecker.getTypeAtLocation(this.variableDeclaration.initializer));
+  private getTypeString(): string | undefined {
+    if (!this.variableDeclaration.type && !this.variableDeclaration.initializer) {
+      return undefined;
     }
+
+    const typeNode = this.variableDeclaration.type ?
+      this.typeChecker.getTypeFromTypeNode(this.variableDeclaration.type) :
+      this.typeChecker.getTypeAtLocation(this.variableDeclaration.initializer!);
+
+    return this.host.typeToString(this.typeChecker, typeNode);
   }
 }
