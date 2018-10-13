@@ -1,4 +1,4 @@
-import {Declaration} from 'typescript';
+import {Declaration, Type, TypeChecker, TypeFormatFlags} from 'typescript';
 import {getContent} from '../TsParser';
 
 /**
@@ -10,8 +10,14 @@ export class Host {
   /** Whether multiple leading comments for a TypeScript node should be concatenated. */
   concatMultipleLeadingComments: boolean = true;
 
-  getContent(declaration: Declaration) {
+  /** Flags that will be used to format a Type into a string representation. */
+  typeFormatFlags: TypeFormatFlags = TypeFormatFlags.None;
+
+  getContent(declaration: Declaration): string {
     return getContent(declaration, this.concatMultipleLeadingComments);
   }
 
+  typeToString(typeChecker: TypeChecker, type: Type): string {
+    return typeChecker.typeToString(type, undefined, this.typeFormatFlags);
+  }
 }

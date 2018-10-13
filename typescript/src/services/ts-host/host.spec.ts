@@ -1,4 +1,5 @@
 import { Dgeni, Package } from 'dgeni';
+import { TypeFormatFlags, VariableDeclaration } from 'typescript';
 import { TsParser } from '../TsParser';
 import { Host } from './host';
 
@@ -15,10 +16,12 @@ describe('Host', () => {
    * Creates the Host instance through Dgeni dependency injection. Also allows passing a function
    * that will run in Dgeni's configuration lifecycle and allows modifying the host factory.
    */
-  function setupTestDgeniInstance(configureFn: (host: Host) => void) {
+  function setupTestDgeniInstance(configureFn?: (host: Host) => void) {
     const testPackage = mockPackage() as Package;
 
-    testPackage.config((tsHost: Host) => configureFn(tsHost));
+    if (configureFn) {
+      testPackage.config((tsHost: Host) => configureFn(tsHost));
+    }
 
     const dgeni = new Dgeni([testPackage]);
     const injector = dgeni.configureInjector();
@@ -47,5 +50,38 @@ describe('Host', () => {
     const declaration = module.exportArray[0].valueDeclaration!;
 
     expect(host.getContent(declaration)).toEqual('This is a test function');
+  });
+
+  describe('type to string conversion', () => {
+
+    it('should properly determine type strings', () => {
+      setupTestDgeniInstance();
+
+      const {moduleSymbols, typeChecker} = parser.parse(['typeToString.ts'], basePath);
+      const testDeclarations = moduleSymbols[0].exportArray
+        .map(symbol => symbol.valueDeclaration) as VariableDeclaration[];
+
+      const typeStrings = [
+        typeChecker.getTypeAtLocation(testDeclarations[0].initializer!),
+        typeChecker.getTypeFromTypeNode(testDeclarations[1].type!),
+        typeChecker.getTypeAtLocation(testDeclarations[2].initializer!),
+      ].map(type => host.typeToString(typeChecker, type));
+
+      expect(typeStrings[0]).toBe('"someString"');
+      expect(typeStrings[1]).toBe('number');
+      expect(typeStrings[2]).toBe('{ A: string; B: string; C: string; D: string; E: string; F: string; G: string; H: string; I: stri...');
+    });
+
+    it('should be able to specify type format flags', () => {
+      setupTestDgeniInstance(h => h.typeFormatFlags = TypeFormatFlags.NoTruncation);
+
+      const {moduleSymbols, typeChecker} = parser.parse(['typeToString.ts'], basePath);
+      const typeDeclaration = moduleSymbols[0].exportArray[2]
+          .valueDeclaration! as VariableDeclaration;
+      const longType = typeChecker.getTypeAtLocation(typeDeclaration.initializer!);
+
+      expect(host.typeToString(typeChecker, longType)).toBe(
+          '{ A: string; B: string; C: string; D: string; E: string; F: string; G: string; H: string; I: string; J: string; K: string; L: string; M: string; N: string; }');
+    });
   });
 });
