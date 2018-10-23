@@ -36,14 +36,20 @@ describe('mergeParameterInfo', () => {
     extractTagsProcessor.$process(docsArray);
     mergeParameterInfoProcessor.$process(docsArray);
 
-    const param3: ParameterDoc = docsArray.find(doc => doc.name === 'param3' && doc.container.name === 'method2');
-    expect(param3.id).toEqual('methodParameters/TestClass.method2()~param3');
-    expect(param3.description).toEqual('description of param3');
-    expect(param3.type).toEqual('string');
+    const param5: ParameterDoc = docsArray.find(doc => doc.name === 'param5' && doc.container.name === 'method2');
+    expect(param5.id).toEqual('methodParameters/TestClass.method2()~param5');
+    expect(param5.description).toEqual('description of param5');
+    expect(param5.type).toEqual('string');
 
-    const param4: ParameterDoc = docsArray.find(doc => doc.name === 'param4' && doc.container.name === 'method2');
-    expect(param4.id).toEqual('methodParameters/TestClass.method2()~param4');
-    expect(param4.description).toEqual('description of param4');
-    expect(param4.type).toEqual('number');
+    const param6: ParameterDoc = docsArray.find(doc => doc.name === 'param6' && doc.container.name === 'method2');
+    expect(param6.id).toEqual('methodParameters/TestClass.method2()~param6');
+    expect(param6.description).toEqual('description of param6');
+    expect(param6.type).toEqual('number');
+
+    const param7: ParameterDoc = docsArray.find(doc => doc.name === 'param7' && doc.container.name === 'method2');
+    expect(param7.id).toEqual('methodParameters/TestClass.method2()~param7');
+    expect(param7.description).toEqual('description of param7');
+    expect(param7.type).toEqual('number');
+    expect(param7.defaultValue).toEqual('42');
   });
 });

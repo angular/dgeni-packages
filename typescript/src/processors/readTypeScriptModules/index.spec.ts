@@ -300,7 +300,7 @@ describe('readTypeScriptModules', () => {
         processor.$process(docs);
 
         const foo: MethodMemberDoc = docs.find(doc => doc.name === 'foo');
-        expect(foo.parameters).toEqual(['num1: number | string', 'num2?: number']);
+        expect(foo.parameters).toEqual(['num1: string | number', 'num2?: number']);
         const overloads = foo.overloads;
         expect(overloads.map(overload => overload.parameters)).toEqual([
           ['str: string'],
@@ -328,7 +328,7 @@ describe('readTypeScriptModules', () => {
         processor.$process(docs);
 
         const foo: MethodMemberDoc = docs.find(doc => doc.name === 'constructor');
-        expect(foo.parameters).toEqual(['x: string', 'y: number | string', 'z?: number']);
+        expect(foo.parameters).toEqual(['x: string', 'y: string | number', 'z?: number']);
         const overloads = foo.overloads;
         expect(overloads.map(overload => overload.parameters)).toEqual([
           ['x: string', 'y: number'],
@@ -561,8 +561,16 @@ describe('readTypeScriptModules', () => {
         expect(param3.isOptional).toBe(false);
         expect(param3.defaultValue).toBe('{}');
 
+        const param4: ParameterDoc = docs.find(doc => doc.name === 'param4' && doc.container.name === 'method1');
+        expect(param4.docType).toEqual('parameter');
+        expect(param4.id).toEqual('methodParameters/TestClass.method1()~param4');
+        expect(param4.content).toEqual('description of param4');
+        expect(param4.type).toEqual('string');
+        expect(param4.isOptional).toBe(false);
+        expect(param4.defaultValue).toBe('\'default string\'');
+
         const method1: MethodMemberDoc = docs.find(doc => doc.name === 'method1')!;
-        expect(method1.parameterDocs).toEqual([param1, param2, param3]);
+        expect(method1.parameterDocs).toEqual([param1, param2, param3, param4]);
       });
     });
 
@@ -623,13 +631,13 @@ describe('readTypeScriptModules', () => {
       const docs: DocCollection = [];
       processor.$process(docs);
       const functionDoc: FunctionExportDoc = docs.find(doc => doc.docType === 'function');
-      expect(functionDoc.parameters).toEqual(['...args: Array<any>']);
+      expect(functionDoc.parameters).toEqual(['...args: any[]']);
       expect(functionDoc.type).toEqual('void');
 
       const interfaceDoc = docs.find(doc => doc.docType === 'interface');
       expect(interfaceDoc.members.length).toEqual(2);
       const methodDoc: MethodMemberDoc = interfaceDoc.members[0];
-      expect(methodDoc.parameters).toEqual(['...args: Array<any>']);
+      expect(methodDoc.parameters).toEqual(['...args: any[]']);
       expect(methodDoc.type).toEqual('void');
 
       const propertyDoc = interfaceDoc.members[1];
