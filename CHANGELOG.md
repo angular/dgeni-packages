@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.26.11 23 October 2018
+
+## Features
+
+* **typescript**: allow specifying type format flags for api-doc-types 5d90fd9f31541
+
+
 # 0.26.10 21 September 2018
 
 ## Fixes
