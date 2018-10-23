@@ -1,5 +1,4 @@
 import { ParameterDeclaration, Symbol } from 'typescript';
-import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { nodeToString } from '../services/TsParser/nodeToString';
 import { BaseApiDoc } from './ApiDoc';
 import { ParameterContainer } from './ParameterContainer';
@@ -11,7 +10,7 @@ import { ParameterContainer } from './ParameterContainer';
  */
 export class ParameterDoc extends BaseApiDoc {
   docType = 'parameter';
-  type = getDeclarationTypeText(this.declaration);
+  type = this.getTypeString(this.declaration);
   isOptional = !!(this.declaration.questionToken);
   isRestParam = !!(this.declaration.dotDotDotToken);
   defaultValue = this.declaration.initializer && nodeToString(this.declaration.initializer);

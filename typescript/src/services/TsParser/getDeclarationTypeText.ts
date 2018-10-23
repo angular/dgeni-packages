@@ -12,7 +12,7 @@ export function getDeclarationTypeText(declaration: ts.Declaration): string {
     return nodeToString(declaration);
   }
 
-  // if the declaration is being initialized then use the initialization value
+  // if the declaration is being initialized then use the initialization type
   const initializer = getInitializer(declaration);
   if (initializer) {
     if (ts.isNewExpression(initializer)) {

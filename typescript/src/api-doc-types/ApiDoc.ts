@@ -1,4 +1,4 @@
-import { Declaration, Symbol, TypeChecker } from 'typescript';
+import * as ts from 'typescript';
 import { Host } from '../services/ts-host/host';
 import { FileInfo } from '../services/TsParser/FileInfo';
 import { getContent } from '../services/TsParser/getContent';
@@ -12,8 +12,8 @@ export interface ApiDoc {
   path: string;
   outputPath: string;
   content: string;
-  symbol: Symbol;
-  declaration: Declaration;
+  symbol: ts.Symbol;
+  declaration: ts.Declaration;
   fileInfo: FileInfo;
   startingLine: number;
   endingLine: number;
@@ -38,12 +38,28 @@ export abstract class BaseApiDoc implements ApiDoc {
 
   originalModule = this.fileInfo.projectRelativePath
     .replace(new RegExp("\." + this.fileInfo.extension + "$"), "");
-  typeChecker: TypeChecker = this.moduleDoc.typeChecker;
+  typeChecker: ts.TypeChecker = this.moduleDoc.typeChecker;
 
   constructor(public host: Host,
               public moduleDoc: ModuleDoc,
-              public symbol: Symbol,
-              public declaration: Declaration,
-              public aliasSymbol?: Symbol) {
+              public symbol: ts.Symbol,
+              public declaration: ts.Declaration,
+              public aliasSymbol?: ts.Symbol) {
+  }
+
+  protected getTypeString(decl: ts.Declaration): string | undefined {
+    if (!ts.isVariableDeclaration(decl) && !ts.isPropertyDeclaration(decl) && !ts.isParameter(decl)) {
+      return undefined;
+    }
+
+    if (!decl.type && !decl.initializer) {
+      return undefined;
+    }
+
+    const type = decl.type ?
+      this.typeChecker.getTypeFromTypeNode(decl.type) :
+      this.typeChecker.getTypeAtLocation(decl);
+
+    return this.host.typeToString(this.typeChecker, type);
   }
 }
