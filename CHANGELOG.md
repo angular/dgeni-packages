@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.26.12 23 October 2018
+
+## Fixes
+
+* **typescript**: use correct optional parameter type	148bc949
+
+
 # 0.26.11 23 October 2018
 
 ## Features
