@@ -38,7 +38,7 @@
     "dgeni": "^0.4.0"
   },
   "dependencies": {
-    "canonical-path": "0.0.2",
+    "canonical-path": "^1.0.0",
     "catharsis": "^0.8.1",
     "change-case": "3.0.0",
     "dgeni": "^0.4.9",
