@@ -1,5 +1,24 @@
 # Changelog
 
+# 0.27.0 17 December 2018
+
+# Dependencies
+
+* update to latest nunjucks package   c84134b
+* update to latest TS version (3.2)   610d19b
+* update to latest canonical-path     2b8e51e
+
+## BREAKING CHANGES
+
+The upgrade to TypeScript 3.2.2 has brought a couple of minor breaking changes:
+
+* the algorithm that truncates long types has changed.
+Types are now truncated at the AST node level, so are more syntactically
+accurate. Also some long types are no longer truncated.
+* the order of exports from a module has changed.
+Previously the exports were listed in the order that they appear in the sourcefile.
+Now classes appear to be listed before functions.
+
 # 0.26.12 23 October 2018
 
 ## Fixes
