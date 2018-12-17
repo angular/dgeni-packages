@@ -69,7 +69,7 @@ describe('Host', () => {
 
       expect(typeStrings[0]).toBe('"someString"');
       expect(typeStrings[1]).toBe('number');
-      expect(typeStrings[2]).toBe('{ A: string; B: string; C: string; D: string; E: string; F: string; G: string; H: string; I: stri...');
+      expect(typeStrings[2]).toBe('{ LongTypePropA: string; LongTypePropB: string; LongTypePropC: string; LongTypePropD: string; LongTypePropE: string; LongTypePropF: string; LongTypePropG: string; LongTypePropH: string; LongTypePropI: string; ... 4 more ...; LongTypePropN: string; }');
     });
 
     it('should be able to specify type format flags', () => {
@@ -81,7 +81,7 @@ describe('Host', () => {
       const longType = typeChecker.getTypeAtLocation(typeDeclaration.initializer!);
 
       expect(host.typeToString(typeChecker, longType)).toBe(
-          '{ A: string; B: string; C: string; D: string; E: string; F: string; G: string; H: string; I: string; J: string; K: string; L: string; M: string; N: string; }');
+        '{ LongTypePropA: string; LongTypePropB: string; LongTypePropC: string; LongTypePropD: string; LongTypePropE: string; LongTypePropF: string; LongTypePropG: string; LongTypePropH: string; LongTypePropI: string; LongTypePropJ: string; LongTypePropK: string; LongTypePropL: string; LongTypePropM: string; LongTypePropN: string; }');
     });
   });
 });

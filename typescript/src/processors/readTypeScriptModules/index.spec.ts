@@ -158,11 +158,11 @@ describe('readTypeScriptModules', () => {
 
       const moduleDoc = docs[0];
       expect(moduleDoc.docType).toEqual('module');
-      expect(getNames(moduleDoc.exports)).toEqual([
-        'OKToExport',
-        '_thisIsPrivate',
-        'thisIsOK',
-      ]);
+      const names = getNames(moduleDoc.exports);
+      expect(names.length).toEqual(3);
+      expect(names).toContain('OKToExport');
+      expect(names).toContain('_thisIsPrivate');
+      expect(names).toContain('thisIsOK');
     });
   });
 

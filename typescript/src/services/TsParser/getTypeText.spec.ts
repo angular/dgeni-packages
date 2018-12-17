@@ -14,26 +14,29 @@ describe('getTypeText', () => {
   it('should return text representation of types', () => {
     const parseInfo = parser.parse(['tsParser/getTypeText.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
+    expect(moduleExports.length).toEqual(13);
 
-    expect(getTypeText(getType(moduleExports[1]))).toEqual('TestClass');
-    expect(getTypeText(getType(moduleExports[2]))).toEqual('string');
-    expect(getTypeText(getType(moduleExports[3]))).toEqual('number');
-    expect(getTypeText(getType(moduleExports[4]))).toEqual('TestType');
-    expect(getTypeText(getType(moduleExports[5]))).toEqual('TestClass | string');
-    expect(getTypeText(getType(moduleExports[6]))).toEqual([
+    const types = moduleExports.map(e => [e.name, getType(e) && getTypeText(getType(e))]);
+    expect(types).toContain(['TestType', 'TestClass']);
+    expect(types).toContain(['testFunction', 'string']);
+    expect(types).toContain(['testConst', 'number']);
+    expect(types).toContain(['testLet', 'TestType']);
+    expect(types).toContain(['TestUnion', 'TestClass | string']);
+    expect(types).toContain(['TestLiteral', [
       '{',
       '    x: number;',
       '    y: string;',
       '}',
-    ].join('\n'));
-    expect(getTypeText(getType(moduleExports[7]))).toEqual('Array<string>');
-    expect(getTypeText(getType(moduleExports[8]))).toEqual('Array<T>');
+    ].join('\n')]);
+    expect(types).toContain(['TestGeneric1', 'Array<string>']);
+    expect(types).toContain(['TestGeneric2', 'Array<T>']);
   });
 
   it('should remove comments from the rendered text', () => {
     const parseInfo = parser.parse(['tsParser/getTypeText.test.ts'], basePath);
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
-    expect(getTypeText(getType(moduleExports[12]))).toEqual([
+    const testType2 = moduleExports.find(e => e.name === 'TestType2') !;
+    expect(getTypeText(getType(testType2))).toEqual([
       '{',
       '    a: number;',
       '    b: string;',

@@ -14,12 +14,15 @@ describe('getExportDocType', () => {
     const parseInfo = parser.parse(['tsParser/getExportDocType.test.ts'], basePath);
 
     const moduleExports = parseInfo.moduleSymbols[0].exportArray;
-    expect(getExportDocType(moduleExports[0])).toEqual('interface');
-    expect(getExportDocType(moduleExports[1])).toEqual('class');
-    expect(getExportDocType(moduleExports[2])).toEqual('function');
-    expect(getExportDocType(moduleExports[3])).toEqual('enum');
-    expect(getExportDocType(moduleExports[4])).toEqual('let');
-    expect(getExportDocType(moduleExports[5])).toEqual('const');
-    expect(getExportDocType(moduleExports[6])).toEqual('type-alias');
+    expect(moduleExports.length).toEqual(7);
+
+    const docTypes = moduleExports.map(e => getExportDocType(e));
+    expect(docTypes).toContain('interface');
+    expect(docTypes).toContain('class');
+    expect(docTypes).toContain('function');
+    expect(docTypes).toContain('enum');
+    expect(docTypes).toContain('let');
+    expect(docTypes).toContain('const');
+    expect(docTypes).toContain('type-alias');
   });
 });
