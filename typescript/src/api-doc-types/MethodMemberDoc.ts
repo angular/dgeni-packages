@@ -1,5 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { Declaration, Symbol } from 'typescript';
+import { Declaration, FunctionLikeDeclaration, Symbol } from 'typescript';
 import { Host } from '../services/ts-host/host';
 import { getTypeParametersText } from '../services/TsParser/getTypeParametersText';
 import { ContainerExportDoc } from './ContainerExportDoc';
@@ -41,9 +41,10 @@ export class MethodMemberDoc extends MemberDoc implements ParameterContainer {
   private computeAnchor() {
     // if the member is a "call" type then it has no name
     const anchorName = this.name.trim() || 'call';
-    const overloadIndex = this.symbol.getDeclarations()!.indexOf(this.declaration);
+    const isOverload = !(this.declaration as FunctionLikeDeclaration).body;
+    const overloadIndex = isOverload ? this.symbol.getDeclarations()!.indexOf(this.declaration) : -1;
     // if there is more than one declaration then we need to distinguish them
-    return `${anchorName}${overloadIndex > 0 ? `_${overloadIndex}` : ''}()`;
+    return `${anchorName}${overloadIndex >= 0 ? `_${overloadIndex}` : ''}()`;
   }
 
   private computeAliases() {

@@ -587,7 +587,7 @@ describe('readTypeScriptModules', () => {
         docs = [];
         processor.$process(docs);
         fn = docs.find(doc => doc.name === 'fn');
-        [foo2, foo, foo1] = docs.filter(doc => doc.name === 'foo');
+        [foo, foo1, foo2] = docs.filter(doc => doc.name === 'foo');
         bar = docs.find(doc => doc.name === 'bar');
       });
 
@@ -611,8 +611,8 @@ describe('readTypeScriptModules', () => {
 
       it('should distinguish method overloads', () => {
         expect(foo.aliases).toContain('MyClass.foo()');
-        expect(foo1.aliases).toContain('MyClass.foo_1()');
-        expect(foo2.aliases).toContain('MyClass.foo_2()');
+        expect(foo1.aliases).toContain('MyClass.foo_0()');
+        expect(foo2.aliases).toContain('MyClass.foo_1()');
       });
     });
   });
