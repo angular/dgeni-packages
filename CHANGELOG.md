@@ -1,8 +1,15 @@
 # Changelog
 
+# 0.27.1 29 December 2018
+
+## Fixes
+
+* **typescript**: implemented method overload should have simple id and aliases	  398f35da3
+
+
 # 0.27.0 17 December 2018
 
-# Dependencies
+## Dependencies
 
 * update to latest nunjucks package   c84134b
 * update to latest TS version (3.2)   610d19b
