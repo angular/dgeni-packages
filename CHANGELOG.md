@@ -1,8 +1,14 @@
 # Changelog
 
+# 0.27.3 2 April 2019
+
+* Chore release - updating dependencies
+
+
 # 0.27.2 14 March 2019
 
 * Chore release - updating dependencies
+
 
 # 0.27.1 29 December 2018
 
