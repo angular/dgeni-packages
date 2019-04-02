@@ -4,7 +4,7 @@
   "description": "A collection of dgeni packages for generating documentation from source code",
   "scripts": {
     "test": "yarn build && node test.js",
-    "cover": "yarn build && istanbul cover jasmine-node -- .",
+    "cover": "yarn build && istanbul cover test.js -- .",
     "docs": "dgeni ./docs",
     "changelog": "changez -o changes.md",
     "build": "tsc -p typescript",
@@ -68,7 +68,7 @@
     "@types/node": "^7.0.29",
     "changez": "^2.1.1",
     "changez-angular": "^2.1.0",
-    "istanbul": "^0.2.7",
+    "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
     "rewire": "~2.0.0",
     "tslint": "^5.4.3"
