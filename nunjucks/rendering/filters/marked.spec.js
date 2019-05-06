@@ -33,8 +33,7 @@ describe("marked custom filter", function() {
         '</ul>\n' +
         '<pre><code>code\n' +
         '  indented code\n' +
-        'code\n' +
-        '</code></pre>\n' +
+        'code</code></pre>\n' +
         ''
       );
   });

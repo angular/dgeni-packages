@@ -40,8 +40,7 @@ describe("renderMarkdown", function() {
       '<p>some test</p>\n' +
       '<pre><code>code\n' +
       '  indented code\n' +
-      'more code\n' +
-      '</code></pre>\n' +
+      'more code</code></pre>\n' +
       '<p>more text</p>\n'
     );
 
