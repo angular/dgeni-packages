@@ -53,6 +53,7 @@
     "mkdirp-promise": "^5.0.0",
     "node-html-encoder": "0.0.2",
     "nunjucks": "^3.1.6",
+    "rehype": "^8.0.0",
     "semver": "^5.2.0",
     "shelljs": "^0.7.0",
     "source-map-support": "^0.4.15",
@@ -114,6 +115,7 @@
     "Jicheng Li <deemstone@gmail.com>",
     "Christoffer Hasselberg <stofolus@gmail.com>",
     "David Herges <dherges@users.noreply.github.com>",
-    "Greg Magolan <gmagolan@gmail.com>"
+    "Greg Magolan <gmagolan@gmail.com>",
+    "Livio Brunner <livio.brunner.lb1@gmail.com>"
   ]
 }
