@@ -7,7 +7,7 @@
     "cover": "yarn build && istanbul cover test.js -- .",
     "docs": "dgeni ./docs",
     "changelog": "changez -o changes.md",
-    "build": "tsc -p typescript",
+    "build": "tsc -p typescript && tsc -p post-process-html",
     "prepublish": "git clean -xdf typescript && yarn build",
     "watch": "tsc -p typescript -w"
   },

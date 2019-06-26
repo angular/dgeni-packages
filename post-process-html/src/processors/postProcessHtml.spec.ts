@@ -1,8 +1,12 @@
-const mockPackage = require('../mocks/mockPackage');
-const Dgeni = require('dgeni');
+import { Dgeni } from 'dgeni';
+import { mockPackage } from '../mocks/mockPackage';
+import { PostProcessHtml } from './postProcessHtml';
 
 describe('postProcessHtml', () => {
-  let dgeni, injector, processor, createDocMessage;
+  let dgeni: Dgeni;
+  let injector: any;
+  let processor: PostProcessHtml;
+  let createDocMessage: any;
 
   beforeEach(() => {
     dgeni = new Dgeni([mockPackage(true)]);
@@ -17,8 +21,8 @@ describe('postProcessHtml', () => {
   });
 
   it('should only process docs that match the specified docTypes', () => {
-    const elements = [];
-    const captureFirstElement = ast => {
+    const elements: string[] = [];
+    const captureFirstElement = (ast: any) => {
       elements.push(ast.children[0].tagName);
     };
     processor.plugins = [() => captureFirstElement];
@@ -34,14 +38,14 @@ describe('postProcessHtml', () => {
   });
 
   it('should run all the plugins on each doc', () => {
-    const capitalizeFirstElement = ast => {
+    const capitalizeFirstElement = (ast: any) => {
       ast.children[0].tagName = ast.children[0].tagName.toUpperCase();
     };
-    const addOneToFirstElement = ast => {
+    const addOneToFirstElement = (ast: any) => {
       ast.children[0].tagName = ast.children[0].tagName + '1';
     };
-    const elements = [];
-    const captureFirstElement = ast => {
+    const elements: string[] = [];
+    const captureFirstElement = (ast: any) => {
       elements.push(ast.children[0].tagName);
     };
 
@@ -55,7 +59,7 @@ describe('postProcessHtml', () => {
     processor.plugins = [
       () => capitalizeFirstElement,
       () => addOneToFirstElement,
-      () => captureFirstElement
+      () => captureFirstElement,
     ];
     processor.$process(docs);
     expect(elements).toEqual(['A1', 'B1']);
@@ -63,7 +67,7 @@ describe('postProcessHtml', () => {
 
   it('should report non-fatal errors', () => {
     const log = injector.get('log');
-    const addWarning = (ast, file) => {
+    const addWarning = (_: any, file: any) => {
       file.message('There was a problem');
     };
     processor.plugins = [() => addWarning];
@@ -73,7 +77,7 @@ describe('postProcessHtml', () => {
 
   it('should throw on fatal errors', () => {
     const log = injector.get('log');
-    const addError = (ast, file) => {
+    const addError = (_: any, file: any) => {
       file.fail('There was an error');
     };
     const doc = { docType: 'a', renderedContent: '' };
