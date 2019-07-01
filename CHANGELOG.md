@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.27.4 1 July 2019
+
+# Features
+
+feat(post-process-html): add new post-process-package    9798f22 & aac5e8e8
+
+# Changelog
+
 # 0.27.3 2 April 2019
 
 * Chore release - updating dependencies
