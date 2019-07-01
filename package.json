@@ -8,7 +8,7 @@
     "docs": "dgeni ./docs",
     "changelog": "changez -o changes.md",
     "build": "tsc -p typescript && tsc -p post-process-html",
-    "prepublish": "git clean -xdf typescript && yarn build",
+    "prepublish": "git clean -xdf typescript && git clean -xdf post-process-html && yarn build",
     "watch": "tsc -p typescript -w"
   },
   "engines": {
