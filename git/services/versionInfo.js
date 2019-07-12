@@ -1,6 +1,6 @@
 'use strict';
 
-var shell = require('shelljs');
+var child = require('child_process');
 var semver = require('semver');
 var _ = require('lodash');
 
@@ -27,7 +27,7 @@ var satisfiesVersion = function(version) {
  * @return {String}         The codename if found, otherwise null/undefined
  */
 var getCodeName = function(tagName) {
-  var gitCatOutput = shell.exec('git cat-file -p ' + tagName, {silent:true}).stdout;
+  var gitCatOutput = child.spawnSync('git', ['cat-file', '-p ' + tagName], {encoding:'utf8'}).stdout;
   var match = gitCatOutput.match(/^.*codename.*$/mg);
   var tagMessage = match && match[0];
   return tagMessage && tagMessage.match(/codename\((.*)\)/)[1];
@@ -38,7 +38,7 @@ var getCodeName = function(tagName) {
  * @return {String} The commit SHA
  */
 function getCommitSHA() {
-  return shell.exec('git rev-parse HEAD', {silent: true}).stdout.replace('\n', '');
+  return child.spawnSync('git', ['rev-parse', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
 }
 
 /**
@@ -46,7 +46,7 @@ function getCommitSHA() {
  * @return {String} The build segment of the version
  */
 function getBuild() {
-  var hash = shell.exec('git rev-parse --short HEAD', {silent: true}).stdout.replace('\n', '');
+  var hash = child.spawnSync('git', ['rev-parse', '--short', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
   return 'sha.' + hash;
 }
 
@@ -56,7 +56,7 @@ function getBuild() {
  * @return {SemVer} The version or null
  */
 var getTaggedVersion = function() {
-  var gitTagResult = shell.exec('git describe --exact-match', {silent:true});
+  var gitTagResult = child.spawnSync('git', ['describe', '--exact-match'], {encoding:'utf8'});
 
   if (gitTagResult.code === 0) {
     var tag = gitTagResult.stdout.trim();
@@ -107,7 +107,7 @@ var getSnapshotVersion = function() {
     // last release was a non beta release. Increment the patch level to
     // indicate the next release that we will be doing.
     // E.g. last release was 1.3.0, then the snapshot will be
-    // 1.3.1-build.1, which is lesser than 1.3.1 accorind the semver!
+    // 1.3.1-build.1, which is lesser than 1.3.1 according to semver!
 
     // If the last release was a beta release we don't update the
     // beta number by purpose, as otherwise the semver comparison

@@ -9,28 +9,28 @@ var versionInfoFactory = rewire('./versionInfo.js');
 
 
 describe("versionInfo", function() {
-  var versionInfo, mockPackage, shellMocks, ciBuild;
+  var versionInfo, mockPackage, gitMocks, ciBuild;
 
   beforeEach(function() {
     mocks.getPreviousVersions.calls.reset();
 
-    var shell = versionInfoFactory.__get__('shell');
+    var child = versionInfoFactory.__get__('child');
 
-    shellMocks = {
+    gitMocks = {
       rev: mocks.mockGitRevParse,
-      describe: mocks.mockShellDefault,
-      cat: mocks.mockShellDefault
+      describe: mocks.mockDefaultFail,
+      cat: mocks.mockDefaultFail
     };
 
-    spyOn(shell, 'exec').and.callFake(function (input) {
-      if (input.indexOf('git rev-parse') == 0) {
-        return shellMocks.rev;
-      } else if (input.indexOf('git describe --exact-match') == 0) {
-        return shellMocks.describe;
-      } else if (input.indexOf('git cat-file') == 0) {
-        return shellMocks.cat;
+    spyOn(child, 'spawnSync').and.callFake(function (command, args) {
+      if (args[0] === 'rev-parse') {
+        return gitMocks.rev;
+      } else if (args[0] === 'describe') {
+        return gitMocks.describe;
+      } else if (args[0] === 'cat-file') {
+        return gitMocks.cat;
       } else {
-        return mocks.mockShellDefault;
+        return mocks.mockDefaultFail;
       }
     });
 
@@ -138,8 +138,8 @@ describe("versionInfo", function() {
   describe("currentVersion with annotated tag", function() {
 
     beforeEach(function() {
-      shellMocks.cat = mocks.mockGitCatFile;
-      shellMocks.describe = mocks.mockGitDescribe;
+      gitMocks.cat = mocks.mockGitCatFile;
+      gitMocks.describe = mocks.mockGitDescribe;
 
       versionInfo = versionInfoFactory(
         function() {},
@@ -148,7 +148,7 @@ describe("versionInfo", function() {
     });
 
     it("should have a version matching the tag", function() {
-      var tag = shellMocks.describe.stdout.trim();
+      var tag = gitMocks.describe.stdout.trim();
       var version = semver.parse(tag);
       expect(versionInfo.currentVersion.version).toBe(version.version);
     });
@@ -158,7 +158,7 @@ describe("versionInfo", function() {
     });
 
     it("should set codeName to null if it doesn't have a codename specified", function() {
-      shellMocks.cat = mocks.mockGitCatFileNoCodeName;
+      gitMocks.cat = mocks.mockGitCatFileNoCodeName;
 
       var dgeni = new Dgeni([mockPackage]);
       var injector = dgeni.configureInjector();
@@ -167,7 +167,7 @@ describe("versionInfo", function() {
     });
 
     it("should set codeName to falsy if it has a badly formatted codename", function() {
-      shellMocks.cat = mocks.mockGitCatFileBadFormat;
+      gitMocks.cat = mocks.mockGitCatFileBadFormat;
 
       var dgeni = new Dgeni([mockPackage]);
       var injector = dgeni.configureInjector();

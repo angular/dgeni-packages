@@ -57,7 +57,7 @@ var mockGitDescribe = {
   stdout: 'v0.10.15'
 };
 
-var mockShellDefault = {
+var mockDefaultFail = {
   code: 1,
   stdout: "default"
 };
@@ -84,5 +84,5 @@ module.exports = {
   mockGitDescribe: mockGitDescribe,
   mockGitLsRemoteTags: mockGitLsRemoteTags,
   mockGitRevParse: mockGitRevParse,
-  mockShellDefault: mockShellDefault
+  mockDefaultFail: mockDefaultFail
 };
