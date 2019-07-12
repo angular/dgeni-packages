@@ -1,5 +1,26 @@
 # Changelog
 
+# 0.28.0 12 July 2019
+
+## Bug Fixes
+- **git:** remove `shelljs` dependency
+  ([18a1c0](https://github.com/angular/angular.js/commit/18a1c0b0692c05d43126150f1d8e284850ea2da3))
+- **nunjucks:** upgrade `marked` to avoid vulnerability
+  ([16ceb9](https://github.com/angular/angular.js/commit/16ceb9c9bc9aac168f82db977a9e380fb20b815a),
+  [#280](https://github.com/angular/dgeni-packages/issues/280))
+
+## Breaking Changes
+
+### **nunjucks** due to:
+  - **[16ceb9](https://github.com/angular/angular.js/commit/16ceb9c9bc9aac168f82db977a9e380fb20b815a)**: upgrade `marked` to avoid vulnerability
+
+There are a few relevant breaking changes with this latest version of `marked`.
+This only affects usage of the `renderMarkdown()` service and the `marked`
+nunjucks filter. Take a look through the
+[marked release notes](https://github.com/markedjs/marked/releases) and
+check if this affects you.
+
+
 # 0.27.4 1 July 2019
 
 ## Fixes
