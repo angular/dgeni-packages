@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.27.3 2 April 2019
+
+* Chore release - updating dependencies and switching from `node-html-encoder` to `htmlencode`
+
 # 0.28.0 12 July 2019
 
 ## Bug Fixes
