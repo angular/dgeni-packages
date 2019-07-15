@@ -1,10 +1,10 @@
-var encoder = new (require('node-html-encoder').Encoder)();
+var htmlEncode = require('htmlencode').htmlEncode;
 
 module.exports = function encodeCodeBlock() {
   return function(str, inline, lang) {
 
     // Encode any HTML entities in the code string
-    str = encoder.htmlEncode(str, true);
+    str = htmlEncode(str, true);
 
     // If a language is provided then attach a CSS class to the code element
     lang = lang ? ' class="lang-' + lang + '"' : '';
