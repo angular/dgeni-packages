@@ -58,7 +58,7 @@ function getBuild() {
 var getTaggedVersion = function() {
   var gitTagResult = child.spawnSync('git', ['describe', '--exact-match'], {encoding:'utf8'});
 
-  if (gitTagResult.code === 0) {
+  if (gitTagResult.status === 0) {
     var tag = gitTagResult.stdout.trim();
     var version = semver.parse(tag);
 
