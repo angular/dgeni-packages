@@ -1,6 +1,13 @@
 # Changelog
 
-# 0.27.3 2 April 2019
+# 0.28.2 21 November 2019
+
+## Bug Fixes
+- **git:** use correct shell execution status property
+  ([ed275635a](https://github.com/angular/angular.js/commit/ed275635adc5f2a6b2b82b26b3150fdb8aaddc36))
+
+
+# 0.28.1 2 April 2019
 
 * Chore release - updating dependencies and switching from `node-html-encoder` to `htmlencode`
 
