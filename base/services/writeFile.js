@@ -1,4 +1,4 @@
-var mkdirp = require('mkdirp-promise');
+var mkdirp = require('mkdirp');
 var fs = require('fs');
 var path = require('canonical-path');
 /**
