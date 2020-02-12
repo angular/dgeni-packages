@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.28.3 12 February 2020
+
+## Bug Fixes
+- **base:** ensure writeFile() actually writes files to disk
+  ([eda95f](https://github.com/angular/angular.js/commit/eda95f7f966d8d8257ebcbcbabf4b7a3f46075aa),
+  [#287](https://github.com/angular/dgeni-packages/issues/287))
+
+
 # 0.28.2 21 November 2019
 
 ## Bug Fixes
