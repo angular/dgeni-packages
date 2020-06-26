@@ -6,7 +6,7 @@ export function testFunction<T>(param1: T[]): number {
   return 0;
 }
 
-export class TestClass<T> {
+export class TestClass<T = any> {
   prop1: T[];
   prop2 = new OtherClass<T>();
   prop3: OtherClass<T, T> = new OtherClass();
