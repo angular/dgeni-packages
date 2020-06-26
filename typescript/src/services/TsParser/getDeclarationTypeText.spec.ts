@@ -23,10 +23,12 @@ describe('getDeclarationTypeText', () => {
     expect(getDeclarationTypeText(testFunction.typeParameters![0])).toEqual('T');
 
     const testClass = getExport('TestClass');
+    const testClassDeclaration = testClass.getDeclarations()![0] as SignatureDeclaration;
     expect(getDeclarationTypeText(testClass.members!.get('prop1' as __String)!.getDeclarations()![0])).toEqual('T[]');
     expect(getDeclarationTypeText(testClass.members!.get('prop2' as __String)!.getDeclarations()![0])).toEqual('OtherClass<T>');
     expect(getDeclarationTypeText(testClass.members!.get('prop3' as __String)!.getDeclarations()![0])).toEqual('OtherClass<T, T>');
     expect(getDeclarationTypeText(testClass.members!.get('method'as __String)!.getDeclarations()![0])).toEqual('T');
+    expect(getDeclarationTypeText(testClassDeclaration.typeParameters![0])).toEqual('T = any');
 
     function getExport(name: string) {
       return moduleExports.find(e => e.name === name)!;

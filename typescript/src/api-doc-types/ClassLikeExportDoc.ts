@@ -8,6 +8,7 @@ import {
   SymbolFlags,
   symbolName,
   SyntaxKind,
+  SignatureDeclaration,
 } from 'typescript';
 import { Host } from '../services/ts-host/host';
 import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
@@ -15,6 +16,7 @@ import { getTypeText } from '../services/TsParser/getTypeText';
 
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
+import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 
 export class HeritageInfo {
   symbol: Symbol | undefined;
@@ -47,7 +49,7 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       const typeParams: string[] = [];
       this.symbol.members.forEach((member) => {
         if (member.getFlags() & SymbolFlags.TypeParameter) {
-          typeParams.push(symbolName(member));
+          member.declarations.forEach(d => typeParams.push(getDeclarationTypeText(d)));
         }
       });
       if (typeParams.length) return `<${typeParams.join(', ')}>`;

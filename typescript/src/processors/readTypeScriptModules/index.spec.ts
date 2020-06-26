@@ -264,6 +264,17 @@ describe('readTypeScriptModules', () => {
     });
   });
 
+  describe('modules', () => {
+    it('should include class type parameters', () => {
+      processor.sourceFiles = [ 'modules.ts'];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+      const typeAliasDoc = docs[1];
+      expect(typeAliasDoc.docType).toEqual('class');
+      expect(typeAliasDoc.typeParams).toEqual('<T = any>');
+    });
+  })
+
   describe('exported functions', () => {
     it('should include type parameters', () => {
       processor.sourceFiles = [ 'functions.ts'];
