@@ -1,5 +1,13 @@
 # Changelog
 
+# 0.28.4 27 June 2020
+
+## Bug Fixes
+- **typescript**: render type initializations
+  ([abfdf5](https://github.com/angular/angular.js/commit/abfdf5a57b71e0de3d3092a316839b8ae626c696),
+  [#290](https://github.com/angular/dgeni-packages/issues/290))
+
+
 # 0.28.3 12 February 2020
 
 ## Bug Fixes
