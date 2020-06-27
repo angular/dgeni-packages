@@ -6,17 +6,15 @@ import {
   HeritageClause,
   Symbol,
   SymbolFlags,
-  symbolName,
   SyntaxKind,
-  SignatureDeclaration,
 } from 'typescript';
 import { Host } from '../services/ts-host/host';
+import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 import { getDecorators, ParsedDecorator } from "../services/TsParser/getDecorators";
 import { getTypeText } from '../services/TsParser/getTypeText';
 
 import { ContainerExportDoc } from './ContainerExportDoc';
 import { ModuleDoc } from './ModuleDoc';
-import { getDeclarationTypeText } from '../services/TsParser/getDeclarationTypeText';
 
 export class HeritageInfo {
   symbol: Symbol | undefined;
