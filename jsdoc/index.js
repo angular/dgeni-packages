@@ -22,6 +22,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 
 .factory(require('./services/code-name-map'))
 .factory(require('./services/code-name'))
+.factory(require('./services/transforms/boolean-tag'))
 .factory(require('./services/transforms/extract-access'))
 .factory(require('./services/transforms/extract-name'))
 .factory(require('./services/transforms/extract-type'))
@@ -31,6 +32,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 .factory(require('./services/parser-adapters/backtick-parser-adapter'))
 .factory(require('./services/parser-adapters/html-block-parser-adapter'))
 
+.factory(require('./services/jsParser-config'))
 .factory(require('./services/jsParser'))
 .factory(require('./file-readers/jsdoc'))
 
