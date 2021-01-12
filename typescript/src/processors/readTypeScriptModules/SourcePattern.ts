@@ -1,5 +1,7 @@
 import {sync as globSync} from 'glob';
-import { difference } from 'lodash';
+// Note that we have to use `require()` here because the `lodash.difference`
+// has a `module.exports = difference` style export.
+import difference = require('lodash.difference');
 
 export interface SourcePattern {
   include: string;

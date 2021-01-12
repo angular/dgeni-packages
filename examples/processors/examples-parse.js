@@ -1,9 +1,8 @@
-const _ = require('lodash');
 const path = require('canonical-path');
 
 const EXAMPLE_REGEX = /<example([^>]*)>([\S\s]+?)<\/example>/g;
-var ATTRIBUTE_REGEX = /\s*([^=]+)\s*=\s*(?:(?:"([^"]+)")|(?:'([^']+)'))/g;
-var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
+const ATTRIBUTE_REGEX = /\s*([^=]+)\s*=\s*(?:(?:"([^"]+)")|(?:'([^']+)'))/g;
+const FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
 
 
 /**
@@ -24,11 +23,12 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
 
             const example = extractAttributes(attributeText);
             const id = uniqueName(exampleMap, 'example-' + (example.name || 'example'));
-            _.assign(example, {
-              attributes: _.omit(example, ['files', 'doc']),
+            const {files: _files, doc: _doc, ...attributes} = example;
+            Object.assign(example, {
+              attributes,
               files: extractFiles(exampleText),
-              id: id,
-              doc: doc,
+              id,
+              doc,
               deployments: {}
             });
 
@@ -66,7 +66,8 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
       file.fileContents = trimIndentation(contents);
       file.language = path.extname(file.name).substr(1);
       file.type = file.type || file.language || 'file';
-      file.attributes = _.omit(file, ['fileContents']);
+      const {fileContents, ...attributes} = file;
+      file.attributes = attributes;
 
       // Store this file information
       files[file.name] = file;

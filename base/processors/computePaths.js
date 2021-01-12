@@ -1,17 +1,14 @@
-const _ = require('lodash');
-const path = require('canonical-path');
 const StringMap = require('stringmap');
+const templateFn = require('lodash.template');
 
 /**
  * @dgProcessor computePathsProcessor
  * @description Compute the path and outputPath for docs that do not already have them from a set of templates
  */
 module.exports = function computePathsProcessor(log, createDocMessage) {
-  let pathTemplateMap, outputPathTemplateMap;
-
   function initializeMaps(pathTemplates) {
-    pathTemplateMap = new StringMap();
-    outputPathTemplateMap = new StringMap();
+    const pathTemplateMap = new StringMap();
+    const outputPathTemplateMap = new StringMap();
 
     pathTemplates.forEach(template => {
       if ( template.docTypes ) {
@@ -20,17 +17,18 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
           if ( template.getPath ) {
             pathTemplateMap[docType] = template.getPath;
           } else if ( template.pathTemplate ) {
-             pathTemplateMap[docType] = _.template(template.pathTemplate);
+             pathTemplateMap[docType] = templateFn(template.pathTemplate);
           }
 
           if ( template.getOutputPath ) {
             outputPathTemplateMap[docType] = template.getOutputPath;
           } else if ( template.outputPathTemplate ) {
-             outputPathTemplateMap[docType] = _.template(template.outputPathTemplate);
+             outputPathTemplateMap[docType] = templateFn(template.outputPathTemplate);
           }
         });
       }
     });
+    return {pathTemplateMap, outputPathTemplateMap};
   }
 
   return {
@@ -42,7 +40,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
     $runBefore: ['paths-computed'],
     $process(docs) {
 
-      initializeMaps(this.pathTemplates);
+      const {pathTemplateMap, outputPathTemplateMap} = initializeMaps(this.pathTemplates);
 
       docs.forEach(doc => {
 

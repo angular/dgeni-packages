@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 /**
  * @dgProcessor memberDocsProcessor
  * @description
@@ -17,14 +15,12 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
     $runAfter: ['ids-computed'],
     $runBefore: ['computing-paths'],
     $process(docs) {
-      let parts;
-
-      docs = _.filter(docs, doc => {
+      docs = docs.filter(doc => {
 
         // Is this doc a member of another doc?
         if ( doc.id.indexOf('#' ) !== -1 ) {
           doc.isMember = true;
-          parts = doc.id.split('#');
+          const parts = doc.id.split('#');
           doc.memberof = parts[0];
           // remove the 'method:', 'property:', etc specifier from the id part
           doc.name = parts[1].replace(/^.*:/, '');
@@ -40,7 +36,7 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
 
           if ( containerDocs.length > 1 ) {
             // The memberof field was ambiguous, try prepending the module name too
-            containerDocs = getDocFromAlias(_.template('${module}.${memberof}')(doc), doc);
+            containerDocs = getDocFromAlias(`${doc.module}.${doc.memberof}`, doc);
             if ( containerDocs.length !== 1 ) {
               log.warn(createDocMessage('Ambiguous container document reference: '+ doc.memberof, doc));
               return;

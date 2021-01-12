@@ -1,5 +1,5 @@
-const _ = require('lodash');
 const StringMap = require('stringmap');
+const templateFn = require('lodash.template');
 
 /**
  * @dgProcessor computeIdsProcessor
@@ -8,11 +8,9 @@ const StringMap = require('stringmap');
  */
 module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
 
-  let getIdMap, getAliasesMap;
-
   function initializeMaps(idTemplates) {
-    getIdMap = new StringMap();
-    getAliasesMap = new StringMap();
+    const getIdMap = new StringMap();
+    const getAliasesMap = new StringMap();
 
     idTemplates.forEach(template => {
       if ( template.docTypes ) {
@@ -21,7 +19,7 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
           if ( template.getId ) {
             getIdMap.set(docType, template.getId);
           } else if ( template.idTemplate ) {
-             getIdMap.set(docType, _.template(template.idTemplate));
+             getIdMap.set(docType, templateFn(template.idTemplate));
           }
 
           if ( template.getAliases ) {
@@ -31,6 +29,8 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
         });
       }
     });
+
+    return {getIdMap, getAliasesMap};
   }
 
   return {
@@ -41,7 +41,7 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
     },
     idTemplates: [],
     $process(docs) {
-      initializeMaps(this.idTemplates);
+      const {getIdMap, getAliasesMap} = initializeMaps(this.idTemplates);
 
       docs.forEach(doc => {
         try {

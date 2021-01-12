@@ -2,7 +2,7 @@ module.exports = {
     env: {
         node: true,
         jasmine: true,
-        es6: true,
+        es2020: true,
     },
     extends: 'eslint:recommended',
     rules: {

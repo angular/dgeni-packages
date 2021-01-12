@@ -20,7 +20,7 @@ describe('Host', () => {
     const testPackage = mockPackage() as Package;
 
     if (configureFn) {
-      testPackage.config((tsHost: Host) => configureFn(tsHost));
+      testPackage.config(function(tsHost: Host) { return configureFn(tsHost); });
     }
 
     const dgeni = new Dgeni([testPackage]);

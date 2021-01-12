@@ -2,10 +2,8 @@
 
 const child = require('child_process');
 const semver = require('semver');
-const _ = require('lodash');
 
 let currentVersion, currentPackage, previousVersions;
-
 /**
 * Check the version is satisfactory.
 * @return {Boolean} Return true if the version is satisfactory.
@@ -80,9 +78,13 @@ function getTaggedVersion() {
  * @return {SemVer} The snapshot version
  */
 function getSnapshotVersion() {
-  let version = _(previousVersions)
-    .filter(tag => satisfiesVersion(tag))
-    .last();
+  let version;
+  for(let i = previousVersions.length - 1; i >= 0; i--) {
+    version = previousVersions[i];
+    if (satisfiesVersion(version)) {
+      break;
+    }
+  }
 
   if (!version) {
     // a snapshot version before the first tag on the branch

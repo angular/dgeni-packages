@@ -1,7 +1,6 @@
 const filters = require('./change-case');
-const _ = require('lodash');
 
-const dashCase = _.find(filters, filter => filter.name === 'dashCase');
+const dashCase = filters.find(filter => filter.name === 'dashCase');
 
 describe("dashCase custom filter", () => {
   it("should have the name 'dashCase'", () => {

@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const mockPackage = require('../mocks/mockPackage');
 const Dgeni = require('dgeni');
 
@@ -12,12 +11,12 @@ describe("examples-generate processor", () => {
 
     docs = [{ file: 'a.b.js' }];
 
-    const files = {};
-
-    files['index.html'] = { type: 'html', name: 'index.html', fileContents: 'index.html content' };
-    files['app.js'] = { type: 'js', name: 'app.js', fileContents: 'app.js content' };
-    files['app.css'] = { type: 'css', name: 'app.css', fileContents: 'app.css content' };
-    files['app.spec.js'] = { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' };
+    const files = {
+      'index.html': { type: 'html', name: 'index.html', fileContents: 'index.html content' },
+      'app.js': { type: 'js', name: 'app.js', fileContents: 'app.js content' },
+      'app.css': { type: 'css', name: 'app.css', fileContents: 'app.css content' },
+      'app.spec.js': { type: 'spec', name: 'app.spec.js', fileContents: 'app.spec.js content' },
+    };
 
     exampleMap = injector.get('exampleMap');
     exampleMap.set('a.b.c', {
@@ -43,10 +42,10 @@ describe("examples-generate processor", () => {
     ];
 
     processor.$process(docs);
-
   });
+
   it("should add an exampleDoc for each example deployment", () => {
-    const exampleDocs = _.filter(docs, { docType: 'example' });
+    const exampleDocs = docs.filter(doc => doc.docType === 'example');
     expect(exampleDocs.length).toBe(2);
 
     expect(exampleDocs[0]).toEqual(
@@ -61,19 +60,19 @@ describe("examples-generate processor", () => {
   });
 
   it("should add a fileDoc for each of the example's files", () => {
-    expect(_.find(docs, { id: 'a.b.c/app.js' })).toEqual(
+    expect(docs.find(doc => doc.id ===  'a.b.c/app.js')).toEqual(
       jasmine.objectContaining({ docType: 'example-file', template: 'template.js' })
     );
-    expect(_.find(docs, { id: 'a.b.c/app.css' })).toEqual(
+    expect(docs.find(doc => doc.id === 'a.b.c/app.css')).toEqual(
       jasmine.objectContaining({ docType: 'example-file', template: 'template.css' })
     );
-    expect(_.find(docs, { id: 'a.b.c/app.spec.js' })).toEqual(
+    expect(docs.find(doc => doc.id === 'a.b.c/app.spec.js')).toEqual(
       jasmine.objectContaining({ docType: 'example-file', template: 'template.spec' })
     );
   });
 
   it("should add the dependencies to the exampleDoc scripts", () => {
-    expect(_.find(docs, { id: 'a.b.c' }).scripts).toEqual([
+    expect(docs.find(doc => doc.id === 'a.b.c').scripts).toEqual([
       { path : 'dep1.js' },
       { path : 'dep2.js' },
       { path : 'http://example.com/dep3.js' },
@@ -81,7 +80,7 @@ describe("examples-generate processor", () => {
       jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.js' })
     ]);
 
-    expect(_.find(docs, { id: 'a.b.c-other' }).scripts).toEqual([
+    expect(docs.find(doc => doc.id === 'a.b.c-other').scripts).toEqual([
       { path: 'someFile.js' },
       { path: 'someOtherFile.js' },
       { path : '../dep1.js' },
@@ -93,14 +92,14 @@ describe("examples-generate processor", () => {
   });
 
   it("should add the dependencies to the exampleDoc stylesheets", () => {
-    expect(_.find(docs, { id: 'a.b.c' }).stylesheets).toEqual([
+    expect(docs.find(doc => doc.id === 'a.b.c').stylesheets).toEqual([
       { path : 'dep5.css' },
       { path : 'http://example.com/dep6.css' },
       { path : 'https://example.com/dep7.css' },
       jasmine.objectContaining({ docType : 'example-file', id : 'a.b.c/app.css' })
     ]);
 
-    expect(_.find(docs, { id: 'a.b.c-other' }).stylesheets).toEqual([
+    expect(docs.find(doc => doc.id === 'a.b.c-other').stylesheets).toEqual([
       { path: 'someStyle.css' },
       { path: 'otherStyle.css' },
       { path : '../dep5.css' },
@@ -111,12 +110,12 @@ describe("examples-generate processor", () => {
   });
 
   it("should add a runnableExampleDoc for each example", () => {
-    const runnableExampleDocs = _.filter(docs, { docType: 'runnableExample' });
+    const runnableExampleDocs = docs.filter(doc => doc.docType === 'runnableExample');
     expect(runnableExampleDocs.length).toEqual(1);
   });
 
   it("should add a manifest doc for each example", () => {
-    const manifestDoc = _.filter(docs, { docType: 'example-file', template: 'manifest.template.json' })[0];
+    const manifestDoc = docs.filter(doc => doc.docType === 'example-file' && doc.template === 'manifest.template.json')[0];
     expect(manifestDoc.id).toEqual('a.b.c/manifest.json');
     expect(manifestDoc.docType).toEqual('example-file');
     expect(manifestDoc.example).toEqual(exampleMap.get('a.b.c'));

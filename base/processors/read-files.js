@@ -1,6 +1,5 @@
 const path = require('canonical-path');
 const fs = require('fs');
-const _ = require('lodash');
 const glob = require('glob');
 var Minimatch = require("minimatch").Minimatch;
 const StringMap = require('stringmap');
@@ -82,11 +81,11 @@ module.exports = function readFilesProcessor(log) {
             docsPromises.push(docsPromise);
 
           });
-          return Promise.all(docsPromises).then(_.flatten);
+          return Promise.all(docsPromises).then(results => results.flat());
         });
 
       });
-      return Promise.all(sourcePromises).then(_.flatten);
+      return Promise.all(sourcePromises).then(results => results.flat());
     }
   };
 };
@@ -136,26 +135,25 @@ function matchFileReader(fileReaders, file) {
  */
 function normalizeSourceInfo(basePath, sourceInfo) {
 
-  if ( _.isString(sourceInfo) ) {
+  if ( typeof sourceInfo === 'string' ) {
     sourceInfo = { include: [sourceInfo] };
-  } else if ( !_.isObject(sourceInfo) || !sourceInfo.include) {
-
+  } else if (!('include' in sourceInfo)) {
     throw new Error('Invalid sourceFiles parameter. ' +
       'You must pass an array of items, each of which is either a string or an object of the form ' +
       '{ include: "...", basePath: "...", exclude: "...", fileReader: "..." }');
   }
 
-  if ( !_.isArray(sourceInfo.include) ) {
+  if ( !Array.isArray(sourceInfo.include) ) {
     sourceInfo.include = [sourceInfo.include];
   }
   sourceInfo.exclude = sourceInfo.exclude || [];
-  if ( !_.isArray(sourceInfo.exclude) ) {
+  if ( !Array.isArray(sourceInfo.exclude) ) {
     sourceInfo.exclude = [sourceInfo.exclude];
   }
 
   sourceInfo.basePath = path.resolve(basePath, sourceInfo.basePath || '.');
-  sourceInfo.include = _.map(sourceInfo.include, include => path.resolve(basePath, include));
-  sourceInfo.exclude = _.map(sourceInfo.exclude, exclude => path.resolve(basePath, exclude));
+  sourceInfo.include = sourceInfo.include.map(include => path.resolve(basePath, include));
+  sourceInfo.exclude = sourceInfo.exclude.map(exclude => path.resolve(basePath, exclude));
 
   return sourceInfo;
 }
@@ -164,21 +162,21 @@ function normalizeSourceInfo(basePath, sourceInfo) {
 function getSourceFiles(sourceInfo) {
 
   // Compute matchers for each of the exclusion patterns
-  const excludeMatchers = _.map(sourceInfo.exclude, exclude => new Minimatch(exclude));
+  const excludeMatchers = sourceInfo.exclude.map(exclude => new Minimatch(exclude));
 
   // Get a list of files to include
   // Each call to glob will produce an array of file paths
-  const filesPromises = _.map(sourceInfo.include, include => matchFiles(include));
+  const filesPromises = sourceInfo.include.map(include => matchFiles(include));
 
   // Once we have all the file path arrays, flatten them into a single array
   return Promise.all(filesPromises)
-      .then(filesCollections => _.flatten(filesCollections))
+      .then(filesCollections => filesCollections.flat())
       .then(files => {
 
     // Filter the files on whether they match the `exclude` property and whether they are files
     const filteredFilePromises = files.map(file => {
 
-      if ( _.some(excludeMatchers, excludeMatcher => excludeMatcher.match(file)) ) {
+      if ( excludeMatchers.some(excludeMatcher => excludeMatcher.match(file)) ) {
         // Return a promise for `null` if the path is excluded
         // Doing this first - it is synchronous - saves us even making the isFile call if not needed
         return Promise.resolve(null);

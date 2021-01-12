@@ -1,6 +1,6 @@
-const _ = require('lodash');
 const path = require('canonical-path');
 const glob = require('glob');
+const templateFn = require('lodash.template');
 
 /**
  * @dgService templateFinder
@@ -27,17 +27,16 @@ module.exports = function templateFinder(log, createDocMessage) {
     getFinder() {
 
       // Traverse each templateFolder and store an index of the files found for later
-      const templateSets = _.map(this.templateFolders, templateFolder => ({
-        templateFolder: templateFolder,
-        templates: _.keyBy(glob.sync('**/*', { cwd: templateFolder }))
-      }));
+      const templateSets = this.templateFolders.map(templateFolder => {
+        const templates = {};
+        for(const template of glob.sync('**/*', { cwd: templateFolder })) {
+          templates[template] = template;
+        }
+        return { templateFolder, templates };
+      });
 
       // Compile each of the patterns and store them for later
-      const patternMatchers = _.map(this.templatePatterns, pattern =>
-        // Here we use the lodash micro templating.
-        // The document will be available to the micro template as a `doc` variable
-        _.template(pattern, { variable: 'doc' })
-      );
+      const patternMatchers = this.templatePatterns.map(pattern => templateFn(pattern, { variable: 'doc' }));
 
       /**
        * Find the path to a template for the specified documents
@@ -48,8 +47,8 @@ module.exports = function templateFinder(log, createDocMessage) {
         let templatePath;
 
         // Search the template sets for a matching pattern for the given doc
-        _.some(templateSets, templateSet =>
-          _.some(patternMatchers, patternMatcher => {
+        templateSets.some(templateSet =>
+          patternMatchers.some(patternMatcher => {
             log.silly('looking for ', patternMatcher(doc));
             templatePath = templateSet.templates[patternMatcher(doc)];
             if ( templatePath ) {
@@ -63,9 +62,9 @@ module.exports = function templateFinder(log, createDocMessage) {
           throw new Error(createDocMessage(
             'No template found./n' +
             'The following template patterns were tried:\n' +
-            _.reduce(patternMatchers, (str, pattern) => str + '  "' + pattern(doc) + '"\n', '') +
+            patternMatchers.reduce((str, pattern) => `${str}  "${pattern(doc)}"\n`, '') +
             'The following folders were searched:\n' +
-            _.reduce(templateSets, (str, templateSet) => str + '  "' + templateSet.templateFolder + '"\n', ''),
+            templateSets.reduce((str, templateSet) => `${str}  "${templateSet.templateFolder}"\n`, ''),
           doc));
         }
 

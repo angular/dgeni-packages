@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const StringMap = require('stringmap');
 
 /**
@@ -10,8 +9,7 @@ class TagCollection {
     this.tagsByName = new StringMap();
     this.badTags = [];
     this.description = '';
-
-    _.forEach(tags, tag => this.addTag(tag));
+    (tags || []).forEach(tag => this.addTag(tag));
   }
 
   /**
@@ -36,8 +34,8 @@ class TagCollection {
    * @param  {Tag} tag The tag to remove
    */
   removeTag(tag) {
-    _.remove(this.tags, tag);
-    _.remove(this.tagsByName.get(tag.tagDef.name), tag);
+    remove(this.tags, tag);
+    remove(this.tagsByName.get(tag.tagDef.name), tag);
   }
 
   /**
@@ -56,6 +54,13 @@ class TagCollection {
    */
   getTags(name) {
     return this.tagsByName.get(name) || [];
+  }
+}
+
+function remove(array, item) {
+  const index = array.indexOf(item);
+  if (index !== -1) {
+    array.splice(index, 1);
   }
 }
 

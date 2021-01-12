@@ -1,7 +1,5 @@
 "use strict";
 
-const _ = require('lodash');
-
 /**
  * @dgProcessor generateProtractorTestsProcessor
  * @description
@@ -22,16 +20,11 @@ module.exports = function generateProtractorTestsProcessor(exampleMap) {
       const basePath = this.basePath;
 
       exampleMap.forEach(example => {
-        _.forEach(example.files, file => {
-
+        Object.values(example.files || {}).forEach(file => {
           // Check if it's a Protractor test.
           if (file.type === 'protractor') {
-
-            _.forEach(deployments, deployment => {
-              docs.push(createProtractorDoc(example, deployment, file, basePath));
-            });
+            deployments.forEach(deployment => docs.push(createProtractorDoc(example, deployment, file, basePath)));
           }
-
         });
       });
     }

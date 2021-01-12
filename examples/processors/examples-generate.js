@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const path = require('canonical-path');
 
 /**
@@ -17,7 +16,6 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       deployments: { presence: true }
     },
     $process(docs) {
-      const that = this;
       exampleMap.forEach(example => {
 
         const stylesheets = [];
@@ -27,10 +25,10 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
         example.indexFile = example.files['index.html'];
 
         // Create a new document for each file of the example
-        _.forEach(example.files, (file, fileName) => {
+        Object.entries(example.files).forEach(([fileName, file]) => {
           if ( fileName === 'index.html' ) return;
 
-          const fileDoc = that.createFileDoc(example, file);
+          const fileDoc = this.createFileDoc(example, file);
           docs.push(fileDoc);
 
           // Store a reference to the fileDoc for attaching to the exampleDocs
@@ -42,19 +40,19 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
         });
 
         // Create an index.html document for the example (one for each deployment type)
-        _.forEach(that.deployments, deployment => {
-          const exampleDoc = that.createExampleDoc(example, deployment, stylesheets, scripts);
+        this.deployments.forEach(deployment => {
+          const exampleDoc = this.createExampleDoc(example, deployment, stylesheets, scripts);
           docs.push(exampleDoc);
           example.deployments[deployment.name] = exampleDoc;
         });
 
         // Create the doc that will be injected into the website as a runnable example
-        const runnableExampleDoc = that.createRunnableExampleDoc(example);
+        const runnableExampleDoc = this.createRunnableExampleDoc(example);
         docs.push(runnableExampleDoc);
         example.runnableExampleDoc = runnableExampleDoc;
 
         // Create the manifest that will be sent to Plunker
-        docs.push(that.createManifestDoc(example));
+        docs.push(this.createManifestDoc(example));
 
       });
     },
@@ -77,12 +75,12 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       };
 
       // Copy in the common scripts and stylesheets
-      exampleDoc.scripts = _.map(commonFiles.scripts, script => ({ path: script }));
-      exampleDoc.stylesheets = _.map(commonFiles.stylesheets || [], stylesheet => ({ path: stylesheet }));
+      exampleDoc.scripts = (commonFiles.scripts || []).map(script => ({ path: script }));
+      exampleDoc.stylesheets = (commonFiles.stylesheets || []).map(stylesheet => ({ path: stylesheet }));
 
       // Copy in any dependencies for this example
       if ( example.deps ) {
-        _.forEach(example.deps.split(';'), dependency => {
+        example.deps.split(';').forEach(dependency => {
           const filePath = /(https?:)?\/\//.test(dependency) ?
             dependency :
             /(https?:)?\/\//.test(dependencyPath) ?
@@ -138,10 +136,9 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
 
     createManifestDoc(example) {
 
-      const files = _(example.files)
-        .omit('index.html')
-        .map(file => file.name)
-        .value();
+      const files = Object.values(example.files)
+        .filter(file => file.name !== 'index.html')
+        .map(file => file.name);
 
       const manifestDoc = {
         id: example.id + '/manifest.json',

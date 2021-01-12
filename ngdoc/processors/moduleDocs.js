@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 /**
  * @dgProcessor moduleDocsProcessor
  * @description
@@ -10,10 +8,8 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
     $runAfter: ['ids-computed', 'memberDocsProcessor'],
     $runBefore: ['computing-paths'],
     $process(docs) {
-      let parts;
-
       // Compute some extra fields for docs in the API area
-      _.forEach(docs, doc => {
+      docs.forEach(doc => {
 
         if ( doc.docType === 'module' ) {
 
@@ -37,7 +33,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
 
 
       // Attach each doc to its module
-      _.forEach(docs, doc => {
+      docs.forEach(doc => {
         if ( doc.docType !== 'module' && doc.module ) {
           let matchingModules = aliasMap.getDocs(doc.module);
 
@@ -47,7 +43,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
           }
 
           if ( matchingModules.length === 1 ) {
-            let module = matchingModules[0];
+            const module = matchingModules[0];
             if (module.docType === 'module') {
               module.components.push(doc);
             } else {
@@ -57,9 +53,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
           } else if ( matchingModules.length > 1 ) {
             let error = createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc);
             error += '\nMatching modules:\n';
-            _.forEach(matchingModules, mod => {
-              error += '- ' + mod.id + '\n';
-            });
+            matchingModules.forEach(mod => error += '- ' + mod.id + '\n');
             throw new Error(error);
           }
         }

@@ -1,6 +1,4 @@
-const _ = require('lodash');
-
-const isEmpty = RegExp.prototype.test.bind(/^\s*$/);
+ const isEmpty = RegExp.prototype.test.bind(/^\s*$/);
 
 function calcIndent(text) {
   const MAX_INDENT = 9999;
@@ -40,9 +38,7 @@ function reindent(text, indent) {
   const lines = text.split('\n');
   const indentedLines = [];
   const indentStr = new Array(indent + 1).join(' ');
-  _.forEach(lines, line => {
-    indentedLines.push(indentStr + line);
-  });
+  lines.forEach(line => indentedLines.push(indentStr + line));
   return indentedLines.join('\n');
 }
 
@@ -51,7 +47,7 @@ function trimIndent(text, indent) {
   const indentRegExp = new RegExp('^\\s{0,' + indent + '}');
 
   // remove the indentation
-  for ( var i = 0; i < lines.length; i++) {
+  for (let i = 0; i < lines.length; i++) {
     lines[i] = lines[i].replace(indentRegExp, '');
   }
 

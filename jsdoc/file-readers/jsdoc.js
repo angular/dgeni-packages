@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 /**
  * @dgService jsdocFileReader
  * @description
@@ -17,7 +15,7 @@ module.exports = function jsdocFileReader(log, jsParser) {
       } catch(ex) {
        ex.file = fileInfo.filePath;
         throw new Error(
-          _.template('JavaScript error in file "${file}"" [line ${lineNumber}, column ${column}]: "${description}"')(ex));
+          `JavaScript error in file "${ex.file}"" [line ${ex.lineNumber}, column ${ex.column}]: "${ex.description}"`);
       }
 
       return [{

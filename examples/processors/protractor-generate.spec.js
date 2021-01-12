@@ -1,8 +1,6 @@
 const mockPackage = require('../mocks/mockPackage');
 const Dgeni = require('dgeni');
 
-const _ = require('lodash');
-
 describe("generateExamplesProcessor", () => {
 
   let processor, exampleMap;
@@ -87,7 +85,7 @@ describe("generateExamplesProcessor", () => {
 
     processor.$process(docs);
 
-    expect(_.filter(docs, { docType: 'e2e-test' })).toEqual([
+    expect(docs.filter(doc => doc.docType === 'e2e-test')).toEqual([
       jasmine.objectContaining({
         docType: 'e2e-test',
         id: 'protractorTest-a.b.c-' + processor.deployments[0].name,

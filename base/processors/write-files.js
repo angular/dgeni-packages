@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const path = require('canonical-path');
 
 /**
@@ -17,7 +16,7 @@ module.exports = function writeFilesProcessor(log, readFilesProcessor, writeFile
     $runBefore: ['files-written'],
     $process(docs) {
       const outputFolder = this.outputFolder;
-      return Promise.all(_.map(docs, doc => {
+      return Promise.all(docs.map(doc => {
 
         if ( !doc.outputPath ) {
           log.debug('Document "' + doc.id + ', ' + doc.docType + '" has no outputPath.');

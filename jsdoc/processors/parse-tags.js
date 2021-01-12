@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const TagCollection = require('../lib/TagCollection');
 const Tag = require('../lib/Tag');
 const StringMap = require('stringmap');
@@ -41,12 +40,10 @@ module.exports = function parseTagsProcessor(log, createDocMessage, backTickPars
 function createTagDefMap(tagDefinitions) {
   // Create a map of the tagDefinitions so that we can look up tagDefs based on name or alias
   const map = new StringMap();
-  _.forEach(tagDefinitions, tagDefinition => {
+  tagDefinitions.forEach(tagDefinition => {
     map.set(tagDefinition.name, tagDefinition);
     if ( tagDefinition.aliases ) {
-      _.forEach(tagDefinition.aliases, alias => {
-        map.set(alias, tagDefinition);
-      });
+      tagDefinition.aliases.forEach(alias => map.set(alias, tagDefinition));
     }
   });
   return map;
@@ -72,22 +69,21 @@ function createTagParser(tagDefinitions, parserAdapters) {
   return function tagParser(content, startingLine) {
     const lines = content.split(END_OF_LINE);
     let lineNumber = 0;
-    let line, match, tagDef;
     const descriptionLines = [];
-    let current;          // The current that that is being extracted
+    let current;                             // The current that that is being extracted
     const tags = new TagCollection();        // Contains all the tags that have been found
 
     init(lines, tags);
 
     // Extract the description block
     do {
-      line = lines[lineNumber];
+      let line = lines[lineNumber];
 
       nextLine(line, lineNumber);
 
       if (parseForTags()) {
-        match = TAG_MARKER.exec(line);
-        tagDef = match && tagDefMap.get(match[1]);
+        const match = TAG_MARKER.exec(line);
+        const tagDef = match && tagDefMap.get(match[1]);
         if ( match && ( !tagDef || !tagDef.ignore ) ) {
           // Only store tags that are unknown or not ignored
           current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);
@@ -105,12 +101,12 @@ function createTagParser(tagDefinitions, parserAdapters) {
 
     // Extract the tags
     while(lineNumber < lines.length) {
-      line = lines[lineNumber];
+      const line = lines[lineNumber];
 
       nextLine(line, lineNumber);
 
-      match = TAG_MARKER.exec(line);
-      tagDef = match && tagDefMap.get(match[1]);
+      const match = TAG_MARKER.exec(line);
+      const tagDef = match && tagDefMap.get(match[1]);
       if (parseForTags() && match && (!tagDef || !tagDef.ignore) ) {
         tags.addTag(current);
         current = new Tag(tagDef, match[1], match[2], startingLine + lineNumber);

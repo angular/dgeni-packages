@@ -1,11 +1,11 @@
-const rewire = require('rewire');
+const child = require('child_process');
 const semver = require('semver');
 const Dgeni = require('dgeni');
 
 const mocks = require('../mocks/mocks.js');
 const mockPackageFactory = require('../mocks/mockPackage');
 
-const versionInfoFactory = rewire('./versionInfo.js');
+const versionInfoFactory = require('./versionInfo.js');
 
 
 describe("versionInfo", () => {
@@ -13,8 +13,6 @@ describe("versionInfo", () => {
 
   beforeEach(() => {
     mocks.getPreviousVersions.calls.reset();
-
-    const child = versionInfoFactory.__get__('child');
 
     gitMocks = {
       rev: mocks.mockGitRevParse,
@@ -179,6 +177,4 @@ describe("versionInfo", () => {
       expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.stdout);
     });
   });
-
-
 });

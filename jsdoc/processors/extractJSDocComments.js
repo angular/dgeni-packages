@@ -1,6 +1,5 @@
-const _ = require('lodash');
 const traverse = require('estraverse').traverse;
-var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
+const LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
 /**
  * @dgProcessor extractJSDocCommentsProcessor
@@ -37,14 +36,14 @@ module.exports = function extractJSDocCommentsProcessor() {
       const processor = this;
 
       // Extract all the `jsFile` docs from the docs collection
-      docs = _.filter(docs, doc => {
+      docs = docs.filter(doc => {
 
         if ( doc.docType !== 'jsFile' ) {
           return true;
         }
 
         // Generate a doc for each jsdoc style comment
-        _.forEach(doc.fileInfo.ast.comments, comment => {
+        doc.fileInfo.ast.comments.forEach(comment => {
 
           // To test for a jsdoc comment (i.e. starting with /** ), we need to check for a
           // star in the first character since the parser strips off the "/*" comment identifier

@@ -3,7 +3,6 @@ import { Document, Package } from 'dgeni';
 import { linkInheritedDocs } from './processors/linkInheritedDocs';
 import { mergeParameterInfo } from './processors/mergeParameterInfo';
 import { readTypeScriptModules } from './processors/readTypeScriptModules';
-import { convertPrivateClassesToInterfaces } from './services/convertPrivateClassesToInterfaces';
 import { exportSymbolsToDocsMap } from './services/exportSymbolsToDocsMap';
 import { modules } from './services/modules';
 import { Host } from './services/ts-host/host';
@@ -15,8 +14,8 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 // Register the services and file readers
 .factory(modules)
 .factory(exportSymbolsToDocsMap)
-.factory('tsHost', () => new Host())
-.factory('tsParser', function(log) { return new TsParser(log); })
+.factory('tsHost', function tsHost() { return new Host(); })
+.factory('tsParser', function(log: any) { return new TsParser(log); })
 
 .factory('convertPrivateClassesToInterfaces', function convertPrivateClassesToInterfaces() { return convertPrivateClassesToInterfaces; })
 

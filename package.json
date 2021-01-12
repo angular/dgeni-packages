@@ -12,7 +12,7 @@
     "watch": "tsc -p typescript -w"
   },
   "engines": {
-    "node": ">=6.9.1",
+    "node": ">=11.0.0",
     "yarn": ">=0.17.9"
   },
   "repository": {
@@ -41,14 +41,15 @@
     "canonical-path": "^1.0.0",
     "catharsis": "^0.8.1",
     "change-case": "3.0.0",
-    "dgeni": "^0.4.9",
+    "dgeni": "^0.4.13",
     "eslint": "^7.17.0",
     "espree": "^2.2.3",
     "estraverse": "^4.1.0",
     "glob": "^7.0.5",
     "htmlencode": "^0.0.4",
     "htmlparser2": "^3.7.3",
-    "lodash": "^4.17.13",
+    "lodash.difference": "^4.5.0",
+    "lodash.template": "^4.5.0",
     "marked": "^0.7.0",
     "minimatch": "^3.0.2",
     "mkdirp": "^1.0.3",
@@ -64,15 +65,14 @@
   "devDependencies": {
     "@types/glob": "^5.0.30",
     "@types/jasmine": "^2.5.51",
-    "@types/lodash": "^4.14.66",
+    "@types/lodash.difference": "^4.5.6",
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^14.14.20",
     "changez": "^2.1.1",
     "changez-angular": "^2.1.0",
     "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
-    "rewire": "~2.0.0",
-    "tslint": "^5.4.3"
+    "rewire": "~2.0.0"
   },
   "contributors": [
     "Peter Bacon Darwin <pete@bacondarwin.com>",

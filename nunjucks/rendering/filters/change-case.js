@@ -1,7 +1,5 @@
 const changeCase = require('change-case');
 
-const _ = require('lodash');
-
 /**
  * @dgRenderFilter lowerCase
  * @description Convert the value to lowercase.
@@ -72,9 +70,9 @@ const changers = [
   'sentence'
 ];
 
-module.exports = _.map(changers, changer => ({
+module.exports = changers.map(changer => ({
   name: changer + 'Case',
-  process: changeCase[changer]
+  process: changeCase[changer],
 }));
 
 // Aliases

@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 /**
  * @dgProcessor providerDocsProcessor
  * @description
@@ -12,7 +10,7 @@ module.exports = function providerDocsProcessor(log, aliasMap, createDocMessage)
     $process(docs) {
 
       // Map services to their providers
-      _.forEach(docs, doc => {
+      docs.forEach(doc => {
         if ( doc.docType === 'provider' ) {
           const serviceId = doc.id.replace(/provider:/, 'service:').replace(/Provider$/, '');
           const serviceDocs = aliasMap.getDocs(serviceId);
@@ -25,7 +23,7 @@ module.exports = function providerDocsProcessor(log, aliasMap, createDocMessage)
             log.warn(createDocMessage('Missing service "' + serviceId + '" for provider', doc));
           } else {
             log.warn(createDocMessage('Ambiguous service name "' + serviceId + '" for provider', doc) + '\n' +
-              _.reduce(serviceDocs, (msg, doc) => msg + '\n  "' + doc.id + '"', 'Matching docs: '));
+              serviceDocs.reduce((msg, doc) => `${msg}\n  "${doc.id}"`, 'Matching docs: '));
           }
         }
       });

@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 /**
  * @dgProcessor generateComponentGroupsProcessor
  * @description
@@ -13,14 +11,16 @@ module.exports = function generateComponentGroupsProcessor(moduleMap) {
 
       moduleMap.forEach(module => {
 
-        _(module.components)
-          .groupBy('docType')
-          .tap(docTypes => {
-            // We don't want the overview docType to be represented as a componentGroup
-            delete docTypes.overview;
-          })
-          .map((docs, docType) => {
-            return {
+        // We don't want the overview docType to be represented as a componentGroup
+        const componentDocs = module.components.filter(doc => doc.docType !== 'overview');
+        const componentGroupsMap = {};
+        for(const componentDoc of componentDocs) {
+          (componentGroupsMap[componentDoc.docType] = componentGroupsMap[componentDoc.docType] || []).push(componentDoc);
+        }
+
+        module.componentGroups = Object.keys(componentGroupsMap)
+          .map(docType => {
+            const componentGroupDoc = {
               id: module.id + '.' + docType,
               docType: 'componentGroup',
               groupType: docType,
@@ -28,15 +28,11 @@ module.exports = function generateComponentGroupsProcessor(moduleMap) {
               moduleDoc: module,
               area: module.area,
               name: docType + ' components in '  + module.name,
-              components: docs
+              components: componentGroupsMap[docType],
             };
-          })
-          .tap(groups => {
-            module.componentGroups = groups;
-            _.forEach(groups, group => docs.push(group));
-          })
-          // execute lazy lodash
-          .value();
+            docs.push(componentGroupDoc);
+            return componentGroupDoc;
+          });
       });
     }
   };

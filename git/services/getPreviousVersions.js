@@ -1,7 +1,6 @@
 'use strict';
 
 const child = require('child_process');
-const _ = require('lodash');
 const semver = require('semver');
 
 /**
@@ -16,18 +15,22 @@ module.exports = function getPreviousVersions(decorateVersion, packageInfo) {
     // Needed e.g. for Travis
     const repo_url = packageInfo.repository.url;
     const tagResults = child.spawnSync('git', ['ls-remote', '--tags', repo_url], {encoding: 'utf8'});
-    if (tagResults.status === 0) {
-      return _(tagResults.stdout.match(/v[0-9].*[0-9]$/mg))
+    if (tagResults.status !== 0) {
+      return [];
+    }
+
+    const matches = tagResults.stdout.match(/v[0-9].*[0-9]$/mg);
+    if (!matches) {
+      return [];
+    }
+
+    return matches
         .map(tag => semver.parse(tag))
-        .filter()
+        .filter(tag => !!tag)
         .map(version => {
           decorateVersion(version);
           return version;
         })
-        .sort(semver.compare)
-        .value();
-    } else {
-      return [];
-    }
-  };
+        .sort(semver.compare);
+  }
 };

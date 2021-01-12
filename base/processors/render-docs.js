@@ -1,4 +1,3 @@
-const _ = require('lodash');
 
 /**
  * @dgProcessor
@@ -42,14 +41,12 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
       docs.forEach(doc => {
         log.debug('Rendering doc:', doc.id || doc.name || doc.path);
         try {
-          const data = _.defaults(
-            { doc: doc, docs: docs },
-            this.extraData,
-            this.helpers);
+          const data = { doc, docs, ...this.extraData, ...this.helpers};
           const templateFile = findTemplate(data.doc);
           doc.renderedContent = render(templateFile, data);
-        } catch(ex) {
-          log.debug(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));
+        } catch (ex) {
+          const {content, moduleDoc, components, serviceDoc, providerDoc, ...restOfDoc} = doc;
+          log.debug(restOfDoc);
           throw new Error(createDocMessage('Failed to render', doc, ex));
         }
       }, this);

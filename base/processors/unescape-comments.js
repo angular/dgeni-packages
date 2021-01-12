@@ -1,4 +1,3 @@
-const _ = require('lodash');
 
 /**
  * @dgProcessor unescapeCommentsProcessor
@@ -12,9 +11,7 @@ module.exports = function unescapeCommentsProcessor() {
     $runAfter: ['docs-rendered'],
     $runBefore: ['writing-files'],
     $process(docs) {
-      _.forEach(docs, doc => {
-        doc.renderedContent = doc.renderedContent.replace(/\/&amp;#42;/g, '/*').replace(/&amp;#42;\//g, '*/');
-      });
+      docs.forEach(doc => doc.renderedContent = doc.renderedContent.replace(/\/&amp;#42;/g, '/*').replace(/&amp;#42;\//g, '*/'));
     }
   };
 };

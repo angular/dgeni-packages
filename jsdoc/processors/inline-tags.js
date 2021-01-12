@@ -1,4 +1,3 @@
-const _ = require('lodash');
 var INLINE_TAG = /(\{@[^\s}]+[^}]*\})/;
                         //  11111111     22222222
 var INLINE_TAG_DETAIL = /\{@([^\s]+)\s*([^}]*)\}/;
@@ -41,7 +40,7 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
       const definitionMap = getMap(definitions);
 
       // Walk the docs and parse the inline-tags
-      _.forEach(docs, doc => {
+      docs.forEach(doc => {
 
         if ( doc.renderedContent ) {
           // This is a stack of start-end tag instances
@@ -116,13 +115,11 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
 };
 
 function getMap(objects) {
-  const map = new StringMap();
-  _.forEach(objects, object => {
+  var map = new StringMap();
+  objects.forEach(object => {
     map.set(object.name, object);
     if ( object.aliases ) {
-      _.forEach(object.aliases, alias => {
-        map.set(alias, object);
-      });
+      object.aliases.forEach(alias => map.set(alias, object));
     }
   });
   return map;

@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const cloneDeep = require('clonedeep');
 
 /**
  * @dgProcessor
@@ -38,13 +38,13 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     const defaultTransformFn = getTransformationFn(defaultTagTransforms);
 
     // Add some useful methods to the tagDefs
-    const tagDefs = _.map(tagDefinitions, tagDef => {
+    const tagDefs = tagDefinitions.map(tagDef => {
 
       // Make a copy of the tagDef as we are going to modify it
-      tagDef = _.clone(tagDef);
+      tagDef = cloneDeep(tagDef);
 
       // Compute this tagDefs specific transformation function
-      const transformFn = getTransformationFn(tagDef.transforms, tagDef.name);
+      const transformFn = getTransformationFn(tagDef.transforms);
 
       // Attach a transformation function to the cloned tagDef
       // running the specific transforms followed by the default transforms
@@ -62,7 +62,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     return function tagExtractor(doc) {
 
       // Try to extract each of the tags defined in the tagDefs collection
-      _.forEach(tagDefs, tagDef => {
+      tagDefs.forEach(tagDef => {
 
         log.silly('extracting tags for: ' + tagDef.name);
 
@@ -116,14 +116,13 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
   }
 
   function readTags(doc, docProperty, tagDef, tags) {
-    let value;
     // Does this tagDef expect multiple instances of the tag?
     if ( tagDef.multi ) {
       // We may have multiple tags for this tag def, so we put them into an array
       doc[docProperty] = Array.isArray(doc[docProperty]) ? doc[docProperty] : [];
-      _.forEach(tags, tag => {
+      tags.forEach(tag => {
         // Transform and add the tag to the array
-        value = tagDef.getProperty(doc, tag);
+        const value = tagDef.getProperty(doc, tag);
         if ( value !== undefined ) {
           doc[docProperty].push(value);
         }
@@ -135,7 +134,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       }
 
       // Transform and apply the tag to the document
-      value = tagDef.getProperty(doc, tags[0]);
+      const value = tagDef.getProperty(doc, tags[0]);
       if ( value !== undefined ) {
         doc[docProperty] = value;
       }
@@ -151,7 +150,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
    */
   function getTransformationFn(transforms, tagDefName) {
 
-    if ( _.isFunction(transforms) ) {
+    if (typeof transforms === 'function') {
 
       // transform is a single function so just use that
       return transforms;
@@ -161,13 +160,8 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
 
       // transform is an array then we will apply each in turn like a pipe-line
       return (doc, tag, value) => {
-
-        _.forEach(transforms, transform => {
-          value = transform(doc, tag, value);
-        });
-
+        transforms.forEach(transform => value = transform(doc, tag, value));
         return value;
-
       };
     }
 
@@ -191,8 +185,8 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     id = id ? '"' + id + '" ' : '';
     let message = createDocMessage('Invalid tags found', doc) + '\n';
 
-    _.forEach(doc.tags.badTags, badTag => {
-      let description = (_.isString(badTag.description) && (badTag.description.substr(0, 20) + '...'));
+    doc.tags.badTags.forEach(badTag => {
+      let description = typeof badTag.description === 'string' ? badTag.description.substr(0, 20) + '...' : '';
       if ( badTag.name ) {
         description = badTag.name + ' ' + description;
       }
@@ -201,9 +195,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       }
 
       message += 'Line: ' + badTag.startingLine + ': @' + badTag.tagName + ' ' + description + '\n';
-      _.forEach(badTag.errors, error => {
-        message += '    * ' + error + '\n';
-      });
+      badTag.errors.forEach(error => message += '    * ' + error + '\n');
     });
 
     return message + '\n';
