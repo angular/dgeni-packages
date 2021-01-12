@@ -1,9 +1,9 @@
-var path = require('canonical-path');
-var fs = require('fs');
-var _ = require('lodash');
-var glob = require('glob');
+const path = require('canonical-path');
+const fs = require('fs');
+const _ = require('lodash');
+const glob = require('glob');
 var Minimatch = require("minimatch").Minimatch;
-var StringMap = require('stringmap');
+const StringMap = require('stringmap');
 
 /**
  * @dgProcessor readFilesProcessor
@@ -41,11 +41,11 @@ module.exports = function readFilesProcessor(log) {
     $runAfter: ['reading-files'],
     $runBefore: ['files-read'],
     $process() {
-      var fileReaders = this.fileReaders;
-      var fileReaderMap = getFileReaderMap(fileReaders);
-      var basePath = this.basePath;
+      const fileReaders = this.fileReaders;
+      const fileReaderMap = getFileReaderMap(fileReaders);
+      const basePath = this.basePath;
 
-      var sourcePromises = this.sourceFiles.map(sourceInfo => {
+      const sourcePromises = this.sourceFiles.map(sourceInfo => {
 
         sourceInfo = normalizeSourceInfo(basePath, sourceInfo);
 
@@ -53,23 +53,23 @@ module.exports = function readFilesProcessor(log) {
 
         return getSourceFiles(sourceInfo).then(files => {
 
-          var docsPromises = [];
+          const docsPromises = [];
 
           log.debug('Found ' + files.length + ' files:\n', files);
 
           files.forEach(file => {
 
             // Load up each file and extract documents using the appropriate fileReader
-            var docsPromise = readFile(file).then(content => {
+            const docsPromise = readFile(file).then(content => {
 
               // Choose a file reader for this file
-              var fileReader = sourceInfo.fileReader ? fileReaderMap.get(sourceInfo.fileReader) : matchFileReader(fileReaders, file);
+              const fileReader = sourceInfo.fileReader ? fileReaderMap.get(sourceInfo.fileReader) : matchFileReader(fileReaders, file);
 
               log.debug('Reading File Content\nFile Path:', file, '\nFile Reader:', fileReader.name);
 
-              var fileInfo = createFileInfo(file, content, sourceInfo, fileReader, basePath);
+              const fileInfo = createFileInfo(file, content, sourceInfo, fileReader, basePath);
 
-              var docs = fileReader.getDocs(fileInfo);
+              const docs = fileReader.getDocs(fileInfo);
 
               // Attach the fileInfo object to each doc
               docs.forEach(doc => {
@@ -106,7 +106,7 @@ function createFileInfo(file, content, sourceInfo, fileReader, basePath) {
 
 
 function getFileReaderMap(fileReaders) {
-  var fileReaderMap = new StringMap();
+  const fileReaderMap = new StringMap();
   fileReaders.forEach(fileReader => {
 
     if ( !fileReader.name ) {
@@ -123,7 +123,7 @@ function getFileReaderMap(fileReaders) {
 
 
 function matchFileReader(fileReaders, file) {
-  var found = fileReaders.find(fileReader => {
+  const found = fileReaders.find(fileReader => {
     // If no defaultPattern is defined then match everything
     return !fileReader.defaultPattern || fileReader.defaultPattern.test(file);
   });
@@ -164,11 +164,11 @@ function normalizeSourceInfo(basePath, sourceInfo) {
 function getSourceFiles(sourceInfo) {
 
   // Compute matchers for each of the exclusion patterns
-  var excludeMatchers = _.map(sourceInfo.exclude, exclude => new Minimatch(exclude));
+  const excludeMatchers = _.map(sourceInfo.exclude, exclude => new Minimatch(exclude));
 
   // Get a list of files to include
   // Each call to glob will produce an array of file paths
-  var filesPromises = _.map(sourceInfo.include, include => matchFiles(include));
+  const filesPromises = _.map(sourceInfo.include, include => matchFiles(include));
 
   // Once we have all the file path arrays, flatten them into a single array
   return Promise.all(filesPromises)
@@ -176,7 +176,7 @@ function getSourceFiles(sourceInfo) {
       .then(files => {
 
     // Filter the files on whether they match the `exclude` property and whether they are files
-    var filteredFilePromises = files.map(file => {
+    const filteredFilePromises = files.map(file => {
 
       if ( _.some(excludeMatchers, excludeMatcher => excludeMatcher.match(file)) ) {
         // Return a promise for `null` if the path is excluded
@@ -221,6 +221,6 @@ function matchFiles(pattern) {
     glob(pattern, (err, data) => {
       if (err) { reject(err); }
       resolve(data);
-    })
+    });
   });
 }

@@ -1,4 +1,4 @@
-var jsParserImpl = require('espree');
+const jsParserImpl = require('espree');
 
 module.exports = function jsParser() {
   return code => {

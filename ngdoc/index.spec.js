@@ -1,6 +1,6 @@
-var ngdocPackage = require('./');
-var Dgeni = require('dgeni');
-var mockLog = require('dgeni/lib/mocks/log');
+const ngdocPackage = require('./');
+const Dgeni = require('dgeni');
+const mockLog = require('dgeni/lib/mocks/log');
 
 describe('ngdoc package', () => {
   it("should be instance of Package", () => {
@@ -8,7 +8,7 @@ describe('ngdoc package', () => {
   });
 
   function runDgeni(docs) {
-    var testPackage = new Dgeni.Package('testPackage', [ngdocPackage])
+    const testPackage = new Dgeni.Package('testPackage', [ngdocPackage])
       .factory('log', function log() { return mockLog(false); })
       .processor('provideTestDocs', function provideTestDocs() {
         return {
@@ -31,8 +31,8 @@ describe('ngdoc package', () => {
 
 
   it("should compute the path of components from their attributes", done => {
-    var docTypes = ['service', 'provider', 'directive', 'input', 'function', 'filter', 'type'];
-    var docs = docTypes.map(docType => ({ docType: docType, area: 'AREA', module: 'MODULE', name: 'NAME' }));
+    const docTypes = ['service', 'provider', 'directive', 'input', 'function', 'filter', 'type'];
+    const docs = docTypes.map(docType => ({ docType: docType, area: 'AREA', module: 'MODULE', name: 'NAME' }));
 
     runDgeni(docs).then(
       docs => {
@@ -51,7 +51,7 @@ describe('ngdoc package', () => {
 
 
   it("should compute the path of modules from their attributes", done => {
-    var doc = { docType: 'module', area: 'AREA', name: 'MODULE' };
+    const doc = { docType: 'module', area: 'AREA', name: 'MODULE' };
 
     runDgeni([doc]).then(
       docs => {
@@ -69,8 +69,8 @@ describe('ngdoc package', () => {
 
 
   it("should compute the path of component groups from their attributes", done => {
-    var groupTypes = ['service', 'provider', 'directive', 'input', 'function', 'filter', 'type'];
-    var docs = groupTypes.map(groupType =>
+    const groupTypes = ['service', 'provider', 'directive', 'input', 'function', 'filter', 'type'];
+    const docs = groupTypes.map(groupType =>
           ({ docType: 'componentGroup', area: 'AREA', groupType: groupType, moduleName: 'MODULE' }));
 
     runDgeni(docs).then(

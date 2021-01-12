@@ -1,7 +1,7 @@
-var tagDefFactory = require('./public');
+const tagDefFactory = require('./public');
 
 describe("public tagDef", () => {
-  var extractAccessTransform, extractTypeTransform, tagDef;
+  let extractAccessTransform, extractTypeTransform, tagDef;
 
   beforeEach(() => {
     extractTypeTransform = () => {};

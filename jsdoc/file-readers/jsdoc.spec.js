@@ -1,14 +1,14 @@
-var path = require('canonical-path');
-var Dgeni = require('dgeni');
-var mockPackage = require('../mocks/mockPackage');
+const path = require('canonical-path');
+const Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
 
-var srcJsContent = require('../mocks/_test-data/srcJsFile.js');
-var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
+const srcJsContent = require('../mocks/_test-data/srcJsFile.js');
+const docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
 
 
 describe("jsdoc fileReader", () => {
 
-  var fileReader, jsDocParser;
+  let fileReader, jsDocParser;
 
   function createFileInfo(file, content, basePath) {
     return {
@@ -23,8 +23,8 @@ describe("jsdoc fileReader", () => {
   }
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     fileReader = injector.get('jsdocFileReader');
   });
 
@@ -41,16 +41,16 @@ describe("jsdoc fileReader", () => {
   describe("getDocs", () => {
 
     it('should return a single doc representing the file', () => {
-      var fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
-      var docs = fileReader.getDocs(fileInfo);
+      const fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
+      const docs = fileReader.getDocs(fileInfo);
       expect(docs.length).toEqual(1);
       expect(docs[0]).toEqual(jasmine.objectContaining({ docType: 'jsFile' }));
     });
 
 
     it("should attach the AST to the fileInfo", () => {
-      var fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
-      var docs = fileReader.getDocs(fileInfo);
+      const fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
+      const docs = fileReader.getDocs(fileInfo);
       expect(fileInfo.ast).toEqual(jasmine.objectContaining({
         type: 'Program',
         range: [ 0, 3135 ]
@@ -59,11 +59,11 @@ describe("jsdoc fileReader", () => {
 
 
     it('should understand ES6 features', () => {
-      var fileInfo = createFileInfo(
+      const fileInfo = createFileInfo(
         'some/file.js',
         "function *someGenerator() { yield 10; }",
         '.');
-      var docs = fileReader.getDocs(fileInfo);
+      const docs = fileReader.getDocs(fileInfo);
       expect(fileInfo.ast.body[0]).toEqual(jasmine.objectContaining({
         type: 'FunctionDeclaration',
         generator: true
@@ -71,7 +71,7 @@ describe("jsdoc fileReader", () => {
     });
 
     it("should cope with invalid JavaScript", () => {
-      var fileInfo = createFileInfo(
+      const fileInfo = createFileInfo(
         'some/file.js',
         "var _parameters={\n" +
         "  QueryTemplate:'ArlaPS_CheckIn/UpdateStaffUsersCMD',\n" +
@@ -88,7 +88,7 @@ describe("jsdoc fileReader", () => {
         "  sync:true\n" +
         "}\n",
         '.');
-      expect(() => fileReader.getDocs(fileInfo)).toThrowError('JavaScript error in file "some/file.js"" [line 13, column 3]: "Unexpected identifier"')
+      expect(() => fileReader.getDocs(fileInfo)).toThrowError('JavaScript error in file "some/file.js"" [line 13, column 3]: "Unexpected identifier"');
     });
 
   });

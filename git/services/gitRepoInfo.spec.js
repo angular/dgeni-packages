@@ -1,17 +1,17 @@
-var mockPackageFactory = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
-var gitRepoInfoFactory = require('./gitRepoInfo');
+const mockPackageFactory = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
+const gitRepoInfoFactory = require('./gitRepoInfo');
 
 describe("gitRepoInfo", () => {
-  var gitRepoInfo, mockPackage;
+  let gitRepoInfo, mockPackage;
 
   beforeEach(() => {
     mockPackage = mockPackageFactory()
       .factory(gitRepoInfoFactory);
 
-    var dgeni = new Dgeni([mockPackage]);
+    const dgeni = new Dgeni([mockPackage]);
 
-    var injector = dgeni.configureInjector();
+    const injector = dgeni.configureInjector();
     gitRepoInfo = injector.get('gitRepoInfo');
   });
 
@@ -31,8 +31,8 @@ describe("gitRepoInfo", () => {
     mockPackage.factory(function packageInfo() {
       return {};
     });
-    var dgeni = new Dgeni([mockPackage]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage]);
+    const injector = dgeni.configureInjector();
 
     expect(() => injector.get('gitRepoInfo')).toThrow();
   });

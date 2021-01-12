@@ -1,19 +1,19 @@
-var Dgeni = require('dgeni');
-var mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
 
 describe("renderMarkdown", () => {
 
-  var renderMarkdown, trimIndentation;
+  let renderMarkdown, trimIndentation;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     trimIndentation = injector.get('trimIndentation');
     renderMarkdown = injector.get('renderMarkdown');
   });
 
   it("should render the given markdown content as HTML", () => {
-    var html = renderMarkdown(
+    const html = renderMarkdown(
       '## heading 2\n\n' +
       'some paragraph\n\n' +
       '* a bullet point');
@@ -27,7 +27,7 @@ describe("renderMarkdown", () => {
   });
 
   it("should trim leading whitespace from code blocks", () => {
-    var html = renderMarkdown(
+    const html = renderMarkdown(
       'some test\n\n' +
       '```\n' +
       '   code\n' +

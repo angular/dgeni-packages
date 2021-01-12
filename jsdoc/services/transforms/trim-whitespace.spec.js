@@ -1,8 +1,8 @@
-var transformFactory = require('./trim-whitespace');
+const transformFactory = require('./trim-whitespace');
 
 describe("trim-whitespace", () => {
 
-  var transform;
+  let transform;
 
   beforeEach(() => {
     transform = transformFactory();
@@ -13,7 +13,7 @@ describe("trim-whitespace", () => {
   });
 
   it("should not do anything if the value is not a string", () => {
-    var someNonStringObject = {};
+    const someNonStringObject = {};
     expect(transform({}, {}, someNonStringObject)).toEqual(someNonStringObject);
   });
 

@@ -1,8 +1,8 @@
-var matcherFactory = require('./variable-declarator');
+const matcherFactory = require('./variable-declarator');
 
 describe('VariableDeclarator matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

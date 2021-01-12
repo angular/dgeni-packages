@@ -9,5 +9,5 @@ module.exports = function ExpressionStatementNodeMatcherFactory (codeNameService
    */
   return function ExpressionStatementNodeMatcher (node) {
     return codeNameService.find(node.expression) || null;
-  }
+  };
 };

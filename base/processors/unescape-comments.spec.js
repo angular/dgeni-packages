@@ -1,14 +1,14 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("unescapeCommentsProcessor", () => {
   it("should convert HTML encoded comments back to their original form", () => {
 
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
-    var processor = injector.get('unescapeCommentsProcessor');
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
+    const processor = injector.get('unescapeCommentsProcessor');
 
-    var doc = {
+    const doc = {
       renderedContent: 'Some text containing /&amp;#42; a comment &amp;#42;/\nSome text containing /&amp;#42; a comment &amp;#42;/'
     };
     processor.$process([doc]);

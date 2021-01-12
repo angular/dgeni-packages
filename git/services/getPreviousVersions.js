@@ -1,8 +1,8 @@
 'use strict';
 
-var child = require('child_process');
-var _ = require('lodash');
-var semver = require('semver');
+const child = require('child_process');
+const _ = require('lodash');
+const semver = require('semver');
 
 /**
  * Get a collection of all the previous versions sorted by semantic version
@@ -14,8 +14,8 @@ module.exports = function getPreviousVersions(decorateVersion, packageInfo) {
     // always use the remote tags as the local clone might
     // not contain all commits when cloned with git clone --depth=...
     // Needed e.g. for Travis
-    var repo_url = packageInfo.repository.url;
-    var tagResults = child.spawnSync('git', ['ls-remote', '--tags', repo_url], {encoding: 'utf8'});
+    const repo_url = packageInfo.repository.url;
+    const tagResults = child.spawnSync('git', ['ls-remote', '--tags', repo_url], {encoding: 'utf8'});
     if (tagResults.status === 0) {
       return _(tagResults.stdout.match(/v[0-9].*[0-9]$/mg))
         .map(tag => semver.parse(tag))

@@ -3,7 +3,7 @@
  * @description  Infer the name of the document from name of the following code
  */
 module.exports = function codeNameService(log, codeNameMap, getInjectables) {
-  var REMOVE_SUFFIX_REGEX = /NodeMatcher$/;
+  const REMOVE_SUFFIX_REGEX = /NodeMatcher$/;
 
   /**
    * Registers code name mappers
@@ -25,9 +25,9 @@ module.exports = function codeNameService(log, codeNameMap, getInjectables) {
    * @return {String}      The name of the code or null if none found.
    */
   function findCodeName(node) {
-    var res = null;
+    let res = null;
     if (node) {
-      var matcher = codeNameMap.get(node.type);
+      const matcher = codeNameMap.get(node.type);
       if (matcher) {
         res = matcher(node);
       } else {
@@ -38,9 +38,9 @@ module.exports = function codeNameService(log, codeNameMap, getInjectables) {
     return res;
   }
 
-  var api = {
+  const api = {
     find: findCodeName
-  }
+  };
 
   /**
    * @property {Function[]} matchers AST node matchers

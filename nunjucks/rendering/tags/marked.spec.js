@@ -1,13 +1,13 @@
-var Dgeni = require('dgeni');
-var mockPackage = require('../../mocks/mockPackage');
-var nunjucks = require('nunjucks');
+const Dgeni = require('dgeni');
+const mockPackage = require('../../mocks/mockPackage');
+const nunjucks = require('nunjucks');
 
 describe("marked custom tag extension", () => {
-  var extension;
+  let extension;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     extension = injector.get('markedNunjucksTag');
   });
@@ -19,7 +19,7 @@ describe("marked custom tag extension", () => {
   describe("process", () => {
 
     it("should render the markdown and reindent", () => {
-      var result = extension.process(null, () => {
+      const result = extension.process(null, () => {
         return '  ## heading 2\n\n' +
                '  some paragraph\n\n' +
                '    * a bullet point';
@@ -38,16 +38,16 @@ describe("marked custom tag extension", () => {
 
   describe("parse", () => {
     it("should interact correctly with the parser", () => {
-      var log = [];
-      var parserMock = {
+      const log = [];
+      const parserMock = {
         advanceAfterBlockEnd() { log.push('advanceAfterBlockEnd'); },
         parseUntilBlocks() { log.push('parseUntilBlocks'); return 'some content'; }
       };
-      var nodesMock = {
+      const nodesMock = {
         CallExtension: function CallExtension() { log.push('CallExtension'); this.args = arguments; }
       };
 
-      var tag = extension.parse(parserMock, nodesMock);
+      const tag = extension.parse(parserMock, nodesMock);
 
       expect(log).toEqual([
         'advanceAfterBlockEnd',
@@ -64,7 +64,7 @@ describe("marked custom tag extension", () => {
 
   describe('(when used with nunjucks)', () => {
     it('should not escape the output of the tag, even if nunjucks is configured to escape output', () => {
-      var engine = new nunjucks.Environment(null, {autoescape: true});
+      const engine = new nunjucks.Environment(null, {autoescape: true});
       engine.addExtension('marked', extension);
       const renderedContent = engine.renderString('{% marked %}some `inline code`{% endmarked %}', {});
       expect(renderedContent).toEqual('<p>some <code>inline code</code></p>\n');

@@ -1,21 +1,21 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("moduleDocsProcessor", () => {
-  var processor, aliasMap, moduleMap;
+  let processor, aliasMap, moduleMap;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     processor = injector.get('moduleDocsProcessor');
     moduleMap = injector.get('moduleMap');
     aliasMap = injector.get('aliasMap');
   });
 
   it("should compute the package name and filename for the module", () => {
-    var doc1 = { docType: 'module', name: 'ng', id: 'module:ng' };
-    var doc2 = { docType: 'module', name: 'ngRoute', id: 'module:ngRoute' };
-    var doc3 = { docType: 'module', name: 'ngMock', id: 'module:ngMock', packageName: 'angular-mocks' };
+    const doc1 = { docType: 'module', name: 'ng', id: 'module:ng' };
+    const doc2 = { docType: 'module', name: 'ngRoute', id: 'module:ngRoute' };
+    const doc3 = { docType: 'module', name: 'ngMock', id: 'module:ngMock', packageName: 'angular-mocks' };
 
     processor.$process([doc1, doc2, doc3]);
 
@@ -31,9 +31,9 @@ describe("moduleDocsProcessor", () => {
   });
 
   it("should add module docs to the moduleMap", () => {
-    var doc1 = { docType: 'module', id: 'ng' };
-    var doc2 = { docType: 'module', id: 'ngMock' };
-    var doc3 = { docType: 'service', module: 'ng', id: 'ng.$http' };
+    const doc1 = { docType: 'module', id: 'ng' };
+    const doc2 = { docType: 'module', id: 'ngMock' };
+    const doc3 = { docType: 'service', module: 'ng', id: 'ng.$http' };
 
     processor.$process([doc1, doc2, doc3]);
 
@@ -43,11 +43,11 @@ describe("moduleDocsProcessor", () => {
   });
 
   it("should connect all docs to their module", () => {
-    var doc1 = { docType: 'module', id: 'ng', aliases: ['ng'] };
-    var doc2 = { docType: 'module', id: 'ngMock', aliases: ['ngMock'] };
-    var doc3 = { docType: 'service', module: 'ng', id: 'ng.$http' };
-    var doc4 = { docType: 'service', module: 'ng', id: 'ng.$log' };
-    var doc5 = { docType: 'service', module: 'ngMock', id: 'ng.$log' };
+    const doc1 = { docType: 'module', id: 'ng', aliases: ['ng'] };
+    const doc2 = { docType: 'module', id: 'ngMock', aliases: ['ngMock'] };
+    const doc3 = { docType: 'service', module: 'ng', id: 'ng.$http' };
+    const doc4 = { docType: 'service', module: 'ng', id: 'ng.$log' };
+    const doc5 = { docType: 'service', module: 'ngMock', id: 'ng.$log' };
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
@@ -63,9 +63,9 @@ describe("moduleDocsProcessor", () => {
   });
 
   it("should complain if their is more than one matching modules", () => {
-    var doc1 = { docType: 'module', id: 'module:app.mod1', aliases: ['app', 'app.mod1', 'mod1', 'module:app', 'module:app.mod1', 'module:mod1'] };
-    var doc2 = { docType: 'module', id: 'module:app.mod2', aliases: ['app', 'app.mod2', 'mod2', 'module:app', 'module:app.mod2', 'module:mod2'] };
-    var doc3 = { docType: 'service', module: 'app', id: 'app.service' };
+    const doc1 = { docType: 'module', id: 'module:app.mod1', aliases: ['app', 'app.mod1', 'mod1', 'module:app', 'module:app.mod1', 'module:mod1'] };
+    const doc2 = { docType: 'module', id: 'module:app.mod2', aliases: ['app', 'app.mod2', 'mod2', 'module:app', 'module:app.mod2', 'module:mod2'] };
+    const doc3 = { docType: 'service', module: 'app', id: 'app.service' };
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
@@ -79,8 +79,8 @@ describe("moduleDocsProcessor", () => {
   });
 
   it("should try using the module specifier if the module reference is ambiguous", () => {
-    var doc1 = { docType: 'module', id: 'module:ngMessages', aliases: ['ngMessages', 'module:ngMessages'] };
-    var doc2 = { docType: 'directive', module:'ngMessages', id: 'module:ngMessages.directive:ngMessages', aliases: ['ngMessages.ngMessages', 'module:ngMessages.ngMessages', 'ngMessages.directive:ngMessages', 'module:ngMessages.directive:ngMessages', 'directive:ngMessages', 'ngMessages'] };
+    const doc1 = { docType: 'module', id: 'module:ngMessages', aliases: ['ngMessages', 'module:ngMessages'] };
+    const doc2 = { docType: 'directive', module:'ngMessages', id: 'module:ngMessages.directive:ngMessages', aliases: ['ngMessages.ngMessages', 'module:ngMessages.ngMessages', 'ngMessages.directive:ngMessages', 'module:ngMessages.directive:ngMessages', 'directive:ngMessages', 'ngMessages'] };
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
@@ -91,10 +91,9 @@ describe("moduleDocsProcessor", () => {
   });
 
   it("should throw an error if a module is documented as another type of entity", () => {
-    var doc1 = { docType: 'module', name: 'mod1', id: 'module:mod1', aliases: ['mod1', 'module:mod1'] };
-    var doc1 = { docType: 'object', name: 'mod2', id: 'object:mod2', aliases: ['mod2', 'object:mod2'] };
-    var doc2 = { docType: 'service', name: 'service1', module: 'mod1', id: 'mod1.service1' };
-    var doc3 = { docType: 'service', name: 'service2', module: 'mod2', id: 'mod2.service2' };
+    const doc1 = { docType: 'object', name: 'mod2', id: 'object:mod2', aliases: ['mod2', 'object:mod2'] };
+    const doc2 = { docType: 'service', name: 'service1', module: 'mod1', id: 'mod1.service1' };
+    const doc3 = { docType: 'service', name: 'service2', module: 'mod2', id: 'mod2.service2' };
 
     aliasMap.addDoc(doc1);
 

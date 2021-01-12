@@ -1,7 +1,7 @@
-var _ = require('lodash');
-var TagCollection = require('../lib/TagCollection');
-var Tag = require('../lib/Tag');
-var StringMap = require('stringmap');
+const _ = require('lodash');
+const TagCollection = require('../lib/TagCollection');
+const Tag = require('../lib/Tag');
+const StringMap = require('stringmap');
 
 /**
  * @dgProcessor parseTagsProcessor
@@ -18,13 +18,13 @@ module.exports = function parseTagsProcessor(log, createDocMessage, backTickPars
     $runBefore: ['tags-parsed'],
     $process(docs) {
 
-      var tagParser = createTagParser(this.tagDefinitions, this.parserAdapters);
+      const tagParser = createTagParser(this.tagDefinitions, this.parserAdapters);
 
       docs.forEach(doc => {
         try {
           doc.tags = tagParser(doc.content || '', doc.startingLine);
         } catch(e) {
-          var message = createDocMessage('Error parsing tags', doc, e);
+          const message = createDocMessage('Error parsing tags', doc, e);
           log.error(message);
           throw new Error(message);
         }
@@ -40,7 +40,7 @@ module.exports = function parseTagsProcessor(log, createDocMessage, backTickPars
  */
 function createTagDefMap(tagDefinitions) {
   // Create a map of the tagDefinitions so that we can look up tagDefs based on name or alias
-  var map = new StringMap();
+  const map = new StringMap();
   _.forEach(tagDefinitions, tagDefinition => {
     map.set(tagDefinition.name, tagDefinition);
     if ( tagDefinition.aliases ) {
@@ -59,9 +59,9 @@ function createTagDefMap(tagDefinitions) {
  */
 function createTagParser(tagDefinitions, parserAdapters) {
 
-  var END_OF_LINE = /\r?\n/;
-  var TAG_MARKER = /^\s*@(\S+)\s*(.*)$/;
-  var tagDefMap = createTagDefMap(tagDefinitions);
+  const END_OF_LINE = /\r?\n/;
+  const TAG_MARKER = /^\s*@(\S+)\s*(.*)$/;
+  const tagDefMap = createTagDefMap(tagDefinitions);
 
   /**
    * tagParser
@@ -70,12 +70,12 @@ function createTagParser(tagDefinitions, parserAdapters) {
    * @return {TagCollection}       A collection of tags that were parsed
    */
   return function tagParser(content, startingLine) {
-    var lines = content.split(END_OF_LINE);
-    var lineNumber = 0;
-    var line, match, tagDef;
-    var descriptionLines = [];
-    var current;          // The current that that is being extracted
-    var tags = new TagCollection();        // Contains all the tags that have been found
+    const lines = content.split(END_OF_LINE);
+    let lineNumber = 0;
+    let line, match, tagDef;
+    const descriptionLines = [];
+    let current;          // The current that that is being extracted
+    const tags = new TagCollection();        // Contains all the tags that have been found
 
     init(lines, tags);
 

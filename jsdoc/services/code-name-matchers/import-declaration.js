@@ -9,5 +9,5 @@ module.exports = function ImportDeclarationNodeMatcherFactory () {
    */
   return function ImportDeclarationNodeMatcher (node) {
     return node.source && node.source.value || null;
-  }
+  };
 };

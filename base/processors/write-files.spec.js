@@ -1,21 +1,21 @@
-var path = require('canonical-path');
+const path = require('canonical-path');
 
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("writeFilesProcessor", () => {
-  var processor, writeFileSpy, mockLog;
+  let processor, writeFileSpy, mockLog;
 
 
   beforeEach(() => {
     writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Promise.resolve());
 
-    var testPackage = mockPackage().factory('writeFile', function writeFile() { return writeFileSpy; });
+    const testPackage = mockPackage().factory('writeFile', function writeFile() { return writeFileSpy; });
 
-    var dgeni = new Dgeni([testPackage]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([testPackage]);
+    const injector = dgeni.configureInjector();
 
-    var readFilesProcessor = injector.get('readFilesProcessor');
+    const readFilesProcessor = injector.get('readFilesProcessor');
     readFilesProcessor.basePath = path.resolve('some/path');
 
     processor = injector.get('writeFilesProcessor');

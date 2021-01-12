@@ -1,8 +1,8 @@
-var codeFilterFactory = require('./code');
+const codeFilterFactory = require('./code');
 
 describe("code custom filter", () => {
 
-  var codeFilter, codeSpy;
+  let codeFilter, codeSpy;
 
   beforeEach(() => {
     codeSpy = jasmine.createSpy('code').and.callFake(value => '<code>' + value + '</code>');

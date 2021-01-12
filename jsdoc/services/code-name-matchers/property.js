@@ -9,5 +9,5 @@ module.exports = function PropertyNodeMatcherFactory (codeNameService) {
    */
   return function PropertyNodeMatcher (node) {
     return codeNameService.find(node.value) || codeNameService.find(node.key);
-  }
+  };
 };

@@ -1,13 +1,13 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("inlineTagsProcessor", () => {
 
-  var processor, mockLog;
+  let processor, mockLog;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     processor = injector.get('inlineTagProcessor');
     mockLog = injector.get('log');
@@ -26,7 +26,7 @@ describe("inlineTagsProcessor", () => {
 
       // The processor is mostly only interested in the renderedContent but the other fields are
       // used in error reporting
-      var doc = {
+      const doc = {
         file: 'a/b/c.js',
         startingLine: 123,
         renderedContent:
@@ -35,11 +35,11 @@ describe("inlineTagsProcessor", () => {
           '{@handledTag other description}\n' +
           'text {@handledTag more\ndescription }'
       };
-      var docs = [doc];
+      const docs = [doc];
 
       // Provide a mock tag handler to track what tags have been handled
-      var tagsFound = [];
-      var mockInlineTagDefinition = {
+      const tagsFound = [];
+      const mockInlineTagDefinition = {
         name: 'handledTag',
         handler(doc, tagName, tagDescription, docs) {
           tagsFound.push({ name: tagName, description: tagDescription });
@@ -50,7 +50,7 @@ describe("inlineTagsProcessor", () => {
       processor.inlineTagDefinitions = [mockInlineTagDefinition];
 
       // Run the processor
-      var results = processor.$process(docs);
+      const results = processor.$process(docs);
 
       // This processor should not return anything.  All its work is done on the docs, in place
       expect(results).toBeUndefined();
@@ -75,7 +75,7 @@ describe("inlineTagsProcessor", () => {
     });
 
     it("should parse the block of rendered content between start and end inline tags", () => {
-      var doc = {
+      const doc = {
         file: 'a/b/c.js',
         startingLine: 123,
         renderedContent:
@@ -85,11 +85,11 @@ describe("inlineTagsProcessor", () => {
           '{@endblock} ' +
           'content after'
       };
-      var docs = [doc];
+      const docs = [doc];
 
       // Provide a mock tag handler to track what tags have been handled
-      var tagsFound = [];
-      var mockInlineTagDefinition = {
+      const tagsFound = [];
+      const mockInlineTagDefinition = {
         name: 'block',
         end: 'endblock',
         handler(doc, tagName, tagDescription, docs) {
@@ -101,7 +101,7 @@ describe("inlineTagsProcessor", () => {
       processor.inlineTagDefinitions = [mockInlineTagDefinition];
 
       // Run the processor
-      var results = processor.$process(docs);
+      const results = processor.$process(docs);
 
       // This processor should not return anything.  All its work is done on the docs, in place
       expect(results).toBeUndefined();
@@ -122,7 +122,7 @@ describe("inlineTagsProcessor", () => {
     });
 
     it("should not get confused by successive inline tags", () => {
-      var doc = {
+      const doc = {
         file: 'a/b/c.js',
         startingLine: 123,
         renderedContent:
@@ -133,11 +133,11 @@ describe("inlineTagsProcessor", () => {
           'more content within another inline tag' +
           '{@endblock}'
       };
-      var docs = [doc];
+      const docs = [doc];
 
       // Provide a mock tag handler to track what tags have been handled
-      var tagsFound = [];
-      var mockInlineTagDefinition = {
+      const tagsFound = [];
+      const mockInlineTagDefinition = {
         name: 'block',
         end: 'endblock',
         handler(doc, tagName, tagDescription, docs) {
@@ -149,7 +149,7 @@ describe("inlineTagsProcessor", () => {
       processor.inlineTagDefinitions = [mockInlineTagDefinition];
 
       // Run the processor
-      var results = processor.$process(docs);
+      const results = processor.$process(docs);
 
       // This processor should not return anything.  All its work is done on the docs, in place
       expect(results).toBeUndefined();

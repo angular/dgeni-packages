@@ -1,20 +1,20 @@
-var Dgeni = require('dgeni');
-var mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
 
 describe('code-name doc service', () => {
 
-  var codeNameService, codeNameMap, mockLog;
+  let codeNameService, codeNameMap, mockLog;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     codeNameService = injector.get('codeNameService');
     codeNameMap = injector.get('codeNameMap');
     mockLog = injector.get('log');
   });
 
   it("should register matcher", () => {
-    var testMatcher = function test () {};
+    const testMatcher = function test () {};
 
     codeNameService.matchers = [testMatcher];
 
@@ -22,7 +22,7 @@ describe('code-name doc service', () => {
   });
 
   it("should strip suffix from matcher name", () => {
-    var testMatcher = function TestNodeMatcher () {};
+    const testMatcher = function TestNodeMatcher () {};
 
     codeNameService.matchers = [testMatcher];
 
@@ -30,7 +30,7 @@ describe('code-name doc service', () => {
   });
 
   it("should log anonymous matcher and refuse registration", () => {
-    var testMatcher = () => {};
+    const testMatcher = () => {};
 
     codeNameService.matchers = [testMatcher];
 
@@ -43,7 +43,7 @@ describe('code-name doc service', () => {
   });
 
   it("should process matcher for node", () => {
-    var testMatcher = function TestNodeMatcher () { return 'test'}
+    const testMatcher = function TestNodeMatcher () { return 'test';};
 
     codeNameService.matchers = [testMatcher];
 

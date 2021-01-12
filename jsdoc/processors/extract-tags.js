@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgProcessor
@@ -14,7 +14,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     $runAfter: ['extracting-tags'],
     $runBefore: ['tags-extracted'],
     $process(docs) {
-      var tagExtractor = createTagExtractor(parseTagsProcessor.tagDefinitions, this.defaultTagTransforms);
+      const tagExtractor = createTagExtractor(parseTagsProcessor.tagDefinitions, this.defaultTagTransforms);
       docs.forEach(doc => {
         log.debug(createDocMessage('extracting tags', doc));
         tagExtractor(doc);
@@ -35,22 +35,22 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
   function createTagExtractor(tagDefinitions, defaultTagTransforms) {
 
     // Compute a default transformation function
-    var defaultTransformFn = getTransformationFn(defaultTagTransforms);
+    const defaultTransformFn = getTransformationFn(defaultTagTransforms);
 
     // Add some useful methods to the tagDefs
-    var tagDefs = _.map(tagDefinitions, tagDef => {
+    const tagDefs = _.map(tagDefinitions, tagDef => {
 
       // Make a copy of the tagDef as we are going to modify it
       tagDef = _.clone(tagDef);
 
       // Compute this tagDefs specific transformation function
-      var transformFn = getTransformationFn(tagDef.transforms);
+      const transformFn = getTransformationFn(tagDef.transforms, tagDef.name);
 
       // Attach a transformation function to the cloned tagDef
       // running the specific transforms followed by the default transforms
-      var tagProperty = tagDef.tagProperty || 'description';
+      const tagProperty = tagDef.tagProperty || 'description';
       tagDef.getProperty = (doc, tag) => {
-        var value = tag[tagProperty];
+        let value = tag[tagProperty];
         value = transformFn(doc, tag, value);
         value = defaultTransformFn(doc, tag, value);
         return value;
@@ -66,11 +66,11 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
 
         log.silly('extracting tags for: ' + tagDef.name);
 
-        var docProperty = tagDef.docProperty || tagDef.name;
+        const docProperty = tagDef.docProperty || tagDef.name;
         log.silly(' - to be attached to doc.' + docProperty);
 
         // Collect the tags for this tag def
-        var tags = doc.tags.getTags(tagDef.name);
+        const tags = doc.tags.getTags(tagDef.name);
 
         // No tags found for this tag def
         if ( tags.length === 0 ) {
@@ -99,7 +99,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     // Apply the default function if there is one
     if ( tagDef.defaultFn ) {
       log.silly('   - applying default value function');
-      var defaultValue = tagDef.defaultFn(doc);
+      const defaultValue = tagDef.defaultFn(doc);
       log.silly('     - default value: ', defaultValue);
       if (tagDef.multi) {
         doc[docProperty] = Array.isArray(doc[docProperty]) ? doc[docProperty] : [];
@@ -116,7 +116,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
   }
 
   function readTags(doc, docProperty, tagDef, tags) {
-    var value;
+    let value;
     // Does this tagDef expect multiple instances of the tag?
     if ( tagDef.multi ) {
       // We may have multiple tags for this tag def, so we put them into an array
@@ -149,7 +149,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
    *         The transformation to apply to the tag
    * @return {function(doc, tag, value)} A single function that will do the transformation
    */
-  function getTransformationFn(transforms) {
+  function getTransformationFn(transforms, tagDefName) {
 
     if ( _.isFunction(transforms) ) {
 
@@ -178,17 +178,21 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
 
     }
 
-    throw new Error('Invalid transformFn in tag definition, ' + tagDef.name +
+    if (tagDefName) {
+      throw new Error('Invalid transformFn in tag definition, ' + tagDefName +
         ' - you must provide a function or an array of functions.');
+    } else {
+      throw new Error('Invalid default transformFn - you must provide a function or an array of functions.');
+    }
   }
 
   function formatBadTagErrorMessage(doc) {
-    var id = (doc.id || doc.name);
+    let id = (doc.id || doc.name);
     id = id ? '"' + id + '" ' : '';
-    var message = createDocMessage('Invalid tags found', doc) + '\n';
+    let message = createDocMessage('Invalid tags found', doc) + '\n';
 
     _.forEach(doc.tags.badTags, badTag => {
-      var description = (_.isString(badTag.description) && (badTag.description.substr(0, 20) + '...'));
+      let description = (_.isString(badTag.description) && (badTag.description.substr(0, 20) + '...'));
       if ( badTag.name ) {
         description = badTag.name + ' ' + description;
       }

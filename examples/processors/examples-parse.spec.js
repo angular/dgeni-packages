@@ -1,20 +1,20 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("parseExamplesProcessor", () => {
 
-  var processor, exampleMap, mockTrimIndentation;
+  let processor, exampleMap;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     processor = injector.get('parseExamplesProcessor');
     exampleMap = injector.get('exampleMap');
   });
 
   it("should extract example tags from the doc content", () => {
-    var docs = [
+    const docs = [
       {
         content: 'a b c <example name="bar" moo1="nar1">some example content 1</example> x y z\n' +
                   'a b c <example name="bar" moo2="nar2">some example content 2</example> x y z'
@@ -32,8 +32,8 @@ describe("parseExamplesProcessor", () => {
     expect(exampleMap.get('example-value')).toEqual(jasmine.objectContaining({ name:'value', id: 'example-value'}));
     expect(exampleMap.get('example-with-files')).toEqual(jasmine.objectContaining({ name: 'with-files', id: 'example-with-files'}));
 
-    var files = exampleMap.get('example-with-files').files;
-    var file = files['app.js'];
+    const files = exampleMap.get('example-with-files').files;
+    let file = files['app.js'];
     expect(file.name).toEqual('app.js');
     expect(file.type).toEqual('js');
     expect(file.fileContents).toEqual('aaa');
@@ -48,7 +48,7 @@ describe("parseExamplesProcessor", () => {
 
 
   it("should compute unique ids for each example", () => {
-    var docs = [{
+    const docs = [{
       content: '<example name="bar">some example content 1</example>\n' +
                     '<example name="bar">some example content 2</example>'
     }];
@@ -58,7 +58,7 @@ describe("parseExamplesProcessor", () => {
   });
 
   it("should inject a new set of elements in place of the example into the original markup to be used by the template", () => {
-    doc = {
+    const doc = {
       content: 'Some content before <example name="bar">some example content 1</example> and some after'
     };
 
@@ -69,7 +69,7 @@ describe("parseExamplesProcessor", () => {
   });
 
   it("should cope with docs that have no content", () => {
-    doc = {};
+    const doc = {};
     expect(() => processor.$process([doc])).not.toThrow();
   });
 });

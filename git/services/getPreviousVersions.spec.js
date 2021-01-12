@@ -1,23 +1,23 @@
-var rewire = require('rewire');
-var semver = require('semver');
+const rewire = require('rewire');
+const semver = require('semver');
 var getPreviousVersionsFactory = rewire('./getPreviousVersions');
-var Dgeni = require('dgeni');
+const Dgeni = require('dgeni');
 
-var mocks = require('../mocks/mocks.js');
-var mockPackageFactory = require('../mocks/mockPackage');
+const mocks = require('../mocks/mocks.js');
+const mockPackageFactory = require('../mocks/mockPackage');
 
 describe("getPreviousVersions", () => {
-  var getPreviousVersions, child;
+  let getPreviousVersions, child;
 
   beforeEach(() => {
     child = getPreviousVersionsFactory.__get__('child');
 
-    var mockPackage = mockPackageFactory()
+    const mockPackage = mockPackageFactory()
       .factory(getPreviousVersionsFactory);
 
-    var dgeni = new Dgeni([mockPackage]);
+    const dgeni = new Dgeni([mockPackage]);
 
-    var injector = dgeni.configureInjector();
+    const injector = dgeni.configureInjector();
     getPreviousVersions = injector.get('getPreviousVersions');
   });
 
@@ -88,7 +88,7 @@ describe("getPreviousVersions", () => {
       status: 0,
       stdout: 'v0.1.1\nv0.1.2'
     });
-    var versions = getPreviousVersions();
+    const versions = getPreviousVersions();
 
     expect(mocks.decorateVersion.calls.allArgs())
     .toEqual([

@@ -1,12 +1,12 @@
-var basePackage = require('./');
-var mockPackage = require('./mocks/mockPackage');
-var Dgeni = require('dgeni');
-var path = require('canonical-path');
+const basePackage = require('./');
+const mockPackage = require('./mocks/mockPackage');
+const Dgeni = require('dgeni');
+const path = require('canonical-path');
 
 describe('base package', () => {
 
   function runDgeni(docs) {
-    var testPackage = new Dgeni.Package('testPackage', [mockPackage()])
+    const testPackage = new Dgeni.Package('testPackage', [mockPackage()])
       .processor('provideTestDocs', function provideTestDocs() {
         return {
           $runBefore: ['computeIdsProcessor'],
@@ -41,7 +41,7 @@ describe('base package', () => {
           {
             docTypes: ['service', 'guide'],
             getPath(doc) {
-              var docPath = path.dirname(doc.fileInfo.relativePath);
+              let docPath = path.dirname(doc.fileInfo.relativePath);
               if ( doc.fileInfo.baseName !== 'index' ) {
                 docPath = path.join(docPath, doc.fileInfo.baseName);
               }
@@ -66,8 +66,8 @@ describe('base package', () => {
   describe("computeIdsProcessor", () => {
 
     it("should use provided id templates", done => {
-      var doc1 = { docType: 'service', fileInfo: { relativePath: 'a/b/c/d.js', baseName: 'd' } };
-      var doc2 = { docType: 'guide', fileInfo: { relativePath: 'x/y/z/index', baseName: 'index' } };
+      const doc1 = { docType: 'service', fileInfo: { relativePath: 'a/b/c/d.js', baseName: 'd' } };
+      const doc2 = { docType: 'guide', fileInfo: { relativePath: 'x/y/z/index', baseName: 'index' } };
 
 
       runDgeni([doc1,doc2]).then(
@@ -87,8 +87,8 @@ describe('base package', () => {
   describe("computePathsProcessor", () => {
 
     it("should use provided path templates", done => {
-      var doc1 = { docType: 'service', fileInfo: { relativePath: 'a/b/c/d.js', baseName: 'd' } };
-      var doc2 = { docType: 'guide', fileInfo: { relativePath: 'x/y/z/index', baseName: 'index' } };
+      const doc1 = { docType: 'service', fileInfo: { relativePath: 'a/b/c/d.js', baseName: 'd' } };
+      const doc2 = { docType: 'guide', fileInfo: { relativePath: 'x/y/z/index', baseName: 'index' } };
 
 
       runDgeni([doc1,doc2]).then(

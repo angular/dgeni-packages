@@ -1,5 +1,5 @@
-var mockPackage = require('./mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('./mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe('jsdoc package', () => {
   it("should be instance of Package", () => {
@@ -9,7 +9,7 @@ describe('jsdoc package', () => {
   describe("computePathsProcessor", () => {
 
     function runDgeni(docs) {
-      var testPackage = new Dgeni.Package('testPackage', [mockPackage()])
+      const testPackage = new Dgeni.Package('testPackage', [mockPackage()])
 
         .processor('provideTestDocs', function provideTestDocs() {
           return {
@@ -32,8 +32,8 @@ describe('jsdoc package', () => {
 
 
     it("should compute the id and path of the document from its name or codeName", done => {
-      var doc1 = { docType: 'js', fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' }, name: 'fooName', codeName: 'fooCodeName', content: 'some content' };
-      var doc2 = { docType: 'js', fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' }, codeName: 'xyz', content: 'some content' };
+      const doc1 = { docType: 'js', fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' }, name: 'fooName', codeName: 'fooCodeName', content: 'some content' };
+      const doc2 = { docType: 'js', fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' }, codeName: 'xyz', content: 'some content' };
 
         runDgeni([doc1,doc2]).then(docs => {
           expect(doc1.id).toEqual('fooName');
@@ -51,8 +51,8 @@ describe('jsdoc package', () => {
 
 
     it("should compute the id and path of the document from its file name", done => {
-      var doc1 = { docType: 'js', fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' }, content: 'some content'  };
-      var doc2 = { docType: 'js', fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' }, content: 'some content'  };
+      const doc1 = { docType: 'js', fileInfo: { relativePath: 'a/b/c/foo.ngdoc', baseName: 'foo' }, content: 'some content'  };
+      const doc2 = { docType: 'js', fileInfo: { relativePath: 'x/y/z/index.html', baseName: 'index' }, content: 'some content'  };
 
         runDgeni([doc1,doc2]).then(docs => {
           expect(doc1.path).toEqual('a/b/c/foo');

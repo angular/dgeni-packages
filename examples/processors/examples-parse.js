@@ -1,7 +1,7 @@
-var _ = require('lodash');
-var path = require('canonical-path');
+const _ = require('lodash');
+const path = require('canonical-path');
 
-var EXAMPLE_REGEX = /<example([^>]*)>([\S\s]+?)<\/example>/g;
+const EXAMPLE_REGEX = /<example([^>]*)>([\S\s]+?)<\/example>/g;
 var ATTRIBUTE_REGEX = /\s*([^=]+)\s*=\s*(?:(?:"([^"]+)")|(?:'([^']+)'))/g;
 var FILE_REGEX = /<file([^>]*)>([\S\s]+?)<\/file>/g;
 
@@ -22,8 +22,8 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
           if (!doc.content) { return; }
           doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
 
-            var example = extractAttributes(attributeText);
-            var id = uniqueName(exampleMap, 'example-' + (example.name || 'example'));
+            const example = extractAttributes(attributeText);
+            const id = uniqueName(exampleMap, 'example-' + (example.name || 'example'));
             _.assign(example, {
               attributes: _.omit(example, ['files', 'doc']),
               files: extractFiles(exampleText),
@@ -47,7 +47,7 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
   };
 
   function extractAttributes(attributeText) {
-    var attributes = {};
+    const attributes = {};
     attributeText.replace(ATTRIBUTE_REGEX, (match, prop, val1, val2) => {
       attributes[prop] = val1 || val2;
     });
@@ -55,9 +55,9 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
   }
 
   function extractFiles(exampleText) {
-    var files = {};
+    const files = {};
     exampleText.replace(FILE_REGEX, (match, attributesText, contents) => {
-      var file = extractAttributes(attributesText);
+      const file = extractAttributes(attributesText);
       if ( !file.name ) {
         throw new Error('Missing name attribute in file: ' + match);
       }
@@ -76,7 +76,7 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
 
   function uniqueName(containerMap, name) {
     if ( containerMap.has(name) ) {
-      var index = 1;
+      let index = 1;
       while(containerMap.has(name + index)) {
         index += 1;
       }

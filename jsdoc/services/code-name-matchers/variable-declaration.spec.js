@@ -1,8 +1,8 @@
-var matcherFactory = require('./variable-declaration');
+const matcherFactory = require('./variable-declaration');
 
 describe('VariableDeclaration matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {

@@ -1,8 +1,8 @@
-var rewire = require('rewire');
+const rewire = require('rewire');
 var engineFactory = rewire('./nunjucks-template-engine');
 
 describe("nunjucksTemplateEngine service", () => {
-  var nunjucks, addFilterSpy, addExtensionSpy, engine, mockTemplateFinder;
+  let nunjucks, addFilterSpy, addExtensionSpy, engine, mockTemplateFinder;
 
   beforeEach(() => {
 
@@ -25,7 +25,7 @@ describe("nunjucksTemplateEngine service", () => {
       engine.templateFolders = ['templates'];
       engine.config = { foo: 'bar' };
 
-      var render = engine.getRenderer();
+      const render = engine.getRenderer();
       expect(render).toEqual(jasmine.any(Function));
 
       expect(nunjucks.Environment).toHaveBeenCalledWith(
@@ -37,10 +37,10 @@ describe("nunjucksTemplateEngine service", () => {
 
     it("should load the given custom filters", () => {
 
-      var dummyFilter = { name: 'test', process() {} };
+      const dummyFilter = { name: 'test', process() {} };
       engine.filters.push(dummyFilter);
 
-      var render = engine.getRenderer();
+      const render = engine.getRenderer();
       expect(render).toEqual(jasmine.any(Function));
 
       expect(addFilterSpy).toHaveBeenCalledWith(dummyFilter.name, dummyFilter.process);
@@ -49,10 +49,10 @@ describe("nunjucksTemplateEngine service", () => {
 
     it("should load the given custom tags", () => {
 
-      var dummyExtension = { tags: ['dummy']};
+      const dummyExtension = { tags: ['dummy']};
       engine.tags.push(dummyExtension);
 
-      var render = engine.getRenderer();
+      const render = engine.getRenderer();
       expect(render).toEqual(jasmine.any(Function));
 
       expect(addExtensionSpy).toHaveBeenCalledWith('dummy', dummyExtension);

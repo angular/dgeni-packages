@@ -9,5 +9,5 @@ module.exports = function IdentifierNodeMatcherFactory () {
    */
   return function IdentifierNodeMatcher (node) {
     return node.name || null;
-  }
+  };
 };

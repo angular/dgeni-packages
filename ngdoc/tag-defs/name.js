@@ -3,9 +3,9 @@ module.exports = function(createDocMessage) {
     name: 'name',
     required: true,
     transforms(doc, tag, value) {
-      var INPUT_TYPE = /input\[(.+)\]/;
+      const INPUT_TYPE = /input\[(.+)\]/;
       if ( doc.docType === 'input' ) {
-        var match = INPUT_TYPE.exec(value);
+        const match = INPUT_TYPE.exec(value);
         if ( !match ) {
           throw new Error(createDocMessage('Invalid input directive name.  It should be of the form: "input[inputType]" but was "' + value + '"', doc));
         }

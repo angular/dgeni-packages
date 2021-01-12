@@ -1,6 +1,6 @@
-var Package = require('dgeni').Package;
+const Package = require('dgeni').Package;
 
-var somePackage = new Package('somePackage');
+const somePackage = new Package('somePackage');
 
 /**
  * @dgPackage testPackage

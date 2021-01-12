@@ -1,8 +1,8 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
-var Tag = require('../lib/Tag');
-var TagCollection = require('../lib/TagCollection');
+const Tag = require('../lib/Tag');
+const TagCollection = require('../lib/TagCollection');
 
 
 function createDoc(tags) {
@@ -14,17 +14,13 @@ function createDoc(tags) {
   };
 }
 
-function createProcessor(tagDefs) {
-  return factory(mockLog, createTagDefContainer(tagDefs), createDocMessageFactory());
-}
-
 describe("extractTagsProcessor", () => {
 
-  var parseTagsProcessor, processor, mockLog;
+  let parseTagsProcessor, processor, mockLog;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     parseTagsProcessor = injector.get('parseTagsProcessor');
     processor = injector.get('extractTagsProcessor');
     mockLog = injector.get('log');
@@ -32,7 +28,7 @@ describe("extractTagsProcessor", () => {
 
   it("should log a warning if the doc contains bad tags", () => {
 
-      var doc = createDoc([]);
+      const doc = createDoc([]);
       doc.tags.badTags = [ {
         name: 'bad1',
         description: 'bad tag 1',
@@ -52,22 +48,22 @@ describe("extractTagsProcessor", () => {
 
   describe('default tag-def', () => {
     it("should the extract the description property to a property with the name of the tagDef", () => {
-      var tagDef = { name: 'a' };
+      const tagDef = { name: 'a' };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag = new Tag(tagDef, 'a', 'some content', 123);
-      var doc = createDoc([tag]);
+      const tag = new Tag(tagDef, 'a', 'some content', 123);
+      const doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('some content');
     });
 
     it("should not write a property to the doc if the tag value is undefined", () => {
-      var tagDef = { name: 'a' };
+      const tagDef = { name: 'a' };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag = new Tag(tagDef, 'a', undefined, 123);
-      var doc = createDoc([tag]);
+      const tag = new Tag(tagDef, 'a', undefined, 123);
+      const doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toBeUndefined();
@@ -77,11 +73,11 @@ describe("extractTagsProcessor", () => {
 
   describe("tag-defs with docProperty", () => {
     it("should assign the extracted value to the docProperty", () => {
-      var tagDef = { name: 'a', docProperty: 'b' };
+      const tagDef = { name: 'a', docProperty: 'b' };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag = new Tag(tagDef, 'a', 'some content', 123);
-      var doc = createDoc([tag]);
+      const tag = new Tag(tagDef, 'a', 'some content', 123);
+      const doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toBeUndefined();
@@ -90,11 +86,11 @@ describe("extractTagsProcessor", () => {
     });
 
     it("should not write a property to the doc if the tag value is undefined", () => {
-      var tagDef = { name: 'a', docProperty: 'b' };
+      const tagDef = { name: 'a', docProperty: 'b' };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag = new Tag(tagDef, 'a', undefined, 123);
-      var doc = createDoc([tag]);
+      const tag = new Tag(tagDef, 'a', undefined, 123);
+      const doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.b).toBeUndefined();
@@ -104,13 +100,13 @@ describe("extractTagsProcessor", () => {
 
   describe("tag-defs with multi", () => {
     it("should assign the extracted value(s) to an array on the doc", () => {
-      var tagDef = { name: 'a', multi: true };
+      const tagDef = { name: 'a', multi: true };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag1 = new Tag(tagDef, 'a', 'some content', 123);
-      var tag2 = new Tag(tagDef, 'a', 'some other content', 256);
-      var docA = createDoc([tag1]);
-      var docB = createDoc([tag1, tag2]);
+      const tag1 = new Tag(tagDef, 'a', 'some content', 123);
+      const tag2 = new Tag(tagDef, 'a', 'some other content', 256);
+      const docA = createDoc([tag1]);
+      const docB = createDoc([tag1, tag2]);
 
       processor.$process([docA]);
       expect(docA.a).toEqual(['some content']);
@@ -120,13 +116,13 @@ describe("extractTagsProcessor", () => {
     });
 
     it("should not add a value to the array if the tag value is undefined", () => {
-      var tagDef = { name: 'a', multi: true };
+      const tagDef = { name: 'a', multi: true };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag1 = new Tag(tagDef, 'a', undefined, 123);
-      var tag2 = new Tag(tagDef, 'a', 'some other content', 256);
-      var docA = createDoc([tag1]);
-      var docB = createDoc([tag1, tag2]);
+      const tag1 = new Tag(tagDef, 'a', undefined, 123);
+      const tag2 = new Tag(tagDef, 'a', 'some other content', 256);
+      const docA = createDoc([tag1]);
+      const docB = createDoc([tag1, tag2]);
 
       processor.$process([docA]);
       expect(docA.a).toEqual([]);
@@ -138,10 +134,10 @@ describe("extractTagsProcessor", () => {
 
   describe("tag-defs with required", () => {
     it("should throw an error if the tag is missing", () => {
-      var tagDef = { name: 'a', required: true };
+      const tagDef = { name: 'a', required: true };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var doc = createDoc([]);
+      const doc = createDoc([]);
       expect(() => processor.$process([doc])).toThrow();
     });
   });
@@ -149,12 +145,12 @@ describe("extractTagsProcessor", () => {
   describe("tag-defs with tagProperty", () => {
     it("should assign the specified tag property to the document", () => {
 
-      var tagDef = { name: 'a', tagProperty: 'b' };
+      const tagDef = { name: 'a', tagProperty: 'b' };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag = new Tag(tagDef, 'a', 'some content', 123);
+      const tag = new Tag(tagDef, 'a', 'some content', 123);
       tag.b = 'special value';
-      var doc = createDoc([tag]);
+      const doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('special value');
@@ -162,12 +158,12 @@ describe("extractTagsProcessor", () => {
     });
 
     it("should not write a property to the doc if the specified tag value is undefined", () => {
-      var tagDef = { name: 'a', tagProperty: 'b' };
+      const tagDef = { name: 'a', tagProperty: 'b' };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var tag = new Tag(tagDef, 'a', 'some content', 123);
+      const tag = new Tag(tagDef, 'a', 'some content', 123);
       tag.b = undefined;
-      var doc = createDoc([tag]);
+      const doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toBeUndefined();
@@ -178,11 +174,11 @@ describe("extractTagsProcessor", () => {
   describe("tag-defs with defaultFn", () => {
 
     it("should run the defaultFn if the tag is missing", () => {
-      var defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
-      var tagDef = { name: 'a', defaultFn: defaultFn };
+      const defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
+      const tagDef = { name: 'a', defaultFn: defaultFn };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var doc = createDoc([]);
+      const doc = createDoc([]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('default value');
@@ -191,10 +187,10 @@ describe("extractTagsProcessor", () => {
 
 
     it("should not write a property to the doc if the defaultFn returns undefined", () => {
-      var tagDef = { name: 'a', defaultFn() {} };
+      const tagDef = { name: 'a', defaultFn() {} };
       parseTagsProcessor.tagDefinitions = [tagDef];
 
-      var doc = createDoc([]);
+      const doc = createDoc([]);
 
       processor.$process([doc]);
       expect(doc.a).toBeUndefined();
@@ -204,11 +200,11 @@ describe("extractTagsProcessor", () => {
     describe("and mult", () => {
 
       it("should run the defaultFn if the tag is missing", () => {
-        var defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
-        var tagDef = { name: 'a', defaultFn: defaultFn, multi: true };
+        const defaultFn = jasmine.createSpy('defaultFn').and.returnValue('default value');
+        const tagDef = { name: 'a', defaultFn: defaultFn, multi: true };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
-        var doc = createDoc([]);
+        const doc = createDoc([]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual(['default value']);
@@ -216,10 +212,10 @@ describe("extractTagsProcessor", () => {
       });
 
       it("should not add a value to the array if the defaultFn returns undefined", () => {
-        var tagDef = { name: 'a', defaultFn() {}, multi: true };
+        const tagDef = { name: 'a', defaultFn() {}, multi: true };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
-        var doc = createDoc([]);
+        const doc = createDoc([]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual([]);
@@ -234,12 +230,12 @@ describe("extractTagsProcessor", () => {
     describe("(single)", () => {
       it("should apply the transform to the extracted value", () => {
         function addA(doc, tag, value) { return value + '*A*'; }
-        var tagDef = { name: 'a', transforms: addA };
+        const tagDef = { name: 'a', transforms: addA };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
 
-        var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = createDoc([tag]);
+        const tag = new Tag(tagDef, 'a', 'some content', 123);
+        const doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content*A*');
@@ -249,12 +245,12 @@ describe("extractTagsProcessor", () => {
       it("should not write to the property if the transform returns undefined", () => {
         function returnUndefined(doc, tag, value) {}
 
-        var tagDef = { name: 'a', transforms: returnUndefined };
+        const tagDef = { name: 'a', transforms: returnUndefined };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
 
-        var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = createDoc([tag]);
+        const tag = new Tag(tagDef, 'a', 'some content', 123);
+        const doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toBeUndefined();
@@ -264,12 +260,12 @@ describe("extractTagsProcessor", () => {
 
       it("should allow changes to tag and doc", () => {
         function transform(doc, tag, value) { doc.x = 'x'; tag.y = 'y'; return value; }
-        var tagDef = { name: 'a', transforms: transform };
+        const tagDef = { name: 'a', transforms: transform };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
 
-        var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = createDoc([tag]);
+        const tag = new Tag(tagDef, 'a', 'some content', 123);
+        const doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content');
@@ -283,12 +279,12 @@ describe("extractTagsProcessor", () => {
       it("should apply the transforms to the extracted value", () => {
         function addA(doc, tag, value) { return value + '*A*'; }
         function addB(doc, tag, value) { return value + '*B*'; }
-        var tagDef = { name: 'a', transforms: [ addA, addB ] };
+        const tagDef = { name: 'a', transforms: [ addA, addB ] };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
 
-        var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = createDoc([tag]);
+        const tag = new Tag(tagDef, 'a', 'some content', 123);
+        const doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content*A**B*');
@@ -299,12 +295,12 @@ describe("extractTagsProcessor", () => {
         function addA(doc, tag, value) { return value + '*A*'; }
         function returnUndefined(doc, tag, value) {}
 
-        var tagDef = { name: 'a', transforms: [addA, returnUndefined] };
+        const tagDef = { name: 'a', transforms: [addA, returnUndefined] };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
 
-        var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = createDoc([tag]);
+        const tag = new Tag(tagDef, 'a', 'some content', 123);
+        const doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toBeUndefined();
@@ -317,12 +313,12 @@ describe("extractTagsProcessor", () => {
         function addA(doc, tag, value) { return value + '*A*'; }
         function returnUndefined(doc, tag, value) {}
 
-        var tagDef = { name: 'a', transforms: [returnUndefined, addA] };
+        const tagDef = { name: 'a', transforms: [returnUndefined, addA] };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
 
-        var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = createDoc([tag]);
+        const tag = new Tag(tagDef, 'a', 'some content', 123);
+        const doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('undefined*A*');
@@ -332,12 +328,12 @@ describe("extractTagsProcessor", () => {
       it("should allow changes to tag and doc", () => {
         function transform1(doc, tag, value) { doc.x = 'x'; return value; }
         function transform2(doc, tag, value) { tag.y = 'y'; return value; }
-        var tagDef = { name: 'a', transforms: [transform1, transform2] };
+        const tagDef = { name: 'a', transforms: [transform1, transform2] };
 
         parseTagsProcessor.tagDefinitions = [tagDef];
 
-        var tag = new Tag(tagDef, 'a', 'some content', 123);
-        var doc = createDoc([tag]);
+        const tag = new Tag(tagDef, 'a', 'some content', 123);
+        const doc = createDoc([tag]);
 
         processor.$process([doc]);
         expect(doc.a).toEqual('some content');
@@ -350,16 +346,16 @@ describe("extractTagsProcessor", () => {
   describe("default transforms", () => {
 
     it("should apply the default transformations to all tags", () => {
-      var tagDef1 = { name: 'a' };
-      var tagDef2 = { name: 'b' };
+      const tagDef1 = { name: 'a' };
+      const tagDef2 = { name: 'b' };
       function addA(doc, tag, value) { return value + '*A*'; }
 
       parseTagsProcessor.tagDefinitions = [tagDef1, tagDef2];
       processor.defaultTagTransforms = [addA];
 
-      var tag1 = new Tag(tagDef1, 'a', 'some content', 123);
-      var tag2 = new Tag(tagDef2, 'b', 'some other content', 123);
-      var doc = createDoc([tag1, tag2]);
+      const tag1 = new Tag(tagDef1, 'a', 'some content', 123);
+      const tag2 = new Tag(tagDef2, 'b', 'some other content', 123);
+      const doc = createDoc([tag1, tag2]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('some content*A*');
@@ -371,13 +367,13 @@ describe("extractTagsProcessor", () => {
     it("should apply the default transformations after tag specific transforms", () => {
       function addA(doc, tag, value) { return value + '*A*'; }
       function addB(doc, tag, value) { return value + '*B*'; }
-      var tagDef1 = { name: 'a', transforms: addA };
+      const tagDef1 = { name: 'a', transforms: addA };
 
       parseTagsProcessor.tagDefinitions = [tagDef1];
       processor.defaultTagTransforms = [addB];
 
-      var tag = new Tag(tagDef1, 'a', 'some content', 123);
-      var doc = createDoc([tag]);
+      const tag = new Tag(tagDef1, 'a', 'some content', 123);
+      const doc = createDoc([tag]);
 
       processor.$process([doc]);
       expect(doc.a).toEqual('some content*A**B*');

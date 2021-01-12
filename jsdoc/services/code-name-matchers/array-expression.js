@@ -9,5 +9,5 @@ module.exports = function ArrayExpressionNodeMatcherFactory () {
    */
   return function ArrayExpressionNodeMatcher (node) {
     return null;
-  }
+  };
 };

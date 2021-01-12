@@ -1,10 +1,10 @@
-var getAliasesFactory = require('./getAliases');
+const getAliasesFactory = require('./getAliases');
 
 describe("getAliases", () => {
 
   it("should extract all the parts from a code name", () => {
 
-    var getAliases = getAliasesFactory();
+    const getAliases = getAliasesFactory();
 
     expect(getAliases({ id: 'module:ng.service:$http#get'})).toEqual([
       '$http#get',

@@ -1,4 +1,4 @@
-var htmlEncode = require('htmlencode').htmlEncode;
+const htmlEncode = require('htmlencode').htmlEncode;
 
 module.exports = function encodeCodeBlock() {
   return (str, inline, lang) => {

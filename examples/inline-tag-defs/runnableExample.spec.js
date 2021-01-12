@@ -1,13 +1,13 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("runnableExampleInlineTagDef", () => {
 
-  var exampleMap, tagDef;
+  let exampleMap, tagDef;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     exampleMap = injector.get('exampleMap');
     exampleMap.set('some-example', {

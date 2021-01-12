@@ -1,8 +1,8 @@
-var matcherFactory = require('./class-declaration');
+const matcherFactory = require('./class-declaration');
 
 describe('ClassDeclaration matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var StringMap = require('stringmap');
+const _ = require('lodash');
+const StringMap = require('stringmap');
 
 /**
  * A collection of tags that can be looked up by their tagDefinition.
@@ -22,7 +22,7 @@ class TagCollection {
     if ( !tag.errors && tag.tagDef ) {
       this.tags.push(tag);
 
-      var tags = this.tagsByName.get(tag.tagDef.name) || [];
+      const tags = this.tagsByName.get(tag.tagDef.name) || [];
       tags.push(tag);
       this.tagsByName.set(tag.tagDef.name, tags);
 

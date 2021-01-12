@@ -1,5 +1,5 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 function MockParserAdapter() {
 }
@@ -15,8 +15,8 @@ MockParserAdapter.prototype = {
 };
 
 describe("parse-tags processor", () => {
-  var processor;
-  var tagDefinitions = [
+  let processor;
+  const tagDefinitions = [
     { name: 'id' },
     { name: 'description' },
     { name: 'param' },
@@ -25,8 +25,8 @@ describe("parse-tags processor", () => {
 
   beforeEach(() => {
 
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     processor = injector.get('parseTagsProcessor');
     processor.tagDefinitions = tagDefinitions;
@@ -39,10 +39,10 @@ describe("parse-tags processor", () => {
 
 
   it("should only return tags that are not ignored", () => {
-    var content = 'Some initial content\n@id some.id\n' +
+    const content = 'Some initial content\n@id some.id\n' +
                   '@description Some description\n@other-tag Some other tag\n' +
                   '@param some param\n@param some other param';
-    var doc = {content: content, startingLine: 10};
+    const doc = {content: content, startingLine: 10};
     processor.$process([doc]);
 
     expect(doc.tags.tags[0]).toEqual(
@@ -62,8 +62,8 @@ describe("parse-tags processor", () => {
   });
 
   it("should cope with tags that have no 'description'", () => {
-    var content = '@id\n@description some description';
-    var doc = { content: content, startingLine: 123 };
+    const content = '@id\n@description some description';
+    const doc = { content: content, startingLine: 123 };
     processor.$process([doc]);
     expect(doc.tags.tags[0]).toEqual(jasmine.objectContaining({ tagName: 'id', description: '' }));
     expect(doc.tags.tags[1]).toEqual(jasmine.objectContaining({ tagName: 'description', description: 'some description' }));
@@ -78,7 +78,7 @@ describe("parse-tags processor", () => {
   it('should ignore tags if a parser adapter has indicated that the line should not be parsed', () => {
     processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
     processor.parserAdapters = [new MockParserAdapter()];
-    var content =
+    const content =
     '@a some text\n\n' +
       '<<IGNORE_START>>\n' +
       '  some code\n' +
@@ -86,7 +86,7 @@ describe("parse-tags processor", () => {
       '<<IGNORE_END>>\n\n' +
       'more text\n' +
       '@b is a tag';
-    var doc = { content: content };
+    const doc = { content: content };
     processor.$process([doc]);
     expect(doc.tags.getTag('a').description).toEqual('some text\n\n' +
       '<<IGNORE_START>>\n' +
@@ -108,7 +108,7 @@ describe("parse-tags processor", () => {
   describe('legacy standard adapter', () => {
     it("should ignore @tags inside back-ticked code blocks", () => {
       processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
-      var content =
+      const content =
       '@a some text\n\n' +
         '```\n' +
         '  some code\n' +
@@ -116,7 +116,7 @@ describe("parse-tags processor", () => {
         '```\n\n' +
         'more text\n' +
         '@b is a tag';
-      var doc = { content: content };
+      const doc = { content: content };
       processor.$process([doc]);
       expect(doc.tags.getTag('a').description).toEqual('some text\n\n' +
         '```\n' +
@@ -132,7 +132,7 @@ describe("parse-tags processor", () => {
 
     it("should cope with single line back-ticked code blocks", () => {
       processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
-      var content =
+      const content =
       '@a some text\n\n' +
         '```some single line of code @b not a tag```\n\n' +
         'some text outside a code block\n' +
@@ -141,7 +141,7 @@ describe("parse-tags processor", () => {
         '  @b not a tag\n' +
         '```\n';
 
-      var doc = { content: content };
+      const doc = { content: content };
       processor.$process([doc]);
 
       expect(doc.tags.getTag('a').description).toEqual('some text\n\n' +

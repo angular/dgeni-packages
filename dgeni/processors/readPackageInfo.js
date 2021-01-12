@@ -1,4 +1,4 @@
-var Package = require('dgeni').Package;
+const Package = require('dgeni').Package;
 
 module.exports = function readPackageInfo() {
   return {
@@ -18,7 +18,7 @@ module.exports = function readPackageInfo() {
             processorName = processorName.name || processorName;
 
             // TODO - yes this is horribly slow :-)
-            var processorDoc = docs.find(doc => doc.docType === 'dgProcessor' && (processorName === doc.name || processorName === doc.codeName));
+            let processorDoc = docs.find(doc => doc.docType === 'dgProcessor' && (processorName === doc.name || processorName === doc.codeName));
 
             if (!processorDoc) {
               processorDoc = {
@@ -28,7 +28,7 @@ module.exports = function readPackageInfo() {
             }
 
             // No doc for this processor so get it from the package
-            var processor = doc.package.module[processorName][1];
+            let processor = doc.package.module[processorName][1];
             if (doc.package.module[processorName][0] === 'factory') {
               // processor is defined as a factory so we call it to get the definition
               processor = processor();
@@ -49,7 +49,7 @@ module.exports = function readPackageInfo() {
           doc.dependencies = doc.package.dependencies.map(dependency => {
 
             // TODO - yes this is horribly slow :-)
-            var packageDoc = docs.find(doc => dependency.name === doc.name || dependency === doc.name);
+            let packageDoc = docs.find(doc => dependency.name === doc.name || dependency === doc.name);
 
             if (!packageDoc) {
               // No doc for this dependency package so get it direcly from the package

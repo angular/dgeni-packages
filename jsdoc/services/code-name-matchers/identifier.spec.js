@@ -1,8 +1,8 @@
-var matcherFactory = require('./identifier');
+const matcherFactory = require('./identifier');
 
 describe('Identifier matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

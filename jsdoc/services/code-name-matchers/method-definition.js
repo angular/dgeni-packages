@@ -9,5 +9,5 @@ module.exports = function MethodDefinitionNodeMatcherFactory (codeNameService) {
    */
   return function MethodDefinitionNodeMatcher (node) {
     return codeNameService.find(node.key) || null;
-  }
+  };
 };

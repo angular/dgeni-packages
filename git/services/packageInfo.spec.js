@@ -1,9 +1,9 @@
-var rewire = require('rewire');
+const rewire = require('rewire');
 var packageInfoFactory = rewire('./packageInfo.js');
 
 
 describe("packageInfo", () => {
-  var fs, path;
+  let fs, path;
 
   beforeEach(() => {
     fs = packageInfoFactory.__get__('fs');
@@ -23,7 +23,7 @@ describe("packageInfo", () => {
     fs.existsSync.and.returnValue(true);
     spyOn(fs, 'readFileSync').and.returnValue('{"foo":"bar"}');
 
-    var packageInfo = packageInfoFactory();
+    const packageInfo = packageInfoFactory();
 
     expect(packageInfo).toEqual({foo: "bar"});
   });

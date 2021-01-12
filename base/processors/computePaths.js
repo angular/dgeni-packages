@@ -1,13 +1,13 @@
-var _ = require('lodash');
-var path = require('canonical-path');
-var StringMap = require('stringmap');
+const _ = require('lodash');
+const path = require('canonical-path');
+const StringMap = require('stringmap');
 
 /**
  * @dgProcessor computePathsProcessor
  * @description Compute the path and outputPath for docs that do not already have them from a set of templates
  */
 module.exports = function computePathsProcessor(log, createDocMessage) {
-  var pathTemplateMap, outputPathTemplateMap;
+  let pathTemplateMap, outputPathTemplateMap;
 
   function initializeMaps(pathTemplates) {
     pathTemplateMap = new StringMap();
@@ -31,7 +31,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
         });
       }
     });
-  };
+  }
 
   return {
     $validate: {
@@ -49,7 +49,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
         try {
 
           if ( !doc.path ) {
-            var getPath = pathTemplateMap[doc.docType];
+            const getPath = pathTemplateMap[doc.docType];
             if ( !getPath ) {
               log.warn(createDocMessage('No path template provided', doc));
             } else {
@@ -58,7 +58,7 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
           }
 
           if ( !doc.outputPath ) {
-            var getOutputPath = outputPathTemplateMap[doc.docType];
+            const getOutputPath = outputPathTemplateMap[doc.docType];
             if ( !getOutputPath ) {
               log.warn(createDocMessage('No output path template provided', doc));
             } else {

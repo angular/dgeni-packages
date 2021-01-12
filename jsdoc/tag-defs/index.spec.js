@@ -1,4 +1,4 @@
-var tagDefFactories = require('./');
+const tagDefFactories = require('./');
 
 describe("jsdoc tagdefs", () => {
   it("should contain an array of tagDef factory functions", () => {

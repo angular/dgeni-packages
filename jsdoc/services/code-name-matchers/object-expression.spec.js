@@ -1,8 +1,8 @@
-var matcherFactory = require('./object-expression');
+const matcherFactory = require('./object-expression');
 
 describe('ObjectExpression matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

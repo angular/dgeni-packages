@@ -1,20 +1,20 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
-var getDocFromAlias, aliasMap;
+let getDocFromAlias, aliasMap;
 
 describe("getDocFromAlias", () => {
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     aliasMap = injector.get('aliasMap');
     getDocFromAlias = injector.get('getDocFromAlias');
   });
 
   it("should return an array of docs that match the alias", () => {
-    var doc1 = { aliases: ['a','b','c'] };
-    var doc2 = { aliases: ['a','b'] };
-    var doc3 = { aliases: ['a'] };
+    const doc1 = { aliases: ['a','b','c'] };
+    const doc2 = { aliases: ['a','b'] };
+    const doc3 = { aliases: ['a'] };
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
     aliasMap.addDoc(doc3);
@@ -25,9 +25,9 @@ describe("getDocFromAlias", () => {
   });
 
   it("should return docs that match the alias and originating doc's area", () => {
-    var doc1 = { aliases: ['a'], area: 'api'};
-    var doc2 = { aliases: ['a'], area: 'api'};
-    var doc3 = { aliases: ['a'], area: 'other'};
+    const doc1 = { aliases: ['a'], area: 'api'};
+    const doc2 = { aliases: ['a'], area: 'api'};
+    const doc3 = { aliases: ['a'], area: 'other'};
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
     aliasMap.addDoc(doc3);
@@ -36,9 +36,9 @@ describe("getDocFromAlias", () => {
   });
 
   it("should return docs that match the alias and originating doc's area and module", () => {
-    var doc1 = { aliases: ['a'], area: 'api', module: 'ng'};
-    var doc2 = { aliases: ['a'], area: 'api', module: 'ngMock'};
-    var doc3 = { aliases: ['a'], area: 'other', module: 'ng'};
+    const doc1 = { aliases: ['a'], area: 'api', module: 'ng'};
+    const doc2 = { aliases: ['a'], area: 'api', module: 'ngMock'};
+    const doc3 = { aliases: ['a'], area: 'other', module: 'ng'};
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
     aliasMap.addDoc(doc3);

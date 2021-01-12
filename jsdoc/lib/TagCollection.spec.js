@@ -1,8 +1,8 @@
-var TagCollection = require('./TagCollection');
-var Tag = require('./Tag');
+const TagCollection = require('./TagCollection');
+const Tag = require('./Tag');
 
 describe("TagCollection", () => {
-  var tags;
+  let tags;
 
   beforeEach(() => {
     tags = new TagCollection();
@@ -25,7 +25,7 @@ describe("TagCollection", () => {
 
   describe("addTag", () => {
     it("should add a good tag to the tags and tagsByName properties", () => {
-      var goodTag = { tagDef: { name: 'param'} };
+      const goodTag = { tagDef: { name: 'param'} };
       tags.addTag(goodTag);
       expect(tags.tags[0]).toBe(goodTag);
       expect(tags.tagsByName.get('param')[0]).toBe(goodTag);
@@ -33,7 +33,7 @@ describe("TagCollection", () => {
     });
 
     it("should add a bad tag to the badTags properties", () => {
-      var badTag = { tagDef: { name: 'param'}, errors: [ {} ] };
+      const badTag = { tagDef: { name: 'param'}, errors: [ {} ] };
       tags.addTag(badTag);
       expect(tags.badTags[0]).toBe(badTag);
       expect(tags.tags).toEqual([]);
@@ -43,7 +43,7 @@ describe("TagCollection", () => {
 
   describe("removeTag", () => {
     it("should remove the tag from both the tags and the tagsByName", () => {
-      var tag = { tagDef: { name: 'param' } };
+      const tag = { tagDef: { name: 'param' } };
       tags.addTag(tag);
       tags.removeTag(tag);
       expect(tags.tags).toEqual([]);
@@ -53,9 +53,9 @@ describe("TagCollection", () => {
 
   describe("getTag", () => {
     it("should get the first tag that matches the tagDef", () => {
-      var tagDef = { name: 'param' };
-      var tag1 = new Tag(tagDef, 'param', '...', 0);
-      var tag2 = new Tag(tagDef, 'param', '...', 100);
+      const tagDef = { name: 'param' };
+      const tag1 = new Tag(tagDef, 'param', '...', 0);
+      const tag2 = new Tag(tagDef, 'param', '...', 100);
       tags.addTag(tag1);
       tags.addTag(tag2);
       expect(tags.getTag(tagDef.name)).toBe(tag1);
@@ -64,9 +64,9 @@ describe("TagCollection", () => {
 
   describe("getTags", () => {
     it("should get the tags by name", () => {
-      var tagDef = { name: 'param' };
-      var tag1 = new Tag(tagDef, 'param', '...', 0);
-      var tag2 = new Tag(tagDef, 'param', '...', 100);
+      const tagDef = { name: 'param' };
+      const tag1 = new Tag(tagDef, 'param', '...', 0);
+      const tag2 = new Tag(tagDef, 'param', '...', 100);
       tags.addTag(tag1);
       tags.addTag(tag2);
       expect(tags.getTags(tagDef.name)).toEqual([tag1,tag2]);

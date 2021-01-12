@@ -18,7 +18,7 @@ module.exports = function extractAccessTransform(createDocMessage) {
    */
   function extractAccessTransformImpl (doc, tag, value) {
 
-    var static = extractAccessTransformImpl;
+    const static = extractAccessTransformImpl;
 
     // Check if this docType is allowed to provide an access value
     if ( !static.allowedDocTypes.has(doc.docType) ) {
@@ -35,7 +35,7 @@ module.exports = function extractAccessTransform(createDocMessage) {
                                        'Only one of the following tags allowed per doc: ' + joinKeys(static.allowedTags, '", "@', '[ "@access", "@', '" ]'), doc));
     }
 
-    var tagName = tag.tagDef.name;
+    const tagName = tag.tagDef.name;
     if ( tagName !== static.accessTagName ) {
 
       // Check that the tag has been registered
@@ -62,8 +62,8 @@ module.exports = function extractAccessTransform(createDocMessage) {
   }
 
   function joinKeys(set, joiner, pre, post) {
-    var result = pre || '';
-    var first = true;
+    let result = pre || '';
+    let first = true;
     set.forEach((_val, key) => {
       if (!first) {
         result += joiner;

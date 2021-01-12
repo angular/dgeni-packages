@@ -8,8 +8,8 @@ var htmlparser = require("htmlparser2");
  */
 module.exports = function extractLinks() {
   return html => {
-    var result = {hrefs: [], names: []};
-    var parser = new htmlparser.Parser({
+    const result = {hrefs: [], names: []};
+    const parser = new htmlparser.Parser({
       onopentag(name, attribs) {
 
         // Parse anchor elements, extracting href and name

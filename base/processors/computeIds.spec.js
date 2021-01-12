@@ -1,12 +1,12 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("computeIdsProcessor", () => {
-  var processor, mockLog;
+  let processor, mockLog;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     processor = injector.get('computeIdsProcessor');
     mockLog = injector.get('log');
   });
@@ -21,7 +21,7 @@ describe("computeIdsProcessor", () => {
       }
     ];
 
-    var doc = { docType: 'b' };
+    const doc = { docType: 'b' };
     processor.$process([doc]);
     expect(processor.idTemplates[0].getId).not.toHaveBeenCalled();
     expect(processor.idTemplates[0].getAliases).not.toHaveBeenCalled();
@@ -39,7 +39,7 @@ describe("computeIdsProcessor", () => {
         idTemplate: '${ docType }'
       }
     ];
-    var doc = { docType: 'a' };
+    const doc = { docType: 'a' };
     processor.$process([doc]);
     expect(processor.idTemplates[0].getId).toHaveBeenCalled();
     expect(processor.idTemplates[0].getAliases).toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe("computeIdsProcessor", () => {
         idTemplate: '${ docType }'
       }
     ];
-    var doc = { docType: 'a' };
+    const doc = { docType: 'a' };
     processor.$process([doc]);
     expect(doc).toEqual({ docType: 'a', id: 'a' });
   });
@@ -72,8 +72,8 @@ describe("computeIdsProcessor", () => {
       }
     ];
 
-    var docA = { docType: 'a' };
-    var docB = { docType: 'b' };
+    const docA = { docType: 'a' };
+    const docB = { docType: 'b' };
 
     processor.$process([docA, docB]);
 
@@ -91,7 +91,7 @@ describe("computeIdsProcessor", () => {
         idTemplate: '${ docType }'
       }
     ];
-    var doc = { docType: 'a', id: 'already/here', aliases: ['x','y','z'] };
+    const doc = { docType: 'a', id: 'already/here', aliases: ['x','y','z'] };
     processor.$process([doc]);
     expect(processor.idTemplates[0].getId).not.toHaveBeenCalled();
     expect(processor.idTemplates[0].getAliases).not.toHaveBeenCalled();

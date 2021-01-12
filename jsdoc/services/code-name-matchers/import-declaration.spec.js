@@ -1,8 +1,8 @@
-var matcherFactory = require('./import-declaration');
+const matcherFactory = require('./import-declaration');
 
 describe('ImportDeclaration matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

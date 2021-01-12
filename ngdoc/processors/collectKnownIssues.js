@@ -6,7 +6,7 @@ module.exports = function collectKnownIssuesProcessor() {
       docs
         .filter(doc => doc.knownIssues && doc.knownIssues.length)
         .forEach(doc => {
-          var moduleDoc = doc.moduleDoc;
+          const moduleDoc = doc.moduleDoc;
           moduleDoc.knownIssueDocs = moduleDoc.knownIssueDocs || [];
           moduleDoc.knownIssueDocs.push(doc);
         });

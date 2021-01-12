@@ -1,13 +1,13 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
-var tagDefFactory = require('./memberof');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
+const tagDefFactory = require('./memberof');
 
 describe("memberof tag-def", () => {
-  var tagDef;
+  let tagDef;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     tagDef = injector.invoke(tagDefFactory);
   });
 

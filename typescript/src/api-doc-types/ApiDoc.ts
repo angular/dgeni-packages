@@ -1,7 +1,6 @@
 import * as ts from 'typescript';
 import { Host } from '../services/ts-host/host';
 import { FileInfo } from '../services/TsParser/FileInfo';
-import { getContent } from '../services/TsParser/getContent';
 import { ModuleDoc } from './ModuleDoc';
 
 export interface ApiDoc {
@@ -37,7 +36,7 @@ export abstract class BaseApiDoc implements ApiDoc {
   outputPath: string = '';
 
   originalModule = this.fileInfo.projectRelativePath
-    .replace(new RegExp("\." + this.fileInfo.extension + "$"), "");
+    .replace(new RegExp("\\." + this.fileInfo.extension + "$"), "");
   typeChecker: ts.TypeChecker = this.moduleDoc.typeChecker;
 
   constructor(public host: Host,

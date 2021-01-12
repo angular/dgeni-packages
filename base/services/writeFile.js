@@ -1,6 +1,6 @@
-var mkdirp = require('mkdirp');
-var fs = require('fs');
-var path = require('canonical-path');
+const mkdirp = require('mkdirp');
+const fs = require('fs');
+const path = require('canonical-path');
 /**
  * @dgService writeFile
  * @description

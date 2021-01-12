@@ -1,20 +1,20 @@
-var rewire = require('rewire');
-var semver = require('semver');
-var Dgeni = require('dgeni');
+const rewire = require('rewire');
+const semver = require('semver');
+const Dgeni = require('dgeni');
 
-var mocks = require('../mocks/mocks.js');
-var mockPackageFactory = require('../mocks/mockPackage');
+const mocks = require('../mocks/mocks.js');
+const mockPackageFactory = require('../mocks/mockPackage');
 
-var versionInfoFactory = rewire('./versionInfo.js');
+const versionInfoFactory = rewire('./versionInfo.js');
 
 
 describe("versionInfo", () => {
-  var versionInfo, mockPackage, gitMocks, ciBuild;
+  let versionInfo, mockPackage, gitMocks, ciBuild;
 
   beforeEach(() => {
     mocks.getPreviousVersions.calls.reset();
 
-    var child = versionInfoFactory.__get__('child');
+    const child = versionInfoFactory.__get__('child');
 
     gitMocks = {
       rev: mocks.mockGitRevParse,
@@ -37,9 +37,9 @@ describe("versionInfo", () => {
     mockPackage = mockPackageFactory()
       .factory(versionInfoFactory);
 
-    var dgeni = new Dgeni([mockPackage]);
+    const dgeni = new Dgeni([mockPackage]);
 
-    var injector = dgeni.configureInjector();
+    const injector = dgeni.configureInjector();
     versionInfo = injector.get('versionInfo');
 
     ciBuild = process.env.TRAVIS_BUILD_NUMBER;
@@ -148,8 +148,8 @@ describe("versionInfo", () => {
     });
 
     it("should have a version matching the tag", () => {
-      var tag = gitMocks.describe.stdout.trim();
-      var version = semver.parse(tag);
+      const tag = gitMocks.describe.stdout.trim();
+      const version = semver.parse(tag);
       expect(versionInfo.currentVersion.version).toBe(version.version);
     });
 
@@ -160,8 +160,8 @@ describe("versionInfo", () => {
     it("should set codeName to null if it doesn't have a codename specified", () => {
       gitMocks.cat = mocks.mockGitCatFileNoCodeName;
 
-      var dgeni = new Dgeni([mockPackage]);
-      var injector = dgeni.configureInjector();
+      const dgeni = new Dgeni([mockPackage]);
+      const injector = dgeni.configureInjector();
       versionInfo = injector.get('versionInfo');
       expect(versionInfo.currentVersion.codeName).toBe(null);
     });
@@ -169,8 +169,8 @@ describe("versionInfo", () => {
     it("should set codeName to falsy if it has a badly formatted codename", () => {
       gitMocks.cat = mocks.mockGitCatFileBadFormat;
 
-      var dgeni = new Dgeni([mockPackage]);
-      var injector = dgeni.configureInjector();
+      const dgeni = new Dgeni([mockPackage]);
+      const injector = dgeni.configureInjector();
       versionInfo = injector.get('versionInfo');
       expect(versionInfo.currentVersion.codeName).toBeFalsy();
     });

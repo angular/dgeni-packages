@@ -1,4 +1,4 @@
-var path = require('canonical-path');
+const path = require('canonical-path');
 
 module.exports = function() {
   return {

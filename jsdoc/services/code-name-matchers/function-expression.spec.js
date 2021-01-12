@@ -1,8 +1,8 @@
-var matcherFactory = require('./function-expression');
+const matcherFactory = require('./function-expression');
 
 describe('FunctionExpression matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

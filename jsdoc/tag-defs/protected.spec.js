@@ -1,7 +1,7 @@
-var tagDefFactory = require('./protected');
+const tagDefFactory = require('./protected');
 
 describe("protected tagDef", () => {
-  var extractAccessTransform, extractTypeTransform, tagDef;
+  let extractAccessTransform, extractTypeTransform, tagDef;
 
   beforeEach(() => {
     extractTypeTransform = () => {};

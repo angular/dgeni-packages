@@ -1,10 +1,10 @@
 'use strict';
 
-var child = require('child_process');
-var semver = require('semver');
-var _ = require('lodash');
+const child = require('child_process');
+const semver = require('semver');
+const _ = require('lodash');
 
-var currentVersion, currentPackage, previousVersions;
+let currentVersion, currentPackage, previousVersions;
 
 /**
 * Check the version is satisfactory.
@@ -27,9 +27,9 @@ function satisfiesVersion(version) {
  * @return {String}         The codename if found, otherwise null/undefined
  */
 function getCodeName(tagName) {
-  var gitCatOutput = child.spawnSync('git', ['cat-file', '-p ' + tagName], {encoding:'utf8'}).stdout;
-  var match = gitCatOutput.match(/^.*codename.*$/mg);
-  var tagMessage = match && match[0];
+  const gitCatOutput = child.spawnSync('git', ['cat-file', '-p ' + tagName], {encoding:'utf8'}).stdout;
+  const match = gitCatOutput.match(/^.*codename.*$/mg);
+  const tagMessage = match && match[0];
   return tagMessage && tagMessage.match(/codename\((.*)\)/)[1];
 }
 
@@ -46,7 +46,7 @@ function getCommitSHA() {
  * @return {String} The build segment of the version
  */
 function getBuild() {
-  var hash = child.spawnSync('git', ['rev-parse', '--short', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
+  const hash = child.spawnSync('git', ['rev-parse', '--short', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
   return 'sha.' + hash;
 }
 
@@ -55,11 +55,11 @@ function getBuild() {
  * @return {SemVer} The version or null
  */
 function getTaggedVersion() {
-  var gitTagResult = child.spawnSync('git', ['describe', '--exact-match'], {encoding:'utf8'});
+  const gitTagResult = child.spawnSync('git', ['describe', '--exact-match'], {encoding:'utf8'});
 
   if (gitTagResult.status === 0) {
-    var tag = gitTagResult.stdout.trim();
-    var version = semver.parse(tag);
+    const tag = gitTagResult.stdout.trim();
+    const version = semver.parse(tag);
 
     if (version && satisfiesVersion(version)) {
       version.codeName = getCodeName(tag);
@@ -80,7 +80,7 @@ function getTaggedVersion() {
  * @return {SemVer} The snapshot version
  */
 function getSnapshotVersion() {
-  var version = _(previousVersions)
+  let version = _(previousVersions)
     .filter(tag => satisfiesVersion(tag))
     .last();
 
@@ -99,7 +99,7 @@ function getSnapshotVersion() {
   // We need to clone to ensure that we are not modifying another version
   version = semver(version.raw);
 
-  var jenkinsBuild = process.env.TRAVIS_BUILD_NUMBER || process.env.BUILD_NUMBER;
+  const jenkinsBuild = process.env.TRAVIS_BUILD_NUMBER || process.env.BUILD_NUMBER;
   if (!version.prerelease || !version.prerelease.length) {
     // last release was a non beta release. Increment the patch level to
     // indicate the next release that we will be doing.

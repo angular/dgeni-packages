@@ -1,4 +1,4 @@
-var filter = require('./first-line');
+const filter = require('./first-line');
 
 describe("firstLine filter", () => {
 

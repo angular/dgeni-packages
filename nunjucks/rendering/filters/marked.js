@@ -6,7 +6,7 @@ module.exports = function markedNunjucksFilter(renderMarkdown) {
   return {
     name: 'marked',
     process(str) {
-      var output = str && renderMarkdown(str);
+      const output = str && renderMarkdown(str);
       return output;
     }
   };

@@ -12,18 +12,18 @@ module.exports = function markedNunjucksTag(trimIndentation, renderMarkdown) {
     parse(parser, nodes) {
       parser.advanceAfterBlockEnd();
 
-      var content = parser.parseUntilBlocks("endmarked");
-      var tag = new nodes.CallExtension(this, 'process', null, [content]);
+      const content = parser.parseUntilBlocks("endmarked");
+      const tag = new nodes.CallExtension(this, 'process', null, [content]);
       parser.advanceAfterBlockEnd();
 
       return tag;
     },
 
     process(context, content) {
-      var contentString = content();
-      var indent = trimIndentation.calcIndent(contentString);
-      var trimmedString = trimIndentation.trimIndent(contentString, indent);
-      var markedString = renderMarkdown(trimmedString);
+      const contentString = content();
+      const indent = trimIndentation.calcIndent(contentString);
+      const trimmedString = trimIndentation.trimIndent(contentString, indent);
+      const markedString = renderMarkdown(trimmedString);
 
       return trimIndentation.reindent(markedString, indent);
     }

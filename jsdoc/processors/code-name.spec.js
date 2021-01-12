@@ -1,13 +1,13 @@
-var Dgeni = require('dgeni');
-var mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
 
 describe('code-name doc processor', () => {
 
-  var jsParser, processor, mockLog, codeNameService;
+  let jsParser, processor, mockLog, codeNameService;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     codeNameService = injector.get('codeNameService');
     jsParser = injector.get('jsParser');
     processor = injector.get('codeNameProcessor');
@@ -15,7 +15,7 @@ describe('code-name doc processor', () => {
   });
 
   it("should use already existing codeName", () => {
-    var doc = { codeName: 'test' };
+    const doc = { codeName: 'test' };
     processor.$process([doc]);
     expect(doc.codeName).toEqual('test');
     expect(mockLog.silly).toHaveBeenCalledWith('found codeName: ', 'test');
@@ -23,7 +23,7 @@ describe('code-name doc processor', () => {
   });
 
   it("should return null for empty codeNode", () => {
-    var doc = { };
+    const doc = { };
     processor.$process([doc]);
     expect(doc.codeName).toEqual(null);
     expect(mockLog.silly).not.toHaveBeenCalled();
@@ -31,8 +31,8 @@ describe('code-name doc processor', () => {
 
   it("should process parsed document", () => {
     spyOn(codeNameService, 'find').and.callThrough();
-    var ast = jsParser('(function foo() { })()');
-    var doc = { codeNode: ast };
+    const ast = jsParser('(function foo() { })()');
+    const doc = { codeNode: ast };
     processor.$process([doc]);
     expect(doc.codeName).toEqual('foo');
     expect(codeNameService.find).toHaveBeenCalledWith(jasmine.objectContaining({'type': 'FunctionExpression'}));

@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var traverse = require('estraverse').traverse;
+const _ = require('lodash');
+const traverse = require('estraverse').traverse;
 var LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 
 /**
@@ -33,8 +33,8 @@ module.exports = function extractJSDocCommentsProcessor() {
     removeJsFileDocs: true,
     $process(docs) {
 
-      var commentDocs = [];
-      var processor = this;
+      const commentDocs = [];
+      const processor = this;
 
       // Extract all the `jsFile` docs from the docs collection
       docs = _.filter(docs, doc => {
@@ -51,10 +51,10 @@ module.exports = function extractJSDocCommentsProcessor() {
           if ( comment.type === 'Block' && comment.value.charAt(0) === '*' ) {
             // Strip off any leading stars and
             // trim off leading and trailing whitespace
-            var text = comment.value.replace(LEADING_STAR, '').trim();
+            const text = comment.value.replace(LEADING_STAR, '').trim();
 
             // Extract the information about the code directly after this comment
-            var codeLocation = findNodeAfter(doc.fileInfo.ast, comment.range[1]);
+            const codeLocation = findNodeAfter(doc.fileInfo.ast, comment.range[1]);
 
             // Create a doc from this comment
             commentDocs.push({
@@ -78,7 +78,7 @@ module.exports = function extractJSDocCommentsProcessor() {
 };
 
 function findNodeAfter(ast, pos) {
-  var found, path;
+  let found, path;
   traverse(ast, {
     enter(node) {
       if ( node.range[1] > pos && node.range[0] >= pos ) {

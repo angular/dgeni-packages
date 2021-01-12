@@ -1,15 +1,15 @@
-var tagDefFactory = require('./license');
+const tagDefFactory = require('./license');
 
 describe("license tag-def", () => {
-  var tagDef;
+  let tagDef;
 
   beforeEach(() => {
     tagDef = tagDefFactory();
   });
 
   it('should pull in the license detail if it matches the SPDX License List', () => {
-    var doc = {};
-    var result = tagDef.transforms(doc, 'license', 'Apache-2.0');
+    const doc = {};
+    const result = tagDef.transforms(doc, 'license', 'Apache-2.0');
     expect(result).toEqual('Apache-2.0');
     expect(doc.licenseDescription).toEqual(jasmine.objectContaining({
       "name": "Apache License 2.0",

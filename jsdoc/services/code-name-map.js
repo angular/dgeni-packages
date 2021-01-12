@@ -1,4 +1,4 @@
-var StringMap = require('stringmap');
+const StringMap = require('stringmap');
 
 /**
  * @dgService codeNameMap

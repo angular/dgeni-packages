@@ -1,7 +1,7 @@
 "use strict";
 
-var path = require('canonical-path');
-var Package = require('dgeni').Package;
+const path = require('canonical-path');
+const Package = require('dgeni').Package;
 
 /**
  * @dgPackage git

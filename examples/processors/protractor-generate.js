@@ -1,6 +1,6 @@
 "use strict";
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgProcessor generateProtractorTestsProcessor
@@ -18,8 +18,8 @@ module.exports = function generateProtractorTestsProcessor(exampleMap) {
     $runBefore: ['extra-docs-added'],
     $process(docs) {
 
-      var deployments = this.deployments;
-      var basePath = this.basePath;
+      const deployments = this.deployments;
+      const basePath = this.basePath;
 
       exampleMap.forEach(example => {
         _.forEach(example.files, file => {

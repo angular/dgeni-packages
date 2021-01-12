@@ -9,5 +9,5 @@ module.exports = function FunctionDeclarationNodeMatcherFactory () {
    */
   return function FunctionDeclarationNodeMatcher (node) {
     return node.id && node.id.name || null;
-  }
+  };
 };

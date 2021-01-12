@@ -9,5 +9,5 @@ module.exports = function ArrowFunctionExpressionNodeMatcherFactory () {
    */
   return function ArrowFunctionExpressionNodeMatcher (node) {
     return null;
-  }
+  };
 };

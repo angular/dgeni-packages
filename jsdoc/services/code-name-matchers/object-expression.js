@@ -9,5 +9,5 @@ module.exports = function ObjectExpressionNodeMatcherFactory () {
    */
   return function ObjectExpressionNodeMatcher (node) {
     return null;
-  }
+  };
 };

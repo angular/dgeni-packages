@@ -1,8 +1,8 @@
-var tagDefFactory = require('./scope');
+const tagDefFactory = require('./scope');
 
 describe("scope tag-def", () => {
   it("should transform the value to true", () => {
-    var tagDef = tagDefFactory();
+    const tagDef = tagDefFactory();
     expect(tagDef.transforms()).toEqual(true);
   });
 });

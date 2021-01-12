@@ -1,8 +1,8 @@
-var codeTagFactory = require('./code');
-var nunjucks = require('nunjucks');
+const codeTagFactory = require('./code');
+const nunjucks = require('nunjucks');
 
 describe("code custom tag", () => {
-  var codeTag, trimIndentationSpy, codeSpy, env;
+  let codeTag, trimIndentationSpy, codeSpy, env;
 
   beforeEach(() => {
     trimIndentationSpy = jasmine.createSpy('trimIndentation').and.callFake(value => value.trim());

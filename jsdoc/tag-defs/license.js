@@ -1,4 +1,4 @@
-var spdxLicenseList = require('spdx-license-list/spdx-full');
+const spdxLicenseList = require('spdx-license-list/spdx-full');
 
 module.exports = function() {
   return {

@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var path = require('canonical-path');
+const _ = require('lodash');
+const path = require('canonical-path');
 
 /**
  * @dgService getLinkInfo
@@ -15,7 +15,7 @@ var path = require('canonical-path');
 module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock, log) {
 
   return function getLinkInfoImpl(url, title, currentDoc) {
-    var linkInfo = {
+    let linkInfo = {
       url: url,
       type: 'url',
       valid: true,
@@ -26,7 +26,7 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock, log) {
       throw new Error('Invalid url');
     }
 
-    var docs = getDocFromAlias(url, currentDoc);
+    const docs = getDocFromAlias(url, currentDoc);
 
     if ( !getLinkInfoImpl.useFirstAmbiguousLink && docs.length > 1 ) {
 
@@ -42,15 +42,15 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock, log) {
       linkInfo.type = 'doc';
 
       if ( getLinkInfoImpl.relativeLinks && currentDoc && currentDoc.path ) {
-        var currentFolder = path.dirname(currentDoc.path);
-        var docFolder = path.dirname(linkInfo.url);
-        var relativeFolder = path.relative(path.join('/', currentFolder), path.join('/', docFolder));
+        const currentFolder = path.dirname(currentDoc.path);
+        const docFolder = path.dirname(linkInfo.url);
+        const relativeFolder = path.relative(path.join('/', currentFolder), path.join('/', docFolder));
         linkInfo.url = path.join(relativeFolder, path.basename(linkInfo.url));
         log.debug(currentDoc.path, docs[0].path, linkInfo.url);
       }
 
     } else if ( url.indexOf('#') > 0 ) {
-      var pathAndHash = url.split('#');
+      const pathAndHash = url.split('#');
       linkInfo = getLinkInfoImpl(pathAndHash[0], title, currentDoc);
       linkInfo.url = linkInfo.url + '#' + pathAndHash[1];
       return linkInfo;

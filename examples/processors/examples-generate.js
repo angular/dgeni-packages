@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var path = require('canonical-path');
+const _ = require('lodash');
+const path = require('canonical-path');
 
 /**
  * @dgProcessor generateExamplesProcessor
@@ -17,11 +17,11 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       deployments: { presence: true }
     },
     $process(docs) {
-      var that = this;
+      const that = this;
       exampleMap.forEach(example => {
 
-        var stylesheets = [];
-        var scripts = [];
+        const stylesheets = [];
+        const scripts = [];
 
         // The index file is special, see createExampleDoc()
         example.indexFile = example.files['index.html'];
@@ -30,7 +30,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
         _.forEach(example.files, (file, fileName) => {
           if ( fileName === 'index.html' ) return;
 
-          var fileDoc = that.createFileDoc(example, file);
+          const fileDoc = that.createFileDoc(example, file);
           docs.push(fileDoc);
 
           // Store a reference to the fileDoc for attaching to the exampleDocs
@@ -43,13 +43,13 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
 
         // Create an index.html document for the example (one for each deployment type)
         _.forEach(that.deployments, deployment => {
-          var exampleDoc = that.createExampleDoc(example, deployment, stylesheets, scripts);
+          const exampleDoc = that.createExampleDoc(example, deployment, stylesheets, scripts);
           docs.push(exampleDoc);
           example.deployments[deployment.name] = exampleDoc;
         });
 
         // Create the doc that will be injected into the website as a runnable example
-        var runnableExampleDoc = that.createRunnableExampleDoc(example);
+        const runnableExampleDoc = that.createRunnableExampleDoc(example);
         docs.push(runnableExampleDoc);
         example.runnableExampleDoc = runnableExampleDoc;
 
@@ -60,11 +60,11 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
     },
 
     createExampleDoc(example, deployment, stylesheets, scripts) {
-      var deploymentQualifier = deployment.name === 'default' ? '' : ('-' + deployment.name);
-      var commonFiles = (deployment.examples && deployment.examples.commonFiles) || {};
-      var dependencyPath = (deployment.examples && deployment.examples.dependencyPath) || '.';
+      const deploymentQualifier = deployment.name === 'default' ? '' : ('-' + deployment.name);
+      const commonFiles = (deployment.examples && deployment.examples.commonFiles) || {};
+      const dependencyPath = (deployment.examples && deployment.examples.dependencyPath) || '.';
 
-      var exampleDoc = {
+      const exampleDoc = {
         id: example.id + deploymentQualifier,
         deployment: deployment,
         deploymentQualifier: deploymentQualifier,
@@ -83,7 +83,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       // Copy in any dependencies for this example
       if ( example.deps ) {
         _.forEach(example.deps.split(';'), dependency => {
-          var filePath = /(https?:)?\/\//.test(dependency) ?
+          const filePath = /(https?:)?\/\//.test(dependency) ?
             dependency :
             /(https?:)?\/\//.test(dependencyPath) ?
               dependencyPath + dependency :
@@ -109,7 +109,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
     },
 
     createFileDoc(example, file) {
-      var fileDoc = {
+      const fileDoc = {
         docType: 'example-file',
         id: example.id + '/' + file.name,
         fileInfo: example.doc.fileInfo,
@@ -124,7 +124,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
     },
 
     createRunnableExampleDoc(example) {
-      var exampleDoc = {
+      const exampleDoc = {
         id: example.id + '-runnableExample',
         docType: 'runnableExample',
         fileInfo: example.doc.fileInfo,
@@ -138,12 +138,12 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
 
     createManifestDoc(example) {
 
-      var files = _(example.files)
+      const files = _(example.files)
         .omit('index.html')
         .map(file => file.name)
         .value();
 
-      var manifestDoc = {
+      const manifestDoc = {
         id: example.id + '/manifest.json',
         docType: 'example-file',
         example: example,

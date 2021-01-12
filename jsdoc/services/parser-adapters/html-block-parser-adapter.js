@@ -37,6 +37,7 @@ function countTags(line, marker) {
   const regexp = new RegExp(marker + '\\b[\\s\\S]*?(/)?>', 'g');
   let count = 0;
   let match;
+  // eslint-disable-next-line no-cond-assign
   while(match = regexp.exec(line)) {
     count += 1;
   }

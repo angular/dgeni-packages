@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgProcessor providerDocsProcessor
@@ -14,11 +14,11 @@ module.exports = function providerDocsProcessor(log, aliasMap, createDocMessage)
       // Map services to their providers
       _.forEach(docs, doc => {
         if ( doc.docType === 'provider' ) {
-          var serviceId = doc.id.replace(/provider:/, 'service:').replace(/Provider$/, '');
-          var serviceDocs = aliasMap.getDocs(serviceId);
+          const serviceId = doc.id.replace(/provider:/, 'service:').replace(/Provider$/, '');
+          const serviceDocs = aliasMap.getDocs(serviceId);
 
           if ( serviceDocs.length === 1 ) {
-            serviceDoc = serviceDocs[0];
+            const serviceDoc = serviceDocs[0];
             doc.serviceDoc = serviceDoc;
             serviceDoc.providerDoc = doc;
           } else if ( serviceDocs.length === 0 ) {

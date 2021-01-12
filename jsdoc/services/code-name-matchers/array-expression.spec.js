@@ -1,8 +1,8 @@
-var matcherFactory = require('./array-expression');
+const matcherFactory = require('./array-expression');
 
 describe('ArrayExpression matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

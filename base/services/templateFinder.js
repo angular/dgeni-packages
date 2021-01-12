@@ -1,6 +1,6 @@
-var _ = require('lodash');
-var path = require('canonical-path');
-var glob = require('glob');
+const _ = require('lodash');
+const path = require('canonical-path');
+const glob = require('glob');
 
 /**
  * @dgService templateFinder
@@ -27,13 +27,13 @@ module.exports = function templateFinder(log, createDocMessage) {
     getFinder() {
 
       // Traverse each templateFolder and store an index of the files found for later
-      var templateSets = _.map(this.templateFolders, templateFolder => ({
+      const templateSets = _.map(this.templateFolders, templateFolder => ({
         templateFolder: templateFolder,
         templates: _.keyBy(glob.sync('**/*', { cwd: templateFolder }))
       }));
 
       // Compile each of the patterns and store them for later
-      var patternMatchers = _.map(this.templatePatterns, pattern =>
+      const patternMatchers = _.map(this.templatePatterns, pattern =>
         // Here we use the lodash micro templating.
         // The document will be available to the micro template as a `doc` variable
         _.template(pattern, { variable: 'doc' })
@@ -45,7 +45,7 @@ module.exports = function templateFinder(log, createDocMessage) {
        * @return {string}     The path to the matched template
        */
       return function findTemplate(doc) {
-        var templatePath;
+        let templatePath;
 
         // Search the template sets for a matching pattern for the given doc
         _.some(templateSets, templateSet =>

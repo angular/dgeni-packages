@@ -1,5 +1,5 @@
-var decorateVersion = require('./decorateVersion')();
-var semver = require('semver');
+const decorateVersion = require('./decorateVersion')();
+const semver = require('semver');
 
 describe("decorateVersion", () => {
   it('should be a function', () => {
@@ -7,7 +7,7 @@ describe("decorateVersion", () => {
   });
 
   it('should set the docsUrl', () => {
-    var version = semver.parse('5.5.5');
+    const version = semver.parse('5.5.5');
 
     decorateVersion(version);
     expect(version.docsUrl).toBeDefined();
@@ -16,7 +16,7 @@ describe("decorateVersion", () => {
 
   describe('semantic version', () => {
     it('should be true for 1.2.0 not rc1 prerelease', () => {
-      var version = semver.parse('1.2.0-build');
+      const version = semver.parse('1.2.0-build');
       expect(version.prerelease).toEqual(['build']);
 
       decorateVersion(version);
@@ -26,7 +26,7 @@ describe("decorateVersion", () => {
     });
 
     it('should be true for 1.0.x w/o prerelease', () => {
-      var version = semver.parse('1.0.0+rc1.build');
+      const version = semver.parse('1.0.0+rc1.build');
 
       decorateVersion(version);
 
@@ -35,7 +35,7 @@ describe("decorateVersion", () => {
     });
 
     it('should be false for 1.0.x with prerelease', () => {
-      var version = semver.parse('1.0.0-rc1.build');
+      const version = semver.parse('1.0.0-rc1.build');
       expect(version.prerelease).toEqual(['rc1', 'build']);
 
       decorateVersion(version);
@@ -45,7 +45,7 @@ describe("decorateVersion", () => {
     });
 
     it('should be false for 1.2.0rc1', () => {
-      var version = semver.parse('1.2.0-rc1.build');
+      const version = semver.parse('1.2.0-rc1.build');
       expect(version.prerelease).toEqual(['rc1', 'build']);
 
       decorateVersion(version);
@@ -57,19 +57,19 @@ describe("decorateVersion", () => {
 
   describe('isOldDocsUrl', () => {
     it('should not be set for 1.0.2', () => {
-      var version = semver.parse('1.0.2');
+      const version = semver.parse('1.0.2');
       decorateVersion(version);
       expect(version.isOldDocsUrl).toBeUndefined();
     });
 
     it('should be set for version < 1', () => {
-      var version = semver.parse('0.0.2');
+      const version = semver.parse('0.0.2');
       decorateVersion(version);
       expect(version.isOldDocsUrl).toBe(true);
     });
 
     it('should be set for version < 1.0.2', () => {
-      var version = semver.parse('1.0.1');
+      const version = semver.parse('1.0.1');
       decorateVersion(version);
       expect(version.isOldDocsUrl).toBe(true);
     });

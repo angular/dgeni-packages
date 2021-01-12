@@ -1,11 +1,11 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("trimIndentation", () => {
-  var trimIndentation;
+  let trimIndentation;
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     trimIndentation = injector.get('trimIndentation');
   });
   it("should trim simple leading white-space from a single line of text", () => {

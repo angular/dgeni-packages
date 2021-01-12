@@ -1,8 +1,8 @@
-var matcherFactory = require('./export-named-declaration');
+const matcherFactory = require('./export-named-declaration');
 
 describe('ExportNamedDeclaration matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {
@@ -14,7 +14,7 @@ describe('ExportNamedDeclaration matcher', () => {
   });
 
   it("should start search for right", () => {
-    var expr = {
+    const expr = {
       right: 'right'
     };
 

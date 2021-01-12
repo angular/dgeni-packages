@@ -1,4 +1,4 @@
-var filter = require('./json');
+const filter = require('./json');
 
 describe("json filter", () => {
   it("should have the name 'json'", () => {

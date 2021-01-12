@@ -5,11 +5,10 @@ module.exports = function wireUpServicesToPackages() {
     $process(docs) {
 
       // Build a map of the service name to package doc
-      var services = {};
+      const services = {};
       docs.forEach(doc => {
         if(doc.docType === 'dgPackage') {
-          var packageDoc = doc;
-          for(serviceName in doc.package.module) {
+          for(const serviceName in doc.package.module) {
             services[serviceName] = doc;
           }
         }
@@ -21,7 +20,7 @@ module.exports = function wireUpServicesToPackages() {
           doc.packageDoc = services[doc.name];
           doc.packageDoc.services.push(doc);
         }
-      })
+      });
     }
   };
 };

@@ -9,5 +9,5 @@ module.exports = function MemberExpressionNodeMatcherFactory (codeNameService) {
    */
   return function MemberExpressionNodeMatcher (node) {
     return codeNameService.find(node.property) || null;
-  }
+  };
 };

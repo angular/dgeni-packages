@@ -9,5 +9,5 @@ module.exports = function VariableDeclarationNodeMatcherFactory (codeNameService
    */
   return function VariableDeclarationNodeMatcher (node) {
     return node.declarations && node.declarations[0] && codeNameService.find(node.declarations[0]) || null;
-  }
+  };
 };

@@ -1,12 +1,12 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
-var isEmpty = RegExp.prototype.test.bind(/^\s*$/);
+const isEmpty = RegExp.prototype.test.bind(/^\s*$/);
 
 function calcIndent(text) {
-  var MAX_INDENT = 9999;
-  var lines = text.split('\n');
-  var minIndent = MAX_INDENT;
-  var emptyLinesRemoved = false;
+  const MAX_INDENT = 9999;
+  const lines = text.split('\n');
+  let minIndent = MAX_INDENT;
+  let emptyLinesRemoved = false;
 
   // ignore leading empty lines
   while(isEmpty(lines[0])) {
@@ -19,14 +19,14 @@ function calcIndent(text) {
     // ignore first line if it has no indentation and there is more than one line
     // this is because sometimes our text starts in the middle of a line of other
     // text that is indented and so doesn't appear to have an indent when it really does.
-    var ignoreLine = (lines[0][0] != ' '  && lines.length > 1);
+    const ignoreLine = (lines[0][0] != ' '  && lines.length > 1);
     if ( ignoreLine && !emptyLinesRemoved ) {
       lines.shift();
     }
 
     lines.forEach(line => {
       if ( !isEmpty(line) ) {
-        var indent = line.match(/^\s*/)[0].length;
+        const indent = line.match(/^\s*/)[0].length;
         minIndent = Math.min(minIndent, indent);
       }
     });
@@ -37,9 +37,9 @@ function calcIndent(text) {
 }
 
 function reindent(text, indent) {
-  var lines = text.split('\n');
-  var indentedLines = [];
-  var indentStr = new Array(indent + 1).join(' ');
+  const lines = text.split('\n');
+  const indentedLines = [];
+  const indentStr = new Array(indent + 1).join(' ');
   _.forEach(lines, line => {
     indentedLines.push(indentStr + line);
   });
@@ -47,8 +47,8 @@ function reindent(text, indent) {
 }
 
 function trimIndent(text, indent) {
-  var lines = text.split('\n');
-  var indentRegExp = new RegExp('^\\s{0,' + indent + '}');
+  const lines = text.split('\n');
+  const indentRegExp = new RegExp('^\\s{0,' + indent + '}');
 
   // remove the indentation
   for ( var i = 0; i < lines.length; i++) {
@@ -66,7 +66,7 @@ function trimIndent(text, indent) {
 
 // The primary export is a function that does the intentation trimming
 module.exports = function trimIndentation() {
-  var trimIndentationImpl = text => trimIndent(text, calcIndent(text));
+  const trimIndentationImpl = text => trimIndent(text, calcIndent(text));
   trimIndentationImpl.calcIndent = calcIndent;
   trimIndentationImpl.trimIndent = trimIndent;
   trimIndentationImpl.reindent = reindent;

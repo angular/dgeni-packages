@@ -1,36 +1,36 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
-var tagDefFactory = require('./name');
+const tagDefFactory = require('./name');
 
 describe("name tag-def", () => {
-  var tagDef;
+  let tagDef;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     tagDef = injector.invoke(tagDefFactory);
   });
 
   it("should update the inputType if docType is input", () => {
-    var doc = { docType: 'input' };
-    var tag = {};
-    var value = tagDef.transforms(doc, tag, 'input[checkbox]');
+    const doc = { docType: 'input' };
+    const tag = {};
+    const value = tagDef.transforms(doc, tag, 'input[checkbox]');
     expect(value).toEqual('input[checkbox]');
     expect(doc.inputType).toEqual('checkbox');
   });
 
   it("should not update the inputType if docType is not input", () => {
-    var doc = { docType: 'directive' };
-    var tag = {};
-    var value = tagDef.transforms(doc, tag, 'input[checkbox]');
+    const doc = { docType: 'directive' };
+    const tag = {};
+    const value = tagDef.transforms(doc, tag, 'input[checkbox]');
     expect(value).toEqual('input[checkbox]');
     expect(doc.inputType).toBeUndefined();
   });
 
   it("should throw error if the docType is 'input' and the name is not a valid format", () => {
-    var doc = { docType: 'input' };
-    var tag = {};
+    const doc = { docType: 'input' };
+    const tag = {};
     expect(() => tagDef.transforms(doc, tag, 'invalidInputName')).toThrow();
   });
 

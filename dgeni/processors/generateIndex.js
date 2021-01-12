@@ -3,7 +3,7 @@ module.exports = function generateIndex() {
     $runAfter: ['adding-extra-docs'],
     $runBefore: ['extra-docs-added'],
     $process(docs) {
-      var indexDoc = {
+      const indexDoc = {
         docType: 'indexPage',
         name: 'index',
         packages: []

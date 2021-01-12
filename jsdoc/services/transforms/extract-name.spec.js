@@ -1,7 +1,7 @@
-var transformFactory = require('./extract-name');
+const transformFactory = require('./extract-name');
 
 describe("extract-name transform", () => {
-  var doc, tag, value, transform;
+  let doc, tag, value, transform;
 
   beforeEach(() => {
     doc = {};

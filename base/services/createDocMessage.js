@@ -3,14 +3,14 @@ module.exports = function createDocMessage() {
     message = message || '';
     if ( doc ) {
       message += ' - doc';
-      var docIdentifier = doc.id || doc.name || doc.path;
+      const docIdentifier = doc.id || doc.name || doc.path;
       if ( docIdentifier ) {
         message += ' "' + docIdentifier + '"';
       }
       if ( doc.docType ) {
         message += ' (' + doc.docType + ') ';
       }
-      var filePath = doc.fileInfo && doc.fileInfo.relativePath;
+      const filePath = doc.fileInfo && doc.fileInfo.relativePath;
       if ( filePath ) {
         message += ' - from file "' + filePath + '"';
         if ( doc.startingLine ) {

@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgProcessor
@@ -36,17 +36,17 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
     },
     $process: function process(docs) {
 
-      var render = templateEngine.getRenderer();
-      var findTemplate = templateFinder.getFinder();
+      const render = templateEngine.getRenderer();
+      const findTemplate = templateFinder.getFinder();
 
       docs.forEach(doc => {
         log.debug('Rendering doc:', doc.id || doc.name || doc.path);
         try {
-          var data = _.defaults(
+          const data = _.defaults(
             { doc: doc, docs: docs },
             this.extraData,
             this.helpers);
-          var templateFile = findTemplate(data.doc);
+          const templateFile = findTemplate(data.doc);
           doc.renderedContent = render(templateFile, data);
         } catch(ex) {
           log.debug(_.omit(doc, ['content', 'moduleDoc', 'components', 'serviceDoc', 'providerDoc']));

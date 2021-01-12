@@ -1,4 +1,4 @@
-var sortByDependency = require('dgeni/lib/util/dependency-sort').sortByDependency;
+const sortByDependency = require('dgeni/lib/util/dependency-sort').sortByDependency;
 
 module.exports = function computeProcessorPipeline() {
   return {
@@ -7,7 +7,7 @@ module.exports = function computeProcessorPipeline() {
     $process(docs) {
       docs.forEach(doc => {
         if (doc.docType === 'dgPackage') {
-          var processors = collectProcessors(doc);
+          const processors = collectProcessors(doc);
           doc.pipeline = sortByDependency(processors, '$runAfter', '$runBefore');
         }
       });
@@ -16,9 +16,9 @@ module.exports = function computeProcessorPipeline() {
 };
 
 function collectProcessors(doc) {
-  var processors = [].concat(doc.processors);
+  const processors = [...doc.processors];
   doc.dependencies.forEach(dependency => {
-    processors = processors.concat(collectProcessors(dependency));
+    processors.push(...collectProcessors(dependency));
   });
   return processors;
 }

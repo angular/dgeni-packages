@@ -1,9 +1,9 @@
-var gitPackage = require('./mocks/mockPackage');
-var Dgeni = require('dgeni');
-var mocks = require('./mocks/mocks');
+const gitPackage = require('./mocks/mockPackage');
+const Dgeni = require('dgeni');
+const mocks = require('./mocks/mocks');
 
 describe('git package', () => {
-  var extraData, dgeni;
+  let extraData, dgeni;
   beforeEach(() => {
     dgeni = new Dgeni([gitPackage()]);
   });
@@ -13,7 +13,7 @@ describe('git package', () => {
   });
 
   it("should have factories set", () => {
-    var injector = dgeni.configureInjector();
+    const injector = dgeni.configureInjector();
 
     expect(injector.get('gitData')).toBeDefined();
     expect(injector.get('packageInfo')).toBeDefined();
@@ -23,8 +23,8 @@ describe('git package', () => {
   });
 
   it("should set extraData.git to gitData", () => {
-    var injector = dgeni.configureInjector();
-    var renderDocsProcessor = injector.get('renderDocsProcessor');
+    const injector = dgeni.configureInjector();
+    const renderDocsProcessor = injector.get('renderDocsProcessor');
     expect(renderDocsProcessor.extraData.git).toBe(mocks.gitData);
   });
 });

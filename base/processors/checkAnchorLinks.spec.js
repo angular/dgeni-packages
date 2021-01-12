@@ -1,10 +1,10 @@
-var path = require('canonical-path');
+const path = require('canonical-path');
 
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("checkAnchorLinks", () => {
-  var processor, mockLog;
+  let processor, mockLog;
 
   function checkWarning(link, doc) {
     expect(mockLog.warn).toHaveBeenCalled();
@@ -14,9 +14,9 @@ describe("checkAnchorLinks", () => {
 
 
   beforeEach(() => {
-    var testPackage = mockPackage();
-    var dgeni = new Dgeni([testPackage]);
-    var injector = dgeni.configureInjector();
+    const testPackage = mockPackage();
+    const dgeni = new Dgeni([testPackage]);
+    const injector = dgeni.configureInjector();
 
     processor = injector.get('checkAnchorLinksProcessor');
     mockLog = injector.get('log');
@@ -46,7 +46,7 @@ describe("checkAnchorLinks", () => {
     processor.$process([
       { renderedContent: '<a href="Foo extends Bar"></a>', outputPath: 'doc/path.html', path: 'doc/path' },
       { renderedContent: 'CONTENT OF FOO', outputPath: 'doc/Foo extends Bar.html', path: 'doc/Foo extends Bar' }
-    ])
+    ]);
     expect(mockLog.warn).not.toHaveBeenCalled();
   });
 

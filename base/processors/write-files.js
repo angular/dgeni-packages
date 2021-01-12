@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var path = require('canonical-path');
+const _ = require('lodash');
+const path = require('canonical-path');
 
 /**
  * @dgProcessor writeFilesProcessor
@@ -16,14 +16,14 @@ module.exports = function writeFilesProcessor(log, readFilesProcessor, writeFile
     $runAfter:['writing-files'],
     $runBefore: ['files-written'],
     $process(docs) {
-      var outputFolder = this.outputFolder;
+      const outputFolder = this.outputFolder;
       return Promise.all(_.map(docs, doc => {
 
         if ( !doc.outputPath ) {
           log.debug('Document "' + doc.id + ', ' + doc.docType + '" has no outputPath.');
         } else {
 
-          var outputFile = path.resolve(readFilesProcessor.basePath, outputFolder, doc.outputPath);
+          const outputFile = path.resolve(readFilesProcessor.basePath, outputFolder, doc.outputPath);
 
           log.silly('writing file', outputFile);
           return writeFile(outputFile, doc.renderedContent).then(() => {

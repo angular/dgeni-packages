@@ -1,20 +1,20 @@
-var path = require('canonical-path');
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const path = require('canonical-path');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("readPackageInfo processor", () => {
 
-  var processor;
+  let processor;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     processor = injector.get('readPackageInfo');
   });
 
   it('should wire up documented and pseudo processors', () => {
-    var docs = [
+    const docs = [
     {
       docType: 'dgPackage',
       name: 'testPackage',
@@ -47,7 +47,7 @@ describe("readPackageInfo processor", () => {
 
 
   it('should wire up documented and undocumented package dependencies', () => {
-    var docs = [
+    const docs = [
     {
       docType: 'dgPackage',
       name: 'testPackage',

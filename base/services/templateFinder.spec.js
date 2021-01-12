@@ -1,22 +1,22 @@
-var rewire = require('rewire');
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const rewire = require('rewire');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 var templateFinderFactory = rewire('./templateFinder');
 
 describe("templateFinder", () => {
 
-  var templateFinder;
+  let templateFinder;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     templateFinder = injector.get('templateFinder');
   });
 
 
   describe("getFinder", () => {
 
-    var glob, patterns, templateFolders, findTemplate;
+    let glob, patterns, templateFolders, findTemplate;
 
     beforeEach(() => {
       glob = templateFinderFactory.__get__('glob');

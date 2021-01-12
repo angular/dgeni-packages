@@ -1,6 +1,6 @@
-var path = require('canonical-path');
+const path = require('canonical-path');
 var packagePath = __dirname;
-var Package = require('dgeni').Package;
+const Package = require('dgeni').Package;
 
 /**
  * @dgPackage examples

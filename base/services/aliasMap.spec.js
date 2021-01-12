@@ -1,18 +1,18 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("aliasMap", () => {
-  var aliasMap;
+  let aliasMap;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     aliasMap = injector.get('aliasMap');
   });
 
   describe("addDoc", () => {
     it("should add the doc to an array for each alias", () => {
-      var doc = { aliases: ['a', 'b', 'c'] };
+      const doc = { aliases: ['a', 'b', 'c'] };
       aliasMap.addDoc(doc);
       expect(aliasMap.getDocs('a')).toEqual([doc]);
       expect(aliasMap.getDocs('b')).toEqual([doc]);
@@ -20,7 +20,7 @@ describe("aliasMap", () => {
     });
 
     it("should not add the doc if it has no aliases", () => {
-      var doc = { };
+      const doc = { };
       aliasMap.addDoc(doc);
       expect(aliasMap.getDocs('a')).toEqual([]);
       expect(aliasMap.getDocs('b')).toEqual([]);
@@ -30,15 +30,15 @@ describe("aliasMap", () => {
 
   describe("getDocs", () => {
     it("should return an empty array if no doc matches the alias", () => {
-      var doc = { aliases: ['a', 'b', 'c'] };
+      const doc = { aliases: ['a', 'b', 'c'] };
       expect(aliasMap.getDocs('d')).toEqual([]);
     });
   });
 
   describe("removeDoc", () => {
     it("should remove the doc from any parts of the aliasMap", () => {
-      var doc1 = { aliases: ['a','b1'] };
-      var doc2 = { aliases: ['a','b2'] };
+      const doc1 = { aliases: ['a','b1'] };
+      const doc2 = { aliases: ['a','b2'] };
       aliasMap.addDoc(doc1);
       aliasMap.addDoc(doc2);
 

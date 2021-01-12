@@ -1,8 +1,8 @@
-var matcherFactory = require('./program');
+const matcherFactory = require('./program');
 
 describe('Program matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {

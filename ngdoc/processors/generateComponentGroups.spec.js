@@ -1,18 +1,18 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("generateComponentGroupsProcessor", () => {
-  var processor, moduleMap;
+  let processor, moduleMap;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     processor = injector.get('generateComponentGroupsProcessor');
     moduleMap = injector.get('moduleMap');
   });
 
   it("should create a new doc for each group of components (by docType) in each module", () => {
-    var docs = [];
+    const docs = [];
     moduleMap.set('mod1', {
       id: 'mod1',
       name: 'mod1',
@@ -49,7 +49,7 @@ describe("generateComponentGroupsProcessor", () => {
         { docType: 'a', id: 'a1' }
       ]
     });
-    var docs = [];
+    const docs = [];
     processor.$process(docs);
     expect(docs.length).toEqual(1);
 
@@ -72,9 +72,9 @@ describe("generateComponentGroupsProcessor", () => {
         { docType: 'b', id: 'a3' }
       ]
     });
-    var docs = [];
+    const docs = [];
     processor.$process(docs);
-    var componentGroups = moduleMap.get('mod1').componentGroups;
+    const componentGroups = moduleMap.get('mod1').componentGroups;
     expect(componentGroups.length).toEqual(2);
     expect(componentGroups[0].name).toEqual('a components in mod1');
   });

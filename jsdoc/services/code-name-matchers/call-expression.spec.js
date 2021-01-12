@@ -1,8 +1,8 @@
-var matcherFactory = require('./call-expression');
+const matcherFactory = require('./call-expression');
 
 describe('CallExpression matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {

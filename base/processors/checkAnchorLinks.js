@@ -85,7 +85,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
       if ( unmatchedLinkCount ) {
         const errorMessage = unmatchedLinkCount + ' unmatched links';
         if (this.errorOnUnmatchedLinks) {
-          throw new Error(errorMessage)
+          throw new Error(errorMessage);
         } else {
           log.warn(errorMessage);
         }

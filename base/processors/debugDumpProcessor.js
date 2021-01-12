@@ -1,4 +1,4 @@
-var path = require('canonical-path');
+const path = require('canonical-path');
 var util = require("util");
 
 /**
@@ -24,9 +24,9 @@ module.exports = function debugDumpProcessor(log, readFilesProcessor, writeFile)
 
     $process(docs) {
       log.info('Dumping docs:', this.filterFn, this.outputPath);
-      var filteredDocs = this.filterFn(docs);
-      var dumpedDocs = util.inspect(filteredDocs, this.depth);
-      var outputPath = path.resolve(readFilesProcessor.basePath, this.outputPath);
+      const filteredDocs = this.filterFn(docs);
+      const dumpedDocs = util.inspect(filteredDocs, this.depth);
+      const outputPath = path.resolve(readFilesProcessor.basePath, this.outputPath);
       return writeFile(outputPath, dumpedDocs).then(() => docs);
     }
   };

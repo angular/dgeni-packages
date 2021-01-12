@@ -1,8 +1,8 @@
-var examplesPackage = require('./index');
-var ngdocPackage = require('../ngdoc/index');
+const examplesPackage = require('./index');
+const ngdocPackage = require('../ngdoc/index');
 
-var Dgeni = require('dgeni');
-var mockLog = require('dgeni/lib/mocks/log');
+const Dgeni = require('dgeni');
+const mockLog = require('dgeni/lib/mocks/log');
 
 
 
@@ -13,7 +13,7 @@ describe('examples package', () => {
 
 
   function runDgeni(docs) {
-    var testPackage = new Dgeni.Package('testPackage', [examplesPackage, ngdocPackage])
+    const testPackage = new Dgeni.Package('testPackage', [examplesPackage, ngdocPackage])
       .factory('log', function log() { return mockLog(false); })
       .processor('provideTestDocs', function provideTestDocs() {
         return {
@@ -56,7 +56,7 @@ describe('examples package', () => {
   }
 
   function processExample() {
-    var doc = {
+    const doc = {
       content:
         '/** @ngdoc service\n' +
         ' * @description\n' +

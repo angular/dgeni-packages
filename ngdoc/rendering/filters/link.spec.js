@@ -1,7 +1,7 @@
-var filterFactory = require('./link');
+const filterFactory = require('./link');
 
 describe("link filter", () => {
-  var filter;
+  let filter;
 
   beforeEach(() => {
     filter = filterFactory();

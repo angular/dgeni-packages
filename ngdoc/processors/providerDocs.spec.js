@@ -1,12 +1,12 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("providerDocsProcessor", () => {
-  var processor, aliasMap, mockLog;
+  let processor, aliasMap, mockLog;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     processor = injector.get('providerDocsProcessor');
     aliasMap = injector.get('aliasMap');
     mockLog = injector.get('log');
@@ -14,11 +14,11 @@ describe("providerDocsProcessor", () => {
 
 
   it("should connect all services docs to their provider docs", () => {
-    var doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
-    var doc2 = { docType: 'provider', id: 'provider:$logProvider', aliases: ['provider:$logProvider'] };
-    var doc3 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
-    var doc4 = { docType: 'service', id: 'service:$log', aliases: ['service:$log'] };
-    var doc5 = { docType: 'service', id: 'service:$filter', aliases: ['service:$filter'] };
+    const doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
+    const doc2 = { docType: 'provider', id: 'provider:$logProvider', aliases: ['provider:$logProvider'] };
+    const doc3 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
+    const doc4 = { docType: 'service', id: 'service:$log', aliases: ['service:$log'] };
+    const doc5 = { docType: 'service', id: 'service:$filter', aliases: ['service:$filter'] };
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
@@ -38,9 +38,9 @@ describe("providerDocsProcessor", () => {
 
 
   it("should log a warning if their is more than one matching service", () => {
-    var doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
-    var doc2 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
-    var doc3 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
+    const doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
+    const doc2 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
+    const doc3 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
@@ -56,7 +56,7 @@ describe("providerDocsProcessor", () => {
 
 
   it("should complain if there is no service for a provider", () => {
-    var doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
+    const doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
 
     aliasMap.addDoc(doc1);
 

@@ -1,4 +1,4 @@
-var filter = require('./first-paragraph');
+const filter = require('./first-paragraph');
 
 describe("firstParagraph filter", () => {
   it("should have the name 'firstParagraph'", () => {

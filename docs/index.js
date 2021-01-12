@@ -1,6 +1,6 @@
 // Canonical path provides a consistent path (i.e. always forward slashes) across different OSes
-var path = require('canonical-path');
-var Package = require('dgeni').Package;
+const path = require('canonical-path');
+const Package = require('dgeni').Package;
 
 module.exports = new Package('dgeni-docs', [require('../dgeni')])
 
@@ -44,7 +44,7 @@ module.exports = new Package('dgeni-docs', [require('../dgeni')])
     docTypes: ['dgService'],
     pathTemplate: '${packageDoc.id}/services/${name}.md',
     outputPathTemplate: '${path}'
-  })
+  });
 })
 
 .config(function(templateFinder, templateEngine) {

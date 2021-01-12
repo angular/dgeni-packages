@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { CompilerHost, CompilerOptions, createCompilerHost, createSourceFile, getDefaultLibFileName, ScriptTarget, SourceFile, sys, WriteFileCallback} from 'typescript';
+import { CompilerHost, CompilerOptions, createSourceFile, getDefaultLibFileName, ScriptTarget, SourceFile, sys, WriteFileCallback} from 'typescript';
 const path = require('canonical-path');
 
 // We need to provide our own version of CompilerHost because we want to set the
@@ -18,7 +18,7 @@ export class CustomCompilerHost implements CompilerHost {
     // let's just try loading the file as-is initially
     try {
       resolvedPath = path.resolve(this.baseDir, fileName);
-      text = fs.readFileSync(resolvedPath, { encoding: this.options.charset! });
+      text = fs.readFileSync(resolvedPath, { encoding: this.options.charset as BufferEncoding });
       this.log.debug('found source file:', fileName);
       return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
     } catch (e) {
@@ -42,7 +42,7 @@ export class CustomCompilerHost implements CompilerHost {
       for (let i = 0; i < baseDirDepth; ++i) {
         try {
           resolvedPath = path.resolve(this.baseDir, maybe);
-          text = fs.readFileSync(resolvedPath, { encoding: this.options.charset! });
+          text = fs.readFileSync(resolvedPath, { encoding: this.options.charset as BufferEncoding });
           this.log.debug('found source file:', fileName);
           return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
         } catch (e) {
@@ -53,7 +53,7 @@ export class CustomCompilerHost implements CompilerHost {
     }
 
     // Strip off the extension and resolve relative to the baseDir
-    baseFilePath = fileName.replace(/\.[^.\/]+$/, '');
+    baseFilePath = fileName.replace(/\.[^./]+$/, '');
     resolvedPath = path.resolve(this.baseDir, baseFilePath);
     baseFilePath = path.relative(this.baseDir, resolvedPath);
 
@@ -64,7 +64,7 @@ export class CustomCompilerHost implements CompilerHost {
       try {
         resolvedPathWithExt = resolvedPath + extension;
         this.log.silly('getSourceFile:', resolvedPathWithExt);
-        text = fs.readFileSync(resolvedPathWithExt, { encoding: this.options.charset! });
+        text = fs.readFileSync(resolvedPathWithExt, { encoding: this.options.charset as BufferEncoding });
         this.log.debug('found source file:', fileName, resolvedPathWithExt);
         return createSourceFile(baseFilePath + extension, text, languageVersion);
       } catch (e) {

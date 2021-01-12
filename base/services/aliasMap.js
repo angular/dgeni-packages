@@ -1,4 +1,4 @@
-var StringMap = require('stringmap');
+const StringMap = require('stringmap');
 
 /**
  * @dgService aliasMap
@@ -6,7 +6,7 @@ var StringMap = require('stringmap');
  * A map of id aliases to docs
  */
 module.exports = function aliasMap() {
-  var map = new StringMap();
+  const map = new StringMap();
 
   return {
     /**
@@ -22,7 +22,7 @@ module.exports = function aliasMap() {
       doc.aliases.forEach(alias => {
 
         // Try to get a list of docs that match this alias
-        var matchedDocs = map.get(alias) || [];
+        const matchedDocs = map.get(alias) || [];
         matchedDocs.push(doc);
         map.set(alias, matchedDocs);
 
@@ -38,10 +38,10 @@ module.exports = function aliasMap() {
 
       doc.aliases.forEach(alias => {
 
-        var matchedDocs = map.get(alias);
+        const matchedDocs = map.get(alias);
         if ( matchedDocs ) {
           // We have an array of docs so we need to remove the culprit
-          var index = matchedDocs.indexOf(doc);
+          const index = matchedDocs.indexOf(doc);
           if ( index !== -1 ) {
             matchedDocs.splice(index, 1);
           }

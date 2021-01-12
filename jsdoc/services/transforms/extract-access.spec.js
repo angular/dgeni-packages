@@ -1,19 +1,19 @@
-var Dgeni = require('dgeni');
-var mockPackage = require('../../mocks/mockPackage');
+const Dgeni = require('dgeni');
+const mockPackage = require('../../mocks/mockPackage');
 
-var transformFactory = require('./extract-access');
+const transformFactory = require('./extract-access');
 
 describe("extract-access transform", () => {
-  var transform;
+  let transform;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     transform = injector.get('extractAccessTransform');
   });
 
   describe('(@access tag)', () => {
-    var doc, tag;
+    let doc, tag;
     beforeEach(() => {
       doc = {};
       tag = { tagDef: { name: "access" } };
@@ -26,7 +26,7 @@ describe("extract-access transform", () => {
     it("should extract the access restrictions for property", () => {
       doc.docType = 'property';
 
-      var value = transform(doc, tag, 'private');
+      const value = transform(doc, tag, 'private');
       expect(doc.access).toEqual('private');
       expect(value).toBeUndefined();
     });
@@ -34,7 +34,7 @@ describe("extract-access transform", () => {
     it("should extract the access restrictions for method", () => {
       doc.docType = 'method';
 
-      var value = transform(doc, tag, 'public');
+      const value = transform(doc, tag, 'public');
       expect(doc.access).toEqual('public');
       expect(value).toBeUndefined();
     });
@@ -49,7 +49,7 @@ describe("extract-access transform", () => {
     it("should throw an error for unknown value", () => {
       doc.docType = 'method';
 
-      value = 'root';
+      const value = 'root';
 
       expect(() => transform(doc, tag, value)).toThrowError('Illegal value for `doc.access` property of "root".\n' +
                       'This property can only contain the following values: [ "private", "public" ] - doc (method) ');
@@ -59,7 +59,7 @@ describe("extract-access transform", () => {
       doc.docType = 'method';
       doc.access = 'private';
 
-      value = 'private';
+      const value = 'private';
 
       expect(() => transform(doc, tag, value)).toThrowError('Illegal use of "@access" tag.\n' +
                       '`doc.access` property is already defined as "private".\n' +
@@ -69,7 +69,7 @@ describe("extract-access transform", () => {
     it("should throw an error if no value defined", () => {
       doc.docType = 'method';
 
-      value = '';
+      const value = '';
 
       expect(() => transform(doc, tag, value)).toThrowError('Illegal value for `doc.access` property of "".\n' +
                       'This property can only contain the following values: [ "private", "public" ] - doc (method) ');
@@ -80,8 +80,8 @@ describe("extract-access transform", () => {
 
 
     it("should throw an error if the tag is not registered with the extractAccessTransform", () => {
-      doc = { docType: 'property' };
-      tag = { tagDef: { name: 'other' } };
+      const doc = { docType: 'property' };
+      const tag = { tagDef: { name: 'other' } };
 
       expect(() => transform(doc, tag, '')).toThrowError('Register tag @other with extractAccessTransform.allowedTags.set("other") prior to use - doc (property) ');
     });
@@ -90,18 +90,18 @@ describe("extract-access transform", () => {
       transform.allowedTags.set('a', 'blah');
       transform.allowedTags.set('b');
 
-      doc = { docType: 'property' };
-      tag = { tagDef: { name: 'a' } };
+      const doc1 = { docType: 'property' };
+      const tag1 = { tagDef: { name: 'a' } };
 
-      var value = transform(doc, tag, 'some value');
-      expect(value).toEqual('blah');
-      expect(doc.access).toEqual('a');
+      const value1 = transform(doc1, tag1, 'some value');
+      expect(value1).toEqual('blah');
+      expect(doc1.access).toEqual('a');
 
-      doc = { docType: 'property' };
-      tag = { tagDef: { name: 'b' } };
-      var value = transform(doc, tag, 'some value');
-      expect(value).toBeUndefined();
-      expect(doc.access).toEqual('b');
+      const doc2 = { docType: 'property' };
+      const tag2 = { tagDef: { name: 'b' } };
+      const value2 = transform(doc2, tag2, 'some value');
+      expect(value2).toBeUndefined();
+      expect(doc2.access).toEqual('b');
     });
   });
 });

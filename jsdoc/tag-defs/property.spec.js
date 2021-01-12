@@ -1,12 +1,12 @@
-var tagDefFactory = require('./property');
+const tagDefFactory = require('./property');
 
 describe("property tagDef", () => {
   it("should add the injected transforms to the transforms property", () => {
-    var extractNameTransform = () => {};
-    var extractTypeTransform = () => {};
-    var wholeTagTransform = () => {};
+    const extractNameTransform = () => {};
+    const extractTypeTransform = () => {};
+    const wholeTagTransform = () => {};
 
-    var tagDef = tagDefFactory(extractTypeTransform, extractNameTransform, wholeTagTransform);
+    const tagDef = tagDefFactory(extractTypeTransform, extractNameTransform, wholeTagTransform);
     expect(tagDef.transforms).toEqual([extractTypeTransform, extractNameTransform, wholeTagTransform]);
   });
 });

@@ -1,8 +1,8 @@
-var matcherFactory = require('./method-definition');
+const matcherFactory = require('./method-definition');
 
 describe('MethodDefinition matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {

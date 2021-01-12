@@ -1,23 +1,23 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 
-var tagDefFactory = require('./link');
+const tagDefFactory = require('./link');
 
 describe("links inline tag handler", () => {
-  var tagDef, getLinkInfoSpy, doc, links, log;
+  let tagDef, getLinkInfoSpy, doc, links, log;
 
   beforeEach(() => {
 
     getLinkInfoSpy = jasmine.createSpy('getLinkInfo');
 
-    var testPackage = mockPackage()
+    const testPackage = mockPackage()
       .factory('getLinkInfo', function getLinkInfo() {
         return getLinkInfoSpy;
       });
 
-    var dgeni = new Dgeni([testPackage]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([testPackage]);
+    const injector = dgeni.configureInjector();
     log = injector.get('log');
     tagDef = injector.get('linkInlineTagDef');
 

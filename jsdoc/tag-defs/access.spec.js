@@ -1,19 +1,19 @@
-var tagDefFactory = require('./access');
+const tagDefFactory = require('./access');
 
 describe("access tagDef", () => {
-  var extractAccessTransform;
+  let extractAccessTransform;
 
   beforeEach(() => {
     extractAccessTransform = () => {};
   });
 
   it("should have the correct name", () => {
-    var tagDef = tagDefFactory(extractAccessTransform);
+    const tagDef = tagDefFactory(extractAccessTransform);
     expect(tagDef.name).toEqual('access');
   });
 
   it("should add the injected transforms to the transforms property", () => {
-    var tagDef = tagDefFactory(extractAccessTransform);
+    const tagDef = tagDefFactory(extractAccessTransform);
     expect(tagDef.transforms).toEqual(extractAccessTransform);
   });
 });

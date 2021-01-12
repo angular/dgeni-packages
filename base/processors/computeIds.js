@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var StringMap = require('stringmap');
+const _ = require('lodash');
+const StringMap = require('stringmap');
 
 /**
  * @dgProcessor computeIdsProcessor
@@ -8,7 +8,7 @@ var StringMap = require('stringmap');
  */
 module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
 
-  var getIdMap, getAliasesMap;
+  let getIdMap, getAliasesMap;
 
   function initializeMaps(idTemplates) {
     getIdMap = new StringMap();
@@ -31,7 +31,7 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
         });
       }
     });
-  };
+  }
 
   return {
     $runAfter: ['computing-ids'],
@@ -46,7 +46,7 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
       docs.forEach(doc => {
         try {
           if ( !doc.id ) {
-            var getId = getIdMap.get(doc.docType);
+            const getId = getIdMap.get(doc.docType);
             if ( !getId ) {
               log.warn(createDocMessage('No idTemplate or getId(doc) method provided', doc));
             } else {
@@ -55,7 +55,7 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
           }
 
           if ( !doc.aliases ) {
-            var getAliases = getAliasesMap.get(doc.docType);
+            const getAliases = getAliasesMap.get(doc.docType);
             if ( !getAliases ) {
               log.warn(createDocMessage('No getAlias(doc) method provided', doc));
             } else {

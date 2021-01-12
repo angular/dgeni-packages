@@ -9,5 +9,5 @@ module.exports = function ProgramNodeMatcherFactory (codeNameService) {
    */
   return function ProgramNodeMatcher (node) {
     return node.body && node.body[0] && codeNameService.find(node.body[0]) || null;
-  }
+  };
 };

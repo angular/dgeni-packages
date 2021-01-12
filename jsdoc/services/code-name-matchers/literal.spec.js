@@ -1,8 +1,8 @@
-var matcherFactory = require('./literal');
+const matcherFactory = require('./literal');
 
 describe('Literal matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

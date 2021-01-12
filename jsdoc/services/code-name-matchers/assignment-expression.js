@@ -9,5 +9,5 @@ module.exports = function AssignmentExpressionNodeMatcherFactory (codeNameServic
    */
   return function AssignmentExpressionNodeMatcher (node) {
     return codeNameService.find(node.right) || codeNameService.find(node.left) || null;
-  }
+  };
 };

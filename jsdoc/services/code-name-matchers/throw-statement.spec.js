@@ -1,8 +1,8 @@
-var matcherFactory = require('./throw-statement');
+const matcherFactory = require('./throw-statement');
 
 describe('ThrowStatement matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {

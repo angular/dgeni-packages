@@ -1,13 +1,13 @@
 
 function parseCodeName(codeName) {
-  var parts = [];
-  var currentPart;
+  const parts = [];
+  let currentPart;
 
   codeName.split('.').forEach(part => {
-    var subParts = part.split(':');
+    const subParts = part.split(':');
 
-    var name = subParts.pop();
-    var modifier = subParts.pop();
+    const name = subParts.pop();
+    const modifier = subParts.pop();
 
     if ( !modifier && currentPart  ) {
       currentPart.name += '.' + name;
@@ -33,12 +33,12 @@ module.exports = function getAliases() {
 
   return (doc) => {
 
-    var codeNameParts = parseCodeName(doc.id);
+    const codeNameParts = parseCodeName(doc.id);
 
-    var methodName;
-    var aliases = [];
+    let methodName;
+    let aliases = [];
     // Add the last part to the list of aliases
-    var part = codeNameParts.pop();
+    const part = codeNameParts.pop();
 
     // If the name contains a # then it is a member and that should be included in the aliases
     if ( part.name.indexOf('#') !== -1 ) {

@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgProcessor memberDocsProcessor
@@ -7,7 +7,7 @@ var _ = require('lodash');
  */
 module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMessage) {
 
-  var mergeableTypes = {
+  const mergeableTypes = {
     method: 'methods',
     property: 'properties',
     event: 'events'
@@ -17,7 +17,7 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
     $runAfter: ['ids-computed'],
     $runBefore: ['computing-paths'],
     $process(docs) {
-      var parts;
+      let parts;
 
       docs = _.filter(docs, doc => {
 
@@ -31,7 +31,7 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
 
           log.debug('child doc found', doc.id, doc.memberof);
 
-          var containerDocs = getDocFromAlias(doc.memberof, doc);
+          let containerDocs = getDocFromAlias(doc.memberof, doc);
 
           if ( containerDocs.length === 0 ) {
             log.warn(createDocMessage('Missing container document: "'+ doc.memberof + '"', doc));
@@ -47,12 +47,12 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
             }
           }
 
-          var containerDoc = containerDocs[0];
+          const containerDoc = containerDocs[0];
           doc.memberof = containerDoc.id;
 
           // Add this member doc to the container doc
-          var containerProperty = mergeableTypes[doc.docType];
-          var container = containerDoc[containerProperty] = containerDoc[containerProperty] || [];
+          const containerProperty = mergeableTypes[doc.docType];
+          const container = containerDoc[containerProperty] = containerDoc[containerProperty] || [];
           container.push(doc);
 
         } else {

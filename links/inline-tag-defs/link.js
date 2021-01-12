@@ -20,7 +20,7 @@ module.exports = function linkInlineTagDef(getLinkInfo, createDocMessage, log) {
       // Parse out the uri and title
       return tagDescription.replace(INLINE_LINK, (match, uri, title) => {
 
-        var linkInfo = getLinkInfo(uri, title, doc);
+        const linkInfo = getLinkInfo(uri, title, doc);
 
         if ( !linkInfo.valid ) {
           log.warn(createDocMessage(linkInfo.error, doc));

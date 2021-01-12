@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgProcessor moduleDocsProcessor
@@ -10,7 +10,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
     $runAfter: ['ids-computed', 'memberDocsProcessor'],
     $runBefore: ['computing-paths'],
     $process(docs) {
-      var parts;
+      let parts;
 
       // Compute some extra fields for docs in the API area
       _.forEach(docs, doc => {
@@ -23,10 +23,10 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
           doc.components = [];
 
           // Compute the package name and filename for the module
-          var match = /^ng(.*)/.exec(doc.name);
+          const match = /^ng(.*)/.exec(doc.name);
           if ( match ) {
             if ( !doc.packageName ) {
-              var packageName = match[1].toLowerCase();
+              let packageName = match[1].toLowerCase();
               if ( packageName ) { packageName = '-' + packageName; }
               doc.packageName = 'angular' + packageName;
             }
@@ -39,7 +39,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
       // Attach each doc to its module
       _.forEach(docs, doc => {
         if ( doc.docType !== 'module' && doc.module ) {
-          var matchingModules = aliasMap.getDocs(doc.module);
+          let matchingModules = aliasMap.getDocs(doc.module);
 
           if ( matchingModules.length > 1 ) {
             // try matching with the 'module:' specifier
@@ -47,7 +47,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
           }
 
           if ( matchingModules.length === 1 ) {
-            var module = matchingModules[0];
+            let module = matchingModules[0];
             if (module.docType === 'module') {
               module.components.push(doc);
             } else {
@@ -55,7 +55,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
             }
             doc.moduleDoc = module;
           } else if ( matchingModules.length > 1 ) {
-            var error = createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc);
+            let error = createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc);
             error += '\nMatching modules:\n';
             _.forEach(matchingModules, mod => {
               error += '- ' + mod.id + '\n';

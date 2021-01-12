@@ -1,5 +1,5 @@
-var path = require('canonical-path');
-var Package = require('dgeni').Package;
+const path = require('canonical-path');
+const Package = require('dgeni').Package;
 
 /**
  * @dgPackage jsdoc
@@ -52,7 +52,7 @@ module.exports = new Package('jsdoc', [require('../base')])
   computeIdsProcessor.idTemplates.push({
     docTypes: ['js'],
     getId(doc) {
-      var docPath = doc.name || doc.codeName;
+      let docPath = doc.name || doc.codeName;
       if ( !docPath ) {
         docPath = path.dirname(doc.fileInfo.relativePath);
         if ( doc.fileInfo.baseName !== 'index' ) {

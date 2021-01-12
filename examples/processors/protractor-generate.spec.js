@@ -1,16 +1,16 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 describe("generateExamplesProcessor", () => {
 
-  var processor, exampleMap;
+  let processor, exampleMap;
 
   beforeEach(() => {
 
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     processor = injector.get('generateProtractorTestsProcessor');
     processor.templateFolder = 'examples';
@@ -39,7 +39,7 @@ describe("generateExamplesProcessor", () => {
       },
       deployments: {}
     });
-    var docs = [];
+    const docs = [];
     processor.$process(docs);
     expect(docs[0].basePath).toEqual('');
     expect(docs[1].basePath).toEqual('');
@@ -55,7 +55,7 @@ describe("generateExamplesProcessor", () => {
 
   it("should add a protractor doc for each example-deployment pair in the example", () => {
 
-    docs = [
+    const docs = [
       { file: 'a.b.c.js' },
       { file: 'x.y.z.js' }
     ];

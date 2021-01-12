@@ -1,5 +1,5 @@
-var url = require('url');
-var path = require('canonical-path');
+const url = require('url');
+const path = require('canonical-path');
 
 /**
  * @dgService resolveUrl
@@ -14,7 +14,7 @@ module.exports = function resolveUrl() {
   return (currentPath, newPath, base) => {
 
     // Extract only the path and the hash from the newPath
-    var parsedUrl = url.parse(newPath);
+    const parsedUrl = url.parse(newPath);
     parsedUrl.search = null;
     newPath = url.format(parsedUrl);
 

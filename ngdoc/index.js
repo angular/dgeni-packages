@@ -1,5 +1,5 @@
-var path = require('canonical-path');
-var Package = require('dgeni').Package;
+const path = require('canonical-path');
+const Package = require('dgeni').Package;
 
 /**
  * @dgPackage ngdoc
@@ -74,8 +74,8 @@ module.exports = new Package('ngdoc', [
   computeIdsProcessor.idTemplates.push({
     docTypes: ['method', 'property', 'event'],
     getId(doc) {
-      var parts = doc.name.split('#');
-      var name = parts.pop();
+      const parts = doc.name.split('#');
+      const name = parts.pop();
       parts.push(doc.docType + ':' + name);
       return parts.join('#');
     },

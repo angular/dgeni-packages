@@ -1,7 +1,7 @@
-var tagDefFactory = require('./private');
+const tagDefFactory = require('./private');
 
 describe("private tagDef", () => {
-  var extractAccessTransform, extractTypeTransform, tagDef;
+  let extractAccessTransform, extractTypeTransform, tagDef;
 
   beforeEach(() => {
     extractTypeTransform = () => {};

@@ -1,4 +1,4 @@
-var Package = require('dgeni').Package;
+const Package = require('dgeni').Package;
 
 module.exports = function mockPackage() {
 
@@ -9,7 +9,7 @@ module.exports = function mockPackage() {
 
   // provide a mock template engine for the tests
   .factory('templateEngine', function dummyTemplateEngine() {
-    var renderSpy = jasmine.createSpy('templateEngine');
+    const renderSpy = jasmine.createSpy('templateEngine');
     return {
       getRenderer() { return renderSpy; }
     };

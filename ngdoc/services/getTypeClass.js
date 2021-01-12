@@ -5,7 +5,7 @@
  */
 module.exports = function getTypeClass() {
   return typeStr => {
-    var typeClass = typeStr.toLowerCase().match(/^[-\w]+/) || [];
+    let typeClass = typeStr.toLowerCase().match(/^[-\w]+/) || [];
     typeClass = typeClass[0] ? typeClass[0] : 'object';
     return 'label type-hint type-hint-' + typeClass;
   };

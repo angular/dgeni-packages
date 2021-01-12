@@ -1,8 +1,8 @@
-var matcherFactory = require('./function-declaration');
+const matcherFactory = require('./function-declaration');
 
 describe('FunctionDeclaration matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

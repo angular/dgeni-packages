@@ -1,8 +1,8 @@
-var matcherFactory = require('./assignment-expression');
+const matcherFactory = require('./assignment-expression');
 
 describe('AssignmentExpression matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {
@@ -14,7 +14,7 @@ describe('AssignmentExpression matcher', () => {
   });
 
   it("should start search for right", () => {
-    var expr = {
+    const expr = {
       left: 'left',
       right: 'right'
     };
@@ -28,7 +28,7 @@ describe('AssignmentExpression matcher', () => {
 
   it("should continue search with left", () => {
     codeNameServiceMock.value = null;
-    var expr = {
+    const expr = {
       left: 'test',
       right: null
     };
@@ -42,7 +42,7 @@ describe('AssignmentExpression matcher', () => {
 
   it("should return null for empty left and right", () => {
     codeNameServiceMock.value = null;
-    var expr = {
+    const expr = {
       left: null,
       right: null
     };

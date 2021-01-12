@@ -1,8 +1,8 @@
-var matcherFactory = require('./return-statement');
+const matcherFactory = require('./return-statement');
 
 describe('ReturnStatement matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {

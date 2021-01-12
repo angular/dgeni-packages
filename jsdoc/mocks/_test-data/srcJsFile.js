@@ -1,4 +1,4 @@
-module.exports = 
+module.exports =
 "'use strict';\n" +
 "\n" +
 "/**\n" +
@@ -61,7 +61,7 @@ module.exports =
 "     * BC version}.\n" +
 "     */\n" +
 "    return function(expression, locals) {\n" +
-"      var instance, match, constructor, identifier;\n" +
+"      let instance, match, constructor, identifier;\n" +
 "\n" +
 "      if(isString(expression)) {\n" +
 "        match = expression.match(CNTRL_REG),\n" +

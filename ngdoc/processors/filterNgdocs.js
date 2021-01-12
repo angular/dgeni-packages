@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgProcessor filterNgDocsProcessor
@@ -10,7 +10,7 @@ module.exports = function filterNgDocsProcessor(log) {
     $runAfter: ['tags-parsed'],
     $runBefore: ['extracting-tags'],
     $process(docs) {
-      var docCount = docs.length;
+      const docCount = docs.length;
       docs = _.filter(docs, doc => doc.tags.getTag('ngdoc'));
       log.debug('filtered ' + (docCount - docs.length) + ' docs');
       return docs;

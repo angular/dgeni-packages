@@ -1,8 +1,8 @@
-var matcherFactory = require('./property');
+const matcherFactory = require('./property');
 
 describe('Property matcher', () => {
 
-  var matcher, codeNameServiceMock;
+  let matcher, codeNameServiceMock;
 
   beforeEach(() => {
     codeNameServiceMock = {
@@ -14,7 +14,7 @@ describe('Property matcher', () => {
   });
 
   it("should start search for value", () => {
-    var expr = {
+    const expr = {
       key: 'key',
       value: 'value'
     };
@@ -28,7 +28,7 @@ describe('Property matcher', () => {
 
   it("should continue search with key", () => {
     codeNameServiceMock.value = null;
-    var expr = {
+    const expr = {
       key: 'key',
       value: null
     };
@@ -42,7 +42,7 @@ describe('Property matcher', () => {
 
   it("should return null for empty key and value", () => {
     codeNameServiceMock.value = null;
-    var expr = {
+    const expr = {
       key: null,
       value: null
     };

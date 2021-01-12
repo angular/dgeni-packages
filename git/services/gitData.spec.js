@@ -1,20 +1,20 @@
-var mocks = require('../mocks/mocks');
-var mockPackageFactory = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
-var gitDataFactory = require('./gitData');
+const mocks = require('../mocks/mocks');
+const mockPackageFactory = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
+const gitDataFactory = require('./gitData');
 
 
 
 describe("gitData", () => {
-  var gitData;
+  let gitData, mockPackage;
 
   beforeEach(() => {
     mockPackage = mockPackageFactory()
       .factory(gitDataFactory);
 
-    var dgeni = new Dgeni([mockPackage]);
+    const dgeni = new Dgeni([mockPackage]);
 
-    var injector = dgeni.configureInjector();
+    const injector = dgeni.configureInjector();
     gitData = injector.get('gitData');
 
   });

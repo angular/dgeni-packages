@@ -1,8 +1,8 @@
-var matcherFactory = require('./arrow-function-expression');
+const matcherFactory = require('./arrow-function-expression');
 
 describe('ArrowFunctionExpression matcher', () => {
 
-  var matcher;
+  let matcher;
 
   beforeEach(() => {
     matcher = matcherFactory();

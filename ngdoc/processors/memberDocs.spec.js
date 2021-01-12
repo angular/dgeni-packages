@@ -1,12 +1,12 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("memberDocsProcessor", () => {
-  var processor, aliasMap, mockLog;
+  let processor, aliasMap, mockLog;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     processor = injector.get('memberDocsProcessor');
     aliasMap = injector.get('aliasMap');
     mockLog = injector.get('log');
@@ -14,10 +14,10 @@ describe("memberDocsProcessor", () => {
 
   it("should remove docs that are members of container docs", () => {
 
-    var doc1 = { id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
-    var doc2 = { id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
-    var doc3 = { id: 'ng.$log#warn' };
-    var docs = [doc1, doc2, doc3];
+    const doc1 = { id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
+    const doc2 = { id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
+    const doc3 = { id: 'ng.$log#warn' };
+    let docs = [doc1, doc2, doc3];
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
@@ -29,14 +29,14 @@ describe("memberDocsProcessor", () => {
 
   it("should connect member docs to their container doc", () => {
 
-    var doc1 = { id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
-    var doc2 = { id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
-    var doc3 = { id: 'ng.$log#warn', docType: 'method' };
-    var docs = [doc1, doc2, doc3];
+    const doc1 = { id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
+    const doc2 = { id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
+    const doc3 = { id: 'ng.$log#warn', docType: 'method' };
+    const docs = [doc1, doc2, doc3];
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
-    docs = processor.$process(docs);
+    processor.$process(docs);
 
     expect(doc3.name).toEqual('warn');
     expect(doc3.memberof).toEqual('module:ng.service:$log');
@@ -46,9 +46,9 @@ describe("memberDocsProcessor", () => {
   });
 
   it("should attempt to match the container by using the member's module", () => {
-    var doc1 = { module: 'ng', id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
-    var doc2 = { module: 'ngMock', id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
-    var doc3 = { module: 'ngMock', id: '$log#warn', docType: 'method' };
+    const doc1 = { module: 'ng', id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
+    const doc2 = { module: 'ngMock', id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
+    const doc3 = { module: 'ngMock', id: '$log#warn', docType: 'method' };
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
@@ -62,10 +62,10 @@ describe("memberDocsProcessor", () => {
 
   it("should warn if the container doc does not exist or is ambiguous", () => {
 
-    var doc1 = { module: 'ng', id: 'module:ng.service:orderBy', aliases: ['orderBy', 'service:orderBy', 'ng.orderBy', 'module:ng.service:orderBy', 'ng.service:orderBy'] };
-    var doc2 = { module: 'ng', id: 'module:ng.filter:orderBy', aliases: ['orderBy', 'filter:orderBy', 'ng.orderBy', 'module:ng.filter:orderBy', 'ng.service:orderBy'] };
-    var doc3 = { module: 'ng', id: 'ng.$http#get', docType: 'method' };
-    var doc4 = { module: 'ng', id: 'orderBy#doIt', docType: 'method' };
+    const doc1 = { module: 'ng', id: 'module:ng.service:orderBy', aliases: ['orderBy', 'service:orderBy', 'ng.orderBy', 'module:ng.service:orderBy', 'ng.service:orderBy'] };
+    const doc2 = { module: 'ng', id: 'module:ng.filter:orderBy', aliases: ['orderBy', 'filter:orderBy', 'ng.orderBy', 'module:ng.filter:orderBy', 'ng.service:orderBy'] };
+    const doc3 = { module: 'ng', id: 'ng.$http#get', docType: 'method' };
+    const doc4 = { module: 'ng', id: 'orderBy#doIt', docType: 'method' };
 
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);

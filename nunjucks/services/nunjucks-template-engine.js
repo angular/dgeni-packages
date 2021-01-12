@@ -1,4 +1,4 @@
-var nunjucks = require('nunjucks');
+const nunjucks = require('nunjucks');
 
 /**
  * @dgService templateEngine
@@ -18,8 +18,8 @@ module.exports = function templateEngine(templateFinder) {
     tags: [],
 
     getRenderer() {
-      var loader = new nunjucks.FileSystemLoader(templateFinder.templateFolders, {throwOnUndefined: true, watch: false, noCache: false});
-      var engine = new nunjucks.Environment(loader, this.config);
+      const loader = new nunjucks.FileSystemLoader(templateFinder.templateFolders, {throwOnUndefined: true, watch: false, noCache: false});
+      const engine = new nunjucks.Environment(loader, this.config);
 
       // Configure nunjucks with the custom filters
       this.filters.forEach(filter => engine.addFilter(filter.name, filter.process));

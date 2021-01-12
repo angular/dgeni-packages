@@ -1,9 +1,9 @@
-var ngdocFileReaderFactory = require('./ngdoc');
-var path = require('canonical-path');
+const ngdocFileReaderFactory = require('./ngdoc');
+const path = require('canonical-path');
 
 describe("ngdocFileReader", () => {
 
-  var fileReader;
+  let fileReader;
 
   function createFileInfo(file, content, basePath) {
     return {
@@ -33,7 +33,7 @@ describe("ngdocFileReader", () => {
 
   describe("getDocs", () => {
     it('should return an object containing info about the file and its contents', () => {
-      var fileInfo = createFileInfo('foo/bar.ngdoc', 'A load of content', 'base/path');
+      const fileInfo = createFileInfo('foo/bar.ngdoc', 'A load of content', 'base/path');
       expect(fileReader.getDocs(fileInfo)).toEqual([{
         content: 'A load of content',
         startingLine: 1

@@ -1,6 +1,6 @@
-var changeCase = require('change-case');
+const changeCase = require('change-case');
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * @dgRenderFilter lowerCase
@@ -56,7 +56,7 @@ var _ = require('lodash');
  */
 
 
-var changers = [
+const changers = [
   'no',
   'lower',
   'pascal',

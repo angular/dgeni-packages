@@ -1,9 +1,9 @@
-var transformFactory = require('./whole-tag');
+const transformFactory = require('./whole-tag');
 
 describe("whole-tag transform", () => {
   it("should return the whole tag", () => {
-    var transform = transformFactory();
-    var doc = {}, tag = {}, value = {};
+    const transform = transformFactory();
+    const doc = {}, tag = {}, value = {};
     expect(transform(doc, tag, value)).toBe(tag);
   });
 });

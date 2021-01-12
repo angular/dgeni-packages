@@ -3,12 +3,12 @@ module.exports = function(trimIndentation, encodeCodeBlock) {
     tags: ['code'],
 
     parse(parser, nodes) {
-      var tok = parser.nextToken();
-      var args = parser.parseSignature(null, true);
+      const tok = parser.nextToken();
+      const args = parser.parseSignature(null, true);
       parser.advanceAfterBlockEnd(tok.value);
 
-      var content = parser.parseUntilBlocks("endcode");
-      var tag = new nodes.CallExtension(this, 'process', args, [content]);
+      const content = parser.parseUntilBlocks("endcode");
+      const tag = new nodes.CallExtension(this, 'process', args, [content]);
       parser.advanceAfterBlockEnd();
 
       return tag;
@@ -19,8 +19,8 @@ module.exports = function(trimIndentation, encodeCodeBlock) {
         content = lang;
         lang = undefined;
       }
-      var trimmedString = trimIndentation(content());
-      var codeString = encodeCodeBlock(trimmedString, false, lang);
+      const trimmedString = trimIndentation(content());
+      const codeString = encodeCodeBlock(trimmedString, false, lang);
       return codeString;
     }
   };

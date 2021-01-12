@@ -9,5 +9,5 @@ module.exports = function LiteralNodeMatcherFactory () {
    */
   return function LiteralNodeMatcher (node) {
     return node.value || null;
-  }
+  };
 };

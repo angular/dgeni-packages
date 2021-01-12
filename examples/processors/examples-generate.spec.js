@@ -1,18 +1,18 @@
-var _ = require('lodash');
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const _ = require('lodash');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("examples-generate processor", () => {
-  var templateFolder, deployments, docs, exampleMap;
+  let docs, exampleMap;
 
   beforeEach(() => {
 
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
 
     docs = [{ file: 'a.b.js' }];
 
-    files = {};
+    const files = {};
 
     files['index.html'] = { type: 'html', name: 'index.html', fileContents: 'index.html content' };
     files['app.js'] = { type: 'js', name: 'app.js', fileContents: 'app.js content' };
@@ -29,7 +29,7 @@ describe("examples-generate processor", () => {
       deployments: {}
     });
 
-    processor = injector.get('generateExamplesProcessor');
+    const processor = injector.get('generateExamplesProcessor');
     processor.templateFolder = 'examples';
     processor.deployments = [
       {
@@ -46,7 +46,7 @@ describe("examples-generate processor", () => {
 
   });
   it("should add an exampleDoc for each example deployment", () => {
-    var exampleDocs = _.filter(docs, { docType: 'example' });
+    const exampleDocs = _.filter(docs, { docType: 'example' });
     expect(exampleDocs.length).toBe(2);
 
     expect(exampleDocs[0]).toEqual(
@@ -111,12 +111,12 @@ describe("examples-generate processor", () => {
   });
 
   it("should add a runnableExampleDoc for each example", () => {
-    var runnableExampleDocs = _.filter(docs, { docType: 'runnableExample' });
+    const runnableExampleDocs = _.filter(docs, { docType: 'runnableExample' });
     expect(runnableExampleDocs.length).toEqual(1);
   });
 
   it("should add a manifest doc for each example", () => {
-    var manifestDoc = _.filter(docs, { docType: 'example-file', template: 'manifest.template.json' })[0];
+    const manifestDoc = _.filter(docs, { docType: 'example-file', template: 'manifest.template.json' })[0];
     expect(manifestDoc.id).toEqual('a.b.c/manifest.json');
     expect(manifestDoc.docType).toEqual('example-file');
     expect(manifestDoc.example).toEqual(exampleMap.get('a.b.c'));

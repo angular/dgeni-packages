@@ -1,6 +1,6 @@
 // Matches:
 // name, [name], [name=default], name text, [name] text, [name=default] text, name - text, [name] - text or [name=default] - text
-var NAME_AND_DESCRIPTION = /^\s*(\[([^\]=]+)(?:=([^\]]+))?\]|\S+)((?:[ \t]*\-\s*|\s+)(\S[\s\S]*))?\s*$/;
+var NAME_AND_DESCRIPTION = /^\s*(\[([^\]=]+)(?:=([^\]]+))?\]|\S+)((?:[ \t]*-\s*|\s+)(\S[\s\S]*))?\s*$/;
 
 /**
  * Extract the name information from a tag
@@ -20,7 +20,7 @@ module.exports = function extractNameTransform() {
         tag.defaultValue = defaultValue;
       }
 
-      var aliasParts = tag.name.split('|');
+      const aliasParts = tag.name.split('|');
       tag.name = aliasParts[0];
       tag.alias = aliasParts[1];
       return dashDescription || description || '';

@@ -1,5 +1,5 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 function createMockTagCollection(tags) {
   return {
@@ -11,27 +11,27 @@ function createMockTagCollection(tags) {
 
 
 describe("filter-ngdocs doc-processor plugin", () => {
-  var processor;
+  let processor;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     processor = injector.get('filterNgDocsProcessor');
   });
 
   it("should only return docs that have the ngdoc tag", () => {
 
-    var doc1 = { tags: createMockTagCollection({ngdoc: 'a'}) };
+    const doc1 = { tags: createMockTagCollection({ngdoc: 'a'}) };
 
-    var doc2 = { tags: createMockTagCollection({other: 'b'}) };
+    const doc2 = { tags: createMockTagCollection({other: 'b'}) };
 
-    var doc3 = { tags: createMockTagCollection({ngdoc: 'c', other: 'd'}) };
+    const doc3 = { tags: createMockTagCollection({ngdoc: 'c', other: 'd'}) };
 
-    var doc4 = { tags: createMockTagCollection({}) };
+    const doc4 = { tags: createMockTagCollection({}) };
 
-    var docs = [ doc1, doc2, doc3, doc4 ];
+    const docs = [ doc1, doc2, doc3, doc4 ];
 
-    var filteredDocs = processor.$process(docs);
+    const filteredDocs = processor.$process(docs);
 
     expect(filteredDocs).toEqual([doc1, doc3]);
   });

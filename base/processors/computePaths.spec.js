@@ -1,12 +1,12 @@
-var mockPackage = require('../mocks/mockPackage');
-var Dgeni = require('dgeni');
+const mockPackage = require('../mocks/mockPackage');
+const Dgeni = require('dgeni');
 
 describe("computePathsProcessor", () => {
-  var processor, mockLog;
+  let processor, mockLog;
 
   beforeEach(() => {
-    var dgeni = new Dgeni([mockPackage()]);
-    var injector = dgeni.configureInjector();
+    const dgeni = new Dgeni([mockPackage()]);
+    const injector = dgeni.configureInjector();
     processor = injector.get('computePathsProcessor');
     mockLog = injector.get('log');
   });
@@ -23,7 +23,7 @@ describe("computePathsProcessor", () => {
       }
     ];
 
-    var doc = { docType: 'b' };
+    const doc = { docType: 'b' };
     processor.$process([doc]);
     expect(processor.pathTemplates[0].getPath).not.toHaveBeenCalled();
     expect(processor.pathTemplates[0].getOutputPath).not.toHaveBeenCalled();
@@ -42,7 +42,7 @@ describe("computePathsProcessor", () => {
         outputPathTemplate: '${ docType }.html'
       }
     ];
-    var doc = { docType: 'a' };
+    const doc = { docType: 'a' };
     processor.$process([doc]);
     expect(processor.pathTemplates[0].getPath).toHaveBeenCalled();
     expect(processor.pathTemplates[0].getOutputPath).toHaveBeenCalled();
@@ -58,7 +58,7 @@ describe("computePathsProcessor", () => {
         outputPathTemplate: '${ docType }.html'
       }
     ];
-    var doc = { docType: 'a' };
+    const doc = { docType: 'a' };
     processor.$process([doc]);
     expect(doc).toEqual({ docType: 'a', path: 'a', outputPath: 'a.html' });
   });
@@ -78,8 +78,8 @@ describe("computePathsProcessor", () => {
       }
     ];
 
-    var docA = { docType: 'a' };
-    var docB = { docType: 'b' };
+    const docA = { docType: 'a' };
+    const docB = { docType: 'b' };
 
     processor.$process([docA, docB]);
 
@@ -98,7 +98,7 @@ describe("computePathsProcessor", () => {
         outputPathTemplate: '${ docType }.html'
       }
     ];
-    var doc = { docType: 'a', path: 'already/here', outputPath: 'already/here/file.html' };
+    const doc = { docType: 'a', path: 'already/here', outputPath: 'already/here/file.html' };
     processor.$process([doc]);
     expect(processor.pathTemplates[0].getPath).not.toHaveBeenCalled();
     expect(processor.pathTemplates[0].getOutputPath).not.toHaveBeenCalled();

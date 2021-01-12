@@ -1,7 +1,7 @@
 // Much of this code was inspired by or simply copied from the JSDOC project.
 // See https://github.com/jsdoc3/jsdoc/blob/c9b0237c12144cfa48abe5fccd73ba2a1d46553a/lib/jsdoc/tag/type.js
 
-var catharsis = require('catharsis');
+const catharsis = require('catharsis');
 var TYPE_EXPRESSION_START = /^\s*\{[^@]/;
 
 /**
@@ -12,9 +12,9 @@ var TYPE_EXPRESSION_START = /^\s*\{[^@]/;
  */
 module.exports =  function extractTypeTransform() {
   return (doc, tag, value) => {
-    var start, position, count, length, expression;
+    let start, position, count, length, expression;
 
-    var match = TYPE_EXPRESSION_START.exec(value);
+    const match = TYPE_EXPRESSION_START.exec(value);
     if (match) {
       length = value.length;
       // the start is the beginning of the `{`
@@ -67,10 +67,10 @@ module.exports =  function extractTypeTransform() {
 
   /** @private */
   function getTypeStrings(parsedType) {
-    var types = [];
+    const types = [];
 
-    var TYPES = catharsis.Types;
-    var util = require('util');
+    const TYPES = catharsis.Types;
+    const util = require('util');
 
     switch(parsedType.type) {
       case TYPES.AllLiteral:
@@ -93,7 +93,7 @@ module.exports =  function extractTypeTransform() {
         break;
       case TYPES.TypeUnion:
         parsedType.elements.forEach(element => {
-          types = types.concat( getTypeStrings(element) );
+          types.push(...getTypeStrings(element));
         });
         break;
       case TYPES.UndefinedLiteral:

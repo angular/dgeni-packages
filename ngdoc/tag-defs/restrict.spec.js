@@ -1,7 +1,7 @@
-var tagDefFactory = require('./restrict');
+const tagDefFactory = require('./restrict');
 
 describe("restrict tag-def", () => {
-  var tagDef;
+  let tagDef;
 
   beforeEach(() => {
     tagDef = tagDefFactory();

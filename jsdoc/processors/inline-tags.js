@@ -1,8 +1,8 @@
-var _ = require('lodash');
-var INLINE_TAG = /(\{@[^\s\}]+[^\}]*\})/;
+const _ = require('lodash');
+var INLINE_TAG = /(\{@[^\s}]+[^}]*\})/;
                         //  11111111     22222222
-var INLINE_TAG_DETAIL = /\{@([^\s]+)\s*([^\}]*)\}/;
-var StringMap = require('stringmap');
+var INLINE_TAG_DETAIL = /\{@([^\s]+)\s*([^}]*)\}/;
+const StringMap = require('stringmap');
 
 /**
  * @dgProcessor inlineTagProcessor
@@ -37,8 +37,8 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
     $runBefore: ['writing-files'],
     $process(docs) {
 
-      var definitions = this.inlineTagDefinitions;
-      var definitionMap = getMap(definitions);
+      const definitions = this.inlineTagDefinitions;
+      const definitionMap = getMap(definitions);
 
       // Walk the docs and parse the inline-tags
       _.forEach(docs, doc => {
@@ -47,32 +47,32 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
           // This is a stack of start-end tag instances
           // as a new start-end tag is found it is unshifted onto the front of this array
           // Each item looks like: { definition: tagDef, value: { tag: '...', content: '...' } }
-          var pendingTags = [];
+          const pendingTags = [];
 
           // The resulting array from the split is alternating plain content and inline tags
-          var parts = doc.renderedContent.split(INLINE_TAG);
+          const parts = doc.renderedContent.split(INLINE_TAG);
 
           doc.renderedContent = parts.reduce((renderedContent, nextPart) => {
 
-            var match = INLINE_TAG_DETAIL.exec(nextPart);
+            const match = INLINE_TAG_DETAIL.exec(nextPart);
 
             if (match) {
 
               // We have a new tag
-              var tagName = match[1];
-              var tagDescription = match[2] && match[2].trim();
+              const tagName = match[1];
+              const tagDescription = match[2] && match[2].trim();
               if (pendingTags.length > 0 && tagName === pendingTags[0].definition.end) {
 
                 // We have found a matching end tag. Remove it from the stack and run its handler
-                var pendingTag = pendingTags.shift();
-                var startTag = pendingTag.definition;
+                const pendingTag = pendingTags.shift();
+                const startTag = pendingTag.definition;
 
                 nextPart = startTag.handler(doc, startTag.name, pendingTag.value, docs);
 
               } else {
 
                 // We have a new tag. Look it up in the definitions
-                var definition = definitionMap.get(tagName);
+                const definition = definitionMap.get(tagName);
 
                 if (!definition) {
 
@@ -116,7 +116,7 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
 };
 
 function getMap(objects) {
-  var map = new StringMap();
+  const map = new StringMap();
   _.forEach(objects, object => {
     map.set(object.name, object);
     if ( object.aliases ) {

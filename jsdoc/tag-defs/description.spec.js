@@ -1,7 +1,7 @@
-var tagDefFactory = require('./description');
+const tagDefFactory = require('./description');
 
 describe("description tag-def", () => {
-  var tagDef;
+  let tagDef;
 
   beforeEach(() => {
     tagDef = tagDefFactory();
@@ -9,9 +9,9 @@ describe("description tag-def", () => {
 
   describe('transforms', () => {
     it("should prepend any non-tag specific description found in the jsdoc comment", () => {
-      var doc = { tags: { description: 'general description'} };
-      var tag = {};
-      var value = "tag specific description";
+      const doc = { tags: { description: 'general description'} };
+      const tag = {};
+      const value = "tag specific description";
       expect(tagDef.transforms(doc, tag, value)).toEqual('general description\ntag specific description');
     });
   });
@@ -19,7 +19,7 @@ describe("description tag-def", () => {
 
   describe("defaultFn", () => {
     it("should get the contents of the non-tag specific description", () => {
-      var doc = { tags: { description: 'general description'} };
+      const doc = { tags: { description: 'general description'} };
       expect(tagDef.defaultFn(doc)).toEqual('general description');
     });
   });
