@@ -1,8 +1,8 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("unescapeCommentsProcessor", function() {
-  it("should convert HTML encoded comments back to their original form", function() {
+describe("unescapeCommentsProcessor", () => {
+  it("should convert HTML encoded comments back to their original form", () => {
 
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();

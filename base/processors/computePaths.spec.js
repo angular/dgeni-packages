@@ -1,10 +1,10 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("computePathsProcessor", function() {
+describe("computePathsProcessor", () => {
   var processor, mockLog;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('computePathsProcessor');
@@ -12,7 +12,7 @@ describe("computePathsProcessor", function() {
   });
 
 
-  it("should do nothing but log a debug message if there is no path template for the given docType", function() {
+  it("should do nothing but log a debug message if there is no path template for the given docType", () => {
     processor.pathTemplates = [
       {
         docTypes: ['a'],
@@ -32,7 +32,7 @@ describe("computePathsProcessor", function() {
   });
 
 
-  it("should compute path and outputPath using the getPath and getOutputPath functions", function() {
+  it("should compute path and outputPath using the getPath and getOutputPath functions", () => {
     processor.pathTemplates = [
       {
         docTypes: ['a'],
@@ -50,7 +50,7 @@ describe("computePathsProcessor", function() {
   });
 
 
-  it("should compute the path using the template strings if no getPath/getOutputPath functions are specified", function() {
+  it("should compute the path using the template strings if no getPath/getOutputPath functions are specified", () => {
     processor.pathTemplates = [
       {
         docTypes: ['a'],
@@ -64,7 +64,7 @@ describe("computePathsProcessor", function() {
   });
 
 
-  it("should use the template that matches the given docType", function() {
+  it("should use the template that matches the given docType", () => {
     processor.pathTemplates = [
       {
         docTypes: ['a'],
@@ -88,7 +88,7 @@ describe("computePathsProcessor", function() {
   });
 
 
-  it("should use the path if present (and not compute a new one)", function() {
+  it("should use the path if present (and not compute a new one)", () => {
     processor.pathTemplates = [
       {
         docTypes: ['a'],

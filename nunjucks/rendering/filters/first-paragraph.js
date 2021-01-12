@@ -4,7 +4,7 @@
  */
 module.exports = {
   name: 'firstParagraph',
-  process: function(str) {
+  process(str) {
     if (!str) return str;
 
     str = str

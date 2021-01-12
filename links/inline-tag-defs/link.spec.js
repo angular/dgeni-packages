@@ -4,15 +4,15 @@ var Dgeni = require('dgeni');
 
 var tagDefFactory = require('./link');
 
-describe("links inline tag handler", function() {
+describe("links inline tag handler", () => {
   var tagDef, getLinkInfoSpy, doc, links, log;
 
-  beforeEach(function() {
+  beforeEach(() => {
 
     getLinkInfoSpy = jasmine.createSpy('getLinkInfo');
 
     var testPackage = mockPackage()
-      .factory('getLinkInfo', function() {
+      .factory('getLinkInfo', function getLinkInfo() {
         return getLinkInfoSpy;
       });
 
@@ -38,11 +38,11 @@ describe("links inline tag handler", function() {
 
   });
 
-  it("should have name 'link'", function() {
+  it("should have name 'link'", () => {
     expect(tagDef.name).toEqual('link');
   });
 
-  it("should use the result of getLinkInfo to create a HTML anchor", function() {
+  it("should use the result of getLinkInfo to create a HTML anchor", () => {
     getLinkInfoSpy.and.returnValue({
       valid: true,
       url: 'some/url',
@@ -53,7 +53,7 @@ describe("links inline tag handler", function() {
   });
 
 
-  it("should log a warning if the link is invalid", function() {
+  it("should log a warning if the link is invalid", () => {
     getLinkInfoSpy.and.returnValue({
       valid: false,
       error: 'Invalid link (does not match any doc): "module:ngOther.directive:ngDirective"'

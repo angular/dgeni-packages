@@ -1,19 +1,19 @@
 var matcherFactory = require('./expression-statement');
 
-describe('ExpressionStatement matcher', function() {
+describe('ExpressionStatement matcher', () => {
 
   var matcher, codeNameServiceMock;
 
-  beforeEach(function() {
+  beforeEach(() => {
     codeNameServiceMock = {
-      find: function (arg) {
+      find(arg) {
         return arg;
       }
     };
     matcher = matcherFactory(codeNameServiceMock);
   });
 
-  it("should return null for unsupported node", function() {
+  it("should return null for unsupported node", () => {
     spyOn(codeNameServiceMock, 'find').and.callThrough();
 
     expect(matcher({})).toBeNull();
@@ -21,7 +21,7 @@ describe('ExpressionStatement matcher', function() {
     expect(codeNameServiceMock.find.calls.count()).toEqual(2);
   });
 
-  it("should return name for supported node", function() {
+  it("should return name for supported node", () => {
     spyOn(codeNameServiceMock, 'find').and.callThrough();
 
     expect(matcher({expression: 'test'})).toEqual('test');

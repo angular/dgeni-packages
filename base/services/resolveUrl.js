@@ -11,7 +11,7 @@ var path = require('canonical-path');
  * @param {String=} base The base path
  */
 module.exports = function resolveUrl() {
-  return function(currentPath, newPath, base) {
+  return (currentPath, newPath, base) => {
 
     // Extract only the path and the hash from the newPath
     var parsedUrl = url.parse(newPath);

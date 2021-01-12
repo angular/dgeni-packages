@@ -6,11 +6,11 @@ var srcJsContent = require('../mocks/_test-data/srcJsFile.js');
 var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
 
 
-describe("extractJSDocCommentsProcessor", function() {
+describe("extractJSDocCommentsProcessor", () => {
 
   var processor, jsParser;
 
-  var createFileInfo = function(file, content, basePath) {
+  function createFileInfo(file, content, basePath) {
     return {
       filePath: file,
       baseName: path.basename(file, path.extname(file)),
@@ -20,16 +20,16 @@ describe("extractJSDocCommentsProcessor", function() {
       content: content,
       ast: jsParser(content),
     };
-  };
+  }
 
-  var createDocsCollection = function(fileInfo) {
+  function createDocsCollection(fileInfo) {
     return [{
       fileInfo: fileInfo,
       docType: 'jsFile'
     }];
-  };
+  }
 
-  beforeEach(function() {
+  beforeEach(() => {
     dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     jsParser = injector.get('jsParser');
@@ -37,9 +37,9 @@ describe("extractJSDocCommentsProcessor", function() {
   });
 
 
-  describe("$process", function() {
+  describe("$process", () => {
 
-    it('should return a collection of documents extracted from the file', function() {
+    it('should return a collection of documents extracted from the file', () => {
       var docs = createDocsCollection(createFileInfo('some/file.js', srcJsContent, '.'));
 
       docs = processor.$process(docs);
@@ -49,28 +49,28 @@ describe("extractJSDocCommentsProcessor", function() {
       expect(docs[2]).toEqual(jasmine.objectContaining(docsFromJsContent[2]));
     });
 
-    it("should set the docType to js", function() {
+    it("should set the docType to js", () => {
       var docs = createDocsCollection(createFileInfo('some/file.js', '/** @some jsdoc comment */', '.'));
       docs = processor.$process(docs);
       expect(docs[0].docType).toEqual('js');
     });
 
 
-    it("should strip off the leading whitespace/stars from each line of the comments", function() {
+    it("should strip off the leading whitespace/stars from each line of the comments", () => {
       var docs = createDocsCollection(createFileInfo('some/file.js', '/** abc  \n  * other stuff  \n\t\t*last line.\n*/\n', '.'));
       docs = processor.$process(docs);
       expect(docs[0].content).toEqual('abc  \nother stuff  \nlast line.');
     });
 
 
-    it("should ignore non-jsdoc comments", function() {
+    it("should ignore non-jsdoc comments", () => {
       var docs = createDocsCollection(createFileInfo('some/file.js', '/** Some jsdoc comment */\n// A line comment\n\/* A non-jsdoc block comment*/', '.'));
       docs = processor.$process(docs);
       expect(docs.length).toEqual(1);
     });
 
 
-    it("should find the next code item following the comment and attach it to the doc", function() {
+    it("should find the next code item following the comment and attach it to the doc", () => {
       var docs = createDocsCollection(createFileInfo('some/file.js', srcJsContent, '.'));
       docs = processor.$process(docs);
       expect(docs.length).toEqual(3);
@@ -80,16 +80,16 @@ describe("extractJSDocCommentsProcessor", function() {
     });
 
 
-    it("should not break if the comment has no code", function() {
+    it("should not break if the comment has no code", () => {
       var docs = createDocsCollection(createFileInfo('some/file.js', 'function main() { } /** @some jsdoc comment */', '.'));
-      expect(function() {
+      expect(() => {
         docs = processor.$process(docs);
         expect(docs.length).toEqual(1);
       }).not.toThrow();
     });
 
 
-    it("should not remove windows new line characters when stripping stars from comments", function() {
+    it("should not remove windows new line characters when stripping stars from comments", () => {
       var docs = createDocsCollection(createFileInfo('some/file.js', '/** Some jsdoc comment\r\n* over multiple\r\n* lines\r\n**/', '.'));
       docs = processor.$process(docs);
       expect(docs[0].content).toEqual('Some jsdoc comment\r\nover multiple\r\nlines');

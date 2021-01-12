@@ -10,7 +10,7 @@ module.exports = function jsdocFileReader(log, jsParser) {
   return {
     name: 'jsdocFileReader',
     defaultPattern: /\.js$/,
-    getDocs: function(fileInfo) {
+    getDocs(fileInfo) {
 
       try {
         fileInfo.ast = jsParser(fileInfo.content);

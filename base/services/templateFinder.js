@@ -24,23 +24,20 @@ module.exports = function templateFinder(log, createDocMessage) {
     templatePatterns: [],
 
 
-    getFinder: function() {
+    getFinder() {
 
       // Traverse each templateFolder and store an index of the files found for later
-      var templateSets = _.map(this.templateFolders, function(templateFolder) {
-        return {
-          templateFolder: templateFolder,
-          templates: _.keyBy(glob.sync('**/*', { cwd: templateFolder }))
-        };
-      });
+      var templateSets = _.map(this.templateFolders, templateFolder => ({
+        templateFolder: templateFolder,
+        templates: _.keyBy(glob.sync('**/*', { cwd: templateFolder }))
+      }));
 
       // Compile each of the patterns and store them for later
-      var patternMatchers = _.map(this.templatePatterns, function(pattern) {
-
+      var patternMatchers = _.map(this.templatePatterns, pattern =>
         // Here we use the lodash micro templating.
         // The document will be available to the micro template as a `doc` variable
-        return _.template(pattern, { variable: 'doc' });
-      });
+        _.template(pattern, { variable: 'doc' })
+      );
 
       /**
        * Find the path to a template for the specified documents
@@ -51,28 +48,24 @@ module.exports = function templateFinder(log, createDocMessage) {
         var templatePath;
 
         // Search the template sets for a matching pattern for the given doc
-        _.some(templateSets, function(templateSet) {
-          return _.some(patternMatchers, function(patternMatcher) {
+        _.some(templateSets, templateSet =>
+          _.some(patternMatchers, patternMatcher => {
             log.silly('looking for ', patternMatcher(doc));
             templatePath = templateSet.templates[patternMatcher(doc)];
             if ( templatePath ) {
               log.debug('template found', path.resolve(templateSet.templateFolder, templatePath));
               return true;
             }
-          });
-        });
+          })
+        );
 
         if ( !templatePath ) {
           throw new Error(createDocMessage(
             'No template found./n' +
             'The following template patterns were tried:\n' +
-            _.reduce(patternMatchers, function(str, pattern) {
-              return str + '  "' + pattern(doc) + '"\n';
-            }, '') +
+            _.reduce(patternMatchers, (str, pattern) => str + '  "' + pattern(doc) + '"\n', '') +
             'The following folders were searched:\n' +
-            _.reduce(templateSets, function(str, templateSet) {
-              return str + '  "' + templateSet.templateFolder + '"\n';
-            }, ''),
+            _.reduce(templateSets, (str, templateSet) => str + '  "' + templateSet.templateFolder + '"\n', ''),
           doc));
         }
 

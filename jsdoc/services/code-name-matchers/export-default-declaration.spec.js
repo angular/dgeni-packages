@@ -1,19 +1,19 @@
 var matcherFactory = require('./export-default-declaration');
 
-describe('ExportDefaultDeclaration matcher', function() {
+describe('ExportDefaultDeclaration matcher', () => {
 
   var matcher, codeNameServiceMock;
 
-  beforeEach(function() {
+  beforeEach(() => {
     codeNameServiceMock = {
-      find: function (arg) {
+      find(arg) {
         return arg;
       }
     };
     matcher = matcherFactory(codeNameServiceMock);
   });
 
-  it("should start search for right", function () {
+  it("should start search for right", () => {
     var expr = {
       right: 'right'
     };
@@ -25,7 +25,7 @@ describe('ExportDefaultDeclaration matcher', function() {
     expect(codeNameServiceMock.find).toHaveBeenCalledWith(expr.right);
   });
 
-  it("should return null for empty right", function () {
+  it("should return null for empty right", () => {
     spyOn(codeNameServiceMock, 'find').and.callThrough();
 
     expect(matcher({})).toBeNull();

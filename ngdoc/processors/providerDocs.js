@@ -9,10 +9,10 @@ module.exports = function providerDocsProcessor(log, aliasMap, createDocMessage)
   return {
     $runAfter: ['ids-computed', 'memberDocsProcessor'],
     $runBefore: ['computing-paths'],
-    $process: function(docs) {
+    $process(docs) {
 
       // Map services to their providers
-      _.forEach(docs, function(doc) {
+      _.forEach(docs, doc => {
         if ( doc.docType === 'provider' ) {
           var serviceId = doc.id.replace(/provider:/, 'service:').replace(/Provider$/, '');
           var serviceDocs = aliasMap.getDocs(serviceId);
@@ -25,9 +25,7 @@ module.exports = function providerDocsProcessor(log, aliasMap, createDocMessage)
             log.warn(createDocMessage('Missing service "' + serviceId + '" for provider', doc));
           } else {
             log.warn(createDocMessage('Ambiguous service name "' + serviceId + '" for provider', doc) + '\n' +
-              _.reduce(serviceDocs, function(msg, doc) {
-                return msg + '\n  "' + doc.id + '"';
-              }, 'Matching docs: '));
+              _.reduce(serviceDocs, (msg, doc) => msg + '\n  "' + doc.id + '"', 'Matching docs: '));
           }
         }
       });

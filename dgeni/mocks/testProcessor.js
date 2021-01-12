@@ -8,6 +8,6 @@ module.exports = function testProcessor() {
     $validate: {
       requiredProp: { presence: true }
     },
-    $process: function(docs) {}
+    $process(docs) {}
   };
 };

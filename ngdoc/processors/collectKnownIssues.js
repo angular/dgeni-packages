@@ -2,10 +2,10 @@ module.exports = function collectKnownIssuesProcessor() {
   return {
     $runAfter: ['moduleDocsProcessor'],
     $runBefore: ['computing-paths'],
-    $process: function(docs) {
+    $process(docs) {
       docs
-        .filter(function(doc) { return doc.knownIssues && doc.knownIssues.length; })
-        .forEach(function(doc) {
+        .filter(doc => doc.knownIssues && doc.knownIssues.length)
+        .forEach(doc => {
           var moduleDoc = doc.moduleDoc;
           moduleDoc.knownIssueDocs = moduleDoc.knownIssueDocs || [];
           moduleDoc.knownIssueDocs.push(doc);

@@ -24,7 +24,7 @@ function calcIndent(text) {
       lines.shift();
     }
 
-    lines.forEach(function(line){
+    lines.forEach(line => {
       if ( !isEmpty(line) ) {
         var indent = line.match(/^\s*/)[0].length;
         minIndent = Math.min(minIndent, indent);
@@ -40,7 +40,7 @@ function reindent(text, indent) {
   var lines = text.split('\n');
   var indentedLines = [];
   var indentStr = new Array(indent + 1).join(' ');
-  _.forEach(lines, function(line) {
+  _.forEach(lines, line => {
     indentedLines.push(indentStr + line);
   });
   return indentedLines.join('\n');
@@ -66,9 +66,7 @@ function trimIndent(text, indent) {
 
 // The primary export is a function that does the intentation trimming
 module.exports = function trimIndentation() {
-  var trimIndentationImpl = function(text) {
-      return trimIndent(text, calcIndent(text));
-  };
+  var trimIndentationImpl = text => trimIndent(text, calcIndent(text));
   trimIndentationImpl.calcIndent = calcIndent;
   trimIndentationImpl.trimIndent = trimIndent;
   trimIndentationImpl.reindent = reindent;

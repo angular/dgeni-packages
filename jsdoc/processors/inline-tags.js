@@ -23,7 +23,7 @@ var StringMap = require('stringmap');
  * function(partialNames) {
  *   return {
  *     name: 'link',
- *     handler: function(doc, tagName, tagDescription, docs) { ... }},
+ *     handler(doc, tagName, tagDescription, docs) { ... }},
  *     description: 'Handle inline link tags',
  *     aliases: ['codeLink']
  *   };
@@ -35,13 +35,13 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
     inlineTagDefinitions: [],
     $runAfter: ['docs-rendered'],
     $runBefore: ['writing-files'],
-    $process: function(docs) {
+    $process(docs) {
 
       var definitions = this.inlineTagDefinitions;
       var definitionMap = getMap(definitions);
 
       // Walk the docs and parse the inline-tags
-      _.forEach(docs, function(doc) {
+      _.forEach(docs, doc => {
 
         if ( doc.renderedContent ) {
           // This is a stack of start-end tag instances
@@ -52,7 +52,7 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
           // The resulting array from the split is alternating plain content and inline tags
           var parts = doc.renderedContent.split(INLINE_TAG);
 
-          doc.renderedContent = parts.reduce(function(renderedContent, nextPart) {
+          doc.renderedContent = parts.reduce((renderedContent, nextPart) => {
 
             var match = INLINE_TAG_DETAIL.exec(nextPart);
 
@@ -117,10 +117,10 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
 
 function getMap(objects) {
   var map = new StringMap();
-  _.forEach(objects, function(object) {
+  _.forEach(objects, object => {
     map.set(object.name, object);
     if ( object.aliases ) {
-      _.forEach(object.aliases, function(alias) {
+      _.forEach(object.aliases, alias => {
         map.set(alias, object);
       });
     }

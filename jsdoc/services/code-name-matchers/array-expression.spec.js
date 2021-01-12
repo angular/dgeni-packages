@@ -1,14 +1,14 @@
 var matcherFactory = require('./array-expression');
 
-describe('ArrayExpression matcher', function() {
+describe('ArrayExpression matcher', () => {
 
   var matcher;
 
-  beforeEach(function() {
+  beforeEach(() => {
     matcher = matcherFactory();
   });
 
-  it("should return null for any argument", function() {
+  it("should return null for any argument", () => {
     expect(matcher()).toBeNull();
     expect(matcher(null)).toBeNull();
     expect(matcher({})).toBeNull();

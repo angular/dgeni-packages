@@ -9,11 +9,9 @@ module.exports = function filterNgDocsProcessor(log) {
   return {
     $runAfter: ['tags-parsed'],
     $runBefore: ['extracting-tags'],
-    $process: function(docs) {
+    $process(docs) {
       var docCount = docs.length;
-      docs = _.filter(docs, function(doc) {
-        return doc.tags.getTag('ngdoc');
-      });
+      docs = _.filter(docs, doc => doc.tags.getTag('ngdoc'));
       log.debug('filtered ' + (docCount - docs.length) + ' docs');
       return docs;
     }

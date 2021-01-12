@@ -1,15 +1,15 @@
 var transformFactory = require('./extract-name');
 
-describe("extract-name transform", function() {
+describe("extract-name transform", () => {
   var doc, tag, value, transform;
 
-  beforeEach(function() {
+  beforeEach(() => {
     doc = {};
     tag = {};
     transform = transformFactory();
   });
 
-  it("should extract the name from the description", function() {
+  it("should extract the name from the description", () => {
 
     value = '   paramName - Some description  \n Some more description';
     value = transform(doc, tag, value);
@@ -18,7 +18,7 @@ describe("extract-name transform", function() {
     expect(value).toEqual('Some description  \n Some more description');
   });
 
-  it("should extract an optional name", function() {
+  it("should extract an optional name", () => {
     value = '[someName]';
     value = transform(doc, tag, value);
     expect(tag.name).toEqual('someName');
@@ -26,7 +26,7 @@ describe("extract-name transform", function() {
     expect(value).toEqual('');
   });
 
-  it("should extract a name and its default value", function() {
+  it("should extract a name and its default value", () => {
     value = '[someName=someDefault]';
     value = transform(doc, tag, value);
     expect(tag.name).toEqual('someName');
@@ -35,7 +35,7 @@ describe("extract-name transform", function() {
     expect(value).toEqual('');
   });
 
-  it("should extract a param name alias", function() {
+  it("should extract a param name alias", () => {
     value = 'paramName|aliasName some description';
     value = transform(doc, tag, value);
     expect(tag.name).toEqual('paramName');

@@ -1,17 +1,17 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("computeIdsProcessor", function() {
+describe("computeIdsProcessor", () => {
   var processor, mockLog;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('computeIdsProcessor');
     mockLog = injector.get('log');
   });
 
-  it("should do nothing but log a debug message if there is no id template for the given docType", function() {
+  it("should do nothing but log a debug message if there is no id template for the given docType", () => {
     processor.idTemplates = [
       {
         docTypes: ['a'],
@@ -30,7 +30,7 @@ describe("computeIdsProcessor", function() {
   });
 
 
-  it("should compute id and partial ids using the getId and getAliases functions", function() {
+  it("should compute id and partial ids using the getId and getAliases functions", () => {
     processor.idTemplates = [
       {
         docTypes: ['a'],
@@ -47,7 +47,7 @@ describe("computeIdsProcessor", function() {
   });
 
 
-  it("should compute the id using the template strings if no getId/getAliases functions are specified", function() {
+  it("should compute the id using the template strings if no getId/getAliases functions are specified", () => {
     processor.idTemplates = [
       {
         docTypes: ['a'],
@@ -60,7 +60,7 @@ describe("computeIdsProcessor", function() {
   });
 
 
-  it("should use the template that matches the given docType", function() {
+  it("should use the template that matches the given docType", () => {
     processor.idTemplates = [
       {
         docTypes: ['a'],
@@ -82,7 +82,7 @@ describe("computeIdsProcessor", function() {
   });
 
 
-  it("should use the id if present (and not compute a new one)", function() {
+  it("should use the id if present (and not compute a new one)", () => {
     processor.idTemplates = [
       {
         docTypes: ['a'],

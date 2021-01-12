@@ -1,10 +1,10 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("moduleDocsProcessor", function() {
+describe("moduleDocsProcessor", () => {
   var processor, aliasMap, moduleMap;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('moduleDocsProcessor');
@@ -12,7 +12,7 @@ describe("moduleDocsProcessor", function() {
     aliasMap = injector.get('aliasMap');
   });
 
-  it("should compute the package name and filename for the module", function() {
+  it("should compute the package name and filename for the module", () => {
     var doc1 = { docType: 'module', name: 'ng', id: 'module:ng' };
     var doc2 = { docType: 'module', name: 'ngRoute', id: 'module:ngRoute' };
     var doc3 = { docType: 'module', name: 'ngMock', id: 'module:ngMock', packageName: 'angular-mocks' };
@@ -30,7 +30,7 @@ describe("moduleDocsProcessor", function() {
 
   });
 
-  it("should add module docs to the moduleMap", function() {
+  it("should add module docs to the moduleMap", () => {
     var doc1 = { docType: 'module', id: 'ng' };
     var doc2 = { docType: 'module', id: 'ngMock' };
     var doc3 = { docType: 'service', module: 'ng', id: 'ng.$http' };
@@ -42,7 +42,7 @@ describe("moduleDocsProcessor", function() {
     expect(moduleMap.get('ngMock')).toBe(doc2);
   });
 
-  it("should connect all docs to their module", function() {
+  it("should connect all docs to their module", () => {
     var doc1 = { docType: 'module', id: 'ng', aliases: ['ng'] };
     var doc2 = { docType: 'module', id: 'ngMock', aliases: ['ngMock'] };
     var doc3 = { docType: 'service', module: 'ng', id: 'ng.$http' };
@@ -62,7 +62,7 @@ describe("moduleDocsProcessor", function() {
 
   });
 
-  it("should complain if their is more than one matching modules", function() {
+  it("should complain if their is more than one matching modules", () => {
     var doc1 = { docType: 'module', id: 'module:app.mod1', aliases: ['app', 'app.mod1', 'mod1', 'module:app', 'module:app.mod1', 'module:mod1'] };
     var doc2 = { docType: 'module', id: 'module:app.mod2', aliases: ['app', 'app.mod2', 'mod2', 'module:app', 'module:app.mod2', 'module:mod2'] };
     var doc3 = { docType: 'service', module: 'app', id: 'app.service' };
@@ -70,16 +70,15 @@ describe("moduleDocsProcessor", function() {
     aliasMap.addDoc(doc1);
     aliasMap.addDoc(doc2);
 
-    expect(function() {
-      processor.$process([doc1, doc2, doc3]);
-    }).toThrowError('Ambiguous module reference: "app" - doc "app.service" (service) \n'+
+    expect(() => processor.$process([doc1, doc2, doc3]))
+        .toThrowError('Ambiguous module reference: "app" - doc "app.service" (service) \n'+
                     'Matching modules:\n'+
                     '- module:app.mod1\n'+
                     '- module:app.mod2\n');
 
   });
 
-  it("should try using the module specifier if the module reference is ambiguous", function() {
+  it("should try using the module specifier if the module reference is ambiguous", () => {
     var doc1 = { docType: 'module', id: 'module:ngMessages', aliases: ['ngMessages', 'module:ngMessages'] };
     var doc2 = { docType: 'directive', module:'ngMessages', id: 'module:ngMessages.directive:ngMessages', aliases: ['ngMessages.ngMessages', 'module:ngMessages.ngMessages', 'ngMessages.directive:ngMessages', 'module:ngMessages.directive:ngMessages', 'directive:ngMessages', 'ngMessages'] };
 
@@ -91,7 +90,7 @@ describe("moduleDocsProcessor", function() {
 
   });
 
-  it("should throw an error if a module is documented as another type of entity", function() {
+  it("should throw an error if a module is documented as another type of entity", () => {
     var doc1 = { docType: 'module', name: 'mod1', id: 'module:mod1', aliases: ['mod1', 'module:mod1'] };
     var doc1 = { docType: 'object', name: 'mod2', id: 'object:mod2', aliases: ['mod2', 'object:mod2'] };
     var doc2 = { docType: 'service', name: 'service1', module: 'mod1', id: 'mod1.service1' };
@@ -99,9 +98,8 @@ describe("moduleDocsProcessor", function() {
 
     aliasMap.addDoc(doc1);
 
-    expect(function() {
-      processor.$process([doc1, doc2, doc3]);
-    }).toThrowError('"mod2" is not a module. It is documented as "object". Either the module is incorrectly typed or the module reference is invalid - doc "mod2.service2" (service) ');
+    expect(() => processor.$process([doc1, doc2, doc3]))
+        .toThrowError('"mod2" is not a module. It is documented as "object". Either the module is incorrectly typed or the module reference is invalid - doc "mod2.service2" (service) ');
 
   });
 

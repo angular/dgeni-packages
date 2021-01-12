@@ -9,11 +9,11 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
   return {
     $runAfter: ['ids-computed', 'memberDocsProcessor'],
     $runBefore: ['computing-paths'],
-    $process: function(docs) {
+    $process(docs) {
       var parts;
 
       // Compute some extra fields for docs in the API area
-      _.forEach(docs, function(doc) {
+      _.forEach(docs, doc => {
 
         if ( doc.docType === 'module' ) {
 
@@ -37,7 +37,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
 
 
       // Attach each doc to its module
-      _.forEach(docs, function(doc) {
+      _.forEach(docs, doc => {
         if ( doc.docType !== 'module' && doc.module ) {
           var matchingModules = aliasMap.getDocs(doc.module);
 
@@ -57,7 +57,7 @@ module.exports = function moduleDocsProcessor(log, aliasMap, moduleMap, createDo
           } else if ( matchingModules.length > 1 ) {
             var error = createDocMessage('Ambiguous module reference: "' + doc.module + '"', doc);
             error += '\nMatching modules:\n';
-            _.forEach(matchingModules, function(mod) {
+            _.forEach(matchingModules, mod => {
               error += '- ' + mod.id + '\n';
             });
             throw new Error(error);

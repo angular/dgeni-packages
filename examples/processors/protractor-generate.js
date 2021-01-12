@@ -16,18 +16,18 @@ module.exports = function generateProtractorTestsProcessor(exampleMap) {
     },
     $runAfter: ['adding-extra-docs'],
     $runBefore: ['extra-docs-added'],
-    $process: function(docs) {
+    $process(docs) {
 
       var deployments = this.deployments;
       var basePath = this.basePath;
 
-      exampleMap.forEach(function(example) {
-        _.forEach(example.files, function(file) {
+      exampleMap.forEach(example => {
+        _.forEach(example.files, file => {
 
           // Check if it's a Protractor test.
           if (file.type === 'protractor') {
 
-            _.forEach(deployments, function(deployment) {
+            _.forEach(deployments, deployment => {
               docs.push(createProtractorDoc(example, deployment, file, basePath));
             });
           }

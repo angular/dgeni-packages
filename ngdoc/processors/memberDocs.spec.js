@@ -1,10 +1,10 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("memberDocsProcessor", function() {
+describe("memberDocsProcessor", () => {
   var processor, aliasMap, mockLog;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('memberDocsProcessor');
@@ -12,7 +12,7 @@ describe("memberDocsProcessor", function() {
     mockLog = injector.get('log');
   });
 
-  it("should remove docs that are members of container docs", function() {
+  it("should remove docs that are members of container docs", () => {
 
     var doc1 = { id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
     var doc2 = { id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
@@ -27,7 +27,7 @@ describe("memberDocsProcessor", function() {
 
   });
 
-  it("should connect member docs to their container doc", function() {
+  it("should connect member docs to their container doc", () => {
 
     var doc1 = { id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
     var doc2 = { id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
@@ -45,7 +45,7 @@ describe("memberDocsProcessor", function() {
 
   });
 
-  it("should attempt to match the container by using the member's module", function() {
+  it("should attempt to match the container by using the member's module", () => {
     var doc1 = { module: 'ng', id: 'module:ng.service:$log', aliases: ['$log', 'service:$log', 'ng.$log', 'module:ng.service:$log', 'ng.service:$log'] };
     var doc2 = { module: 'ngMock', id: 'module:ngMock.service:$log', aliases: ['$log', 'service:$log', 'ngMock.$log', 'module:ngMock.service:$log', 'ngMock.service:$log'] };
     var doc3 = { module: 'ngMock', id: '$log#warn', docType: 'method' };
@@ -60,7 +60,7 @@ describe("memberDocsProcessor", function() {
 
   });
 
-  it("should warn if the container doc does not exist or is ambiguous", function() {
+  it("should warn if the container doc does not exist or is ambiguous", () => {
 
     var doc1 = { module: 'ng', id: 'module:ng.service:orderBy', aliases: ['orderBy', 'service:orderBy', 'ng.orderBy', 'module:ng.service:orderBy', 'ng.service:orderBy'] };
     var doc2 = { module: 'ng', id: 'module:ng.filter:orderBy', aliases: ['orderBy', 'filter:orderBy', 'ng.orderBy', 'module:ng.filter:orderBy', 'ng.service:orderBy'] };

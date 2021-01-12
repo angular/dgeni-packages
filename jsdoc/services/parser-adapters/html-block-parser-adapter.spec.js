@@ -1,8 +1,8 @@
 const htmlBlockParserAdapterFactory = require('./html-block-parser-adapter');
 const TagCollection = require('../../lib/TagCollection');
 
-describe('htmlBlockParserAdapter', function() {
-  it("should ignore @tags inside inline HTML blocks", function() {
+describe('htmlBlockParserAdapter', () => {
+  it("should ignore @tags inside inline HTML blocks", () => {
     const adapter = htmlBlockParserAdapterFactory();
     const lines = [
       '@a some text',
@@ -45,7 +45,7 @@ describe('htmlBlockParserAdapter', function() {
   });
 
 
-  it("should cope with single line HTML blocks", function() {
+  it("should cope with single line HTML blocks", () => {
     const adapter = htmlBlockParserAdapterFactory();
     const lines = [
       '@a some text',
@@ -69,7 +69,7 @@ describe('htmlBlockParserAdapter', function() {
     expect(adapter.parseForTags()).toBeTruthy();
   });
 
-  it("should ignore @tags inside inline custom HTML tag blocks", function() {
+  it("should ignore @tags inside inline custom HTML tag blocks", () => {
     const adapter = htmlBlockParserAdapterFactory();
     const lines = [
       '@a some text',
@@ -112,7 +112,7 @@ describe('htmlBlockParserAdapter', function() {
   });
 
 
-  it("should cope with self-closing HTML tags", function() {
+  it("should cope with self-closing HTML tags", () => {
     const adapter = htmlBlockParserAdapterFactory();
     const lines = [
       '@a some text',
@@ -137,7 +137,7 @@ describe('htmlBlockParserAdapter', function() {
   });
 
   const VOID_TAGS = [ 'area', 'base', 'basefont', 'bgsound', 'br', 'col', 'command', 'embed', 'frame', 'hr', 'image', 'img', 'input', 'isindex', 'keygen', 'link', 'menuitem', 'meta', 'nextid', 'param', 'source', 'track', 'wbr' ];
-  VOID_TAGS.forEach(tag => it(`should cope with default void HTML tags (${tag})`, function() {
+  VOID_TAGS.forEach(tag => it(`should cope with default void HTML tags (${tag})`, () => {
     const adapter = htmlBlockParserAdapterFactory();
     const lines = [
       '@a some text',

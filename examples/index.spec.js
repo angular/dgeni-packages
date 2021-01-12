@@ -6,19 +6,19 @@ var mockLog = require('dgeni/lib/mocks/log');
 
 
 
-describe('examples package', function() {
-  it("should be instance of Package", function() {
+describe('examples package', () => {
+  it("should be instance of Package", () => {
       expect(examplesPackage instanceof Dgeni.Package).toBeTruthy();
   });
 
 
   function runDgeni(docs) {
     var testPackage = new Dgeni.Package('testPackage', [examplesPackage, ngdocPackage])
-      .factory('log', function() { return mockLog(false); })
-      .processor('provideTestDocs', function() {
+      .factory('log', function log() { return mockLog(false); })
+      .processor('provideTestDocs', function provideTestDocs() {
         return {
           $runBefore: ['parseExamplesProcessor'],
-          $process: function() {
+          $process() {
             return docs;
           }
         };
@@ -67,14 +67,12 @@ describe('examples package', function() {
       fileInfo: { relativePath: 'a.js', baseName: 'a' }
     };
 
-    return runDgeni([doc]).then(null, function(err) {
-      console.log("ERROR:", err);
-    });
+    return runDgeni([doc]).then(null, err => console.log("ERROR:", err));
   }
 
 
-  it("should compute the path of examples from their attributes", function(done) {
-    processExample().then(function(docs) {
+  it("should compute the path of examples from their attributes", done => {
+    processExample().then(docs => {
 
       expect(docs.length).toEqual(4);
 

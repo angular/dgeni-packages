@@ -2,11 +2,11 @@ module.exports = function wireUpServicesToPackages() {
   return {
     $runAfter: ['readPackageInfo'],
     $runBefore: ['checkDocsHavePackage'],
-    $process: function(docs) {
+    $process(docs) {
 
       // Build a map of the service name to package doc
       var services = {};
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
         if(doc.docType === 'dgPackage') {
           var packageDoc = doc;
           for(serviceName in doc.package.module) {
@@ -15,7 +15,7 @@ module.exports = function wireUpServicesToPackages() {
         }
       });
 
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
         if(doc.docType === 'dgService' || doc.docType === 'dgProcessor') {
           doc.name = doc.name || doc.codeName;
           doc.packageDoc = services[doc.name];

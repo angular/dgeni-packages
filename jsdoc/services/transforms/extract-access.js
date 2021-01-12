@@ -64,7 +64,7 @@ module.exports = function extractAccessTransform(createDocMessage) {
   function joinKeys(set, joiner, pre, post) {
     var result = pre || '';
     var first = true;
-    set.forEach(function(val, key) {
+    set.forEach((_val, key) => {
       if (!first) {
         result += joiner;
       }

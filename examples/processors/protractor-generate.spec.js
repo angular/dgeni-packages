@@ -3,11 +3,11 @@ var Dgeni = require('dgeni');
 
 var _ = require('lodash');
 
-describe("generateExamplesProcessor", function() {
+describe("generateExamplesProcessor", () => {
 
   var processor, exampleMap;
 
-  beforeEach(function() {
+  beforeEach(() => {
 
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
@@ -29,7 +29,7 @@ describe("generateExamplesProcessor", function() {
   });
 
 
-  it("should add the configured basePath to each doc", function() {
+  it("should add the configured basePath to each doc", () => {
 
     exampleMap.set('x', {
       id: 'x',
@@ -53,7 +53,7 @@ describe("generateExamplesProcessor", function() {
   });
 
 
-  it("should add a protractor doc for each example-deployment pair in the example", function() {
+  it("should add a protractor doc for each example-deployment pair in the example", () => {
 
     docs = [
       { file: 'a.b.c.js' },

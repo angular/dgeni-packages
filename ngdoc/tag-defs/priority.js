@@ -1,6 +1,6 @@
 module.exports = function() {
   return {
     name: 'priority',
-    defaultFn: function(doc) { return 0; }
+    defaultFn(doc) { return 0; }
   };
 };

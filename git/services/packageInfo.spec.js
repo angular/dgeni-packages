@@ -2,24 +2,24 @@ var rewire = require('rewire');
 var packageInfoFactory = rewire('./packageInfo.js');
 
 
-describe("packageInfo", function() {
+describe("packageInfo", () => {
   var fs, path;
 
-  beforeEach(function() {
+  beforeEach(() => {
     fs = packageInfoFactory.__get__('fs');
     path = packageInfoFactory.__get__('path');
     spyOn(path, 'resolve').and.returnValue('');
     spyOn(fs, 'existsSync').and.returnValue(true);
   });
 
-  it('should read package.json as UTF-8', function() {
+  it('should read package.json as UTF-8', () => {
     spyOn(fs, 'readFileSync').and.returnValue('{}');
 
     packageInfoFactory();
 
     expect(fs.readFileSync).toHaveBeenCalledWith('package.json', 'UTF-8');
   });
-  it('should return parsed file contents', function() {
+  it('should return parsed file contents', () => {
     fs.existsSync.and.returnValue(true);
     spyOn(fs, 'readFileSync').and.returnValue('{"foo":"bar"}');
 
@@ -28,8 +28,8 @@ describe("packageInfo", function() {
     expect(packageInfo).toEqual({foo: "bar"});
   });
 
-  it('should walk up the tree looking for jasmine', function() {
-    fs.existsSync.and.callFake(function(file) {
+  it('should walk up the tree looking for jasmine', () => {
+    fs.existsSync.and.callFake(file => {
       if (file == 'package.json') {
         return false;
       } else {

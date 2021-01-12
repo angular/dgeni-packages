@@ -9,7 +9,7 @@ module.exports = function markedNunjucksTag(trimIndentation, renderMarkdown) {
     /** Disable autoescape for this tag because the markdown tag renders HTML that shouldn't be escaped. */
     autoescape: false,
 
-    parse: function(parser, nodes) {
+    parse(parser, nodes) {
       parser.advanceAfterBlockEnd();
 
       var content = parser.parseUntilBlocks("endmarked");
@@ -19,7 +19,7 @@ module.exports = function markedNunjucksTag(trimIndentation, renderMarkdown) {
       return tag;
     },
 
-    process: function(context, content) {
+    process(context, content) {
       var contentString = content();
       var indent = trimIndentation.calcIndent(contentString);
       var trimmedString = trimIndentation.trimIndent(contentString, indent);

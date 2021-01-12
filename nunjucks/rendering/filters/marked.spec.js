@@ -1,20 +1,21 @@
 var Dgeni = require('dgeni');
 var mockPackage = require('../../mocks/mockPackage');
 
-describe("marked custom filter", function() {
+describe("marked custom filter", () => {
   var filter;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
 
     filter = injector.get('markedNunjucksFilter');
   });
 
-  it("should have the name 'marked'", function() {
+  it("should have the name 'marked'", () => {
     expect(filter.name).toEqual('marked');
   });
-  it("should transform the content as markdown trimming excess code indentation", function() {
+
+  it("should transform the content as markdown trimming excess code indentation", () => {
       var result = filter.process(
         '## heading 2\n\n' +
         'some paragraph\n\n' +

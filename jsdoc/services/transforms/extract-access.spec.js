@@ -3,18 +3,18 @@ var mockPackage = require('../../mocks/mockPackage');
 
 var transformFactory = require('./extract-access');
 
-describe("extract-access transform", function() {
+describe("extract-access transform", () => {
   var transform;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     transform = injector.get('extractAccessTransform');
   });
 
-  describe('(@access tag)', function () {
+  describe('(@access tag)', () => {
     var doc, tag;
-    beforeEach(function() {
+    beforeEach(() => {
       doc = {};
       tag = { tagDef: { name: "access" } };
 
@@ -23,7 +23,7 @@ describe("extract-access transform", function() {
       transform.allowedTags.set('public');
     });
 
-    it("should extract the access restrictions for property", function() {
+    it("should extract the access restrictions for property", () => {
       doc.docType = 'property';
 
       var value = transform(doc, tag, 'private');
@@ -31,7 +31,7 @@ describe("extract-access transform", function() {
       expect(value).toBeUndefined();
     });
 
-    it("should extract the access restrictions for method", function() {
+    it("should extract the access restrictions for method", () => {
       doc.docType = 'method';
 
       var value = transform(doc, tag, 'public');
@@ -39,64 +39,54 @@ describe("extract-access transform", function() {
       expect(value).toBeUndefined();
     });
 
-    it("should throw an error for unknown doc types", function() {
+    it("should throw an error for unknown doc types", () => {
       doc.docType = 'other';
-      expect(function () {
-        transform(doc, tag, 'other');
-      }).toThrowError('Illegal use of "@access" tag.\n' +
+      expect(() => transform(doc, tag, 'other')).toThrowError('Illegal use of "@access" tag.\n' +
                       'You can only use this tag on the following docTypes: [ property, method ].\n' +
                       'Register this docType with extractAccessTransform.addDocType("other") prior to use - doc (other) ');
     });
 
-    it("should throw an error for unknown value", function() {
+    it("should throw an error for unknown value", () => {
       doc.docType = 'method';
 
       value = 'root';
 
-      expect(function () {
-        transform(doc, tag, value);
-      }).toThrowError('Illegal value for `doc.access` property of "root".\n' +
+      expect(() => transform(doc, tag, value)).toThrowError('Illegal value for `doc.access` property of "root".\n' +
                       'This property can only contain the following values: [ "private", "public" ] - doc (method) ');
     });
 
-    it("should throw an error for more than one access tag", function() {
+    it("should throw an error for more than one access tag", () => {
       doc.docType = 'method';
       doc.access = 'private';
 
       value = 'private';
 
-      expect(function () {
-        transform(doc, tag, value);
-      }).toThrowError('Illegal use of "@access" tag.\n' +
+      expect(() => transform(doc, tag, value)).toThrowError('Illegal use of "@access" tag.\n' +
                       '`doc.access` property is already defined as "private".\n' +
                       'Only one of the following tags allowed per doc: [ "@access", "@private", "@public" ] - doc (method) ');
     });
 
-    it("should throw an error if no value defined", function() {
+    it("should throw an error if no value defined", () => {
       doc.docType = 'method';
 
       value = '';
 
-      expect(function () {
-        transform(doc, tag, value);
-      }).toThrowError('Illegal value for `doc.access` property of "".\n' +
+      expect(() => transform(doc, tag, value)).toThrowError('Illegal value for `doc.access` property of "".\n' +
                       'This property can only contain the following values: [ "private", "public" ] - doc (method) ');
     });
   });
 
-  describe('(other tags)', function () {
+  describe('(other tags)', () => {
 
 
-    it("should throw an error if the tag is not registered with the extractAccessTransform", function () {
+    it("should throw an error if the tag is not registered with the extractAccessTransform", () => {
       doc = { docType: 'property' };
       tag = { tagDef: { name: 'other' } };
 
-      expect(function () {
-        transform(doc, tag, '');
-      }).toThrowError('Register tag @other with extractAccessTransform.allowedTags.set("other") prior to use - doc (property) ');
+      expect(() => transform(doc, tag, '')).toThrowError('Register tag @other with extractAccessTransform.allowedTags.set("other") prior to use - doc (property) ');
     });
 
-    it('should return the value passed to the allowedTags map', function() {
+    it('should return the value passed to the allowedTags map', () => {
       transform.allowedTags.set('a', 'blah');
       transform.allowedTags.set('b');
 

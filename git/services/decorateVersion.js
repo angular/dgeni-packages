@@ -12,7 +12,7 @@ module.exports = function decorateVersion() {
    * Decorate version with custom properties
    * @param {SemVer} version should be a semver version.
    */
-  return function(version) { 
+  return version => {
     // angular.js didn't follow semantic version until after 1.2.0rc1
     if ((version.major === 1 && version.minor === 0 && version.prerelease.length > 0) || (version.major === 1 && version.minor === 2 && version.prerelease[0] === 'rc1')) {
       version.version = [version.major, version.minor, version.patch].join('.') + version.prerelease.join('');

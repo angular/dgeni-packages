@@ -1,7 +1,7 @@
 var Tag = require('./Tag');
 
-describe("Tag", function() {
-  it("should put constructor parameters into member properties", function() {
+describe("Tag", () => {
+  it("should put constructor parameters into member properties", () => {
     var tagDef = {};
     var tag = new Tag(tagDef, 'someName', 'a load of content', 12);
     expect(tag.tagDef).toBe(tagDef);

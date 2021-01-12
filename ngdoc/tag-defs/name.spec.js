@@ -3,16 +3,16 @@ var Dgeni = require('dgeni');
 
 var tagDefFactory = require('./name');
 
-describe("name tag-def", function() {
+describe("name tag-def", () => {
   var tagDef;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     tagDef = injector.invoke(tagDefFactory);
   });
 
-  it("should update the inputType if docType is input", function() {
+  it("should update the inputType if docType is input", () => {
     var doc = { docType: 'input' };
     var tag = {};
     var value = tagDef.transforms(doc, tag, 'input[checkbox]');
@@ -20,7 +20,7 @@ describe("name tag-def", function() {
     expect(doc.inputType).toEqual('checkbox');
   });
 
-  it("should not update the inputType if docType is not input", function() {
+  it("should not update the inputType if docType is not input", () => {
     var doc = { docType: 'directive' };
     var tag = {};
     var value = tagDef.transforms(doc, tag, 'input[checkbox]');
@@ -28,12 +28,10 @@ describe("name tag-def", function() {
     expect(doc.inputType).toBeUndefined();
   });
 
-  it("should throw error if the docType is 'input' and the name is not a valid format", function() {
+  it("should throw error if the docType is 'input' and the name is not a valid format", () => {
     var doc = { docType: 'input' };
     var tag = {};
-    expect(function() {
-      tagDef.transforms(doc, tag, 'invalidInputName');
-    }).toThrow();
+    expect(() => tagDef.transforms(doc, tag, 'invalidInputName')).toThrow();
   });
 
 });

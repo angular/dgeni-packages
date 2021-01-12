@@ -1,7 +1,7 @@
 var tagDefFactory = require('./element');
 
-describe("element tag-def", function() {
-  it("should set default based on docType", function() {
+describe("element tag-def", () => {
+  it("should set default based on docType", () => {
 
      var tagDef =  tagDefFactory();
      expect(tagDef.defaultFn({ docType: 'directive' })).toEqual('ANY');

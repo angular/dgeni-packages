@@ -7,14 +7,12 @@ var path = require('canonical-path');
  * Write the given contents to a file, ensuring the path to the file exists
  */
 module.exports = function writeFile() {
-  return function(file, content) {
-    return mkdirp(path.dirname(file)).then(function() {
-      return new Promise(function(resolve, reject) {
-        fs.writeFile(file, content, function(err) {
+  return (file, content) =>
+    mkdirp(path.dirname(file))
+      .then(() => new Promise((resolve, reject) => {
+        return fs.writeFile(file, content, err => {
           if (err) { reject(err); }
           resolve();
         });
-      });
-    });
-  };
+      }));
 };

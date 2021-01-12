@@ -1,7 +1,7 @@
 var htmlEncode = require('htmlencode').htmlEncode;
 
 module.exports = function encodeCodeBlock() {
-  return function(str, inline, lang) {
+  return (str, inline, lang) => {
 
     // Encode any HTML entities in the code string
     str = htmlEncode(str, true);

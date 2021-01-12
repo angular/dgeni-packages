@@ -1,10 +1,10 @@
 var rewire = require('rewire');
 var engineFactory = rewire('./nunjucks-template-engine');
 
-describe("nunjucksTemplateEngine service", function() {
+describe("nunjucksTemplateEngine service", () => {
   var nunjucks, addFilterSpy, addExtensionSpy, engine, mockTemplateFinder;
 
-  beforeEach(function() {
+  beforeEach(() => {
 
     nunjucks = engineFactory.__get__('nunjucks');
 
@@ -18,9 +18,9 @@ describe("nunjucksTemplateEngine service", function() {
     engine = engineFactory(mockTemplateFinder);
   });
 
-  describe("getRenderer()", function() {
+  describe("getRenderer()", () => {
 
-    it("should configure nunjucks", function() {
+    it("should configure nunjucks", () => {
 
       engine.templateFolders = ['templates'];
       engine.config = { foo: 'bar' };
@@ -35,9 +35,9 @@ describe("nunjucksTemplateEngine service", function() {
     });
 
 
-    it("should load the given custom filters", function() {
+    it("should load the given custom filters", () => {
 
-      var dummyFilter = { name: 'test', process: function() {} };
+      var dummyFilter = { name: 'test', process() {} };
       engine.filters.push(dummyFilter);
 
       var render = engine.getRenderer();
@@ -47,7 +47,7 @@ describe("nunjucksTemplateEngine service", function() {
     });
 
 
-    it("should load the given custom tags", function() {
+    it("should load the given custom tags", () => {
 
       var dummyExtension = { tags: ['dummy']};
       engine.tags.push(dummyExtension);

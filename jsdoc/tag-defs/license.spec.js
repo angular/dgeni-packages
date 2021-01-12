@@ -1,13 +1,13 @@
 var tagDefFactory = require('./license');
 
-describe("license tag-def", function() {
+describe("license tag-def", () => {
   var tagDef;
 
-  beforeEach(function() {
+  beforeEach(() => {
     tagDef = tagDefFactory();
   });
 
-  it('should pull in the license detail if it matches the SPDX License List', function() {
+  it('should pull in the license detail if it matches the SPDX License List', () => {
     var doc = {};
     var result = tagDef.transforms(doc, 'license', 'Apache-2.0');
     expect(result).toEqual('Apache-2.0');

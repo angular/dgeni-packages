@@ -151,7 +151,7 @@ Or in ngAnimate
 var ngModule = angular.module(<div annotation title="Your AngularJS Module" content="Replace this or ngModule with the module that you used to define your application.">'YourApp'</div>, ['ngAnimate']);
 ngModule.animation('.my-crazy-animation', function() {
   return {
-    enter: function(element, done) {
+    enter(element, done) {
       //run the animation here and call done when the animation is complete
       return function(cancelled) {
 ```

@@ -4,11 +4,11 @@ var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
 
-describe("debugDumpProcessor", function() {
-  it("should write out the docs to a file", function() {
+describe("debugDumpProcessor", () => {
+  it("should write out the docs to a file", () => {
 
     var writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Promise.resolve());
-    var testPackage = mockPackage().factory('writeFile', function() { return writeFileSpy; });
+    var testPackage = mockPackage().factory('writeFile', function writeFile() { return writeFileSpy; });
 
     var dgeni = new Dgeni([testPackage]);
     var injector = dgeni.configureInjector();

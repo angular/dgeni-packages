@@ -2,24 +2,24 @@ var Dgeni = require('dgeni');
 var mockPackage = require('../../mocks/mockPackage');
 var nunjucks = require('nunjucks');
 
-describe("marked custom tag extension", function() {
+describe("marked custom tag extension", () => {
   var extension;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
 
     extension = injector.get('markedNunjucksTag');
   });
 
-  it("should specify the tags to match", function() {
+  it("should specify the tags to match", () => {
     expect(extension.tags).toEqual(['marked']);
   });
 
-  describe("process", function() {
+  describe("process", () => {
 
-    it("should render the markdown and reindent", function() {
-      var result = extension.process(null, function() {
+    it("should render the markdown and reindent", () => {
+      var result = extension.process(null, () => {
         return '  ## heading 2\n\n' +
                '  some paragraph\n\n' +
                '    * a bullet point';
@@ -36,15 +36,15 @@ describe("marked custom tag extension", function() {
 
   });
 
-  describe("parse", function() {
-    it("should interact correctly with the parser", function() {
+  describe("parse", () => {
+    it("should interact correctly with the parser", () => {
       var log = [];
       var parserMock = {
-        advanceAfterBlockEnd: function() { log.push('advanceAfterBlockEnd'); },
-        parseUntilBlocks: function() { log.push('parseUntilBlocks'); return 'some content'; }
+        advanceAfterBlockEnd() { log.push('advanceAfterBlockEnd'); },
+        parseUntilBlocks() { log.push('parseUntilBlocks'); return 'some content'; }
       };
       var nodesMock = {
-        CallExtension: function() { log.push('CallExtension'); this.args = arguments; }
+        CallExtension: function CallExtension() { log.push('CallExtension'); this.args = arguments; }
       };
 
       var tag = extension.parse(parserMock, nodesMock);

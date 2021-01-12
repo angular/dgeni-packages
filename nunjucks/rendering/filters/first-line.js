@@ -4,7 +4,7 @@
  */
 module.exports = {
   name: 'firstLine',
-  process: function(str) {
+  process(str) {
     if (!str) return str;
 
     return str.match(/([^$]*\{@[^}]+\})|.*$/m)[0];

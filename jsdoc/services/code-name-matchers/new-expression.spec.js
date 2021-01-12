@@ -1,29 +1,29 @@
 var matcherFactory = require('./new-expression');
 
-describe('NewExpression matcher', function() {
+describe('NewExpression matcher', () => {
 
   var matcher, codeNameServiceMock;
 
-  beforeEach(function() {
+  beforeEach(() => {
     codeNameServiceMock = {
-      find: function (arg) {
+      find(arg) {
         return arg;
       }
     };
     matcher = matcherFactory(codeNameServiceMock);
   });
 
-  it("should return null for unsupported node", function() {
+  it("should return null for unsupported node", () => {
     spyOn(codeNameServiceMock, 'find').and.callThrough();
 
     expect(matcher({})).toBeNull();
     expect(codeNameServiceMock.find.calls.count()).toEqual(1);
   });
 
-  it("should return name for supported node", function() {
+  it("should return name for supported node", () => {
     spyOn(codeNameServiceMock, 'find').and.callThrough();
 
     expect(matcher({callee: 'test'})).toEqual('test');
     expect(codeNameServiceMock.find.calls.count()).toEqual(1);
-  }); 
+  });
 });

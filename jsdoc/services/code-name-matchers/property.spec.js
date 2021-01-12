@@ -1,19 +1,19 @@
 var matcherFactory = require('./property');
 
-describe('Property matcher', function() {
+describe('Property matcher', () => {
 
   var matcher, codeNameServiceMock;
 
-  beforeEach(function() {
+  beforeEach(() => {
     codeNameServiceMock = {
-      find: function (arg) {
+      find(arg) {
         return arg;
       }
     };
     matcher = matcherFactory(codeNameServiceMock);
   });
 
-  it("should start search for value", function () {
+  it("should start search for value", () => {
     var expr = {
       key: 'key',
       value: 'value'
@@ -26,7 +26,7 @@ describe('Property matcher', function() {
     expect(codeNameServiceMock.find).toHaveBeenCalledWith(expr.value);
   });
 
-  it("should continue search with key", function () {
+  it("should continue search with key", () => {
     codeNameServiceMock.value = null;
     var expr = {
       key: 'key',
@@ -40,7 +40,7 @@ describe('Property matcher', function() {
     expect(codeNameServiceMock.find.calls.allArgs()).toEqual([[null],[expr.key]]);
   });
 
-  it("should return null for empty key and value", function () {
+  it("should return null for empty key and value", () => {
     codeNameServiceMock.value = null;
     var expr = {
       key: null,

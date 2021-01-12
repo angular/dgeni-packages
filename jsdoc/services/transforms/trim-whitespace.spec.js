@@ -1,18 +1,18 @@
 var transformFactory = require('./trim-whitespace');
 
-describe("trim-whitespace", function() {
+describe("trim-whitespace", () => {
 
   var transform;
 
-  beforeEach(function() {
+  beforeEach(() => {
     transform = transformFactory();
   });
 
-  it("should trim newlines and whitespace from the end of the description", function() {
+  it("should trim newlines and whitespace from the end of the description", () => {
     expect(transform({}, {}, 'myId\n\nsome other text  \n  \n')).toEqual('myId\n\nsome other text');
   });
 
-  it("should not do anything if the value is not a string", function() {
+  it("should not do anything if the value is not a string", () => {
     var someNonStringObject = {};
     expect(transform({}, {}, someNonStringObject)).toEqual(someNonStringObject);
   });

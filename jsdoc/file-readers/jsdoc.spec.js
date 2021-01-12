@@ -6,11 +6,11 @@ var srcJsContent = require('../mocks/_test-data/srcJsFile.js');
 var docsFromJsContent = require('../mocks/_test-data/docsFromJsFile');
 
 
-describe("jsdoc fileReader", function() {
+describe("jsdoc fileReader", () => {
 
   var fileReader, jsDocParser;
 
-  var createFileInfo = function(file, content, basePath) {
+  function createFileInfo(file, content, basePath) {
     return {
       fileReader: fileReader.name,
       filePath: file,
@@ -20,17 +20,17 @@ describe("jsdoc fileReader", function() {
       relativePath: path.relative(basePath, file),
       content: content
     };
-  };
+  }
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     fileReader = injector.get('jsdocFileReader');
   });
 
-  describe("defaultPattern", function() {
+  describe("defaultPattern", () => {
 
-    it("should only match js files", function() {
+    it("should only match js files", () => {
       expect(fileReader.defaultPattern.test('abc.js')).toBeTruthy();
       expect(fileReader.defaultPattern.test('abc.ngdoc')).toBeFalsy();
     });
@@ -38,9 +38,9 @@ describe("jsdoc fileReader", function() {
   });
 
 
-  describe("getDocs", function() {
+  describe("getDocs", () => {
 
-    it('should return a single doc representing the file', function() {
+    it('should return a single doc representing the file', () => {
       var fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
       var docs = fileReader.getDocs(fileInfo);
       expect(docs.length).toEqual(1);
@@ -48,7 +48,7 @@ describe("jsdoc fileReader", function() {
     });
 
 
-    it("should attach the AST to the fileInfo", function() {
+    it("should attach the AST to the fileInfo", () => {
       var fileInfo = createFileInfo('some/file.js', srcJsContent, '.');
       var docs = fileReader.getDocs(fileInfo);
       expect(fileInfo.ast).toEqual(jasmine.objectContaining({
@@ -56,9 +56,9 @@ describe("jsdoc fileReader", function() {
         range: [ 0, 3135 ]
       }));
     });
-    
-    
-    it('should understand ES6 features', function() {
+
+
+    it('should understand ES6 features', () => {
       var fileInfo = createFileInfo(
         'some/file.js',
         "function *someGenerator() { yield 10; }",
@@ -70,7 +70,7 @@ describe("jsdoc fileReader", function() {
       }));
     });
 
-    it("should cope with invalid JavaScript", function() {
+    it("should cope with invalid JavaScript", () => {
       var fileInfo = createFileInfo(
         'some/file.js',
         "var _parameters={\n" +
@@ -88,9 +88,7 @@ describe("jsdoc fileReader", function() {
         "  sync:true\n" +
         "}\n",
         '.');
-      expect(function() {
-        var docs = fileReader.getDocs(fileInfo);
-      }).toThrowError('JavaScript error in file "some/file.js"" [line 13, column 3]: "Unexpected identifier"')
+      expect(() => fileReader.getDocs(fileInfo)).toThrowError('JavaScript error in file "some/file.js"" [line 13, column 3]: "Unexpected identifier"')
     });
 
   });

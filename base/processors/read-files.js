@@ -40,27 +40,27 @@ module.exports = function readFilesProcessor(log) {
     },
     $runAfter: ['reading-files'],
     $runBefore: ['files-read'],
-    $process: function() {
+    $process() {
       var fileReaders = this.fileReaders;
       var fileReaderMap = getFileReaderMap(fileReaders);
       var basePath = this.basePath;
 
-      var sourcePromises = this.sourceFiles.map(function(sourceInfo) {
+      var sourcePromises = this.sourceFiles.map(sourceInfo => {
 
         sourceInfo = normalizeSourceInfo(basePath, sourceInfo);
 
         log.debug('Source Info:\n', sourceInfo);
 
-        return getSourceFiles(sourceInfo).then(function(files) {
+        return getSourceFiles(sourceInfo).then(files => {
 
           var docsPromises = [];
 
           log.debug('Found ' + files.length + ' files:\n', files);
 
-          files.forEach(function(file) {
+          files.forEach(file => {
 
             // Load up each file and extract documents using the appropriate fileReader
-            var docsPromise = readFile(file).then(function(content) {
+            var docsPromise = readFile(file).then(content => {
 
               // Choose a file reader for this file
               var fileReader = sourceInfo.fileReader ? fileReaderMap.get(sourceInfo.fileReader) : matchFileReader(fileReaders, file);
@@ -72,7 +72,7 @@ module.exports = function readFilesProcessor(log) {
               var docs = fileReader.getDocs(fileInfo);
 
               // Attach the fileInfo object to each doc
-              docs.forEach(function(doc) {
+              docs.forEach(doc => {
                 doc.fileInfo = fileInfo;
               });
 
@@ -107,7 +107,7 @@ function createFileInfo(file, content, sourceInfo, fileReader, basePath) {
 
 function getFileReaderMap(fileReaders) {
   var fileReaderMap = new StringMap();
-  fileReaders.forEach(function(fileReader) {
+  fileReaders.forEach(fileReader => {
 
     if ( !fileReader.name ) {
       throw new Error('Invalid File Reader: It must have a name property');
@@ -123,7 +123,7 @@ function getFileReaderMap(fileReaders) {
 
 
 function matchFileReader(fileReaders, file) {
-  var found = fileReaders.find(function(fileReader) {
+  var found = fileReaders.find(fileReader => {
     // If no defaultPattern is defined then match everything
     return !fileReader.defaultPattern || fileReader.defaultPattern.test(file);
   });
@@ -154,12 +154,8 @@ function normalizeSourceInfo(basePath, sourceInfo) {
   }
 
   sourceInfo.basePath = path.resolve(basePath, sourceInfo.basePath || '.');
-  sourceInfo.include = _.map(sourceInfo.include, function(include) {
-    return path.resolve(basePath, include);
-  });
-  sourceInfo.exclude = _.map(sourceInfo.exclude, function(exclude) {
-    return path.resolve(basePath, exclude);
-  });
+  sourceInfo.include = _.map(sourceInfo.include, include => path.resolve(basePath, include));
+  sourceInfo.exclude = _.map(sourceInfo.exclude, exclude => path.resolve(basePath, exclude));
 
   return sourceInfo;
 }
@@ -168,48 +164,42 @@ function normalizeSourceInfo(basePath, sourceInfo) {
 function getSourceFiles(sourceInfo) {
 
   // Compute matchers for each of the exclusion patterns
-  var excludeMatchers = _.map(sourceInfo.exclude, function(exclude) {
-    return new Minimatch(exclude);
-  });
+  var excludeMatchers = _.map(sourceInfo.exclude, exclude => new Minimatch(exclude));
 
   // Get a list of files to include
-  var filesPromises = _.map(sourceInfo.include, function(include) {
-    // Each call to glob will produce a array of file paths
-    return matchFiles(include);
-  });
+  // Each call to glob will produce an array of file paths
+  var filesPromises = _.map(sourceInfo.include, include => matchFiles(include));
 
-  return Promise.all(filesPromises).then(function(filesCollections) {
-
-    // Once we have all the file path arrays, flatten them into a single array
-    return _.flatten(filesCollections);
-
-  }).then(function(files) {
+  // Once we have all the file path arrays, flatten them into a single array
+  return Promise.all(filesPromises)
+      .then(filesCollections => _.flatten(filesCollections))
+      .then(files => {
 
     // Filter the files on whether they match the `exclude` property and whether they are files
-    var filteredFilePromises = files.map(function(file) {
+    var filteredFilePromises = files.map(file => {
 
-      if ( _.some(excludeMatchers, function(excludeMatcher) { return excludeMatcher.match(file); }) ) {
+      if ( _.some(excludeMatchers, excludeMatcher => excludeMatcher.match(file)) ) {
         // Return a promise for `null` if the path is excluded
         // Doing this first - it is synchronous - saves us even making the isFile call if not needed
         return Promise.resolve(null);
       } else {
         // Return a promise for the file if path is a file, otherwise return a promise for `null`
-        return isFile(file).then(function(isFile) { return isFile ? file : null; });
+        return isFile(file).then(isFile => { return isFile ? file : null; });
       }
     });
 
     // Return a promise to a filtered list of files, those that are files and not excluded
     // (i.e. those that are not `null` from the previous block of code)
-    return Promise.all(filteredFilePromises).then(function(filteredFiles) {
-      return filteredFiles.filter(function(filteredFile) { return filteredFile; });
+    return Promise.all(filteredFilePromises).then(filteredFiles => {
+      return filteredFiles.filter(filteredFile => filteredFile);
     });
   });
 }
 
 
 function readFile(file) {
-  return new Promise(function(resolve, reject) {
-    fs.readFile(file, 'utf-8', function(err, data) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, 'utf-8', (err, data) => {
       if (err) { reject(err); }
       resolve(data);
     });
@@ -217,8 +207,8 @@ function readFile(file) {
 }
 
 function isFile(file) {
-  return new Promise(function(resolve, reject) {
-    fs.stat(file, function(err, stat) {
+  return new Promise((resolve, reject) => {
+    fs.stat(file, (err, stat) => {
       if (err) { reject(err); }
       resolve(stat.isFile());
     });
@@ -227,8 +217,8 @@ function isFile(file) {
 
 
 function matchFiles(pattern) {
-  return new Promise(function(resolve, reject) {
-    glob(pattern, function(err, data) {
+  return new Promise((resolve, reject) => {
+    glob(pattern, (err, data) => {
       if (err) { reject(err); }
       resolve(data);
     })

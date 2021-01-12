@@ -1,11 +1,11 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("inlineTagsProcessor", function() {
+describe("inlineTagsProcessor", () => {
 
   var processor, mockLog;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
 
@@ -14,15 +14,15 @@ describe("inlineTagsProcessor", function() {
   });
 
 
-  it("should run after docs are rendered and before writing files", function() {
+  it("should run after docs are rendered and before writing files", () => {
     expect(processor.$runAfter).toEqual(['docs-rendered']);
     expect(processor.$runBefore).toEqual(['writing-files']);
   });
 
 
-  describe("$process", function() {
+  describe("$process", () => {
 
-    it("should parse the inline tags from the renderedContent", function() {
+    it("should parse the inline tags from the renderedContent", () => {
 
       // The processor is mostly only interested in the renderedContent but the other fields are
       // used in error reporting
@@ -41,7 +41,7 @@ describe("inlineTagsProcessor", function() {
       var tagsFound = [];
       var mockInlineTagDefinition = {
         name: 'handledTag',
-        handler: function(doc, tagName, tagDescription, docs) {
+        handler(doc, tagName, tagDescription, docs) {
           tagsFound.push({ name: tagName, description: tagDescription });
           return '<Tag Handled>';
         }
@@ -74,7 +74,7 @@ describe("inlineTagsProcessor", function() {
       );
     });
 
-    it("should parse the block of rendered content between start and end inline tags", function() {
+    it("should parse the block of rendered content between start and end inline tags", () => {
       var doc = {
         file: 'a/b/c.js',
         startingLine: 123,
@@ -92,7 +92,7 @@ describe("inlineTagsProcessor", function() {
       var mockInlineTagDefinition = {
         name: 'block',
         end: 'endblock',
-        handler: function(doc, tagName, tagDescription, docs) {
+        handler(doc, tagName, tagDescription, docs) {
           tagsFound.push({ name: tagName, description: tagDescription });
           return '<Tag Handled>';
         }
@@ -121,7 +121,7 @@ describe("inlineTagsProcessor", function() {
       expect(doc.renderedContent).toEqual('content before <Tag Handled> content after');
     });
 
-    it("should not get confused by successive inline tags", function() {
+    it("should not get confused by successive inline tags", () => {
       var doc = {
         file: 'a/b/c.js',
         startingLine: 123,
@@ -140,7 +140,7 @@ describe("inlineTagsProcessor", function() {
       var mockInlineTagDefinition = {
         name: 'block',
         end: 'endblock',
-        handler: function(doc, tagName, tagDescription, docs) {
+        handler(doc, tagName, tagDescription, docs) {
           tagsFound.push({ name: tagName, description: tagDescription });
           return '<Tag Handled>';
         }

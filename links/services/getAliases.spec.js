@@ -1,8 +1,8 @@
 var getAliasesFactory = require('./getAliases');
 
-describe("getAliases", function() {
+describe("getAliases", () => {
 
-  it("should extract all the parts from a code name", function() {
+  it("should extract all the parts from a code name", () => {
 
     var getAliases = getAliasesFactory();
 

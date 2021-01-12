@@ -3,23 +3,23 @@ var Dgeni = require('dgeni');
 
 function createMockTagCollection(tags) {
   return {
-    getTag: function(value) {
+    getTag(value) {
       return tags[value];
     }
   };
 }
 
 
-describe("filter-ngdocs doc-processor plugin", function() {
+describe("filter-ngdocs doc-processor plugin", () => {
   var processor;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('filterNgDocsProcessor');
   });
 
-  it("should only return docs that have the ngdoc tag", function() {
+  it("should only return docs that have the ngdoc tag", () => {
 
     var doc1 = { tags: createMockTagCollection({ngdoc: 'a'}) };
 

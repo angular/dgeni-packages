@@ -6,10 +6,10 @@ var Dgeni = require('dgeni');
 var mocks = require('../mocks/mocks.js');
 var mockPackageFactory = require('../mocks/mockPackage');
 
-describe("getPreviousVersions", function() {
+describe("getPreviousVersions", () => {
   var getPreviousVersions, child;
 
-  beforeEach(function() {
+  beforeEach(() => {
     child = getPreviousVersionsFactory.__get__('child');
 
     var mockPackage = mockPackageFactory()
@@ -21,18 +21,18 @@ describe("getPreviousVersions", function() {
     getPreviousVersions = injector.get('getPreviousVersions');
   });
 
-  it("should have called exec", function() {
+  it("should have called exec", () => {
     spyOn(child, 'spawnSync').and.returnValue({});
     getPreviousVersions();
     expect(child.spawnSync).toHaveBeenCalled();
   });
 
-  it("should return an empty list for no tags", function() {
+  it("should return an empty list for no tags", () => {
     spyOn(child, 'spawnSync').and.returnValue({});
     expect(getPreviousVersions()).toEqual([]);
   });
 
-  it("should return an array of semvers matching tags", function() {
+  it("should return an array of semvers matching tags", () => {
     spyOn(child, 'spawnSync').and.returnValue({
       status: 0,
       stdout: 'v0.1.1'
@@ -40,7 +40,7 @@ describe("getPreviousVersions", function() {
     expect(getPreviousVersions()).toEqual([semver('v0.1.1')]);
   });
 
-  it("should match v0.1.1-rc1", function() {
+  it("should match v0.1.1-rc1", () => {
     spyOn(child, 'spawnSync').and.returnValue({
       status: 0,
       stdout: 'v0.1.1-rc1'
@@ -48,7 +48,7 @@ describe("getPreviousVersions", function() {
     expect(getPreviousVersions()).toEqual([semver('v0.1.1-rc1')]);
   });
 
-  it("should not match v1.1.1.1", function() {
+  it("should not match v1.1.1.1", () => {
     spyOn(child, 'spawnSync').and.returnValue({
       status: 0,
       stdout: 'v1.1.1.1'
@@ -56,7 +56,7 @@ describe("getPreviousVersions", function() {
     expect(getPreviousVersions()).toEqual([]);
   });
 
-  it("should not match v1.1.1-rc", function() {
+  it("should not match v1.1.1-rc", () => {
     spyOn(child, 'spawnSync').and.returnValue({
       status: 0,
       stdout: 'v1.1.1-rc'
@@ -64,7 +64,7 @@ describe("getPreviousVersions", function() {
     expect(getPreviousVersions()).toEqual([]);
   });
 
-  it("should match multiple semvers", function() {
+  it("should match multiple semvers", () => {
     spyOn(child, 'spawnSync').and.returnValue({
       status: 0,
       stdout: 'v0.1.1\nv0.1.2'
@@ -72,7 +72,7 @@ describe("getPreviousVersions", function() {
     expect(getPreviousVersions()).toEqual([semver('v0.1.1'), semver('v0.1.2')]);
   });
 
-  it("should sort multiple semvers", function() {
+  it("should sort multiple semvers", () => {
     spyOn(child, 'spawnSync').and.returnValue({
       status: 0,
       stdout: 'v0.1.1\nv0.1.1-rc1'
@@ -81,7 +81,7 @@ describe("getPreviousVersions", function() {
   });
 
 
-  it("should decorate all versions", function() {
+  it("should decorate all versions", () => {
     mocks.decorateVersion.calls.reset();
 
     spyOn(child, 'spawnSync').and.returnValue({

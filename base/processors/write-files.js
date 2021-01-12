@@ -15,9 +15,9 @@ module.exports = function writeFilesProcessor(log, readFilesProcessor, writeFile
     },
     $runAfter:['writing-files'],
     $runBefore: ['files-written'],
-    $process: function(docs) {
+    $process(docs) {
       var outputFolder = this.outputFolder;
-      return Promise.all(_.map(docs, function(doc) {
+      return Promise.all(_.map(docs, doc => {
 
         if ( !doc.outputPath ) {
           log.debug('Document "' + doc.id + ', ' + doc.docType + '" has no outputPath.');
@@ -26,15 +26,13 @@ module.exports = function writeFilesProcessor(log, readFilesProcessor, writeFile
           var outputFile = path.resolve(readFilesProcessor.basePath, outputFolder, doc.outputPath);
 
           log.silly('writing file', outputFile);
-          return writeFile(outputFile, doc.renderedContent).then(function() {
+          return writeFile(outputFile, doc.renderedContent).then(() => {
             log.debug('written file', outputFile);
             return outputFile;
           });
 
         }
-      })).then(function() {
-        return docs;
-      });
+      })).then(() => docs);
     }
   };
 };

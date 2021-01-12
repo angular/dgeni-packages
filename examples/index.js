@@ -32,17 +32,17 @@ module.exports = new Package('examples', ['jsdoc'])
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['example-file'],
-    getPath: function() {},
+    getPath() {},
     outputPathTemplate: 'examples/${id}'
   });
   computePathsProcessor.pathTemplates.push({
     docTypes: ['runnableExample' ],
     pathTemplate: 'examples/${example.id}',
-    getOutputPath: function() {},
+    getOutputPath() {},
   });
 
   computeIdsProcessor.idTemplates.push({
     docTypes: ['example', 'example-file', 'runnableExample'],
-    getAliases: function(doc) { return [doc.id]; }
+    getAliases(doc) { return [doc.id]; }
   });
 });

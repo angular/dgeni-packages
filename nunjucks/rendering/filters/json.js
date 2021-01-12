@@ -4,7 +4,7 @@
  */
 module.exports = {
   name: 'json',
-  process: function(obj) {
+  process(obj) {
     return JSON.stringify(obj, null, '  ');
   }
 };

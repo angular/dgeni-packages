@@ -7,7 +7,7 @@ module.exports = function runnableExampleInlineTagDef(exampleMap, createDocMessa
   return {
     name: 'runnableExample',
 
-    handler: function(doc, tagName, description) {
+    handler(doc, tagName, description) {
 
       // The tag description should contain the id of the runnable example doc
       var example = exampleMap.get(description);

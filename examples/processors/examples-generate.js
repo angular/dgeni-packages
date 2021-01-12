@@ -16,9 +16,9 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
     $validate: {
       deployments: { presence: true }
     },
-    $process: function(docs) {
+    $process(docs) {
       var that = this;
-      exampleMap.forEach(function(example) {
+      exampleMap.forEach(example => {
 
         var stylesheets = [];
         var scripts = [];
@@ -27,7 +27,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
         example.indexFile = example.files['index.html'];
 
         // Create a new document for each file of the example
-        _.forEach(example.files, function(file, fileName) {
+        _.forEach(example.files, (file, fileName) => {
           if ( fileName === 'index.html' ) return;
 
           var fileDoc = that.createFileDoc(example, file);
@@ -42,7 +42,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
         });
 
         // Create an index.html document for the example (one for each deployment type)
-        _.forEach(that.deployments, function(deployment) {
+        _.forEach(that.deployments, deployment => {
           var exampleDoc = that.createExampleDoc(example, deployment, stylesheets, scripts);
           docs.push(exampleDoc);
           example.deployments[deployment.name] = exampleDoc;
@@ -59,7 +59,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       });
     },
 
-    createExampleDoc: function(example, deployment, stylesheets, scripts) {
+    createExampleDoc(example, deployment, stylesheets, scripts) {
       var deploymentQualifier = deployment.name === 'default' ? '' : ('-' + deployment.name);
       var commonFiles = (deployment.examples && deployment.examples.commonFiles) || {};
       var dependencyPath = (deployment.examples && deployment.examples.dependencyPath) || '.';
@@ -77,12 +77,12 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       };
 
       // Copy in the common scripts and stylesheets
-      exampleDoc.scripts = _.map(commonFiles.scripts, function(script) { return { path: script }; });
-      exampleDoc.stylesheets = _.map(commonFiles.stylesheets || [], function(stylesheet) { return { path: stylesheet }; });
+      exampleDoc.scripts = _.map(commonFiles.scripts, script => ({ path: script }));
+      exampleDoc.stylesheets = _.map(commonFiles.stylesheets || [], stylesheet => ({ path: stylesheet }));
 
       // Copy in any dependencies for this example
       if ( example.deps ) {
-        _.forEach(example.deps.split(';'), function(dependency) {
+        _.forEach(example.deps.split(';'), dependency => {
           var filePath = /(https?:)?\/\//.test(dependency) ?
             dependency :
             /(https?:)?\/\//.test(dependencyPath) ?
@@ -108,7 +108,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       return exampleDoc;
     },
 
-    createFileDoc: function(example, file) {
+    createFileDoc(example, file) {
       var fileDoc = {
         docType: 'example-file',
         id: example.id + '/' + file.name,
@@ -123,7 +123,7 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       return fileDoc;
     },
 
-    createRunnableExampleDoc: function(example) {
+    createRunnableExampleDoc(example) {
       var exampleDoc = {
         id: example.id + '-runnableExample',
         docType: 'runnableExample',
@@ -136,13 +136,11 @@ module.exports = function generateExamplesProcessor(log, exampleMap) {
       return exampleDoc;
     },
 
-    createManifestDoc: function(example) {
+    createManifestDoc(example) {
 
       var files = _(example.files)
         .omit('index.html')
-        .map(function(file) {
-          return file.name;
-        })
+        .map(file => file.name)
         .value();
 
       var manifestDoc = {

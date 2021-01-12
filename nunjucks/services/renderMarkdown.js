@@ -9,12 +9,12 @@ module.exports = function renderMarkdown(trimIndentation) {
 
   var renderer = new marked.Renderer();
 
-  // remove the leading whitespace from the code block before it gets to the
+  // Remove the leading whitespace from the code block before it gets to the
   // markdown code render function
-  renderer.code = function(code, string, language) {
+  renderer.code = (code, string, language) => {
 
     var trimmedCode = trimIndentation(code);
-    var renderedCode = marked.Renderer.prototype.code.call(this, trimmedCode, string, language);
+    var renderedCode = marked.Renderer.prototype.code.call(renderer, trimmedCode, string, language);
 
     // Bug in marked - forgets to add a final newline sometimes
     if ( !/\n$/.test(renderedCode) ) {
@@ -24,7 +24,5 @@ module.exports = function renderMarkdown(trimIndentation) {
     return renderedCode;
   };
 
-  return function(content) {
-    return marked(content, { renderer: renderer });
-  };
+  return content => marked(content, { renderer: renderer });
 };

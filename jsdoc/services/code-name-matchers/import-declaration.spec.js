@@ -1,19 +1,19 @@
 var matcherFactory = require('./import-declaration');
 
-describe('ImportDeclaration matcher', function() {
+describe('ImportDeclaration matcher', () => {
 
   var matcher;
 
-  beforeEach(function() {
+  beforeEach(() => {
     matcher = matcherFactory();
   });
 
-  it("should return null for unsupported nodes", function() {
+  it("should return null for unsupported nodes", () => {
     expect(matcher({})).toBeNull();
     expect(matcher({ source: {} })).toBeNull();
   });
 
-  it("should return a name for supported nodes", function() {
+  it("should return a name for supported nodes", () => {
     expect(matcher({ source: { value: './file' } })).toBe('./file');
   });
 });

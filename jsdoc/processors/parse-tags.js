@@ -16,11 +16,11 @@ module.exports = function parseTagsProcessor(log, createDocMessage, backTickPars
     },
     $runAfter: ['parsing-tags'],
     $runBefore: ['tags-parsed'],
-    $process: function(docs) {
+    $process(docs) {
 
       var tagParser = createTagParser(this.tagDefinitions, this.parserAdapters);
 
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
         try {
           doc.tags = tagParser(doc.content || '', doc.startingLine);
         } catch(e) {
@@ -41,10 +41,10 @@ module.exports = function parseTagsProcessor(log, createDocMessage, backTickPars
 function createTagDefMap(tagDefinitions) {
   // Create a map of the tagDefinitions so that we can look up tagDefs based on name or alias
   var map = new StringMap();
-  _.forEach(tagDefinitions, function(tagDefinition) {
+  _.forEach(tagDefinitions, tagDefinition => {
     map.set(tagDefinition.name, tagDefinition);
     if ( tagDefinition.aliases ) {
-      _.forEach(tagDefinition.aliases, function(alias) {
+      _.forEach(tagDefinition.aliases, alias => {
         map.set(alias, tagDefinition);
       });
     }
@@ -129,14 +129,14 @@ function createTagParser(tagDefinitions, parserAdapters) {
 
 
   function init(lines, tags) {
-    parserAdapters.forEach(function(adapter) { adapter.init(lines, tags); });
+    parserAdapters.forEach(adapter => adapter.init(lines, tags));
   }
 
   function nextLine(line, lineNumber) {
-    parserAdapters.forEach(function(adapter) { adapter.nextLine(line, lineNumber); });
+    parserAdapters.forEach(adapter => adapter.nextLine(line, lineNumber));
   }
 
   function parseForTags() {
-    return parserAdapters.every(function(adapter) { return adapter.parseForTags(); });
+    return parserAdapters.every(adapter => adapter.parseForTags());
   }
 }

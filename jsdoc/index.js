@@ -51,7 +51,7 @@ module.exports = new Package('jsdoc', [require('../base')])
 .config(function(computeIdsProcessor) {
   computeIdsProcessor.idTemplates.push({
     docTypes: ['js'],
-    getId: function(doc) {
+    getId(doc) {
       var docPath = doc.name || doc.codeName;
       if ( !docPath ) {
         docPath = path.dirname(doc.fileInfo.relativePath);
@@ -61,7 +61,7 @@ module.exports = new Package('jsdoc', [require('../base')])
       }
       return docPath;
     },
-    getAliases: function(doc) {
+    getAliases(doc) {
       return [doc.id];
     }
   });

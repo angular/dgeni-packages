@@ -2,7 +2,7 @@ module.exports = function(trimIndentation, encodeCodeBlock) {
   return {
     tags: ['code'],
 
-    parse: function(parser, nodes) {
+    parse(parser, nodes) {
       var tok = parser.nextToken();
       var args = parser.parseSignature(null, true);
       parser.advanceAfterBlockEnd(tok.value);
@@ -14,7 +14,7 @@ module.exports = function(trimIndentation, encodeCodeBlock) {
       return tag;
     },
 
-    process: function(context, lang, content) {
+    process(context, lang, content) {
       if ( !content ) {
         content = lang;
         lang = undefined;

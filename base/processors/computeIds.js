@@ -10,13 +10,13 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
 
   var getIdMap, getAliasesMap;
 
-  var initializeMaps = function(idTemplates) {
+  function initializeMaps(idTemplates) {
     getIdMap = new StringMap();
     getAliasesMap = new StringMap();
 
-    idTemplates.forEach(function(template) {
+    idTemplates.forEach(template => {
       if ( template.docTypes ) {
-        template.docTypes.forEach(function(docType) {
+        template.docTypes.forEach(docType => {
 
           if ( template.getId ) {
             getIdMap.set(docType, template.getId);
@@ -40,10 +40,10 @@ module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
       idTemplates: { presence: true }
     },
     idTemplates: [],
-    $process: function(docs) {
+    $process(docs) {
       initializeMaps(this.idTemplates);
 
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
         try {
           if ( !doc.id ) {
             var getId = getIdMap.get(doc.docType);

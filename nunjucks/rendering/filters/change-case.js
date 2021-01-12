@@ -72,12 +72,10 @@ var changers = [
   'sentence'
 ];
 
-module.exports = _.map(changers, function(changer) {
-  return {
-    name: changer + 'Case',
-    process: changeCase[changer]
-  };
-});
+module.exports = _.map(changers, changer => ({
+  name: changer + 'Case',
+  process: changeCase[changer]
+}));
 
 // Aliases
 module.exports.push({

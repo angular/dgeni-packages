@@ -11,8 +11,8 @@ module.exports = function unescapeCommentsProcessor() {
   return {
     $runAfter: ['docs-rendered'],
     $runBefore: ['writing-files'],
-    $process: function(docs) {
-      _.forEach(docs, function(doc) {
+    $process(docs) {
+      _.forEach(docs, doc => {
         doc.renderedContent = doc.renderedContent.replace(/\/&amp;#42;/g, '/*').replace(/&amp;#42;\//g, '*/');
       });
     }

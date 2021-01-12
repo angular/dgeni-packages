@@ -1,8 +1,8 @@
 const backTickParserAdapterFactory = require('./backtick-parser-adapter');
 const TagCollection = require('../../lib/TagCollection');
 
-describe('backTickParserAdapter', function() {
-  it("should ignore @tags inside back-ticked code blocks", function() {
+describe('backTickParserAdapter', () => {
+  it("should ignore @tags inside back-ticked code blocks", () => {
     const adapter = backTickParserAdapterFactory();
     const lines = [
       '@a some text',
@@ -41,7 +41,7 @@ describe('backTickParserAdapter', function() {
   });
 
 
-  it("should cope with single line back-ticked code blocks", function() {
+  it("should cope with single line back-ticked code blocks", () => {
     const adapter = backTickParserAdapterFactory();
     const lines = [
       '@a some text',

@@ -73,7 +73,7 @@ module.exports = new Package('ngdoc', [
 
   computeIdsProcessor.idTemplates.push({
     docTypes: ['method', 'property', 'event'],
-    getId: function(doc) {
+    getId(doc) {
       var parts = doc.name.split('#');
       var name = parts.pop();
       parts.push(doc.docType + ':' + name);

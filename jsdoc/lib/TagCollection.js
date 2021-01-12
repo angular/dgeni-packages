@@ -4,24 +4,21 @@ var StringMap = require('stringmap');
 /**
  * A collection of tags that can be looked up by their tagDefinition.
  */
-var TagCollection = function(tags) {
-  this.tags = [];
-  this.tagsByName = new StringMap();
-  this.badTags = [];
-  this.description = '';
+class TagCollection {
+  constructor(tags) {
+    this.tags = [];
+    this.tagsByName = new StringMap();
+    this.badTags = [];
+    this.description = '';
 
-  _.forEach(tags, function(tag) {
-    this.addTag(tag);
-  }.bind(this));
-};
-
-TagCollection.prototype = {
+    _.forEach(tags, tag => this.addTag(tag));
+  }
 
   /**
    * Add a new tag to the collection.
    * @param {Tag} tag The tag to add
    */
-  addTag: function(tag) {
+  addTag(tag) {
     if ( !tag.errors && tag.tagDef ) {
       this.tags.push(tag);
 
@@ -32,36 +29,34 @@ TagCollection.prototype = {
     } else {
       this.badTags.push(tag);
     }
-  },
+  }
 
   /**
    * Remove a tag from the collection
    * @param  {Tag} tag The tag to remove
    */
-  removeTag: function(tag) {
+  removeTag(tag) {
     _.remove(this.tags, tag);
     _.remove(this.tagsByName.get(tag.tagDef.name), tag);
-  },
+  }
 
   /**
    * Get the first tag in the collection that has the specified tag definition
    * @param  {string} name The name of the tag definition whose tag we should get
    * @return {Tag}
    */
-  getTag: function(name) {
+  getTag(name) {
     return this.getTags(name)[0];
-  },
+  }
 
   /**
    * Get the tags in the collection that have the specified tag definition
    * @param  {string} name The name of the tag definition whose tags we should get
    * @return {Array}
    */
-  getTags: function(name) {
+  getTags(name) {
     return this.tagsByName.get(name) || [];
   }
-
-};
-
+}
 
 module.exports = TagCollection;

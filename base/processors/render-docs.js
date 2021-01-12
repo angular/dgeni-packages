@@ -39,7 +39,7 @@ module.exports = function renderDocsProcessor(log, templateFinder, templateEngin
       var render = templateEngine.getRenderer();
       var findTemplate = templateFinder.getFinder();
 
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
         log.debug('Rendering doc:', doc.id || doc.name || doc.path);
         try {
           var data = _.defaults(

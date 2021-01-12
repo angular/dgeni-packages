@@ -13,13 +13,13 @@ module.exports = function aliasMap() {
      * Add a new document to the map associating it with each of its potential aliases
      * @param {Object} doc The document to add to the map
      */
-    addDoc: function(doc) {
+    addDoc(doc) {
 
       if ( !doc.aliases ) return;
 
       // We store references to this doc under all its id aliases in the map
       // This map will be used to match references to docs
-      doc.aliases.forEach(function(alias) {
+      doc.aliases.forEach(alias => {
 
         // Try to get a list of docs that match this alias
         var matchedDocs = map.get(alias) || [];
@@ -34,9 +34,9 @@ module.exports = function aliasMap() {
      * Remove a document from the map, including entries for each of its aliases
      * @param  {Object} doc The document to remove from the map
      */
-    removeDoc: function(doc) {
+    removeDoc(doc) {
 
-      doc.aliases.forEach(function(alias) {
+      doc.aliases.forEach(alias => {
 
         var matchedDocs = map.get(alias);
         if ( matchedDocs ) {
@@ -55,7 +55,7 @@ module.exports = function aliasMap() {
      * @param  {string} alias The alias to search for
      * @return {Array}  An array containing all matched docs
      */
-    getDocs: function(alias) {
+    getDocs(alias) {
       return map.get(alias) || [];
     }
   };

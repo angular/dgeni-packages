@@ -1,5 +1,5 @@
 module.exports = function createDocMessage() {
-  return function(message, doc, error) {
+  return (message, doc, error) => {
     message = message || '';
     if ( doc ) {
       message += ' - doc';

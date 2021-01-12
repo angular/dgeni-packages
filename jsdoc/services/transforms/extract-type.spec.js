@@ -1,16 +1,16 @@
 var transformFactory = require('./extract-type');
 
-describe("extract-type transform", function() {
+describe("extract-type transform", () => {
 
   var transform;
 
-  beforeEach(function() {
+  beforeEach(() => {
     doc = {};
     tag = {};
     transform = transformFactory();
   });
 
-  it("should extract the type from the description", function() {
+  it("should extract the type from the description", () => {
     value = ' {string} paramName - Some description  \n Some more description';
     value = transform(doc, tag, value);
 
@@ -18,13 +18,13 @@ describe("extract-type transform", function() {
     expect(value).toEqual('paramName - Some description  \n Some more description');
   });
 
-  it("should return the description if no type is found", function() {
+  it("should return the description if no type is found", () => {
     value = 'paramName - Some description  \n Some more description';
     value = transform(doc, tag, value);
     expect(value).toEqual('paramName - Some description  \n Some more description');
   });
 
-  it("should handle record types", function() {
+  it("should handle record types", () => {
     value = '{{x:number, y:number}} paramName - Some description';
     value = transform(doc, tag, value);
     expect(tag.typeList).toEqual(['{x:number, y:number}']);

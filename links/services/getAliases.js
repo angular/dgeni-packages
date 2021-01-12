@@ -3,7 +3,7 @@ function parseCodeName(codeName) {
   var parts = [];
   var currentPart;
 
-  codeName.split('.').forEach(function(part) {
+  codeName.split('.').forEach(part => {
     var subParts = part.split(':');
 
     var name = subParts.pop();
@@ -31,7 +31,7 @@ function parseCodeName(codeName) {
  */
 module.exports = function getAliases() {
 
-  return function(doc) {
+  return (doc) => {
 
     var codeNameParts = parseCodeName(doc.id);
 
@@ -51,10 +51,10 @@ module.exports = function getAliases() {
     }
 
     // Continue popping off the parts of the codeName and work forward collecting up each alias
-    aliases = codeNameParts.reduceRight(function(aliases, part) {
+    aliases = codeNameParts.reduceRight((aliases, part) => {
 
       // Add this part to each of the aliases we have so far
-      aliases.forEach(function(name) {
+      aliases.forEach(name => {
         // Add the part name and modifier, if provided
         aliases.push(part.name + '.' + name);
         if ( part.modifier ) {

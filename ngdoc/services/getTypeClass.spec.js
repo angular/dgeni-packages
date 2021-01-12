@@ -1,7 +1,7 @@
 var getTypeClassFactory = require('./getTypeClass');
 
-describe("getTypeClass", function() {
-  it("should convert the type name to a css string", function() {
+describe("getTypeClass", () => {
+  it("should convert the type name to a css string", () => {
     var getTypeClass = getTypeClassFactory();
     expect(getTypeClass('string')).toEqual('label type-hint type-hint-string');
     expect(getTypeClass('Object')).toEqual('label type-hint type-hint-object');

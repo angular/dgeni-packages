@@ -15,9 +15,9 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
   return {
     $runAfter: ['files-read'],
     $runBefore: ['parsing-tags'],
-    $process: function(docs) {
+    $process(docs) {
 
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
         try {
           if (!doc.content) { return; }
           doc.content = doc.content.replace(EXAMPLE_REGEX, function processExample(match, attributeText, exampleText) {
@@ -48,7 +48,7 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
 
   function extractAttributes(attributeText) {
     var attributes = {};
-    attributeText.replace(ATTRIBUTE_REGEX, function(match, prop, val1, val2){
+    attributeText.replace(ATTRIBUTE_REGEX, (match, prop, val1, val2) => {
       attributes[prop] = val1 || val2;
     });
     return attributes;
@@ -56,7 +56,7 @@ module.exports = function parseExamplesProcessor(log, exampleMap, trimIndentatio
 
   function extractFiles(exampleText) {
     var files = {};
-    exampleText.replace(FILE_REGEX, function(match, attributesText, contents) {
+    exampleText.replace(FILE_REGEX, (match, attributesText, contents) => {
       var file = extractAttributes(attributesText);
       if ( !file.name ) {
         throw new Error('Missing name attribute in file: ' + match);

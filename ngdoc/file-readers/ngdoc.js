@@ -15,7 +15,7 @@ module.exports = function ngdocFileReader() {
   return {
     name: 'ngdocFileReader',
     defaultPattern: /\.ngdoc$/,
-    getDocs: function(fileInfo) {
+    getDocs(fileInfo) {
       // We return a single element array because ngdoc files only contain one document
       return [{
         content: fileInfo.content,

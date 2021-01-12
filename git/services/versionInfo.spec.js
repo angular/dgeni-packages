@@ -8,10 +8,10 @@ var mockPackageFactory = require('../mocks/mockPackage');
 var versionInfoFactory = rewire('./versionInfo.js');
 
 
-describe("versionInfo", function() {
+describe("versionInfo", () => {
   var versionInfo, mockPackage, gitMocks, ciBuild;
 
-  beforeEach(function() {
+  beforeEach(() => {
     mocks.getPreviousVersions.calls.reset();
 
     var child = versionInfoFactory.__get__('child');
@@ -22,7 +22,7 @@ describe("versionInfo", function() {
       cat: mocks.mockDefaultFail
     };
 
-    spyOn(child, 'spawnSync').and.callFake(function (command, args) {
+    spyOn(child, 'spawnSync').and.callFake((command, args) => {
       if (args[0] === 'rev-parse') {
         return gitMocks.rev;
       } else if (args[0] === 'describe') {
@@ -45,73 +45,73 @@ describe("versionInfo", function() {
     ciBuild = process.env.TRAVIS_BUILD_NUMBER;
   });
 
-  afterEach(function() {
+  afterEach(() => {
     process.env.TRAVIS_BUILD_NUMBER = ciBuild;
   });
 
-  describe("currentPackage", function() {
-    it("should be set", function() {
+  describe("currentPackage", () => {
+    it("should be set", () => {
       expect(versionInfo.currentPackage).not.toBe(null);
     });
 
-    it("should be set to passed in package", function() {
+    it("should be set to passed in package", () => {
       expect(versionInfo.currentPackage).toBe(mocks.packageWithVersion);
     });
   });
 
-  it("should set gitRepoInfo", function() {
+  it("should set gitRepoInfo", () => {
     expect(versionInfo.gitRepoInfo).toBe(mocks.gitRepoInfo);
   });
 
-  describe("previousVersions", function() {
-    it("should call getPreviousVersions", function() {
+  describe("previousVersions", () => {
+    it("should call getPreviousVersions", () => {
       expect(mocks.getPreviousVersions.calls.all().length).toEqual(1);
       expect(mocks.getPreviousVersions).toHaveBeenCalled();
     });
 
-    it("should equal getPreviousVersions", function() {
+    it("should equal getPreviousVersions", () => {
       expect(mocks.getPreviousVersions.calls.all().length).toEqual(1);
       expect(versionInfo.previousVersions).toEqual(mocks.getPreviousVersions());
     });
   });
 
-  describe("currentVersion with no tag", function() {
-    it("should have isSnapshot set to true", function() {
+  describe("currentVersion with no tag", () => {
+    it("should have isSnapshot set to true", () => {
       expect(versionInfo.currentVersion.isSnapshot).toBe(true);
     });
 
-    it("should have codeName of snapshot", function() {
+    it("should have codeName of snapshot", () => {
       expect(versionInfo.currentVersion.codeName).toBe('snapshot');
     });
 
-    it("should have the commitSHA set", function() {
+    it("should have the commitSHA set", () => {
       expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.stdout);
     });
 
-    describe("with branchVersion/Pattern", function() {
-      beforeEach(function() {
+    describe("with branchVersion/Pattern", () => {
+      beforeEach(() => {
         versionInfo = versionInfoFactory(
-          function(){},
+          () => [],
           mocks.packageWithBranchVersion
         );
       });
 
-      it("should satisfy the branchVersion", function() {
+      it("should satisfy the branchVersion", () => {
         expect(semver.satisfies(versionInfo.currentVersion, mocks.packageWithBranchVersion.branchVersion))
           .toBeTruthy();
       });
 
-      it("should have a prerelease", function() {
+      it("should have a prerelease", () => {
         expect(versionInfo.currentVersion.prerelease).toBeTruthy();
       });
     });
 
-    describe("with no BUILD_NUMBER", function() {
-      it("should have a local prerelease", function() {
+    describe("with no BUILD_NUMBER", () => {
+      it("should have a local prerelease", () => {
         delete process.env.TRAVIS_BUILD_NUMBER;
 
         versionInfo = versionInfoFactory(
-          function() {},
+          () => [],
           mocks.packageWithVersion
         );
 
@@ -119,12 +119,12 @@ describe("versionInfo", function() {
       });
     });
 
-    describe("with a BUILD_NUMBER", function() {
-      it("should have a build prerelease", function() {
+    describe("with a BUILD_NUMBER", () => {
+      it("should have a build prerelease", () => {
         process.env.TRAVIS_BUILD_NUMBER = '10';
 
         versionInfo = versionInfoFactory(
-          function() {},
+          () => [],
           mocks.packageWithVersion
         );
 
@@ -135,29 +135,29 @@ describe("versionInfo", function() {
   });
 
 
-  describe("currentVersion with annotated tag", function() {
+  describe("currentVersion with annotated tag", () => {
 
-    beforeEach(function() {
+    beforeEach(() => {
       gitMocks.cat = mocks.mockGitCatFile;
       gitMocks.describe = mocks.mockGitDescribe;
 
       versionInfo = versionInfoFactory(
-        function() {},
+        () => [],
         mocks.packageWithVersion
       );
     });
 
-    it("should have a version matching the tag", function() {
+    it("should have a version matching the tag", () => {
       var tag = gitMocks.describe.stdout.trim();
       var version = semver.parse(tag);
       expect(versionInfo.currentVersion.version).toBe(version.version);
     });
 
-    it("should pull the codeName from the tag", function() {
+    it("should pull the codeName from the tag", () => {
       expect(versionInfo.currentVersion.codeName).toBe('mockCodeName');
     });
 
-    it("should set codeName to null if it doesn't have a codename specified", function() {
+    it("should set codeName to null if it doesn't have a codename specified", () => {
       gitMocks.cat = mocks.mockGitCatFileNoCodeName;
 
       var dgeni = new Dgeni([mockPackage]);
@@ -166,7 +166,7 @@ describe("versionInfo", function() {
       expect(versionInfo.currentVersion.codeName).toBe(null);
     });
 
-    it("should set codeName to falsy if it has a badly formatted codename", function() {
+    it("should set codeName to falsy if it has a badly formatted codename", () => {
       gitMocks.cat = mocks.mockGitCatFileBadFormat;
 
       var dgeni = new Dgeni([mockPackage]);
@@ -175,7 +175,7 @@ describe("versionInfo", function() {
       expect(versionInfo.currentVersion.codeName).toBeFalsy();
     });
 
-    it("should have the commitSHA set", function() {
+    it("should have the commitSHA set", () => {
       expect(versionInfo.currentVersion.commitSHA).toBe(mocks.mockGitRevParse.stdout);
     });
   });

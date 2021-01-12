@@ -1,10 +1,10 @@
 var tagDefFactory = require('./param');
 
-describe('param tagDef', function() {
-  it("should add the injected transforms to the transforms property", function() {
-    var extractNameTransform = function() {};
-    var extractTypeTransform = function() {};
-    var wholeTagTransform = function() {};
+describe('param tagDef', () => {
+  it("should add the injected transforms to the transforms property", () => {
+    var extractNameTransform = () => {};
+    var extractTypeTransform = () => {};
+    var wholeTagTransform = () => {};
 
     var tagDef = tagDefFactory(extractTypeTransform, extractNameTransform, wholeTagTransform);
     expect(tagDef.transforms).toEqual([extractTypeTransform, extractNameTransform, wholeTagTransform]);

@@ -11,7 +11,7 @@ var TYPE_EXPRESSION_START = /^\s*\{[^@]/;
  * @param {Tag} tag The tag whose type should be extracted
  */
 module.exports =  function extractTypeTransform() {
-  return function(doc, tag, value) {
+  return (doc, tag, value) => {
     var start, position, count, length, expression;
 
     var match = TYPE_EXPRESSION_START.exec(value);
@@ -92,7 +92,7 @@ module.exports =  function extractTypeTransform() {
         types.push( catharsis.stringify(parsedType) );
         break;
       case TYPES.TypeUnion:
-        parsedType.elements.forEach(function(element) {
+        parsedType.elements.forEach(element => {
           types = types.concat( getTypeStrings(element) );
         });
         break;

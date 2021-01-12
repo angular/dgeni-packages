@@ -11,9 +11,7 @@ module.exports = function getDocFromAlias(aliasMap, log) {
 
     // If there is more than one item with this name then try to filter them by the originatingDoc's area
     if ( docs.length > 1 && originatingDoc && originatingDoc.area) {
-      docs = _.filter(docs, function(doc) {
-        return doc.area === originatingDoc.area;
-      });
+      docs = _.filter(docs, doc => doc.area === originatingDoc.area);
     }
 
     // If filtering by area left us with none then let's start again
@@ -23,9 +21,7 @@ module.exports = function getDocFromAlias(aliasMap, log) {
 
     // If there is more than one item with this name then try to filter them by the originatingDoc's module
     if ( docs.length > 1 && originatingDoc && originatingDoc.module ) {
-      docs = _.filter(docs, function(doc) {
-        return doc.module === originatingDoc.module;
-      });
+      docs = _.filter(docs, doc => doc.module === originatingDoc.module);
     }
 
     return docs;

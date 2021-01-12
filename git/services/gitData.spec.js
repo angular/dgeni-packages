@@ -5,10 +5,10 @@ var gitDataFactory = require('./gitData');
 
 
 
-describe("gitData", function() {
+describe("gitData", () => {
   var gitData;
 
-  beforeEach(function() {
+  beforeEach(() => {
     mockPackage = mockPackageFactory()
       .factory(gitDataFactory);
 
@@ -19,20 +19,20 @@ describe("gitData", function() {
 
   });
 
-  describe("version", function() {
-    it("should be set to currentVersion of versionInfo", function() {
+  describe("version", () => {
+    it("should be set to currentVersion of versionInfo", () => {
       expect(gitData.version).toEqual(mocks.versionInfo.currentVersion);
     });
   });
 
-  describe("versions", function() {
-    it("should be set to previousVersions of versionInfo", function() {
+  describe("versions", () => {
+    it("should be set to previousVersions of versionInfo", () => {
       expect(gitData.versions).toEqual(mocks.versionInfo.previousVersions);
     });
   });
 
-  describe("info", function() {
-    it("should be set to gitRepoInfo of versionInfo", function() {
+  describe("info", () => {
+    it("should be set to gitRepoInfo of versionInfo", () => {
       expect(gitData.info).toEqual(mocks.versionInfo.gitRepoInfo);
     });
   });

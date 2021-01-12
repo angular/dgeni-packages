@@ -7,10 +7,10 @@ var htmlparser = require("htmlparser2");
  * @param {String} html The html
  */
 module.exports = function extractLinks() {
-  return function(html) {
+  return html => {
     var result = {hrefs: [], names: []};
     var parser = new htmlparser.Parser({
-      onopentag: function(name, attribs) {
+      onopentag(name, attribs) {
 
         // Parse anchor elements, extracting href and name
         if (name === 'a') {

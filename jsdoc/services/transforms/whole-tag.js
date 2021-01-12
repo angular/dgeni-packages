@@ -3,7 +3,7 @@
  * @param  {Tag} tag The tag to process
  */
 module.exports = function wholeTagTransform() {
-  return function(doc, tag, value) {
+  return (doc, tag, value) => {
     return tag;
   };
 };

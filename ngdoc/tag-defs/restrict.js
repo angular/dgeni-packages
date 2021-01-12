@@ -1,12 +1,12 @@
 module.exports = function() {
   return {
     name: 'restrict',
-    defaultFn: function(doc) {
+    defaultFn(doc) {
       if ( doc.docType === 'directive' || doc.docType === 'input' ) {
         return { element: true, attribute: true, cssClass: false, comment: false };
       }
     },
-    transforms: function(doc, tag, value) {
+    transforms(doc, tag, value) {
       value = value || '';
       return {
         element: value.indexOf('E') !== -1,

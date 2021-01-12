@@ -4,8 +4,8 @@ module.exports = function readPackageInfo() {
   return {
     $runAfter: ['tags-extracted'],
     $runBefore: ['computing-ids'],
-    $process: function(docs) {
-      docs.forEach(function(doc) {
+    $process(docs) {
+      docs.forEach(doc => {
         if(doc.docType === 'dgPackage') {
 
           // Create an instance of the processor and extract the interesting properties
@@ -13,16 +13,12 @@ module.exports = function readPackageInfo() {
           doc.services = [];
 
           // Wire up the processor docs
-          doc.processors = doc.package.processors.map(function(processorName) {
+          doc.processors = doc.package.processors.map(processorName => {
 
             processorName = processorName.name || processorName;
 
             // TODO - yes this is horribly slow :-)
-            var processorDoc = docs.filter(function(doc) {
-              if (doc.docType === 'dgProcessor') {
-                return processorName === doc.name || processorName === doc.codeName;
-              }
-            })[0];
+            var processorDoc = docs.find(doc => doc.docType === 'dgProcessor' && (processorName === doc.name || processorName === doc.codeName));
 
             if (!processorDoc) {
               processorDoc = {
@@ -50,12 +46,10 @@ module.exports = function readPackageInfo() {
 
 
           // Wire up package dependency docs
-          doc.dependencies = doc.package.dependencies.map(function(dependency) {
+          doc.dependencies = doc.package.dependencies.map(dependency => {
 
             // TODO - yes this is horribly slow :-)
-            var packageDoc = docs.filter(function(doc) {
-              return dependency.name === doc.name || dependency === doc.name;
-            })[0];
+            var packageDoc = docs.find(doc => dependency.name === doc.name || dependency === doc.name);
 
             if (!packageDoc) {
               // No doc for this dependency package so get it direcly from the package

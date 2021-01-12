@@ -3,14 +3,14 @@ var path = require('canonical-path');
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("writeFilesProcessor", function() {
+describe("writeFilesProcessor", () => {
   var processor, writeFileSpy, mockLog;
 
 
-  beforeEach(function() {
+  beforeEach(() => {
     writeFileSpy = jasmine.createSpy('writeFile').and.returnValue(Promise.resolve());
 
-    var testPackage = mockPackage().factory('writeFile', function() { return writeFileSpy; });
+    var testPackage = mockPackage().factory('writeFile', function writeFile() { return writeFileSpy; });
 
     var dgeni = new Dgeni([testPackage]);
     var injector = dgeni.configureInjector();
@@ -24,12 +24,12 @@ describe("writeFilesProcessor", function() {
     mockLog = injector.get('log');
   });
 
-  it("should write each document to a file", function() {
+  it("should write each document to a file", () => {
     processor.$process([{ renderedContent: 'SOME RENDERED CONTENT', outputPath: 'doc/path.html' }]);
     expect(writeFileSpy).toHaveBeenCalledWith(path.resolve('some/path/build/doc/path.html'), 'SOME RENDERED CONTENT');
   });
 
-  it("should log a debug message if a doc has no outputPath", function() {
+  it("should log a debug message if a doc has no outputPath", () => {
     processor.$process([{ renderedContent: 'SOME RENDERED CONTENT', id: 'doc1', docType: 'test' }]);
     expect(mockLog.debug).toHaveBeenCalledWith('Document "doc1, test" has no outputPath.');
   });

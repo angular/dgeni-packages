@@ -1,17 +1,17 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("createDocMessage", function() {
+describe("createDocMessage", () => {
   var createDocMessage;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     createDocMessage = injector.get('createDocMessage');
   });
 
 
-  it("should generate a message with doc info", function() {
+  it("should generate a message with doc info", () => {
     var message = createDocMessage('some message', { id: 'doc1', name: 'doc-one', path: 'some/doc1', fileInfo: { relativePath: 'some/file.js'} , startingLine: 10, endingLine: 20 });
     expect(message).toEqual('some message - doc "doc1" - from file "some/file.js" - starting at line 10, ending at line 20');
 
@@ -31,7 +31,7 @@ describe("createDocMessage", function() {
   });
 
 
-  it("should be able to wrap an original error", function() {
+  it("should be able to wrap an original error", () => {
     var caught = false;
     try {
       throw new Error('original error');

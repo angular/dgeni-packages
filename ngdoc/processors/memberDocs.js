@@ -16,10 +16,10 @@ module.exports = function memberDocsProcessor(log, getDocFromAlias, createDocMes
   return {
     $runAfter: ['ids-computed'],
     $runBefore: ['computing-paths'],
-    $process: function(docs) {
+    $process(docs) {
       var parts;
 
-      docs = _.filter(docs, function(doc) {
+      docs = _.filter(docs, doc => {
 
         // Is this doc a member of another doc?
         if ( doc.id.indexOf('#' ) !== -1 ) {

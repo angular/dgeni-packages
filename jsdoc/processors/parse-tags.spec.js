@@ -4,17 +4,17 @@ var Dgeni = require('dgeni');
 function MockParserAdapter() {
 }
 MockParserAdapter.prototype = {
-  init: function() {},
-  nextLine: function(line) {
+  init() {},
+  nextLine(line) {
     if (/<<IGNORE_START>>/.test(line)) { this.ignore = true; }
     if (/<<IGNORE_END>>/.test(line)) { this.ignore = false; }
   },
-  parseForTags: function() {
+  parseForTags() {
     return !this.ignore;
   }
 };
 
-describe("parse-tags processor", function() {
+describe("parse-tags processor", () => {
   var processor;
   var tagDefinitions = [
     { name: 'id' },
@@ -23,7 +23,7 @@ describe("parse-tags processor", function() {
     { name: 'other-tag', ignore: true }
   ];
 
-  beforeEach(function() {
+  beforeEach(() => {
 
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
@@ -32,13 +32,13 @@ describe("parse-tags processor", function() {
     processor.tagDefinitions = tagDefinitions;
   });
 
-  it("should be run in the correct place", function() {
+  it("should be run in the correct place", () => {
     expect(processor.$runAfter).toEqual([ 'parsing-tags' ]);
     expect(processor.$runBefore).toEqual([ 'tags-parsed' ]);
   });
 
 
-  it("should only return tags that are not ignored", function() {
+  it("should only return tags that are not ignored", () => {
     var content = 'Some initial content\n@id some.id\n' +
                   '@description Some description\n@other-tag Some other tag\n' +
                   '@param some param\n@param some other param';
@@ -61,7 +61,7 @@ describe("parse-tags processor", function() {
     );
   });
 
-  it("should cope with tags that have no 'description'", function() {
+  it("should cope with tags that have no 'description'", () => {
     var content = '@id\n@description some description';
     var doc = { content: content, startingLine: 123 };
     processor.$process([doc]);
@@ -69,18 +69,13 @@ describe("parse-tags processor", function() {
     expect(doc.tags.tags[1]).toEqual(jasmine.objectContaining({ tagName: 'description', description: 'some description' }));
   });
 
-  it("should cope with empty content or no known tags", function() {
-    expect(function() {
-      processor.$process([{ content: '', startingLine: 123 }]);
-    }).not.toThrow();
-
-    expect(function() {
-      processor.$process([{ content: '@unknownTag some text', startingLine: 123 }]);
-    }).not.toThrow();
+  it("should cope with empty content or no known tags", () => {
+    expect(() =>processor.$process([{ content: '', startingLine: 123 }])).not.toThrow();
+    expect(() => processor.$process([{ content: '@unknownTag some text', startingLine: 123 }])).not.toThrow();
   });
 
 
-  it('should ignore tags if a parser adapter has indicated that the line should not be parsed', function() {
+  it('should ignore tags if a parser adapter has indicated that the line should not be parsed', () => {
     processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
     processor.parserAdapters = [new MockParserAdapter()];
     var content =
@@ -105,15 +100,13 @@ describe("parse-tags processor", function() {
   });
 
 
-  it("should ignore doc if it has no content", function() {
-    expect(function() {
-      processor.$process([{}]);
-    }).not.toThrow();
+  it("should ignore doc if it has no content", () => {
+    expect(() => processor.$process([{}])).not.toThrow();
   });
 
 
-  describe('legacy standard adapter', function() {
-    it("should ignore @tags inside back-ticked code blocks", function() {
+  describe('legacy standard adapter', () => {
+    it("should ignore @tags inside back-ticked code blocks", () => {
       processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
       var content =
       '@a some text\n\n' +
@@ -137,7 +130,7 @@ describe("parse-tags processor", function() {
     });
 
 
-    it("should cope with single line back-ticked code blocks", function() {
+    it("should cope with single line back-ticked code blocks", () => {
       processor.tagDefinitions = [{ name: 'a' }, { name: 'b' }];
       var content =
       '@a some text\n\n' +

@@ -10,7 +10,7 @@ var currentVersion, currentPackage, previousVersions;
 * Check the version is satisfactory.
 * @return {Boolean} Return true if the version is satisfactory.
 */
-var satisfiesVersion = function(version) {
+function satisfiesVersion(version) {
   if (currentPackage.branchVersion !== undefined) {
     return semver.satisfies(version, currentPackage.branchVersion);
   } else if (currentPackage.version !== undefined) {
@@ -18,7 +18,7 @@ var satisfiesVersion = function(version) {
   } else {
     return true;
   }
-};
+}
 
 /**
  * Extract the code name from the tagged commit's message - it should contain the text of the form:
@@ -26,12 +26,12 @@ var satisfiesVersion = function(version) {
  * @param  {String} tagName Name of the tag to look in for the codename
  * @return {String}         The codename if found, otherwise null/undefined
  */
-var getCodeName = function(tagName) {
+function getCodeName(tagName) {
   var gitCatOutput = child.spawnSync('git', ['cat-file', '-p ' + tagName], {encoding:'utf8'}).stdout;
   var match = gitCatOutput.match(/^.*codename.*$/mg);
   var tagMessage = match && match[0];
   return tagMessage && tagMessage.match(/codename\((.*)\)/)[1];
-};
+}
 
 /**
  * Get the current commit SHA
@@ -50,12 +50,11 @@ function getBuild() {
   return 'sha.' + hash;
 }
 
-
 /**
  * If the current commit is tagged as a version get that version
  * @return {SemVer} The version or null
  */
-var getTaggedVersion = function() {
+function getTaggedVersion() {
   var gitTagResult = child.spawnSync('git', ['describe', '--exact-match'], {encoding:'utf8'});
 
   if (gitTagResult.status === 0) {
@@ -74,17 +73,15 @@ var getTaggedVersion = function() {
   }
 
   return null;
-};
+}
 
 /**
  * Get the unstable snapshot version
  * @return {SemVer} The snapshot version
  */
-var getSnapshotVersion = function() {
+function getSnapshotVersion() {
   var version = _(previousVersions)
-    .filter(function(tag) {
-      return satisfiesVersion(tag);
-    })
+    .filter(tag => satisfiesVersion(tag))
     .last();
 
   if (!version) {
@@ -125,7 +122,7 @@ var getSnapshotVersion = function() {
   version.branch = 'master';
 
   return version;
-};
+}
 
 
 module.exports = function versionInfo(getPreviousVersions, packageInfo, gitRepoInfo) {

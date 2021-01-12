@@ -3,14 +3,14 @@ var Dgeni = require('dgeni');
 
 var processor, renderSpy, findTemplateSpy;
 
-describe("render-docs", function() {
+describe("render-docs", () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
 
-    var testPackage = mockPackage().factory('templateFinder', function() {
+    var testPackage = mockPackage().factory('templateFinder', function templateFinder() {
       var finderSpy = jasmine.createSpy('findTemplate').and.returnValue('SOME TEMPLATE');
       return {
-        getFinder: function() { return finderSpy; }
+        getFinder() { return finderSpy; }
       };
     });
 
@@ -23,7 +23,7 @@ describe("render-docs", function() {
   });
 
 
-  it("should call the templateFinder for each doc", function() {
+  it("should call the templateFinder for each doc", () => {
     var doc1 = {}, doc2 = {}, docs = [ doc1, doc2 ];
     processor.$process(docs);
     expect(findTemplateSpy.calls.count()).toEqual(2);
@@ -31,9 +31,9 @@ describe("render-docs", function() {
     expect(findTemplateSpy.calls.argsFor(1)).toEqual([doc2]);
   });
 
-  it("should call the templateEngine.render with the template and data", function() {
+  it("should call the templateEngine.render with the template and data", () => {
     var doc1 = { id: 1 }, doc2 = { id: 2 }, docs = [ doc1, doc2 ];
-    var someProp = {}, someMethod = function() {};
+    var someProp = {}, someMethod = () => {};
 
     processor.extraData.someProp = someProp;
     processor.helpers.someMethod = someMethod;
@@ -47,7 +47,7 @@ describe("render-docs", function() {
       { doc: doc2, docs: docs, someProp: someProp, someMethod: someMethod }]);
   });
 
-  it("should place the result of calling templateEngine.render into doc.renderedContent", function() {
+  it("should place the result of calling templateEngine.render into doc.renderedContent", () => {
     var doc1 = { id: 1 }, doc2 = { id: 2 }, docs = [ doc1, doc2 ];
 
     renderSpy.and.returnValue('RENDERED CONTENT');

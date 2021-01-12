@@ -1,16 +1,16 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("resolveUrl", function() {
+describe("resolveUrl", () => {
   var resolveUrl;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     resolveUrl = injector.get('resolveUrl');
   });
 
-  it("should calculate absolute paths", function() {
+  it("should calculate absolute paths", () => {
     expect(resolveUrl('currentPath/currentFile.html', '/absolutePath/absoluteFile.html', ''))
       .toEqual('/absolutePath/absoluteFile.html');
     expect(resolveUrl('currentPath/currentFile.html', '/absolutePath/absoluteFile.html', '/'))
@@ -21,7 +21,7 @@ describe("resolveUrl", function() {
       .toEqual('/absolutePath/absoluteFile.html');
   });
 
-  it('should use the base path when the path is relative and there is a base path', function() {
+  it('should use the base path when the path is relative and there is a base path', () => {
     expect(resolveUrl('currentPath/currentFile.html', 'relativePath/relativeFile.html', '/'))
       .toEqual('relativePath/relativeFile.html');
     expect(resolveUrl('currentPath/currentFile.html', 'relativePath/relativeFile.html', '/base'))
@@ -30,7 +30,7 @@ describe("resolveUrl", function() {
       .toEqual('base/relativePath/relativeFile.html');
   });
 
-  it('should use the current directory when there is no base path', function() {
+  it('should use the current directory when there is no base path', () => {
     expect(resolveUrl('currentPath/currentFile.html', 'relativePath/relativeFile.html', ''))
       .toEqual('currentPath/relativePath/relativeFile.html');
     expect(resolveUrl('onePath/currentPath/currentFile.html', 'relativePath/relativeFile.html', ''))
@@ -43,7 +43,7 @@ describe("resolveUrl", function() {
       .toEqual('relativePath/relativeFile.html');
   });
 
-  it('should remove any query params', function() {
+  it('should remove any query params', () => {
     expect(resolveUrl('currentPath/currentFile.html', '/absolutePath/absoluteFile.html?foo=bar', ''))
       .toEqual('/absolutePath/absoluteFile.html');
     expect(resolveUrl('currentPath/currentFile.html', '/absolutePath/absoluteFile.html#foo', ''))
@@ -62,24 +62,24 @@ describe("resolveUrl", function() {
       .toEqual('onePath/currentPath/relativePath/relativeFile.html#foo');
   });
 
-  it("should not remove filename if there is only a hash", function() {
+  it("should not remove filename if there is only a hash", () => {
     expect(resolveUrl('xx/yy', '#xyz', ''))
       .toEqual('xx/yy#xyz');
     expect(resolveUrl('xx', '#xyz', ''))
       .toEqual('xx#xyz');
   });
 
-  it('should remove any /./ in the path', function() {
+  it('should remove any /./ in the path', () => {
     expect(resolveUrl('currentFile.html', '/./absolutePath/./absoluteFile.html', ''))
       .toEqual('/absolutePath/absoluteFile.html');
   });
 
-  // it('should remove any dangling / at the end', function() {
+  // it('should remove any dangling / at the end', () => {
   //   expect(resolveUrl('currentFile.html', '/absolutePath/', ''))
   //     .toEqual('absolutePath');
   // });
 
-  it('should encode any \' in the path', function() {
+  it('should encode any \' in the path', () => {
     expect(resolveUrl('currentFile.html', '/abc\'def.html', ''))
       .toEqual('/abc%27def.html');
   });

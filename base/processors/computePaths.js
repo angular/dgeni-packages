@@ -9,13 +9,13 @@ var StringMap = require('stringmap');
 module.exports = function computePathsProcessor(log, createDocMessage) {
   var pathTemplateMap, outputPathTemplateMap;
 
-  var initializeMaps = function(pathTemplates) {
+  function initializeMaps(pathTemplates) {
     pathTemplateMap = new StringMap();
     outputPathTemplateMap = new StringMap();
 
-    pathTemplates.forEach(function(template) {
+    pathTemplates.forEach(template => {
       if ( template.docTypes ) {
-        template.docTypes.forEach(function(docType) {
+        template.docTypes.forEach(docType => {
 
           if ( template.getPath ) {
             pathTemplateMap[docType] = template.getPath;
@@ -40,11 +40,11 @@ module.exports = function computePathsProcessor(log, createDocMessage) {
     pathTemplates: [],
     $runAfter: ['computing-paths'],
     $runBefore: ['paths-computed'],
-    $process: function(docs) {
+    $process(docs) {
 
       initializeMaps(this.pathTemplates);
 
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
 
         try {
 

@@ -1,12 +1,12 @@
 var decorateVersion = require('./decorateVersion')();
 var semver = require('semver');
 
-describe("decorateVersion", function() {
-  it('should be a function', function() {
+describe("decorateVersion", () => {
+  it('should be a function', () => {
     expect(decorateVersion).toEqual(jasmine.any(Function));
   });
 
-  it('should set the docsUrl', function() {
+  it('should set the docsUrl', () => {
     var version = semver.parse('5.5.5');
 
     decorateVersion(version);
@@ -14,8 +14,8 @@ describe("decorateVersion", function() {
     expect(version.isOldDocsUrl).toBeUndefined();
   });
 
-  describe('semantic version', function() {
-    it('should be true for 1.2.0 not rc1 prerelease', function() {
+  describe('semantic version', () => {
+    it('should be true for 1.2.0 not rc1 prerelease', () => {
       var version = semver.parse('1.2.0-build');
       expect(version.prerelease).toEqual(['build']);
 
@@ -25,7 +25,7 @@ describe("decorateVersion", function() {
       expect(semver.parse(version.version)).not.toEqual(null);
     });
 
-    it('should be true for 1.0.x w/o prerelease', function() {
+    it('should be true for 1.0.x w/o prerelease', () => {
       var version = semver.parse('1.0.0+rc1.build');
 
       decorateVersion(version);
@@ -34,7 +34,7 @@ describe("decorateVersion", function() {
       expect(semver.parse(version.version)).not.toEqual(null);
     });
 
-    it('should be false for 1.0.x with prerelease', function() {
+    it('should be false for 1.0.x with prerelease', () => {
       var version = semver.parse('1.0.0-rc1.build');
       expect(version.prerelease).toEqual(['rc1', 'build']);
 
@@ -44,7 +44,7 @@ describe("decorateVersion", function() {
       expect(semver.parse(version.version)).toEqual(null);
     });
 
-    it('should be false for 1.2.0rc1', function() {
+    it('should be false for 1.2.0rc1', () => {
       var version = semver.parse('1.2.0-rc1.build');
       expect(version.prerelease).toEqual(['rc1', 'build']);
 
@@ -55,20 +55,20 @@ describe("decorateVersion", function() {
     });
   });
 
-  describe('isOldDocsUrl', function() {
-    it('should not be set for 1.0.2', function() {
+  describe('isOldDocsUrl', () => {
+    it('should not be set for 1.0.2', () => {
       var version = semver.parse('1.0.2');
       decorateVersion(version);
       expect(version.isOldDocsUrl).toBeUndefined();
     });
 
-    it('should be set for version < 1', function() {
+    it('should be set for version < 1', () => {
       var version = semver.parse('0.0.2');
       decorateVersion(version);
       expect(version.isOldDocsUrl).toBe(true);
     });
 
-    it('should be set for version < 1.0.2', function() {
+    it('should be set for version < 1.0.2', () => {
       var version = semver.parse('1.0.1');
       decorateVersion(version);
       expect(version.isOldDocsUrl).toBe(true);

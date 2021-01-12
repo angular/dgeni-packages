@@ -18,9 +18,9 @@ module.exports = new Package('typescript', [require('../jsdoc')])
 .factory('tsHost', () => new Host())
 .factory('tsParser', function(log) { return new TsParser(log); })
 
-.factory('convertPrivateClassesToInterfaces', function() { return convertPrivateClassesToInterfaces; })
+.factory('convertPrivateClassesToInterfaces', function convertPrivateClassesToInterfaces() { return convertPrivateClassesToInterfaces; })
 
-.factory('EXPORT_DOC_TYPES', function() {
+.factory('EXPORT_DOC_TYPES', function EXPORT_DOC_TYPES() {
   return [
     'class',
     'interface',

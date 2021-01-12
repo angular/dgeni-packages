@@ -1,16 +1,16 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("collectKnownIssuesProcessor", function() {
+describe("collectKnownIssuesProcessor", () => {
   var processor, moduleMap;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('collectKnownIssuesProcessor');
   });
 
-  it("should add API docs that have known issues to their module doc", function() {
+  it("should add API docs that have known issues to their module doc", () => {
     var module1 = {};
     var module2 = {};
     var docs = [

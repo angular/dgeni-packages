@@ -1,7 +1,7 @@
 var tagDefFactory = require('./eventType');
 
-describe("eventType tag-def", function() {
-  it("should split into eventType and eventTarget", function() {
+describe("eventType tag-def", () => {
+  it("should split into eventType and eventTarget", () => {
     var doc = {}, tag = {};
     var tagDef = tagDefFactory();
     var value = tagDef.transforms(doc, tag, 'broadcast on module:ng.directive:ngInclude');

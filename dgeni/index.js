@@ -27,17 +27,17 @@ module.exports = new Package('dgeni', [
     ]));
 })
 
-.config(function (computeIdsProcessor) {
+.config(function(computeIdsProcessor) {
   computeIdsProcessor.idTemplates.push({
     docTypes: ['dgPackage', 'indexPage'],
     idTemplate: '${name}',
-    getAliases: function(doc) { return [doc.id]; }
+    getAliases(doc) { return [doc.id]; }
   });
 
   computeIdsProcessor.idTemplates.push({
     docTypes: ['dgProcessor', 'dgService'],
     idTemplate: '${packageDoc.id}.${name}',
-    getAliases: function(doc) { return [doc.name, doc.id]; }
+    getAliases(doc) { return [doc.name, doc.id]; }
   });
 });
   // TODO: When using this package you will need to provide

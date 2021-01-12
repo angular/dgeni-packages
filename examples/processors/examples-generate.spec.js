@@ -2,10 +2,10 @@ var _ = require('lodash');
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("examples-generate processor", function() {
+describe("examples-generate processor", () => {
   var templateFolder, deployments, docs, exampleMap;
 
-  beforeEach(function() {
+  beforeEach(() => {
 
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
@@ -45,7 +45,7 @@ describe("examples-generate processor", function() {
     processor.$process(docs);
 
   });
-  it("should add an exampleDoc for each example deployment", function() {
+  it("should add an exampleDoc for each example deployment", () => {
     var exampleDocs = _.filter(docs, { docType: 'example' });
     expect(exampleDocs.length).toBe(2);
 
@@ -60,7 +60,7 @@ describe("examples-generate processor", function() {
     expect(exampleDocs[1].fileContents).toEqual('index.html content');
   });
 
-  it("should add a fileDoc for each of the example's files", function() {
+  it("should add a fileDoc for each of the example's files", () => {
     expect(_.find(docs, { id: 'a.b.c/app.js' })).toEqual(
       jasmine.objectContaining({ docType: 'example-file', template: 'template.js' })
     );
@@ -72,7 +72,7 @@ describe("examples-generate processor", function() {
     );
   });
 
-  it("should add the dependencies to the exampleDoc scripts", function() {
+  it("should add the dependencies to the exampleDoc scripts", () => {
     expect(_.find(docs, { id: 'a.b.c' }).scripts).toEqual([
       { path : 'dep1.js' },
       { path : 'dep2.js' },
@@ -92,7 +92,7 @@ describe("examples-generate processor", function() {
     ]);
   });
 
-  it("should add the dependencies to the exampleDoc stylesheets", function() {
+  it("should add the dependencies to the exampleDoc stylesheets", () => {
     expect(_.find(docs, { id: 'a.b.c' }).stylesheets).toEqual([
       { path : 'dep5.css' },
       { path : 'http://example.com/dep6.css' },
@@ -110,12 +110,12 @@ describe("examples-generate processor", function() {
     ]);
   });
 
-  it("should add a runnableExampleDoc for each example", function() {
+  it("should add a runnableExampleDoc for each example", () => {
     var runnableExampleDocs = _.filter(docs, { docType: 'runnableExample' });
     expect(runnableExampleDocs.length).toEqual(1);
   });
 
-  it("should add a manifest doc for each example", function() {
+  it("should add a manifest doc for each example", () => {
     var manifestDoc = _.filter(docs, { docType: 'example-file', template: 'manifest.template.json' })[0];
     expect(manifestDoc.id).toEqual('a.b.c/manifest.json');
     expect(manifestDoc.docType).toEqual('example-file');

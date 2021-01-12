@@ -17,19 +17,15 @@ module.exports = function templateEngine(templateFinder) {
     filters: [],
     tags: [],
 
-    getRenderer: function() {
+    getRenderer() {
       var loader = new nunjucks.FileSystemLoader(templateFinder.templateFolders, {throwOnUndefined: true, watch: false, noCache: false});
       var engine = new nunjucks.Environment(loader, this.config);
 
       // Configure nunjucks with the custom filters
-      this.filters.forEach(function(filter) {
-        engine.addFilter(filter.name, filter.process);
-      });
+      this.filters.forEach(filter => engine.addFilter(filter.name, filter.process));
 
       // Configure nunjucks with the custom tags
-      this.tags.forEach(function(tag) {
-        engine.addExtension(tag.tags[0], tag);
-      });
+      this.tags.forEach(tag => engine.addExtension(tag.tags[0], tag));
 
       return function render(template, data) {
         return engine.render(template, data);

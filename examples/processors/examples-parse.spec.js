@@ -1,11 +1,11 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("parseExamplesProcessor", function() {
+describe("parseExamplesProcessor", () => {
 
   var processor, exampleMap, mockTrimIndentation;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
 
@@ -13,7 +13,7 @@ describe("parseExamplesProcessor", function() {
     exampleMap = injector.get('exampleMap');
   });
 
-  it("should extract example tags from the doc content", function() {
+  it("should extract example tags from the doc content", () => {
     var docs = [
       {
         content: 'a b c <example name="bar" moo1="nar1">some example content 1</example> x y z\n' +
@@ -47,7 +47,7 @@ describe("parseExamplesProcessor", function() {
   });
 
 
-  it("should compute unique ids for each example", function() {
+  it("should compute unique ids for each example", () => {
     var docs = [{
       content: '<example name="bar">some example content 1</example>\n' +
                     '<example name="bar">some example content 2</example>'
@@ -57,7 +57,7 @@ describe("parseExamplesProcessor", function() {
     expect(exampleMap.get('example-bar1').id).toEqual('example-bar1');
   });
 
-  it("should inject a new set of elements in place of the example into the original markup to be used by the template", function() {
+  it("should inject a new set of elements in place of the example into the original markup to be used by the template", () => {
     doc = {
       content: 'Some content before <example name="bar">some example content 1</example> and some after'
     };
@@ -68,11 +68,8 @@ describe("parseExamplesProcessor", function() {
 
   });
 
-  it("should cope with docs that have no content", function() {
+  it("should cope with docs that have no content", () => {
     doc = {};
-    expect(function() {
-      processor.$process([doc]);
-    }).not.toThrow();
+    expect(() => processor.$process([doc])).not.toThrow();
   });
-
 });

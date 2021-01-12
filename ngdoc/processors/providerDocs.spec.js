@@ -1,10 +1,10 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("providerDocsProcessor", function() {
+describe("providerDocsProcessor", () => {
   var processor, aliasMap, mockLog;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('providerDocsProcessor');
@@ -13,7 +13,7 @@ describe("providerDocsProcessor", function() {
   });
 
 
-  it("should connect all services docs to their provider docs", function() {
+  it("should connect all services docs to their provider docs", () => {
     var doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
     var doc2 = { docType: 'provider', id: 'provider:$logProvider', aliases: ['provider:$logProvider'] };
     var doc3 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
@@ -37,7 +37,7 @@ describe("providerDocsProcessor", function() {
   });
 
 
-  it("should log a warning if their is more than one matching service", function() {
+  it("should log a warning if their is more than one matching service", () => {
     var doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
     var doc2 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
     var doc3 = { docType: 'service', id: 'service:$http', aliases: ['service:$http'] };
@@ -55,7 +55,7 @@ describe("providerDocsProcessor", function() {
   });
 
 
-  it("should complain if there is no service for a provider", function() {
+  it("should complain if there is no service for a provider", () => {
     var doc1 = { docType: 'provider', id: 'provider:$httpProvider', aliases: ['provider:$httpProvider'] };
 
     aliasMap.addDoc(doc1);

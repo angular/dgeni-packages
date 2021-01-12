@@ -33,7 +33,7 @@ module.exports = function getLinkInfo(getDocFromAlias, encodeCodeBlock, log) {
       linkInfo.valid = false;
       linkInfo.errorType = 'ambiguous';
       linkInfo.error = 'Ambiguous link: "' + url + '".\n' +
-        docs.reduce(function(msg, doc) { return msg + '\n  "' + doc.id + '" ('+ doc.docType + ') : (' + doc.path + ' / ' + doc.fileInfo.relativePath + ')'; }, 'Matching docs: ');
+        docs.reduce((msg, doc) => msg + '\n  "' + doc.id + '" ('+ doc.docType + ') : (' + doc.path + ' / ' + doc.fileInfo.relativePath + ')', 'Matching docs: ');
 
     } else if ( docs.length >= 1 ) {
 

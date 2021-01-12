@@ -8,7 +8,7 @@ var util = require("util");
  */
 module.exports = function debugDumpProcessor(log, readFilesProcessor, writeFile) {
   return {
-    filterFn: function(docs) { return docs; },
+    filterFn(docs) { return docs; },
     outputPath: 'debug-dump.txt',
     depth: 2,
 
@@ -22,14 +22,12 @@ module.exports = function debugDumpProcessor(log, readFilesProcessor, writeFile)
 
     $runBefore: ['writing-files'],
 
-    $process: function(docs) {
+    $process(docs) {
       log.info('Dumping docs:', this.filterFn, this.outputPath);
       var filteredDocs = this.filterFn(docs);
       var dumpedDocs = util.inspect(filteredDocs, this.depth);
       var outputPath = path.resolve(readFilesProcessor.basePath, this.outputPath);
-      return writeFile(outputPath, dumpedDocs).then(function() {
-        return docs;
-      });
+      return writeFile(outputPath, dumpedDocs).then(() => docs);
     }
   };
 

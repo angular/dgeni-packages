@@ -4,7 +4,7 @@ var Package = require('dgeni').Package;
 
 module.exports = new Package('dgeni-docs', [require('../dgeni')])
 
-.config(function (readFilesProcessor, writeFilesProcessor) {
+.config(function(readFilesProcessor, writeFilesProcessor) {
   readFilesProcessor.basePath = path.resolve(__dirname, '..');
 
   readFilesProcessor.sourceFiles = [
@@ -47,7 +47,7 @@ module.exports = new Package('dgeni-docs', [require('../dgeni')])
   })
 })
 
-.config(function (templateFinder, templateEngine) {
+.config(function(templateFinder, templateEngine) {
   templateFinder.templateFolders.unshift(path.resolve(__dirname, 'templates'));
 
   templateFinder.templatePatterns = [

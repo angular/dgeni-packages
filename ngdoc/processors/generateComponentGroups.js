@@ -9,17 +9,17 @@ module.exports = function generateComponentGroupsProcessor(moduleMap) {
   return {
     $runAfter: ['moduleDocsProcessor'],
     $runBefore: ['computing-paths'],
-    $process: function(docs) {
+    $process(docs) {
 
-      moduleMap.forEach(function(module) {
+      moduleMap.forEach(module => {
 
         _(module.components)
           .groupBy('docType')
-          .tap(function(docTypes) {
+          .tap(docTypes => {
             // We don't want the overview docType to be represented as a componentGroup
             delete docTypes.overview;
           })
-          .map(function(docs, docType) {
+          .map((docs, docType) => {
             return {
               id: module.id + '.' + docType,
               docType: 'componentGroup',
@@ -31,11 +31,9 @@ module.exports = function generateComponentGroupsProcessor(moduleMap) {
               components: docs
             };
           })
-          .tap(function(groups) {
+          .tap(groups => {
             module.componentGroups = groups;
-            _.forEach(groups, function(group) {
-              docs.push(group);
-            });
+            _.forEach(groups, group => docs.push(group));
           })
           // execute lazy lodash
           .value();

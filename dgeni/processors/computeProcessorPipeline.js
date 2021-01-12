@@ -4,8 +4,8 @@ module.exports = function computeProcessorPipeline() {
   return {
     $runAfter: ['readPackageInfo'],
     $runBefore: ['rendering-docs'],
-    $process: function(docs) {
-      docs.forEach(function(doc) {
+    $process(docs) {
+      docs.forEach(doc => {
         if (doc.docType === 'dgPackage') {
           var processors = collectProcessors(doc);
           doc.pipeline = sortByDependency(processors, '$runAfter', '$runBefore');
@@ -17,7 +17,7 @@ module.exports = function computeProcessorPipeline() {
 
 function collectProcessors(doc) {
   var processors = [].concat(doc.processors);
-  doc.dependencies.forEach(function(dependency) {
+  doc.dependencies.forEach(dependency => {
     processors = processors.concat(collectProcessors(dependency));
   });
   return processors;

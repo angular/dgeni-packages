@@ -1,19 +1,19 @@
 var matcherFactory = require('./assignment-expression');
 
-describe('AssignmentExpression matcher', function() {
+describe('AssignmentExpression matcher', () => {
 
   var matcher, codeNameServiceMock;
 
-  beforeEach(function() {
+  beforeEach(() => {
     codeNameServiceMock = {
-      find: function (arg) {
+      find(arg) {
         return arg;
       }
     };
     matcher = matcherFactory(codeNameServiceMock);
   });
 
-  it("should start search for right", function () {
+  it("should start search for right", () => {
     var expr = {
       left: 'left',
       right: 'right'
@@ -26,7 +26,7 @@ describe('AssignmentExpression matcher', function() {
     expect(codeNameServiceMock.find).toHaveBeenCalledWith(expr.right);
   });
 
-  it("should continue search with left", function () {
+  it("should continue search with left", () => {
     codeNameServiceMock.value = null;
     var expr = {
       left: 'test',
@@ -40,7 +40,7 @@ describe('AssignmentExpression matcher', function() {
     expect(codeNameServiceMock.find.calls.allArgs()).toEqual([[null],[expr.left]]);
   });
 
-  it("should return null for empty left and right", function () {
+  it("should return null for empty left and right", () => {
     codeNameServiceMock.value = null;
     var expr = {
       left: null,

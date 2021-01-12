@@ -1,20 +1,20 @@
 var Dgeni = require('dgeni');
 var mockPackage = require('../mocks/mockPackage');
 
-describe('code-name doc processor', function() {
-  
+describe('code-name doc processor', () => {
+
   var jsParser, processor, mockLog, codeNameService;
-  
-  beforeEach(function() {
+
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     codeNameService = injector.get('codeNameService');
-    jsParser = injector.get('jsParser');  
+    jsParser = injector.get('jsParser');
     processor = injector.get('codeNameProcessor');
     mockLog = injector.get('log');
   });
 
-  it("should use already existing codeName", function () {
+  it("should use already existing codeName", () => {
     var doc = { codeName: 'test' };
     processor.$process([doc]);
     expect(doc.codeName).toEqual('test');
@@ -22,14 +22,14 @@ describe('code-name doc processor', function() {
     expect(mockLog.silly.calls.count()).toEqual(1);
   });
 
-  it("should return null for empty codeNode", function () {
+  it("should return null for empty codeNode", () => {
     var doc = { };
     processor.$process([doc]);
     expect(doc.codeName).toEqual(null);
     expect(mockLog.silly).not.toHaveBeenCalled();
   });
 
-  it("should process parsed document", function() {
+  it("should process parsed document", () => {
     spyOn(codeNameService, 'find').and.callThrough();
     var ast = jsParser('(function foo() { })()');
     var doc = { codeNode: ast };

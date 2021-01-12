@@ -3,14 +3,14 @@ var mockPackage = require('./mocks/mockPackage');
 var Dgeni = require('dgeni');
 var path = require('canonical-path');
 
-describe('base package', function() {
+describe('base package', () => {
 
   function runDgeni(docs) {
     var testPackage = new Dgeni.Package('testPackage', [mockPackage()])
-      .processor('provideTestDocs', function() {
+      .processor('provideTestDocs', function provideTestDocs() {
         return {
           $runBefore: ['computeIdsProcessor'],
-          $process: function() {
+          $process() {
             return docs;
           }
         };
@@ -26,10 +26,10 @@ describe('base package', function() {
       .config(function(computeIdsProcessor) {
         computeIdsProcessor.idTemplates.push({
           docTypes: ['service', 'guide'],
-          getId: function(doc) {
+          getId(doc) {
             return doc.docType + ':' + doc.fileInfo.baseName;
           },
-          getAliases: function(doc) {
+          getAliases(doc) {
             return [doc.fileInfo.baseName, doc.fileInfo.relativePath];
           }
         });
@@ -40,14 +40,14 @@ describe('base package', function() {
           // Default path processor template
           {
             docTypes: ['service', 'guide'],
-            getPath: function(doc) {
+            getPath(doc) {
               var docPath = path.dirname(doc.fileInfo.relativePath);
               if ( doc.fileInfo.baseName !== 'index' ) {
                 docPath = path.join(docPath, doc.fileInfo.baseName);
               }
               return docPath;
             },
-            getOutputPath: function(doc) {
+            getOutputPath(doc) {
               return doc.path +
                   ( doc.fileInfo.baseName === 'index' ? '/index.html' : '.html');
             }
@@ -58,48 +58,48 @@ describe('base package', function() {
     return new Dgeni([testPackage]).generate();
   }
 
-  it("should be instance of Package", function() {
+  it("should be instance of Package", () => {
       expect(basePackage instanceof Dgeni.Package).toBeTruthy();
   });
 
 
-  describe("computeIdsProcessor", function() {
+  describe("computeIdsProcessor", () => {
 
-    it("should use provided id templates", function(done) {
+    it("should use provided id templates", done => {
       var doc1 = { docType: 'service', fileInfo: { relativePath: 'a/b/c/d.js', baseName: 'd' } };
       var doc2 = { docType: 'guide', fileInfo: { relativePath: 'x/y/z/index', baseName: 'index' } };
 
 
-      runDgeni([doc1,doc2]).then(function(docs) {
-        expect(doc1.id).toEqual('service:d');
-        expect(doc1.aliases).toEqual(['d', 'a/b/c/d.js']);
-        expect(doc2.id).toEqual('guide:index');
-        expect(doc2.aliases).toEqual(['index', 'x/y/z/index']);
-        done();
-      }, function(err) {
-        console.log('Failed: ', err);
-      });
+      runDgeni([doc1,doc2]).then(
+        docs => {
+          expect(doc1.id).toEqual('service:d');
+          expect(doc1.aliases).toEqual(['d', 'a/b/c/d.js']);
+          expect(doc2.id).toEqual('guide:index');
+          expect(doc2.aliases).toEqual(['index', 'x/y/z/index']);
+          done();
+        },
+        err => console.log('Failed: ', err));
     });
 
   });
 
 
-  describe("computePathsProcessor", function() {
+  describe("computePathsProcessor", () => {
 
-    it("should use provided path templates", function(done) {
+    it("should use provided path templates", done => {
       var doc1 = { docType: 'service', fileInfo: { relativePath: 'a/b/c/d.js', baseName: 'd' } };
       var doc2 = { docType: 'guide', fileInfo: { relativePath: 'x/y/z/index', baseName: 'index' } };
 
 
-      runDgeni([doc1,doc2]).then(function(docs) {
-        expect(doc1.path).toEqual('a/b/c/d');
-        expect(doc1.outputPath).toEqual('a/b/c/d.html');
-        expect(doc2.path).toEqual('x/y/z');
-        expect(doc2.outputPath).toEqual('x/y/z/index.html');
-        done();
-      }, function(err) {
-        console.log('Failed: ', err);
-      });
+      runDgeni([doc1,doc2]).then(
+        docs => {
+          expect(doc1.path).toEqual('a/b/c/d');
+          expect(doc1.outputPath).toEqual('a/b/c/d.html');
+          expect(doc2.path).toEqual('x/y/z');
+          expect(doc2.outputPath).toEqual('x/y/z/index.html');
+          done();
+        },
+        err => console.log('Failed: ', err));
     });
 
   });

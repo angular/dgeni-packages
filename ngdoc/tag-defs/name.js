@@ -2,7 +2,7 @@ module.exports = function(createDocMessage) {
   return {
     name: 'name',
     required: true,
-    transforms: function(doc, tag, value) {
+    transforms(doc, tag, value) {
       var INPUT_TYPE = /input\[(.+)\]/;
       if ( doc.docType === 'input' ) {
         var match = INPUT_TYPE.exec(value);

@@ -1,5 +1,5 @@
 var package = require('./');
 
-describe('nunjucks package', function() {
+describe('nunjucks package', () => {
 
 });

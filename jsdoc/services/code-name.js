@@ -10,7 +10,7 @@ module.exports = function codeNameService(log, codeNameMap, getInjectables) {
    * @param {Function|Function[]}
    */
   function registerCodeNameMatcher (list) {
-    list.forEach(function(v) {
+    list.forEach(v => {
       if (v && v.name) {
         codeNameMap.set(v.name.replace(REMOVE_SUFFIX_REGEX, ''), v);
       } else {

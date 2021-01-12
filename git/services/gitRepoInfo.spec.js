@@ -2,10 +2,10 @@ var mockPackageFactory = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 var gitRepoInfoFactory = require('./gitRepoInfo');
 
-describe("gitRepoInfo", function() {
+describe("gitRepoInfo", () => {
   var gitRepoInfo, mockPackage;
 
-  beforeEach(function() {
+  beforeEach(() => {
     mockPackage = mockPackageFactory()
       .factory(gitRepoInfoFactory);
 
@@ -15,25 +15,25 @@ describe("gitRepoInfo", function() {
     gitRepoInfo = injector.get('gitRepoInfo');
   });
 
-  it("should be set", function() {
+  it("should be set", () => {
     expect(gitRepoInfo).not.toBe(null);
   });
 
-  it("should have owner set from package repository url", function() {
+  it("should have owner set from package repository url", () => {
     expect(gitRepoInfo.owner).toBe('owner');
   });
 
-  it("should have repo set from package repository url", function() {
+  it("should have repo set from package repository url", () => {
     expect(gitRepoInfo.repo).toBe('repo');
   });
 
-  it("should throw an error if packageInfo is empty", function() {
+  it("should throw an error if packageInfo is empty", () => {
     mockPackage.factory(function packageInfo() {
       return {};
     });
     var dgeni = new Dgeni([mockPackage]);
     var injector = dgeni.configureInjector();
 
-    expect(function(){injector.get('gitRepoInfo')}).toThrow();
+    expect(() => injector.get('gitRepoInfo')).toThrow();
   });
 });

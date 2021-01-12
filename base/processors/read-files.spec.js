@@ -3,12 +3,13 @@ var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
 function tidyUp(promise, done) {
-  return promise.then(function() {
-    done();
-  },function(err) {
-    console.log('ERROR', err.stack);
-    done(err);
-  });
+  return promise.then(
+    () => done(),
+    err => {
+      console.log('ERROR', err.stack);
+      done(err);
+    }
+  );
 }
 
 function createReadFilesProcessor(fileReaders, sourceFiles, basePath) {
@@ -25,31 +26,31 @@ function createReadFilesProcessor(fileReaders, sourceFiles, basePath) {
 
 
 
-describe('read-files doc processor', function() {
+describe('read-files doc processor', () => {
 
-  it("should complain if a file reader is not valid", function() {
-    expect(function() {
+  it("should complain if a file reader is not valid", () => {
+    expect(() => {
       var processor = createReadFilesProcessor([ {} ], ['docs/*'], '../fixtures');
       processor.$process();
     }).toThrowError('Invalid File Reader: It must have a name property');
 
 
-    expect(function() {
+    expect(() => {
       var processor = createReadFilesProcessor([ { name: 'badFileReader' } ], ['docs/*'], '../fixtures');
       processor.$process();
     }).toThrowError('Invalid File Reader: "badFileReader": It must have a getDocs property');
   });
 
-  it('should iterate over matching files, providing fileInfo to the reader', function(done) {
+  it('should iterate over matching files, providing fileInfo to the reader', done => {
 
     var mockFileReader = {
       name: 'mockFileReader',
-      getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+      getDocs(fileInfo) { return [{ fileInfo2: fileInfo }]; }
     };
 
     processor = createReadFilesProcessor([mockFileReader], ['docs/*'], '../fixtures');
 
-    var promise = processor.$process().then(function(docs) {
+    var promise = processor.$process().then(docs => {
       expect(docs.length).toEqual(2);
       expect(docs[0].fileInfo).toEqual({
         fileReader: 'mockFileReader',
@@ -79,15 +80,15 @@ describe('read-files doc processor', function() {
   });
 
 
-  it("should accept an array of include patterns", function(done) {
+  it("should accept an array of include patterns", done => {
     var mockFileReader = {
       name: 'mockFileReader',
-      getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+      getDocs(fileInfo) { return [{ fileInfo2: fileInfo }]; }
     };
 
     processor = createReadFilesProcessor([mockFileReader], [ { include: ['docs/*'] } ], '../fixtures');
 
-    var promise = processor.$process().then(function(docs) {
+    var promise = processor.$process().then(docs => {
       expect(docs.length).toEqual(2);
       expect(docs[0].fileInfo).toEqual({
         fileReader: 'mockFileReader',
@@ -117,30 +118,32 @@ describe('read-files doc processor', function() {
   });
 
 
-  it("should complain if there is no matching file-reader", function(done) {
+  it("should complain if there is no matching file-reader", done => {
       var mockFileReader = {
         name: 'mockFileReader',
         defaultPattern: /\.js$/,
-        getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+        getDocs(fileInfo) { return [{ fileInfo2: fileInfo }]; }
       };
 
       processor = createReadFilesProcessor([mockFileReader], ['docs/*'], '../fixtures');
-      processor.$process().then(function(docs) {
-        console.log('expected createReadFileProcessor to fail');
-        expect(docs).toBeUndefined();
-      }, function(err) {
-        expect(err).toMatch('No file reader found for .+b\\.ngdoc');
-        done();
-      });
+      processor.$process().then(
+        docs => {
+          console.log('expected createReadFileProcessor to fail');
+          expect(docs).toBeUndefined();
+        },
+        err => {
+          expect(err).toMatch('No file reader found for .+b\\.ngdoc');
+          done();
+        });
   });
 
 
-  it("should complain if the sourceFiles property is not valid", function() {
-    expect(function() {
+  it("should complain if the sourceFiles property is not valid", () => {
+    expect(() => {
       var mockFileReader = {
         name: 'mockFileReader',
         defaultPattern: /\.js$/,
-        getDocs: function(fileInfo) { return [{ fileInfo2: fileInfo }]; }
+        getDocs(fileInfo) { return [{ fileInfo2: fileInfo }]; }
       };
       var processor = createReadFilesProcessor([ mockFileReader ], [ { wrong: 'docs/*'} ], '../fixtures');
       processor.$process();
@@ -150,25 +153,25 @@ describe('read-files doc processor', function() {
   });
 
 
-  describe('fileReaders', function() {
+  describe('fileReaders', () => {
 
     var mockNgDocFileReader = {
       name: 'mockNgDocFileReader',
       defaultPattern: /\.ngdoc$/,
-      getDocs: function(fileInfo) { return [{}]; }
+      getDocs(fileInfo) { return [{}]; }
     };
 
     var mockJsFileReader = {
       name: 'mockJsFileReader',
       defaultPattern: /\.js$/,
-      getDocs: function(fileInfo) { return [{}]; }
+      getDocs(fileInfo) { return [{}]; }
     };
 
-    it("should use the first file reader that matches if none is specified for a sourceInfo", function(done) {
+    it("should use the first file reader that matches if none is specified for a sourceInfo", done => {
 
       processor = createReadFilesProcessor([mockNgDocFileReader, mockJsFileReader], ['docs/*'], '../fixtures');
 
-      var promise = processor.$process().then(function(docs) {
+      var promise = processor.$process().then(docs => {
         expect(docs[0].fileInfo.extension).toEqual('js');
         expect(docs[0].fileInfo.fileReader).toEqual('mockJsFileReader');
         expect(docs[1].fileInfo.extension).toEqual('ngdoc');
@@ -178,10 +181,10 @@ describe('read-files doc processor', function() {
       tidyUp(promise, done);
     });
 
-    it("should use the fileReader named in the sourceInfo, rather than try to match one", function(done) {
+    it("should use the fileReader named in the sourceInfo, rather than try to match one", done => {
       processor = createReadFilesProcessor([mockNgDocFileReader, mockJsFileReader], [{ include: 'docs/*', fileReader: 'mockJsFileReader' }], '../fixtures');
 
-      var promise = processor.$process().then(function(docs) {
+      var promise = processor.$process().then(docs => {
         expect(docs[0].fileInfo.extension).toEqual('js');
         expect(docs[0].fileInfo.fileReader).toEqual('mockJsFileReader');
         expect(docs[1].fileInfo.extension).toEqual('ngdoc');
@@ -192,32 +195,32 @@ describe('read-files doc processor', function() {
     });
   });
 
-  describe('exclusions', function() {
-    it("should exclude files that match the exclude property of a sourceInfo", function(done) {
+  describe('exclusions', () => {
+    it("should exclude files that match the exclude property of a sourceInfo", done => {
 
       var mockFileReader = {
         name: 'mockFileReader',
-        getDocs: function(fileInfo) { return [{ }]; }
+        getDocs(fileInfo) { return [{ }]; }
       };
 
       processor = createReadFilesProcessor([mockFileReader], [{ include: 'docs/*', exclude:'**/*.ngdoc' }], '../fixtures');
 
-      var promise = processor.$process().then(function(docs) {
+      var promise = processor.$process().then(docs => {
         expect(docs.length).toEqual(1);
         expect(docs[0].fileInfo.extension).toEqual('js');
       });
       tidyUp(promise, done);
     });
 
-    it("should accept an array of exclusion patterns", function(done) {
+    it("should accept an array of exclusion patterns", done => {
       var mockFileReader = {
         name: 'mockFileReader',
-        getDocs: function(fileInfo) { return [{ }]; }
+        getDocs(fileInfo) { return [{ }]; }
       };
 
       processor = createReadFilesProcessor([mockFileReader], [{ include: 'docs/*', exclude:['**/*.ngdoc'] }], '../fixtures');
 
-      var promise = processor.$process().then(function(docs) {
+      var promise = processor.$process().then(docs => {
         expect(docs.length).toEqual(1);
         expect(docs[0].fileInfo.extension).toEqual('js');
       });
@@ -225,17 +228,17 @@ describe('read-files doc processor', function() {
     });
   });
 
-  describe("relative paths", function() {
-    it("should set the relativePath on the doc.fileInfo property correctly", function(done) {
+  describe("relative paths", () => {
+    it("should set the relativePath on the doc.fileInfo property correctly", done => {
 
       var mockFileReader = {
         name: 'mockFileReader',
-        getDocs: function(fileInfo) { return [{ }]; }
+        getDocs(fileInfo) { return [{ }]; }
       };
 
       processor = createReadFilesProcessor([mockFileReader], [{ include: 'src/**/*', basePath:'src' }], '../fixtures');
 
-      var promise = processor.$process().then(function(docs) {
+      var promise = processor.$process().then(docs => {
         expect(docs.length).toEqual(2);
         expect(docs[0].fileInfo.relativePath).toEqual('f1/a.js');
         expect(docs[1].fileInfo.relativePath).toEqual('f2/b.js');

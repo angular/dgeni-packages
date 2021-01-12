@@ -1,17 +1,17 @@
 var mockPackage = require('../mocks/mockPackage');
 var Dgeni = require('dgeni');
 
-describe("generateComponentGroupsProcessor", function() {
+describe("generateComponentGroupsProcessor", () => {
   var processor, moduleMap;
 
-  beforeEach(function() {
+  beforeEach(() => {
     var dgeni = new Dgeni([mockPackage()]);
     var injector = dgeni.configureInjector();
     processor = injector.get('generateComponentGroupsProcessor');
     moduleMap = injector.get('moduleMap');
   });
 
-  it("should create a new doc for each group of components (by docType) in each module", function() {
+  it("should create a new doc for each group of components (by docType) in each module", () => {
     var docs = [];
     moduleMap.set('mod1', {
       id: 'mod1',
@@ -39,7 +39,7 @@ describe("generateComponentGroupsProcessor", function() {
     expect(docs[1].moduleDoc).toEqual(jasmine.objectContaining({ id: 'mod1' }));
   });
 
-  it("should not generate componentGroup docs for the 'overview' docType", function() {
+  it("should not generate componentGroup docs for the 'overview' docType", () => {
 
     moduleMap.set('mod1', {
       id: 'mod1',
@@ -57,7 +57,7 @@ describe("generateComponentGroupsProcessor", function() {
 
   });
 
-  it("should attach the componentGroup to its module", function() {
+  it("should attach the componentGroup to its module", () => {
 
     moduleMap.set('mod1', {
       id: 'mod1',

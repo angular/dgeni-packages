@@ -13,9 +13,9 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     },
     $runAfter: ['extracting-tags'],
     $runBefore: ['tags-extracted'],
-    $process: function(docs) {
+    $process(docs) {
       var tagExtractor = createTagExtractor(parseTagsProcessor.tagDefinitions, this.defaultTagTransforms);
-      docs.forEach(function(doc) {
+      docs.forEach(doc => {
         log.debug(createDocMessage('extracting tags', doc));
         tagExtractor(doc);
       });
@@ -38,7 +38,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     var defaultTransformFn = getTransformationFn(defaultTagTransforms);
 
     // Add some useful methods to the tagDefs
-    var tagDefs = _.map(tagDefinitions, function(tagDef) {
+    var tagDefs = _.map(tagDefinitions, tagDef => {
 
       // Make a copy of the tagDef as we are going to modify it
       tagDef = _.clone(tagDef);
@@ -49,7 +49,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       // Attach a transformation function to the cloned tagDef
       // running the specific transforms followed by the default transforms
       var tagProperty = tagDef.tagProperty || 'description';
-      tagDef.getProperty = function(doc, tag) {
+      tagDef.getProperty = (doc, tag) => {
         var value = tag[tagProperty];
         value = transformFn(doc, tag, value);
         value = defaultTransformFn(doc, tag, value);
@@ -62,7 +62,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     return function tagExtractor(doc) {
 
       // Try to extract each of the tags defined in the tagDefs collection
-      _.forEach(tagDefs, function(tagDef) {
+      _.forEach(tagDefs, tagDef => {
 
         log.silly('extracting tags for: ' + tagDef.name);
 
@@ -121,7 +121,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     if ( tagDef.multi ) {
       // We may have multiple tags for this tag def, so we put them into an array
       doc[docProperty] = Array.isArray(doc[docProperty]) ? doc[docProperty] : [];
-      _.forEach(tags, function(tag) {
+      _.forEach(tags, tag => {
         // Transform and add the tag to the array
         value = tagDef.getProperty(doc, tag);
         if ( value !== undefined ) {
@@ -160,9 +160,9 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     if ( Array.isArray(transforms) ) {
 
       // transform is an array then we will apply each in turn like a pipe-line
-      return function(doc, tag, value) {
+      return (doc, tag, value) => {
 
-        _.forEach(transforms, function(transform) {
+        _.forEach(transforms, transform => {
           value = transform(doc, tag, value);
         });
 
@@ -174,7 +174,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     if ( !transforms ) {
 
       // No transform is specified so we just provide a default
-      return function(doc, tag, value) { return value; };
+      return (doc, tag, value) => value;
 
     }
 
@@ -187,7 +187,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
     id = id ? '"' + id + '" ' : '';
     var message = createDocMessage('Invalid tags found', doc) + '\n';
 
-    _.forEach(doc.tags.badTags, function(badTag) {
+    _.forEach(doc.tags.badTags, badTag => {
       var description = (_.isString(badTag.description) && (badTag.description.substr(0, 20) + '...'));
       if ( badTag.name ) {
         description = badTag.name + ' ' + description;
@@ -197,7 +197,7 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       }
 
       message += 'Line: ' + badTag.startingLine + ': @' + badTag.tagName + ' ' + description + '\n';
-      _.forEach(badTag.errors, function(error) {
+      _.forEach(badTag.errors, error => {
         message += '    * ' + error + '\n';
       });
     });

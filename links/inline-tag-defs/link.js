@@ -15,10 +15,10 @@ module.exports = function linkInlineTagDef(getLinkInfo, createDocMessage, log) {
   return {
     name: 'link',
     description: 'Process inline link tags (of the form {@link some/uri Some Title}), replacing them with HTML anchors',
-    handler: function(doc, tagName, tagDescription) {
+    handler(doc, tagName, tagDescription) {
 
       // Parse out the uri and title
-      return tagDescription.replace(INLINE_LINK, function(match, uri, title) {
+      return tagDescription.replace(INLINE_LINK, (match, uri, title) => {
 
         var linkInfo = getLinkInfo(uri, title, doc);
 

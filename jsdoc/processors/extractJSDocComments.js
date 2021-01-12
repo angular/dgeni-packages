@@ -31,20 +31,20 @@ module.exports = function extractJSDocCommentsProcessor() {
       removeJsFileDocs: { presence: true }
     },
     removeJsFileDocs: true,
-    $process: function(docs) {
+    $process(docs) {
 
       var commentDocs = [];
       var processor = this;
 
       // Extract all the `jsFile` docs from the docs collection
-      docs = _.filter(docs, function(doc) {
+      docs = _.filter(docs, doc => {
 
         if ( doc.docType !== 'jsFile' ) {
           return true;
         }
 
         // Generate a doc for each jsdoc style comment
-        _.forEach(doc.fileInfo.ast.comments, function(comment) {
+        _.forEach(doc.fileInfo.ast.comments, comment => {
 
           // To test for a jsdoc comment (i.e. starting with /** ), we need to check for a
           // star in the first character since the parser strips off the "/*" comment identifier
@@ -80,7 +80,7 @@ module.exports = function extractJSDocCommentsProcessor() {
 function findNodeAfter(ast, pos) {
   var found, path;
   traverse(ast, {
-    enter: function(node) {
+    enter(node) {
       if ( node.range[1] > pos && node.range[0] >= pos ) {
         if ( !found || found.range[0] >= node.range[0] ) {
           found = node;
