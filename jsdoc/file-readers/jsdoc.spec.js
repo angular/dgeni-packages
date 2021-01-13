@@ -88,7 +88,7 @@ describe("jsdoc fileReader", () => {
         "  sync:true\n" +
         "}\n",
         '.');
-      expect(() => fileReader.getDocs(fileInfo)).toThrowError('JavaScript error in file "some/file.js"" [line 13, column 3]: "Unexpected identifier"');
+      expect(() => fileReader.getDocs(fileInfo)).toThrowError('JavaScript error in file "some/file.js" [line 13, column 3]');
     });
 
   });

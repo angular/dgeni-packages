@@ -4,7 +4,7 @@ const LEADING_STAR = /^[^\S\r\n]*\*[^\S\n\r]?/gm;
 /**
  * @dgProcessor extractJSDocCommentsProcessor
  * @description
- * This processor will create an doc for each jsdoc style comment in each jsFile
+ * This processor will create a doc for each jsdoc style comment in each jsFile
  * doc in the docs collection.
  *
  * It will optionaly remove those jsFile docs from the collection by setting the
