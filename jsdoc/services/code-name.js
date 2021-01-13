@@ -1,5 +1,5 @@
 /**
- * @dgProcessor codeNameService
+ * @dgService codeNameService
  * @description  Infer the name of the document from name of the following code
  */
 module.exports = function codeNameService(log, codeNameMap, getInjectables) {
