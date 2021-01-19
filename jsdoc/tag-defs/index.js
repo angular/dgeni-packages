@@ -30,5 +30,6 @@ module.exports = [
   require('./see'),
   require('./since'),
   require('./type'),
-  require('./usage')
+  require('./usage'),
+  require('./version')
 ];
