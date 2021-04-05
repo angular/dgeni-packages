@@ -2,7 +2,6 @@ const path = require('canonical-path');
 const fs = require('fs');
 const glob = require('glob');
 var Minimatch = require("minimatch").Minimatch;
-const StringMap = require('stringmap');
 
 /**
  * @dgProcessor readFilesProcessor
@@ -105,7 +104,7 @@ function createFileInfo(file, content, sourceInfo, fileReader, basePath) {
 
 
 function getFileReaderMap(fileReaders) {
-  const fileReaderMap = new StringMap();
+  const fileReaderMap = new Map();
   fileReaders.forEach(fileReader => {
 
     if ( !fileReader.name ) {

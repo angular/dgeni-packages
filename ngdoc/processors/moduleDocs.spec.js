@@ -37,7 +37,7 @@ describe("moduleDocsProcessor", () => {
 
     processor.$process([doc1, doc2, doc3]);
 
-    expect(moduleMap.values().length).toEqual(2);
+    expect(moduleMap.size).toEqual(2);
     expect(moduleMap.get('ng')).toBe(doc1);
     expect(moduleMap.get('ngMock')).toBe(doc2);
   });

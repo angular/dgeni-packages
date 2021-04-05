@@ -1,7 +1,6 @@
 var INLINE_TAG = /(\{@[^\s}]+[^}]*\})/;
                         //  11111111     22222222
 var INLINE_TAG_DETAIL = /\{@([^\s]+)\s*([^}]*)\}/;
-const StringMap = require('stringmap');
 
 /**
  * @dgProcessor inlineTagProcessor
@@ -115,7 +114,7 @@ module.exports = function inlineTagProcessor(log, createDocMessage) {
 };
 
 function getMap(objects) {
-  var map = new StringMap();
+  var map = new Map();
   objects.forEach(object => {
     map.set(object.name, object);
     if ( object.aliases ) {

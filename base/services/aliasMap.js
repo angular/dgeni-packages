@@ -1,12 +1,10 @@
-const StringMap = require('stringmap');
-
 /**
  * @dgService aliasMap
  * @description
  * A map of id aliases to docs
  */
 module.exports = function aliasMap() {
-  const map = new StringMap();
+  const map = new Map();
 
   return {
     /**
