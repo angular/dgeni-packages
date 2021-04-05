@@ -1,12 +1,10 @@
-const StringMap = require('stringmap');
-
 /**
  * A collection of tags that can be looked up by their tagDefinition.
  */
 class TagCollection {
   constructor(tags) {
     this.tags = [];
-    this.tagsByName = new StringMap();
+    this.tagsByName = new Map();
     this.badTags = [];
     this.description = '';
     (tags || []).forEach(tag => this.addTag(tag));

@@ -1,4 +1,3 @@
-const StringMap = require('stringmap');
 const templateFn = require('lodash.template');
 
 /**
@@ -7,8 +6,8 @@ const templateFn = require('lodash.template');
  */
 module.exports = function computePathsProcessor(log, createDocMessage) {
   function initializeMaps(pathTemplates) {
-    const pathTemplateMap = new StringMap();
-    const outputPathTemplateMap = new StringMap();
+    const pathTemplateMap = new Map();
+    const outputPathTemplateMap = new Map();
 
     pathTemplates.forEach(template => {
       if ( template.docTypes ) {

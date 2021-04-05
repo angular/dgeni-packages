@@ -1,6 +1,5 @@
 const TagCollection = require('../lib/TagCollection');
 const Tag = require('../lib/Tag');
-const StringMap = require('stringmap');
 
 /**
  * @dgProcessor parseTagsProcessor
@@ -39,7 +38,7 @@ module.exports = function parseTagsProcessor(log, createDocMessage, backTickPars
  */
 function createTagDefMap(tagDefinitions) {
   // Create a map of the tagDefinitions so that we can look up tagDefs based on name or alias
-  const map = new StringMap();
+  const map = new Map();
   tagDefinitions.forEach(tagDefinition => {
     map.set(tagDefinition.name, tagDefinition);
     if ( tagDefinition.aliases ) {

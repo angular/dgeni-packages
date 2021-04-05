@@ -1,4 +1,3 @@
-const StringMap = require('stringmap');
 const templateFn = require('lodash.template');
 
 /**
@@ -9,8 +8,8 @@ const templateFn = require('lodash.template');
 module.exports = function computeIdsProcessor(log, aliasMap, createDocMessage) {
 
   function initializeMaps(idTemplates) {
-    const getIdMap = new StringMap();
-    const getAliasesMap = new StringMap();
+    const getIdMap = new Map();
+    const getAliasesMap = new Map();
 
     idTemplates.forEach(template => {
       if ( template.docTypes ) {

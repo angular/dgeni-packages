@@ -1,10 +1,8 @@
-const StringMap = require('stringmap');
-
 /**
  * @dgService codeNameMap
  * @description
  * A map of AST codeName matchers
  */
 module.exports = function codeNameMap() {
-  return new StringMap();
+  return new Map();
 };

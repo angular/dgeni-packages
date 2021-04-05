@@ -12,7 +12,7 @@ describe("TagCollection", () => {
     expect(tags.tags).toEqual([]);
     expect(tags.badTags).toEqual([]);
     // We clone so that toEqual works with our "bare" object
-    expect(tags.tagsByName.isEmpty()).toBe(true);
+    expect(tags.tagsByName.size).toEqual(0);
     expect(tags.description).toEqual('');
   });
 
