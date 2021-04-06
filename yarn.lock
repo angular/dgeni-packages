@@ -529,18 +529,18 @@ change-case@3.0.0:
     upper-case "^1.1.1"
     upper-case-first "^1.1.0"
 
-changez-angular@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/changez-angular/-/changez-angular-3.0.0.tgz#ece8b922adff84b7db1ce87cbb4057046e18beb7"
-  integrity sha512-6HhVtgZwrYZ6qCOWEg/PJT7iSM+p5IjDpzafUBAnG7wwe1ybaOndSxKJW8I27/hghCMRc6txbea/r4UMQSFvRg==
+changez-angular@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/changez-angular/-/changez-angular-3.0.1.tgz#9ed8798984b81d060f2ad04232b7b6463d53f023"
+  integrity sha512-pzYOqMnpX5jvhJYo68eSLDPK5fKwU+Yqy8maFxMYonNpge5bD0aT6CUuZTZyzJd4GKxPREw0Joi55DVcEc28kg==
   dependencies:
-    changez "^3.0.0"
+    changez "^3.0.1"
     nunjucks-date "^1.5.0"
 
-changez@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/changez/-/changez-3.0.0.tgz#0fc990a1ac79ec85a06a4d5a93112a42aed32119"
-  integrity sha512-xtvHeT7SCqoPOEv3hMQdH+jrLHnCscDNb3YJz+i6mqGgBMgNqWVIs0ZKJ5lPvYr/RMjgpbZAxgNaxTkbEnmAIA==
+changez@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/changez/-/changez-3.0.1.tgz#ef8460e047054ca50e964ab0d711fe1e155e02bf"
+  integrity sha512-guhN6lKujEayR2fZOxsrU+L41gXqaeAYo9gSiXAdNzaEYZwHEb+mS19muT59z1H2OTO80bjLvtG4CVR5IOYKGg==
   dependencies:
     commander "^7.2.0"
     find-package "^1.0.0"
