@@ -1,5 +1,24 @@
 # Changelog
 
+# 0.29.0 6 April 2021
+
+
+## Bug Fixes
+- **nunjucks:** do not fail on undefined value by default
+  ([cefb9e](https://github.com/angular/angular.js/commit/cefb9e0c7ad8fe82a2542758d1719d5d93868757))
+
+
+## New Features
+
+- **jsdoc:**
+  - add support for version tag
+    ([0fe303](https://github.com/angular/angular.js/commit/0fe303e593fe04769d6cec958126082e6a541e55))
+  - add support for more jsdoc tags
+    ([169c41](https://github.com/angular/angular.js/commit/169c41a1238dbdf06c29424026b940c21cab7fd5))
+- **jsdoc,nunjucks:** update espree and nunjucks packages
+  ([c2a463](https://github.com/angular/angular.js/commit/c2a463dfc0fdc322c893e72548aede41103a1719))
+
+
 # 0.28.4 27 June 2020
 
 ## Bug Fixes
