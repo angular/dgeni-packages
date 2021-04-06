@@ -12,7 +12,7 @@ module.exports = function templateEngine(templateFinder) {
      * Nunjucks specific options, such as using `{$ $}` for nunjucks interpolation
      * rather than `{{ }}`, which conflicts with AngularJS
      */
-    config: {autoescape: false, throwOnUndefined: true},
+    config: {autoescape: false},
 
     filters: [],
     tags: [],
