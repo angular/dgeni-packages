@@ -67,8 +67,8 @@
     "@types/lodash.difference": "^4.5.6",
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^14.14.20",
-    "changez": "^3.0.0",
-    "changez-angular": "^3.0.0",
+    "changez": "^3.0.1",
+    "changez-angular": "^3.0.1",
     "jasmine": "^2.6.0",
     "nyc": "^15.1.0",
     "rewire": "~2.0.0"
