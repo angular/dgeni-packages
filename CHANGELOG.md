@@ -1,5 +1,18 @@
 # Changelog
 
+<a name=""></a>
+# 0.29.1 27 April 2021
+
+## Bug Fixes
+- **git:** use the package version if no tag satisfies
+  ([c72834](https://github.com/angular/angular.js/commit/c72834c853cb4d3756d5f4d64f2637af30f2465f))
+
+
+## New Features
+- **git:** add `getPreviousVersions.versionMatcher`
+  ([571659](https://github.com/angular/angular.js/commit/5716591f724087a16605d791fcfd44179607568c))
+
+
 # 0.29.0 6 April 2021
 
 
