@@ -9,6 +9,16 @@ const packageWithVersion = {
   }
 };
 
+const packageWithPrereleaseVersion = {
+  "name": "dgeni-packages",
+  "version": "0.99.0-rc.10",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/owner/repo.git"
+  }
+};
+
+
 const packageWithBranchVersion = {
   "name": "dgeni-packages",
   "branchVersion": "^1.4.0-beta.0",
@@ -77,6 +87,7 @@ module.exports = {
   gitRepoInfo: mockGitRepoInfo,
   packageWithBranchVersion: packageWithBranchVersion,
   packageWithVersion: packageWithVersion,
+  packageWithPrereleaseVersion: packageWithPrereleaseVersion,
   versionInfo: mockVersionInfo,
   mockGitCatFile: mockGitCatFile,
   mockGitCatFileBadFormat: mockGitCatFileBadFormat,

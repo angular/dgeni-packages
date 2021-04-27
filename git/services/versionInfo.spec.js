@@ -104,6 +104,23 @@ describe("versionInfo", () => {
       });
     });
 
+    describe("with pre-release package version", () => {
+      beforeEach(() => {
+        versionInfo = versionInfoFactory(
+          () => ['v0.2.0'],
+          mocks.packageWithPrereleaseVersion
+        );
+      });
+
+      it("should satisfy the package version", () => {
+        expect(versionInfo.currentVersion.raw).toEqual(mocks.packageWithPrereleaseVersion.version);
+      });
+
+      it("should have a prerelease", () => {
+        expect(versionInfo.currentVersion.prerelease).toBeTruthy();
+      });
+    });
+
     describe("with no BUILD_NUMBER", () => {
       it("should have a local prerelease", () => {
         delete process.env.TRAVIS_BUILD_NUMBER;
