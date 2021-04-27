@@ -97,5 +97,19 @@ describe("getPreviousVersions", () => {
       ]);
   });
 
+  it('should allow the version matcher to be configured', () => {
+    const previousMatcher = getPreviousVersions.versionMatch;
+    try {
+      getPreviousVersions.versionMatcher = /refs\/tags\/([0-9].*[0-9])$/mg;
+      spyOn(child, 'spawnSync').and.returnValue({
+        status: 0,
+        stdout: 'blah blah  refs/tags/0.1.1\nblah blah  refs/tags/0.1.2'
+      });
+      const versions = getPreviousVersions();
+      expect(versions).toEqual([semver('0.1.1'), semver('0.1.2')]);
+    } finally {
+      getPreviousVersions.versionMatch = previousMatcher;
+    }
+  });
 
 });
