@@ -5,11 +5,17 @@ const semver = require('semver');
 
 /**
  * Get a collection of all the previous versions sorted by semantic version
- * @param {Function} decorateVersion A function to set the docsUrl on the inputted SemVer
+ *
+ * You can configure how versions are matched in the output from the `git ls-remote` call by setting the
+ * `getPreviousVersions.versionMatcher` property to a regular expression, whose first group is the version
+ * to extract.
+ *
+ * @param {Function} decorateVersion A function to set additional properties on the generated SemVer objects
+ * @param packageInfo the JSON parsed package.json object
  * @return {Array.<SemVer>} The collection of previous versions
  */
 module.exports = function getPreviousVersions(decorateVersion, packageInfo) {
-  return () => {
+  function getPreviousVersionsImpl() {
     // always use the remote tags as the local clone might
     // not contain all commits when cloned with git clone --depth=...
     // Needed e.g. for Travis
@@ -19,10 +25,8 @@ module.exports = function getPreviousVersions(decorateVersion, packageInfo) {
       return [];
     }
 
-    const matches = tagResults.stdout.match(/v[0-9].*[0-9]$/mg);
-    if (!matches) {
-      return [];
-    }
+    const matches = [];
+    tagResults.stdout.replace(getPreviousVersionsImpl.versionMatcher, (_, match) => matches.push(match));
 
     return matches
         .map(tag => semver.parse(tag))
@@ -33,4 +37,8 @@ module.exports = function getPreviousVersions(decorateVersion, packageInfo) {
         })
         .sort(semver.compare);
   }
+
+  getPreviousVersionsImpl.versionMatcher = /(v[0-9].*[0-9])$/mg;
+
+  return getPreviousVersionsImpl;
 };
