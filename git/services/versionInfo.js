@@ -80,8 +80,8 @@ function getTaggedVersion() {
 function getSnapshotVersion() {
   let version;
   for(let i = previousVersions.length - 1; i >= 0; i--) {
-    version = previousVersions[i];
-    if (satisfiesVersion(version)) {
+    if (satisfiesVersion(previousVersions[i])) {
+      version = previousVersions[i];
       break;
     }
   }
