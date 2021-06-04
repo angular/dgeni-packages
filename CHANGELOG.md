@@ -71,7 +71,7 @@
 ## Breaking Changes
 
 ### **nunjucks** due to:
-  - **[16ceb9](https://github.com/angular/angular.js/commit/16ceb9c9bc9aac168f82db977a9e380fb20b815a)**: upgrade `marked` to avoid vulnerability
+  - **[16ceb9](https://github.com/angular/dgeni-packages/commit/16ceb9c9bc9aac168f82db977a9e380fb20b815a)**: upgrade `marked` to avoid vulnerability
 
 There are a few relevant breaking changes with this latest version of `marked`.
 This only affects usage of the `renderMarkdown()` service and the `marked`
