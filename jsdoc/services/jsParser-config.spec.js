@@ -16,6 +16,6 @@ describe('jsParserConfig service', function() {
     expect(jsParserConfig.loc).toBe(true);
     expect(jsParserConfig.range).toBe(true);
     expect(jsParserConfig.tokens).toBe(true);
-    expect(jsParserConfig.ecmaVersion).toBe(6);
+    expect(jsParserConfig.ecmaVersion).toBe(8);
   });
 });
