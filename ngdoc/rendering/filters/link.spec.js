@@ -15,4 +15,8 @@ describe("link filter", () => {
     expect(filter.process('URL', 'TITLE')).toEqual('{@link URL TITLE }');
   });
 
+  it("should omit title when it is undefined", () => {
+    expect(filter.process('URL', undefined)).toEqual('{@link URL  }');
+  });
+
 });
