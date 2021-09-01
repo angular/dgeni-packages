@@ -19,6 +19,9 @@ describe("createDocMessage", () => {
     message = createDocMessage('some message', { name: 'doc-one', path: 'some/doc1', fileInfo: { relativePath: 'some/file.js'} , startingLine: 10 });
     expect(message).toEqual('some message - doc "doc-one" - from file "some/file.js" - starting at line 10');
 
+    message = createDocMessage('some message', { name: 'doc-one', path: 'some/doc1', fileInfo: { relativePath: 'some/file.js'} , startingLine: 0, endingLine: 0 });
+    expect(message).toEqual('some message - doc "doc-one" - from file "some/file.js" - starting at line 0, ending at line 0');
+
     message = createDocMessage('some message', { path: 'some/doc1', fileInfo: { relativePath: 'some/file.js'} });
     expect(message).toEqual('some message - doc "some/doc1" - from file "some/file.js"');
 

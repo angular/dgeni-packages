@@ -13,10 +13,10 @@ module.exports = function createDocMessage() {
       const filePath = doc.fileInfo && doc.fileInfo.relativePath;
       if ( filePath ) {
         message += ' - from file "' + filePath + '"';
-        if ( doc.startingLine ) {
+        if ( typeof doc.startingLine === 'number' ) {
           message += ' - starting at line ' + doc.startingLine;
         }
-        if ( doc.endingLine ) {
+        if ( typeof doc.endingLine === 'number' ) {
          message += ', ending at line ' + doc.endingLine;
         }
       }
