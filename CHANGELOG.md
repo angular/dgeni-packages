@@ -1,6 +1,21 @@
 # Changelog
 
-<a name=""></a>
+# 0.29.2 2 September 2021
+
+## Bug Fixes
+
+- **base**:
+  - improve layout of checkAnchorLinks messages
+    [4e5c3e4](https://github.com/angular/angular.js/commit/4e5c3e4)
+  - display doc locations even if they are 0
+    [a390fbf](https://github.com/angular/angular.js/commit/a390fbf)
+ - **ngdoc**: link filter - correctly handle missing title
+    [affb49e](https://github.com/angular/angular.js/commit/affb49e)
+
+## New Features
+- **jsdoc**: add support for parsing ES2017 syntax
+  [974173d](https://github.com/angular/angular.js/commit/974173d)
+
 # 0.29.1 27 April 2021
 
 ## Bug Fixes
