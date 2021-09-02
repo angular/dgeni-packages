@@ -6,7 +6,7 @@ const encode = require('urlencode');
  * @param {Object} log A service that provides logging
  * @description Checks that the generated documents do not have any dangling anchor links.
  */
-module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLinks) {
+module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLinks, createDocMessage) {
   return {
     ignoredLinks: [/^http(?:s)?:\/\//, /^mailto:/, /^chrome:/],
     pathVariants: ['', '/', '.html', '/index.html'],
@@ -40,6 +40,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
           const linkInfo = extractLinks(doc.renderedContent);
           linkInfo.path = docPath;
           linkInfo.outputPath = doc.outputPath;
+          linkInfo.doc = doc;
           allDocs.push(linkInfo);
 
           this.pathVariants.forEach(pathVariant => {
@@ -58,6 +59,7 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
       });
 
       let unmatchedLinkCount = 0;
+      const messages = [];
 
       // Check that all anchor links in each doc point to valid
       // references within the docs collection
@@ -78,12 +80,18 @@ module.exports = function checkAnchorLinksProcessor(log, resolveUrl, extractLink
 
         if (unmatchedLinks.length) {
           unmatchedLinkCount += unmatchedLinks.length;
-          log.warn('Dangling Links Found in "' + linkInfo.outputPath + '":' + unmatchedLinks.map(link => '\n - ' + link));
+          messages.push(
+              createDocMessage('      ', linkInfo.doc) +
+              '\n' +
+              unmatchedLinks.map(link => '         - ' + link).join('\n'));
         }
       });
 
       if ( unmatchedLinkCount ) {
-        const errorMessage = unmatchedLinkCount + ' unmatched links';
+        const plural = unmatchedLinkCount > 0 ? 's' : '';
+        const errorMessage =
+            `Dangling links: ${unmatchedLinkCount} unmatched link${plural}. The following docs have links to URLs that do not exist\n` +
+            messages.join('\n');
         if (this.errorOnUnmatchedLinks) {
           throw new Error(errorMessage);
         } else {
