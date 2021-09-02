@@ -12,6 +12,19 @@ describe("checkAnchorLinks", () => {
     expect(mockLog.warn.calls.first().args[0]).toContain(link);
   }
 
+  function createDoc(docType, renderedContent, path, outputPath, relativePath, startingLine, endingLine) {
+    return {
+      path,
+      outputPath,
+      docType,
+      fileInfo: {
+        relativePath
+      },
+      renderedContent,
+      startingLine,
+      endingLine
+    };
+  }
 
   beforeEach(() => {
     const testPackage = mockPackage();
@@ -23,15 +36,15 @@ describe("checkAnchorLinks", () => {
   });
 
   it("should warn when there is a dangling link", () => {
-    processor.$process([{ renderedContent: '<a href="foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' }]);
-    checkWarning('foo', 'doc/path.html');
+    processor.$process([createDoc('content', '<a href="foo"></a>', 'doc/path', 'doc/path.html', 'doc/path.md', 0, 1)]);
+    checkWarning('foo', 'doc/path.md');
   });
 
   it('should abort when there is a dangling link and `errorOnUnmatchedLinks` is true', () => {
     processor.errorOnUnmatchedLinks = true;
     expect(() => {
       processor.$process([{ renderedContent: '<a href="foo"></a>', outputPath: 'doc/path.html', path: 'doc/path' }]);
-    }).toThrowError('1 unmatched links');
+    }).toThrowError(/1 unmatched link/);
   });
 
   it("should not warn when there is a page for a link", () => {
@@ -107,17 +120,17 @@ describe("checkAnchorLinks", () => {
 
   it("should warn for internal, same page, dangling links", () => {
     processor.$process([
-      { renderedContent: '<a href="#foo">to foo</a>', outputPath: 'x.html', path: 'x' }
+      createDoc('api', '<a href="#foo">to foo</a>', 'a/b/c/x', 'dist/a/b/c/x.html', 'src/a/b/c/x.js', 45, 48),
     ]);
-    checkWarning('#foo', 'x.html');
+    checkWarning('#foo', 'src/a/b/c/x.js');
   });
 
   it("should warn for internal, cross page, dangling links", () => {
     processor.$process([
-      { renderedContent: '<a name="foo">foo</a>', outputPath: 'x.html', path: 'x' },
-      { renderedContent: '<a href="x#bar">to bar</a>', outputPath: 'y.html', path: 'y' }
+      createDoc('content', '<a name="foo">foo</a>', 'x', 'x.html', 'x.md'),
+      createDoc('content', '<a href="x#bar">to bar</a>', 'y', 'y.html', 'y.md'),
     ]);
-    checkWarning('x#bar', 'y.html');
+    checkWarning('x#bar', 'y.md');
   });
 
   it("should skip non-anchor elements", () => {
