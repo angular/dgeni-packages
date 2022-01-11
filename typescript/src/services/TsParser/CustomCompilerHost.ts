@@ -23,7 +23,7 @@ export class CustomCompilerHost implements CompilerHost {
       return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
     } catch (e) {
       // if it is a folder then try loading the index file of that folder
-      if (e.code === 'EISDIR') {
+      if ((e as NodeJS.ErrnoException).code === 'EISDIR') {
         return this.getSourceFile(fileName + '/index.ts', languageVersion, onError);
       }
       // otherwise ignore the error and move on to the strategy below...
@@ -69,9 +69,10 @@ export class CustomCompilerHost implements CompilerHost {
         return createSourceFile(baseFilePath + extension, text, languageVersion);
       } catch (e) {
         // Try again if the file simply did not exist, otherwise report the error as a warning
-        if (e.code !== 'ENOENT') {
-          if (onError) onError(e.message);
-          this.log.warn('Error reading ' + resolvedPathWithExt + ' : ' + e.message);
+        if ((e as NodeJS.ErrnoException)?.code !== 'ENOENT') {
+          const errorMessage = (e instanceof Error) ? e.message : `${e}`;
+          if (onError) onError(errorMessage);
+          this.log.warn('Error reading ' + resolvedPathWithExt + ' : ' + errorMessage);
         }
       }
     }

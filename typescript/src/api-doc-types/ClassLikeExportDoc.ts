@@ -47,7 +47,7 @@ export abstract class ClassLikeExportDoc extends ContainerExportDoc {
       const typeParams: string[] = [];
       this.symbol.members.forEach((member) => {
         if (member.getFlags() & SymbolFlags.TypeParameter) {
-          member.declarations.forEach(d => typeParams.push(getDeclarationTypeText(d)));
+          member.declarations?.forEach(d => typeParams.push(getDeclarationTypeText(d)));
         }
       });
       if (typeParams.length) return `<${typeParams.join(', ')}>`;

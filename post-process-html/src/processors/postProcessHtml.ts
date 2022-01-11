@@ -45,7 +45,8 @@ export class PostProcessHtml implements Processor {
           );
           doc.vFile = vFile;
         } catch (e) {
-          throw new Error(this.createDocMessage(e.message, doc));
+          const errorMessage = (e instanceof Error) ? e.message : `${e}`;
+          throw new Error(this.createDocMessage(errorMessage, doc));
         }
       });
   }
