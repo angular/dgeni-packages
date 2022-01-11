@@ -2,9 +2,6 @@
 import { CompilerOptions, createProgram, NewLineKind, Program, Symbol, SymbolFlags, TypeChecker } from 'typescript';
 import { CustomCompilerHost } from './CustomCompilerHost';
 
-// This import lacks type definitions.
-const path = require('canonical-path');
-
 export { getExportDocType } from './getExportDocType';
 export { getContent } from './getContent';
 export { getAccessibility } from './getAccessibility';

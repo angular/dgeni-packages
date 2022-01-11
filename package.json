@@ -58,7 +58,7 @@
     "semver": "^5.2.0",
     "source-map-support": "^0.4.15",
     "spdx-license-list": "^2.1.0",
-    "typescript": "~3.2.2",
+    "typescript": "~4.5.4",
     "urlencode": "^1.1.0"
   },
   "devDependencies": {
