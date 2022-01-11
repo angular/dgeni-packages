@@ -11,7 +11,6 @@ export class CustomCompilerHost implements CompilerHost {
 
   getSourceFile(fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void): SourceFile {
     let text;
-    let baseFilePath;
     let resolvedPath;
     let resolvedPathWithExt;
 
@@ -20,7 +19,7 @@ export class CustomCompilerHost implements CompilerHost {
       resolvedPath = path.resolve(this.baseDir, fileName);
       text = fs.readFileSync(resolvedPath, { encoding: this.options.charset as BufferEncoding });
       this.log.debug('found source file:', fileName);
-      return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
+      return createSourceFile(resolvedPath, text, languageVersion);
     } catch (e) {
       // if it is a folder then try loading the index file of that folder
       if ((e as NodeJS.ErrnoException).code === 'EISDIR') {
@@ -44,7 +43,7 @@ export class CustomCompilerHost implements CompilerHost {
           resolvedPath = path.resolve(this.baseDir, maybe);
           text = fs.readFileSync(resolvedPath, { encoding: this.options.charset as BufferEncoding });
           this.log.debug('found source file:', fileName);
-          return createSourceFile(path.relative(this.baseDir, resolvedPath), text, languageVersion);
+          return createSourceFile(resolvedPath, text, languageVersion);
         } catch (e) {
           // ignore the error and move on to the next maybe...
         }
@@ -53,9 +52,7 @@ export class CustomCompilerHost implements CompilerHost {
     }
 
     // Strip off the extension and resolve relative to the baseDir
-    baseFilePath = fileName.replace(/\.[^./]+$/, '');
-    resolvedPath = path.resolve(this.baseDir, baseFilePath);
-    baseFilePath = path.relative(this.baseDir, resolvedPath);
+    resolvedPath = path.resolve(this.baseDir, fileName).replace(/\.[^./]+$/, '');
 
     // Iterate through each possible extension and return the first source file that is actually found
     for (const extension of this.extensions) {
@@ -66,7 +63,7 @@ export class CustomCompilerHost implements CompilerHost {
         this.log.silly('getSourceFile:', resolvedPathWithExt);
         text = fs.readFileSync(resolvedPathWithExt, { encoding: this.options.charset as BufferEncoding });
         this.log.debug('found source file:', fileName, resolvedPathWithExt);
-        return createSourceFile(baseFilePath + extension, text, languageVersion);
+        return createSourceFile(resolvedPathWithExt, text, languageVersion);
       } catch (e) {
         // Try again if the file simply did not exist, otherwise report the error as a warning
         if ((e as NodeJS.ErrnoException)?.code !== 'ENOENT') {
