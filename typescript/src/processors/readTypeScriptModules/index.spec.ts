@@ -273,7 +273,16 @@ describe('readTypeScriptModules', () => {
       expect(typeAliasDoc.docType).toEqual('class');
       expect(typeAliasDoc.typeParams).toEqual('<T = any>');
     });
-  })
+
+    it('should correctly compute doc IDs for imported modules', () => {
+      // NOTE: The order of files is important here. We want `modules.ts` to be first discovered by
+      //       TypeScript as an import in `imports.ts`, therefore, `imports.ts` has to come first.
+      processor.sourceFiles = ['imports.ts', 'modules.ts'];
+      const docs: DocCollection = [];
+      processor.$process(docs);
+      expect(docs.map(d => d.id)).toEqual(['imports', 'imports/Y', 'modules', 'modules/X']);
+    });
+  });
 
   describe('exported functions', () => {
     it('should include type parameters', () => {

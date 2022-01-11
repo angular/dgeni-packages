@@ -7,12 +7,12 @@ const path = require('canonical-path');
  * The file (and the location in the file) from where an API doc element was sourced.
  */
 export class FileInfo {
-  relativePath = this.declaration.getSourceFile().fileName;
   location = new Location(this.declaration);
-  filePath = path.resolve(this.basePath, this.relativePath);
+  filePath = path.resolve(this.basePath, this.declaration.getSourceFile().fileName);
   baseName = path.basename(this.filePath, path.extname(this.filePath));
   extension = path.extname(this.filePath).replace(/^\./, '');
-  projectRelativePath = path.relative(this.basePath, this.filePath);
+  relativePath = path.relative(this.basePath, this.filePath);
+  projectRelativePath = this.relativePath;
   realFilePath = this.getRealFilePath(this.filePath);
   realProjectRelativePath = path.relative(this.basePath, this.realFilePath);
 

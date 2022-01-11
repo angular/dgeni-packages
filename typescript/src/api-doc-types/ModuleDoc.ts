@@ -1,4 +1,6 @@
 import { Declaration, TypeChecker } from 'typescript';
+import * as path from 'canonical-path';
+
 import { ModuleSymbol } from '../services/TsParser';
 import { FileInfo } from '../services/TsParser/FileInfo';
 
@@ -11,7 +13,7 @@ import { ExportDoc } from './ExportDoc';
  */
 export class ModuleDoc implements ApiDoc {
   docType = 'module';
-  id = this.symbol.name.replace(/^"|"$/g, '').replace(/\/index$/, '');
+  id = ensureRelative(this.basePath, this.symbol.name.replace(/^"|"$/g, '').replace(/\/index$/, ''));
   name = this.id.split('/').pop()!;
   declaration: Declaration = this.symbol.valueDeclaration!;
   aliases = [this.id, this.name];
@@ -27,4 +29,15 @@ export class ModuleDoc implements ApiDoc {
               public basePath: string,
               public hidePrivateMembers: boolean,
               public typeChecker: TypeChecker) {}
+}
+
+/**
+ * Convert a potentially absolute path to relative.
+ *
+ * If `toPath` is already relative, it is practically returned unchanged. If it is an absolute path,
+ * it is resolved relative to `fromPath` (which should always be an absolute path).
+ */
+function ensureRelative(absoluteFromPath: string, toPath: string): string {
+  const absoluteToPath = path.resolve(absoluteFromPath, toPath);
+  return path.relative(absoluteFromPath, absoluteToPath);
 }
