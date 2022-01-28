@@ -46,6 +46,17 @@ describe("extractTagsProcessor", () => {
         '    * second bad thing\n\n');
   });
 
+  it("should log a warning if the doc contains bad tags (no known tag definition)", () => {
+    const doc = createDoc([]);
+    const tag = new Tag(/* tagDef */ undefined, 'notKnown', 'desc', /* lineNumber */ 3);
+
+    doc.tags.badTags = [tag];
+
+    processor.$process([doc]);
+    expect(mockLog.warn).toHaveBeenCalledWith('Invalid tags found - doc\n' +
+      'Line: 3: @notKnown desc...\n\n');
+});
+
   describe('default tag-def', () => {
     it("should the extract the description property to a property with the name of the tagDef", () => {
       const tagDef = { name: 'a' };

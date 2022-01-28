@@ -195,7 +195,13 @@ module.exports = function extractTagsProcessor(log, parseTagsProcessor, createDo
       }
 
       message += 'Line: ' + badTag.startingLine + ': @' + badTag.tagName + ' ' + description + '\n';
-      badTag.errors.forEach(error => message += '    * ' + error + '\n');
+
+      // An object of type `Tag` in the `badTags` list does not necessarily have an `errors`
+      // field attached. This can happen when the tag does not have a tag definition at all.
+      // We only append more specific error messages if such concrete errors are available.
+      if (badTag.errors !== undefined) {
+        badTag.errors.forEach(error => message += '    * ' + error + '\n');
+      }
     });
 
     return message + '\n';
