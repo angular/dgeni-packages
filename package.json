@@ -52,7 +52,6 @@
     "catharsis": "^0.8.1",
     "change-case": "3.0.0",
     "dgeni": "^0.4.14",
-    "eslint": "^7.17.0",
     "espree": "^7.3.1",
     "estraverse": "^4.1.0",
     "glob": "^7.0.5",
@@ -79,6 +78,7 @@
     "@types/node": "^14.14.20",
     "changez": "^3.0.1",
     "changez-angular": "^3.0.1",
+    "eslint": "^7.17.0",
     "jasmine": "^2.6.0",
     "nyc": "^15.1.0",
     "rewire": "~2.0.0"
