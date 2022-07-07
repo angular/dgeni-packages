@@ -2,6 +2,16 @@
   "name": "dgeni-packages",
   "version": "0.29.3",
   "description": "A collection of dgeni packages for generating documentation from source code",
+  "files": [
+    "**/*.js",
+    "**/*.js.map",
+    "**/*.d.ts",
+    "!**/fixtures/**",
+    "!**/mocks/**",
+    "!**/*.spec.js",
+    "!**/*.spec.js.map",
+    "!**/*.spec.d.ts"
+  ],
   "scripts": {
     "test": "yarn build && node test.js",
     "cover": "yarn build && nyc node test.js",
