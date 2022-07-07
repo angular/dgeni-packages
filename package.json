@@ -6,6 +6,8 @@
     "**/*.js",
     "**/*.js.map",
     "**/*.d.ts",
+    "!.eslintrc.js",
+    "!test.js",
     "!**/fixtures/**",
     "!**/mocks/**",
     "!**/*.spec.js",
