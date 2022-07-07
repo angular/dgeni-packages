@@ -1,4 +1,3 @@
-const mkdirp = require('mkdirp');
 const fs = require('fs');
 const path = require('canonical-path');
 /**
@@ -8,7 +7,7 @@ const path = require('canonical-path');
  */
 module.exports = function writeFile() {
   return (file, content) =>
-    mkdirp(path.dirname(file))
+    fs.mkdir(path.dirname(file), { recursive: true })
       .then(() => new Promise((resolve, reject) => {
         return fs.writeFile(file, content, err => {
           if (err) { reject(err); }
