@@ -5,8 +5,8 @@ import {
     Decorator,
     EmitHint,
     Expression,
+    isDecorator,
     NodeArray,
-    ObjectLiteralElement,
     ObjectLiteralElementLike,
     ObjectLiteralExpression,
     PropertyAssignment,
@@ -26,8 +26,12 @@ export interface ParsedDecorator {
 }
 
 export function getDecorators(declaration: Declaration) {
-  if (declaration.decorators) {
-    return declaration.decorators.map<ParsedDecorator>(decorator => {
+  const decorators = declaration.decorators ||
+    // As of TypeScript 4.8 the decorators are part of the `modifiers` array.
+    declaration.modifiers?.filter(isDecorator) as unknown as Decorator[]|undefined;
+
+  if (decorators?.length) {
+    return decorators.map<ParsedDecorator>(decorator => {
       const callExpression = getCallExpression(decorator);
       if (callExpression) {
         return {
