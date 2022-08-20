@@ -6,12 +6,8 @@ const path = require('canonical-path');
  * Write the given contents to a file, ensuring the path to the file exists
  */
 module.exports = function writeFile() {
-  return (file, content) =>
-    fs.mkdir(path.dirname(file), { recursive: true })
-      .then(() => new Promise((resolve, reject) => {
-        return fs.writeFile(file, content, err => {
-          if (err) { reject(err); }
-          resolve();
-        });
-      }));
+  return async (file, content) => {
+    await fs.promises.mkdir(path.dirname(file), {recursive: true});
+    await fs.promises.writeFile(file, content);
+  };
 };
