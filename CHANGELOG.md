@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.29.5  (2022-08-20)
+
+
+## Bug Fixes
+- **base:** incorrect usage of `fs.mkdir` which does not return a promise
+  ([be5539ece](https://github.com/angular/dgeni-packages/commit/be5539ece8fea10cb04ea92d497f38f78c649e0f))
+
 # 0.29.4  (2022-08-19)
 
 
