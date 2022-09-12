@@ -3,6 +3,8 @@
 const child = require('child_process');
 const semver = require('semver');
 
+const GIT = process.env.GIT_BIN || 'git';
+
 let currentVersion, currentPackage, previousVersions;
 /**
 * Check the version is satisfactory.
@@ -25,7 +27,7 @@ function satisfiesVersion(version) {
  * @return {String}         The codename if found, otherwise null/undefined
  */
 function getCodeName(tagName) {
-  const gitCatOutput = child.spawnSync('git', ['cat-file', '-p ' + tagName], {encoding:'utf8'}).stdout;
+  const gitCatOutput = child.spawnSync(GIT, ['cat-file', '-p ' + tagName], {encoding:'utf8'}).stdout;
   const match = gitCatOutput.match(/^.*codename.*$/mg);
   const tagMessage = match && match[0];
   return tagMessage && tagMessage.match(/codename\((.*)\)/)[1];
@@ -36,7 +38,7 @@ function getCodeName(tagName) {
  * @return {String} The commit SHA
  */
 function getCommitSHA() {
-  return child.spawnSync('git', ['rev-parse', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
+  return child.spawnSync(GIT, ['rev-parse', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
 }
 
 /**
@@ -44,7 +46,7 @@ function getCommitSHA() {
  * @return {String} The build segment of the version
  */
 function getBuild() {
-  const hash = child.spawnSync('git', ['rev-parse', '--short', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
+  const hash = child.spawnSync(GIT, ['rev-parse', '--short', 'HEAD'], {encoding:'utf8'}).stdout.replace('\n', '');
   return 'sha.' + hash;
 }
 
@@ -53,7 +55,7 @@ function getBuild() {
  * @return {SemVer} The version or null
  */
 function getTaggedVersion() {
-  const gitTagResult = child.spawnSync('git', ['describe', '--exact-match'], {encoding:'utf8'});
+  const gitTagResult = child.spawnSync(GIT, ['describe', '--exact-match'], {encoding:'utf8'});
 
   if (gitTagResult.status === 0) {
     const tag = gitTagResult.stdout.trim();
