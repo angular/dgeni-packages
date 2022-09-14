@@ -1,7 +1,10 @@
 {
   "name": "dgeni-packages",
-  "version": "0.29.5",
+  "version": "0.30.0",
   "description": "A collection of dgeni packages for generating documentation from source code",
+  "publishConfig": {
+    "registry": "https://wombat-dressing-room.appspot.com"
+  },
   "files": [
     "**/*.js",
     "**/*.js.map",
@@ -75,13 +78,15 @@
     "@types/jasmine": "^2.5.51",
     "@types/lodash.difference": "^4.5.6",
     "@types/node": "^14.14.20",
-    "changez": "^3.0.1",
-    "changez-angular": "^3.0.1",
     "eslint": "^7.17.0",
     "jasmine": "^2.6.0",
     "nyc": "^15.1.0",
     "rewire": "~2.0.0",
+    "semantic-release": "^19.0.5",
     "source-map-support": "^0.4.15"
+  },
+  "resolutions": {
+    "@semantic-release/npm": "9.0.0"
   },
   "contributors": [
     "Peter Bacon Darwin <pete@bacondarwin.com>",
