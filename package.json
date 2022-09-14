@@ -64,7 +64,7 @@
     "htmlparser2": "^3.7.3",
     "lodash.difference": "^4.5.0",
     "lodash.template": "^4.5.0",
-    "marked": "^0.7.0",
+    "marked": "^4.0.10",
     "minimatch": "^3.0.2",
     "nunjucks": "^3.2.2",
     "rehype": "^8.0.0",
