@@ -1,5 +1,21 @@
 # Changelog
 
+# 0.29.5  (2022-08-20)
+
+
+## Bug Fixes
+- **base:** incorrect usage of `fs.mkdir` which does not return a promise
+  ([be5539ece](https://github.com/angular/dgeni-packages/commit/be5539ece8fea10cb04ea92d497f38f78c649e0f))
+
+# 0.29.4  (2022-08-19)
+
+
+## Bug Fixes
+- **typescript:** account for breaking change in TypeScript 4.8
+  ([126014](https://github.com/angular/angular.js/commit/126014fa5c497edb50f263a08ef8e6ea9e9aa6c6))
+- **jsdoc:** runtime error when jsdoc uses unknown tag definition
+  ([19e629](https://github.com/angular/angular.js/commit/19e629c0d156572cbea149af9e0cc7ec02db7cb6))
+
 # 0.29.3 21 January 2022
 
 ## Bug Fixes
