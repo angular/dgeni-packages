@@ -40,7 +40,8 @@ describe("renderMarkdown", () => {
       '<p>some test</p>\n' +
       '<pre><code>code\n' +
       '  indented code\n' +
-      'more code</code></pre>\n' +
+      'more code\n' +
+      '</code></pre>\n' +
       '<p>more text</p>\n'
     );
 

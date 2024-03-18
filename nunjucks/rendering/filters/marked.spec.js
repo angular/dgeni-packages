@@ -34,7 +34,8 @@ describe("marked custom filter", () => {
         '</ul>\n' +
         '<pre><code>code\n' +
         '  indented code\n' +
-        'code</code></pre>\n' +
+        'code\n' +
+        '</code></pre>\n' +
         ''
       );
   });
